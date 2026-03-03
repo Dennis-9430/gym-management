@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { LoginService } from "../services/auth.services";
 import type { User } from "../types/user.types";
+import "../styles/login.css";
 
 const Login = () => {
   const [username, setUser] = useState("");
@@ -34,24 +35,37 @@ const Login = () => {
   };
   return (
     <>
-      <h1>Gym Management</h1>
-      <div>
-        <h2> Login Gym Management</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Ingrese usuario"
-            value={username}
-            onChange={inputUser}
-          />
-          <input
-            type="password"
-            placeholder="ingrese contraseña"
-            value={password}
-            onChange={inputPassword}
-          />
-          <button type="submit"> Ingresar</button>
-        </form>
+      <div className="login">
+        <div className="login__container">
+          <div className="login__card">
+            <h1 className="login__title">Gym Management</h1>
+            <h4 className="login__subtitle"> Login Gym Management</h4>
+            <form className="login__form" onSubmit={handleSubmit}>
+              <div className="login__field">
+                <input
+                  className="login__input"
+                  type="text"
+                  placeholder="Ingrese usuario"
+                  value={username}
+                  onChange={inputUser}
+                />
+              </div>
+              <div className="login__field">
+                <input
+                  className="login__input"
+                  type="password"
+                  placeholder="ingrese contraseña"
+                  value={password}
+                  onChange={inputPassword}
+                />
+              </div>
+
+              <button className="login__button" type="submit">
+                Iniciar Sesión
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </>
   );

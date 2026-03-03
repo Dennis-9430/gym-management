@@ -1,0 +1,25 @@
+/*css general*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/*fondo general*/
+html,
+body {
+  height: 100%;
+}
+body {
+  background-color: #f4f6f9;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #1f2937;
+}
+/*titulos*/
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
