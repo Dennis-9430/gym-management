@@ -1,19 +1,27 @@
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { sections } from "../types/dashboard.section";
+import PaymentModal from "../pages/payments/PaymentModal";
 import "../styles/dashboard.css";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   if (!user) return null;
   const filteredSections = sections.filter((section) =>
     section.roles.includes(user.role),
   );
-  const handleAccess = (path: string) => {
-    setTimeout(() => {
-      navigate(path);
-    }, 180);
+  const handleAccess = (section: any) => {
+    if (section.action === "NAVIGATE" && section.path) {
+      setTimeout(() => {
+        navigate(section.path);
+      }, 180);
+    }
+    if (section.action === "MODAL") {
+      setShowPaymentModal(true);
+    }
   };
   return (
     <main className="dashboard">
@@ -26,8 +34,8 @@ const Dashboard = () => {
             return (
               <div
                 className="dashboard__card"
-                key={section.path}
-                onClick={() => handleAccess(section.path)}
+                key={section.title}
+                onClick={() => handleAccess(section)}
                 role="button"
                 tabIndex={0}
               >
@@ -40,6 +48,9 @@ const Dashboard = () => {
           })}
         </div>
       </div>
+      {showPaymentModal && (
+        <PaymentModal onClose={() => setShowPaymentModal(false)}></PaymentModal>
+      )}
     </main>
   );
 };

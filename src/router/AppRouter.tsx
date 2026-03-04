@@ -6,10 +6,9 @@ import RegistetClient from "../pages/clients/RegistetClient";
 import ClientsList from "../pages/clients/ClientsList";
 import DailyPayment from "../pages/payments/DailyPayment";
 import Productos from "../pages/products/Products";
-import Cart from "../pages/sales/Cart";
+import Cart from "../pages/sales/Card";
 import RegisterEmployee from "../pages/employees/RegisterEmployee";
 import FinancialReport from "../pages/admin/FinancialReport";
-
 
 function AppRouter() {
   return (
