@@ -9,7 +9,7 @@ import Productos from "../pages/products/Products";
 import Cart from "../pages/sales/Cart";
 import RegisterEmployee from "../pages/employees/RegisterEmployee";
 import FinancialReport from "../pages/admin/FinancialReport";
-import AdminDashboard from "../pages/admin/AdminDashboard";
+
 
 function AppRouter() {
   return (
@@ -32,7 +32,7 @@ function AppRouter() {
           {/*registro admin */}
           <Route path="/employees" element={<RegisterEmployee />} />
           {/*admin */}
-          <Route path="/admin" element={<AdminDashboard />} />
+
           <Route path="/financial" element={<FinancialReport />} />
         </Route>
       </Routes>

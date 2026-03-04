@@ -19,12 +19,7 @@ const Login = () => {
       return;
     }
     login(user);
-
-    if (user.role === "ADMIN") {
-      navigate("/admin");
-    } else {
-      navigate("/dashboard");
-    }
+    navigate("/dashboard");
   };
 
   const inputUser = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +34,7 @@ const Login = () => {
         <div className="login__container">
           <div className="login__card">
             <h1 className="login__title">Gym Management</h1>
-            <h4 className="login__subtitle"> Login Gym Management</h4>
+            <h4 className="login__subtitle"> Login </h4>
             <form className="login__form" onSubmit={handleSubmit}>
               <div className="login__field">
                 <input
