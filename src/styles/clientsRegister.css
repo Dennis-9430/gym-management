@@ -1,0 +1,89 @@
+/*container*/
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  background: #c1c6ca;
+}
+/*card*/
+.register-card {
+  width: 100%;
+  max-width: 550px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+.register-card h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+/*form*/
+.register-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+/*group*/
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+/*label*/
+.register-form {
+  font-size: 0.9rem;
+  color: #475569;
+}
+/*input*/
+.form-group input {
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  transition: border 0.2s;
+}
+/*focus*/
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+.form-group textarea {
+  overflow: none;
+  border-color: #2563eb;
+}
+.full-width {
+  grid-column: span 2;
+}
+/*buttons*/
+.btn-register {
+  grid-column: span 2;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+/*hover*/
+.btn-register:hover {
+  background: #1d4ed8;
+}
+/*responsive*/
+@media (max-width: 768px) {
+  .register-form {
+    grid-template-columns: 1fr;
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+  .btn-register {
+    grid-column: span 1;
+  }
+}

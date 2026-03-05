@@ -1,5 +1,11 @@
+import ClientForm from "../../components/ClientsRegister";
+
 const RegistetClient = () => {
-  return <div>RegistetClient</div>;
+  return (
+    <>
+      <ClientForm />
+    </>
+  );
 };
 
 export default RegistetClient;

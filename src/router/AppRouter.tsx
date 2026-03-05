@@ -3,7 +3,7 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import MainLouyt from "../layouts/MainLouyt";
 import RegistetClient from "../pages/clients/RegistetClient";
-import ClientsList from "../pages/clients/ClientsList";
+import ClientsList from "../components/ClientsRegister";
 import DailyPayment from "../pages/payments/DailyPayment";
 import Productos from "../pages/products/Products";
 import Cart from "../pages/sales/Card";
@@ -20,7 +20,7 @@ function AppRouter() {
         <Route element={<MainLouyt />}>
           <Route path="/dashboard" element={<Dashboard />} />
           {/*Clientes*/}
-          <Route path="/clients/register" element={<RegistetClient />} />
+          <Route path="/" element={<RegistetClient />} />
           <Route path="/clients" element={<ClientsList />} />
           {/*Pagos */}
           <Route path="/payments" element={<DailyPayment />} />

@@ -28,8 +28,8 @@ export const sections: DashboardSection[] = [
   },
 
   {
-    title: "Registra Cliente",
-    path: "/clients/registrer",
+    title: "Registrar Cliente",
+    path: "/clients",
     icon: UserPlus,
     action: "NAVIGATE",
     roles: ["ADMIN", "EMPLOYEE"],
