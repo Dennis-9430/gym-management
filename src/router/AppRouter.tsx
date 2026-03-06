@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import MainLouyt from "../layouts/MainLouyt";
-import RegistetClient from "../pages/clients/RegistetClient";
-import ClientsList from "../components/ClientsRegister";
+import RegisterClient from "../pages/clients/RegistetClient";
+import FormClients from "../components/clientes/FormClients";
+import ListClients from "../pages/clients/ListClients";
 import DailyPayment from "../pages/payments/DailyPayment";
 import Productos from "../pages/products/Products";
 import Cart from "../pages/sales/Card";
@@ -19,9 +20,12 @@ function AppRouter() {
         {/*rutas protegidas */}
         <Route element={<MainLouyt />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          {/*Clientes*/}
-          <Route path="/" element={<RegistetClient />} />
-          <Route path="/clients" element={<ClientsList />} />
+          {/*Registro Clientes*/}
+          <Route path="/clients" element={<FormClients />} />
+          <Route path="/clients/register" element={<RegisterClient />} />
+
+          <Route path="/clients/list" element={<ListClients />} />
+
           {/*Pagos */}
           <Route path="/payments" element={<DailyPayment />} />
           {/*Productos */}

@@ -1,6 +1,6 @@
 import type React from "react";
-import useClientForm from "../hooks/useClientForm";
-import "../styles/clientsRegister.css";
+import useClientForm from "../../reducers/useClientForm";
+import "../../styles/clientsRegister.css";
 
 const ClientForm = () => {
   const { form, updateField, resetForm } = useClientForm();
@@ -39,6 +39,14 @@ const ClientForm = () => {
               placeholder="Apellidos"
               value={form.lastName}
               onChange={(e) => updateField("lastName", e.target.value)}
+            />
+          </div>
+          <div className="form-group full-width">
+            <label>Dirección Domiciliaria</label>
+            <input
+              placeholder="Dirección del domicilio"
+              value={form.address}
+              onChange={(e) => updateField("address", e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -80,7 +88,7 @@ const ClientForm = () => {
           <div className="form-group full-width">
             <label>Observaciones</label>
             <textarea
-              placeholder="Obserbaciones"
+              placeholder="Observaciones"
               value={form.notes}
               onChange={(e) => updateField("notes", e.target.value)}
             />

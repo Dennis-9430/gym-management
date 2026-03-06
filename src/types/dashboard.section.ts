@@ -29,14 +29,14 @@ export const sections: DashboardSection[] = [
 
   {
     title: "Registrar Cliente",
-    path: "/clients",
+    path: "/clients/register",
     icon: UserPlus,
     action: "NAVIGATE",
     roles: ["ADMIN", "EMPLOYEE"],
   },
   {
     title: "Lista de Clientes",
-    path: "/clients",
+    path: "/clients/list",
     icon: Users,
     action: "NAVIGATE",
     roles: ["ADMIN", "EMPLOYEE"],

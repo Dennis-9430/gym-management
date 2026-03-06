@@ -1,9 +1,9 @@
-import ClientForm from "../../components/ClientsRegister";
+import FormClients from "../../components/clientes/FormClients";
 
 const RegistetClient = () => {
   return (
     <>
-      <ClientForm />
+      <FormClients />
     </>
   );
 };

@@ -4,6 +4,7 @@ export type ClientAction =
   | { type: "UPDATE_FIELD"; field: keyof ClientForm; value: string }
   | { type: "RESET" };
 export const initialState: ClientForm = {
+  id: 1,
   documentType: "CEDULA",
   documentNumber: "",
 
@@ -19,6 +20,10 @@ export const initialState: ClientForm = {
 
   notes: "",
   createdAt: new Date(),
+  memberShip: "",
+  memberShipStatus: "ACTIVE",
+
+  fingerPrint: false,
 };
 export const clientReducer = (
   state: ClientForm,

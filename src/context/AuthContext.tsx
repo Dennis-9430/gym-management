@@ -1,6 +1,6 @@
 import { createContext, useReducer, useEffect, useContext } from "react";
 import type { User } from "../types/user.types";
-import { authReducer } from "../reducers/auth.reducer";
+import { authReducer } from "../hooks/auth.reducer";
 
 interface AuthContextProps {
   user: User | null;

@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { clientReducer, initialState } from "../reducers/client.reducer";
+import { clientReducer, initialState } from "./client.reducer";
 
 const useClientForm = () => {
   const [state, dispatch] = useReducer(clientReducer, initialState);

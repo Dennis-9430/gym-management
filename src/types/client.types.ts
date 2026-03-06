@@ -1,19 +1,25 @@
 export type DocumentType = "CEDULA" | "PASSPORT" | "DNI";
-
+export type MemberShipStatus = "ACTIVE" | "EXPIRED" | "NONE";
 export interface ClientForm {
+  id: number;
   documentType: DocumentType;
   documentNumber: string;
 
   firstName: string;
   lastName: string;
 
-  phone: string;
-  email: string;
-  address: string;
+  phone?: string;
+  email?: string;
+  address?: string;
 
-  emergencyContact: string;
-  emergencyPhone: string;
+  emergencyContact?: string;
+  emergencyPhone?: string;
 
-  notes: string;
-  createdAt: Date;
+  notes?: string;
+  createdAt?: Date;
+
+  memberShip: string;
+  memberShipStatus: MemberShipStatus;
+
+  fingerPrint: boolean;
 }

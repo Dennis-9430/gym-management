@@ -1,0 +1,129 @@
+.clients-container {
+  padding: 2rem;
+}
+/*search*/
+.client-search {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  transition: border 0.2s;
+}
+.client-search:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+/*wrapper scroll*/
+.clients-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+/*table*/
+.client-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+/*header*/
+.client-table thead {
+  background: #f1f5f9;
+}
+.client-table th {
+  text-align: left;
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+}
+/*row*/
+.client-table td {
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  border-top: 1px solid #e5e7eb;
+}
+/*hover fila*/
+.client-table tbody tr:hover {
+  background: #f9fafb;
+}
+/*link client*/
+.client-link {
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 500;
+}
+.client-link:hover {
+  text-decoration: underline;
+}
+/*states*/
+.status {
+  font-weight: 500;
+}
+/*actions*/
+.actions {
+  display: flex;
+  gap: 0.4rem;
+}
+.client-table button {
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  transition: all 0.2s;
+}
+/*button renew*/
+.btn-renew {
+  background: #10b981;
+  color: white;
+}
+.btn-renew:hover {
+  background: #059669;
+}
+/*button edit   */
+.btn-edit {
+  background: #3b82f6;
+  color: white;
+}
+.btn-edit:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/*finger*/
+.btn-fingerprint {
+  background: #fc2b2b;
+  color: white;
+}
+.btn-fingerprint:hover {
+  background: #921616;
+}
+/*responsive*/
+@media (max-width: 900px) {
+  .clients-table {
+    font-size: 0.8rem;
+  }
+
+  .clients-table th,
+  .clients-table td {
+    padding: 0.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .clients-table {
+    min-width: 700px;
+  }
+  .actions {
+    flex-direction: column;
+  }
+
+  .clients-table button {
+    width: 100%;
+  }
+}
