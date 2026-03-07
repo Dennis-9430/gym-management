@@ -60,8 +60,19 @@
   text-decoration: underline;
 }
 /*states*/
-.status {
-  font-weight: 500;
+.status-active {
+  color: green;
+  font-weight: bold;
+}
+
+.status-warning {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-expired {
+  color: red;
+  font-weight: bold;
 }
 /*actions*/
 .actions {
@@ -96,12 +107,14 @@
 }
 
 /*finger*/
-.btn-fingerprint {
-  background: #fc2b2b;
+.btn-fingerprint-add {
+  background: #059669;
   color: white;
 }
-.btn-fingerprint:hover {
-  background: #921616;
+
+.btn-fingerprint-remove {
+  background: red;
+  color: white;
 }
 /*responsive*/
 @media (max-width: 900px) {

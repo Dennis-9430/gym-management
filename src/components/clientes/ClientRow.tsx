@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import type { ClientForm } from "../../types/client.types";
+import type { ClientProps } from "../../types/client.types";
+import { getDaysRemaining } from "../../helper/membership";
+import { Fingerprint, RefreshCcw } from "lucide-react";
 
-interface Props {
-  client: ClientForm;
-}
+const ClientRow = ({ client }: ClientProps) => {
+  const daysRemaining = getDaysRemaining(client.memberShipEndDate);
 
-const ClientRow = ({ client }: Props) => {
   const navigate = useNavigate();
   const gotoProfile = () => {
     navigate(`/clients/${client.id}`);
@@ -15,9 +15,6 @@ const ClientRow = ({ client }: Props) => {
   };
   const renewMembership = () => {
     console.log("Renovar membresia", client.id);
-  };
-  const editClient = () => {
-    navigate(`/clietns/edit/${client.id}`);
   };
 
   return (
@@ -33,19 +30,35 @@ const ClientRow = ({ client }: Props) => {
       <td>{client.lastName}</td>
       <td> {client.firstName}</td>
 
-      <td>{client.memberShip}</td>
-      <td className="status">{client.memberShipStatus}</td>
+      <td>
+        {client.memberShip} <br />
+        {client.memberShipStartDate.toLocaleDateString()} -{"> "}
+        {client.memberShipEndDate.toLocaleDateString()}
+      </td>
+      <td className="status">
+        {daysRemaining <= 0
+          ? "EXPIRE"
+          : daysRemaining <= 5
+            ? `${daysRemaining} días`
+            : "ACTIVE"}
+      </td>
       <td className="actions">
         <button className="btn-renew" onClick={renewMembership}>
-          Renovar
-        </button>
-        <button className="btn-edit" onClick={editClient}>
-          Editar
+          <RefreshCcw size={20} /> Renovar
         </button>
       </td>
       <td>
-        <button className="btn-fingerprint" onClick={registerFingerPrint}>
-          Huella
+        <button
+          className={
+            client.fingerPrint
+              ? "btn-fingerprint-remove"
+              : "btn-fingerprint-add"
+          }
+          onClick={registerFingerPrint}
+        >
+          <Fingerprint size={20} />
+
+          {client.fingerPrint ? "Eliminar" : "Registrar"}
         </button>
       </td>
     </tr>

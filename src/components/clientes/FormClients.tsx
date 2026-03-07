@@ -1,10 +1,27 @@
-import type React from "react";
 import useClientForm from "../../reducers/useClientForm";
+import { useParams } from "react-router-dom";
+import { useClients } from "../../hooks/listClientsHook";
 import "../../styles/clientsRegister.css";
+import { useEffect } from "react";
 
-const ClientForm = () => {
+const FormClient = () => {
   const { form, updateField, resetForm } = useClientForm();
-
+  const { id } = useParams();
+  const { clients } = useClients();
+  const clientToEdit = clients.find((c) => c.id === Number(id));
+  useEffect(() => {
+    if (clientToEdit) {
+      updateField("documentNumber", clientToEdit.documentNumber || "");
+      updateField("firstName", clientToEdit.firstName || "");
+      updateField("lastName", clientToEdit.lastName || "");
+      updateField("phone", clientToEdit.phone || "");
+      updateField("email", clientToEdit.email || "");
+      updateField("address", clientToEdit.address || "");
+      updateField("emergencyContact", clientToEdit.emergencyContact || "");
+      updateField("emergencyPhone", clientToEdit.emergencyPhone || "");
+      updateField("notes", clientToEdit.notes || "");
+    }
+  }, [clientToEdit]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("cliente", form);
@@ -95,7 +112,7 @@ const ClientForm = () => {
           </div>
 
           <button className="btn-register" type="submit">
-            Registrar Cliente
+            {id ? "Actualizar cliente" : "Registrar cliente"}
           </button>
         </form>
       </div>
@@ -103,4 +120,4 @@ const ClientForm = () => {
   );
 };
 
-export default ClientForm;
+export default FormClient;

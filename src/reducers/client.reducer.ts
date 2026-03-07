@@ -22,6 +22,8 @@ export const initialState: ClientForm = {
   createdAt: new Date(),
   memberShip: "",
   memberShipStatus: "ACTIVE",
+  memberShipStartDate: new Date(),
+  memberShipEndDate: new Date(),
 
   fingerPrint: false,
 };

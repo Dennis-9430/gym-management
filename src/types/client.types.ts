@@ -16,10 +16,18 @@ export interface ClientForm {
   emergencyPhone?: string;
 
   notes?: string;
+
   createdAt?: Date;
 
   memberShip: string;
+
+  memberShipStartDate: Date;
+  memberShipEndDate: Date;
+
   memberShipStatus: MemberShipStatus;
 
   fingerPrint: boolean;
+}
+export interface ClientProps {
+  client: ClientForm;
 }

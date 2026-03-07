@@ -10,6 +10,7 @@ import Productos from "../pages/products/Products";
 import Cart from "../pages/sales/Card";
 import RegisterEmployee from "../pages/employees/RegisterEmployee";
 import FinancialReport from "../pages/admin/FinancialReport";
+import ClientProfile from "../pages/clients/ClientProfile";
 
 function AppRouter() {
   return (
@@ -37,6 +38,9 @@ function AppRouter() {
           {/*admin */}
 
           <Route path="/financial" element={<FinancialReport />} />
+          {/*perfil cliente y editar*/}
+          <Route path="/clients/:id" element={<ClientProfile />} />
+          <Route path="/clients/edit/:id" element={<FormClients />} />
         </Route>
       </Routes>
     </BrowserRouter>
