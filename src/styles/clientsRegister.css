@@ -58,7 +58,7 @@
 }
 /*buttons*/
 .btn-register {
-  grid-column: span 2;
+  grid-column: span 1;
   margin-top: 1rem;
   padding: 0.7rem;
   background: #2563eb;
@@ -74,6 +74,17 @@
 /*hover*/
 .btn-register:hover {
   background: #1d4ed8;
+}
+.btn-back {
+  border: none;
+  background: #f3f4f6;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-back:hover {
+  background: #e5e7eb;
 }
 /*responsive*/
 @media (max-width: 768px) {

@@ -1,26 +1,108 @@
+/*container*/
 .clients-container {
   padding: 2rem;
 }
+
+/*search bar*/
+
+.client-search-bar {
+  margin-bottom: 1rem;
+}
+
+.search-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search-filters {
+  display: flex;
+  gap: 8px;
+}
+
+.search-actions h2 {
+  margin-right: auto;
+  font-size: 1.4rem;
+}
+
+/*search wrapper para icono*/
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+.search-actions button {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.search-actions button:hover {
+  background: #2563eb;
+}
+
 /*search*/
 .client-search {
   width: 100%;
-  max-width: 320px;
-  padding: 0.6rem 0.8rem;
+  max-width: 260px;
+  padding: 0.6rem 0.8rem 0.6rem 2rem;
   border-radius: 8px;
   border: 1px solid #d1d5db;
-  margin-bottom: 1.5rem;
   font-size: 0.95rem;
   transition: border 0.2s;
 }
+
 .client-search:focus {
   outline: none;
   border-color: #2563eb;
 }
-/*wrapper scroll*/
+
+/*filter buttons*/
+
+.btn-filter {
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #f8fafc;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-filter:hover {
+  background: #e2e8f0;
+}
+
+.btn-filter.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+/*table scroll*/
+
 .clients-table-wrapper {
   width: 100%;
   overflow-x: auto;
 }
+
+/*stats*/
+.clients-stats {
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
 /*table*/
 .client-table {
   width: 100%;
@@ -29,10 +111,12 @@
   border-radius: 10px;
   overflow: hidden;
 }
+
 /*header*/
 .client-table thead {
   background: #f1f5f9;
 }
+
 .client-table th {
   text-align: left;
   padding: 0.9rem 1rem;
@@ -40,46 +124,70 @@
   font-weight: 600;
   color: #374151;
 }
+
+/*sortable header*/
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sort-icon {
+  margin-left: 4px;
+  color: #94a3b8;
+}
+
+.sort-icon.active {
+  color: #2563eb;
+}
+
 /*row*/
 .client-table td {
   padding: 0.85rem 1rem;
   font-size: 0.9rem;
   border-top: 1px solid #e5e7eb;
 }
+
 /*hover fila*/
 .client-table tbody tr:hover {
   background: #f9fafb;
 }
+
 /*link client*/
 .client-link {
   color: #2563eb;
   cursor: pointer;
   font-weight: 500;
 }
+
 .client-link:hover {
   text-decoration: underline;
 }
-/*states*/
+
+/* status*/
+
 .status-active {
-  color: green;
+  color: #16a34a;
   font-weight: bold;
 }
 
 .status-warning {
-  color: orange;
+  color: #f59e0b;
   font-weight: bold;
 }
 
 .status-expired {
-  color: red;
+  color: #dc2626;
   font-weight: bold;
 }
+
 /*actions*/
-.actions {
-  display: flex;
-  gap: 0.4rem;
-}
+
+/*buttons global*/
 .client-table button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
   border: none;
@@ -88,55 +196,74 @@
 
   transition: all 0.2s;
 }
+
 /*button renew*/
 .btn-renew {
   background: #10b981;
   color: white;
 }
+
 .btn-renew:hover {
   background: #059669;
 }
-/*button edit   */
+
+/*button edit*/
 .btn-edit {
   background: #3b82f6;
   color: white;
 }
+
 .btn-edit:hover {
   background: #2563eb;
-  color: white;
 }
 
-/*finger*/
+/*fingerprint*/
+
 .btn-fingerprint-add {
   background: #059669;
   color: white;
 }
 
+.btn-fingerprint-add:hover {
+  background: #047857;
+}
+
 .btn-fingerprint-remove {
-  background: red;
+  background: #ef4444;
   color: white;
 }
+
+.btn-fingerprint-remove:hover {
+  background: #dc2626;
+}
+
 /*responsive*/
 @media (max-width: 900px) {
-  .clients-table {
+  .client-table {
     font-size: 0.8rem;
   }
 
-  .clients-table th,
-  .clients-table td {
+  .client-table th,
+  .client-table td {
     padding: 0.6rem;
   }
 }
 
 @media (max-width: 768px) {
-  .clients-table {
-    min-width: 700px;
-  }
-  .actions {
+  .search-actions {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .clients-stats {
+    margin-top: 10px;
+  }
+  .client-table th {
+    align-items: center;
   }
 
-  .clients-table button {
-    width: 100%;
+  .search-filters {
+    display: flex;
+    gap: 8px;
   }
 }

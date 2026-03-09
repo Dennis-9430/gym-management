@@ -6,7 +6,6 @@ const ClientStats = () => {
       <p>Total asistencias: 0</p>
       <p>Última asistencia: -</p>
       <p>Promedio semanal: -</p>
-      <hr />
     </div>
   );
 };

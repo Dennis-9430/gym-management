@@ -1,11 +1,13 @@
 import useClientForm from "../../reducers/useClientForm";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useClients } from "../../hooks/listClientsHook";
+import React, { useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
 import "../../styles/clientsRegister.css";
-import { useEffect } from "react";
 
 const FormClient = () => {
   const { form, updateField, resetForm } = useClientForm();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { clients } = useClients();
   const clientToEdit = clients.find((c) => c.id === Number(id));
@@ -25,12 +27,26 @@ const FormClient = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("cliente", form);
-    resetForm();
+    if (id) {
+      // si está editando
+      navigate(`/clients/${id}`);
+    } else {
+      // si está registrando
+      navigate("/dashboard");
+    }
+  };
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (id) {
+      navigate(`/clients/${id}`);
+    } else {
+      navigate("/dashboard");
+    }
   };
   return (
     <main className="register-container">
       <div className="register-card">
-        <h2>Registrar cliente</h2>
+        <h2>{id ? "Editar cliente" : "Registrar cliente"}</h2>
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group full-width">
             <label>Número de Cédula </label>
@@ -58,6 +74,7 @@ const FormClient = () => {
               onChange={(e) => updateField("lastName", e.target.value)}
             />
           </div>
+
           <div className="form-group full-width">
             <label>Dirección Domiciliaria</label>
             <input
@@ -66,6 +83,7 @@ const FormClient = () => {
               onChange={(e) => updateField("address", e.target.value)}
             />
           </div>
+
           <div className="form-group">
             <label>Email</label>
             <input
@@ -84,6 +102,7 @@ const FormClient = () => {
               onChange={(e) => updateField("phone", e.target.value)}
             />
           </div>
+
           <div className="form-group">
             <label>Contacto de Emergencia</label>
             <input
@@ -113,6 +132,9 @@ const FormClient = () => {
 
           <button className="btn-register" type="submit">
             {id ? "Actualizar cliente" : "Registrar cliente"}
+          </button>
+          <button type="button" onClick={handleClose} className="btn-register">
+            {id ? "Volver al perfil" : "Cancelar"}
           </button>
         </form>
       </div>
