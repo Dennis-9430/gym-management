@@ -3,12 +3,13 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import MainLouyt from "../layouts/MainLouyt";
 import RegisterClient from "../pages/clients/RegistetClient";
-import FormClients from "../components/clientes/FormClients";
+import FormClients from "../pages/clients/FormClients";
 import ListClients from "../pages/clients/ListClients";
 import DailyPayment from "../pages/payments/DailyPayment";
 import Productos from "../pages/products/Products";
 import Cart from "../pages/sales/Card";
-import RegisterEmployee from "../pages/employees/RegisterEmployee";
+import DashboardEmployee from "../pages/admin/DashboardEmployee";
+import FormEmployee from "../pages/admin/employees/FormEmployee";
 import FinancialReport from "../pages/admin/FinancialReport";
 import ClientProfile from "../pages/clients/ClientProfile";
 
@@ -33,8 +34,9 @@ function AppRouter() {
           <Route path="/products" element={<Productos />} />
           {/*Ventas */}
           <Route path="/sales" element={<Cart />} />
-          {/*registro admin */}
-          <Route path="/employees" element={<RegisterEmployee />} />
+          {/*admin employee  */}
+          <Route path="/dashboardEmployee" element={<DashboardEmployee />} />
+          <Route path="/employee/register" element={<FormEmployee />} />
           {/*admin */}
 
           <Route path="/financial" element={<FinancialReport />} />

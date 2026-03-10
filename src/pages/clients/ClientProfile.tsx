@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useClients } from "../../hooks/listClientsHook";
+import { useClients } from "../../hooks/useListClientsHook";
 import ClientInfo from "../../components/clienteProfile/ClientInfo";
 import ClientStats from "../../components/clienteProfile/ClientStats";
 import ClientMembership from "../../components/clienteProfile/ClientMembership";

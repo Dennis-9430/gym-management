@@ -1,6 +1,6 @@
-import ClientSearch from "../../components/clientes/ClientSearch";
-import ClientTable from "../../components/clientes/ClientTable";
-import { useClients } from "../../hooks/listClientsHook";
+import ClientSearch from "../../components/clientsTable/ClientSearch";
+import ClientTable from "../../components/clientsTable/ClientTable";
+import { useClients } from "../../hooks/useListClientsHook";
 import {} from "../../styles/listClients.css";
 const ListClients = () => {
   const {

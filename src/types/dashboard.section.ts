@@ -58,7 +58,7 @@ export const sections: DashboardSection[] = [
 
   {
     title: "Registrar Personal",
-    path: "/employees",
+    path: "/dashboardEmployee",
     icon: UserCog,
     action: "NAVIGATE",
     roles: ["ADMIN"],

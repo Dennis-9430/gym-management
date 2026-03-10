@@ -1,4 +1,4 @@
-import FormClients from "../../components/clientes/FormClients";
+import FormClients from "./FormClients";
 
 const RegistetClient = () => {
   return (

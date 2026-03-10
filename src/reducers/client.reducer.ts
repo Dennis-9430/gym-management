@@ -2,7 +2,8 @@ import type { ClientForm } from "../types/client.types";
 
 export type ClientAction =
   | { type: "UPDATE_FIELD"; field: keyof ClientForm; value: string }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "LOAD_CLIENT"; payload: ClientForm };
 export const initialState: ClientForm = {
   id: 1,
   documentType: "CEDULA",
@@ -37,8 +38,11 @@ export const clientReducer = (
         ...state,
         [action.field]: action.value,
       };
+    case "LOAD_CLIENT":
+      return action.payload;
     case "RESET":
       return initialState;
+
     default:
       return state;
   }
