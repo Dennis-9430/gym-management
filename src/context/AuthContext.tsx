@@ -1,10 +1,10 @@
 import { createContext, useReducer, useEffect, useContext } from "react";
-import type { User } from "../types/user.types";
+import type { AuthUser } from "../types/user.types";
 import { authReducer } from "../hooks/authHook";
 
 interface AuthContextProps {
-  user: User | null;
-  login: (user: User) => void;
+  user: AuthUser | null;
+  login: (user: AuthUser) => void;
   logout: () => void;
 }
 
@@ -13,7 +13,7 @@ export const AuthContext = createContext<AuthContextProps | undefined>(
 );
 
 const initialState = {
-  user: null,
+  user: null as AuthUser | null,
 };
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = (user: User) => {
+  const login = (user: AuthUser) => {
     localStorage.setItem("user", JSON.stringify(user));
     dispatch({ type: "LOGIN", payload: user });
   };

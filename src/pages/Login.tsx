@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { LoginService } from "../services/auth.services";
-import type { User } from "../types/user.types";
+import type { AuthUser } from "../types/user.types";
 import "../styles/login.css";
 
 const Login = () => {
@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user: User | null = LoginService(username, password);
+    const user: AuthUser | null = LoginService(username, password);
 
     if (!user) {
       alert("Credenciales incorrectas");

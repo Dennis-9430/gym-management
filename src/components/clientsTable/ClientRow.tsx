@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { ClientProps } from "../../types/client.types";
-import { getDaysRemaining } from "../../helper/membership";
+import { getDaysRemaining } from "../../utils/membership";
 import { Fingerprint, RefreshCcw } from "lucide-react";
 
 const ClientRow = ({ client }: ClientProps) => {
@@ -32,7 +32,7 @@ const ClientRow = ({ client }: ClientProps) => {
 
       <td>
         {client.memberShip} <br />
-        {client.memberShipStartDate.toLocaleDateString()} -{"> "}
+        {client.memberShipStartDate.toLocaleDateString()} -{" > "}
         {client.memberShipEndDate.toLocaleDateString()}
       </td>
       <td className="status">

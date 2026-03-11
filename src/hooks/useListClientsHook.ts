@@ -2,9 +2,9 @@ import { useEffect, useReducer } from "react";
 import {
   listClientsReducer,
   initialState,
-} from "../reducers/listClients.reducer";
+} from "./reducers/listClients.reducer";
 import type { ClientForm } from "../types/client.types";
-import { getMembershipStatus } from "../helper/membership";
+import { getMembershipStatus } from "../utils/membership";
 
 export const useClients = () => {
   const [state, dispatch] = useReducer(listClientsReducer, initialState);
@@ -49,7 +49,7 @@ export const useClients = () => {
         createdAt: new Date(),
         memberShip: "Quincenal",
         memberShipStartDate: new Date("2026-03-05"),
-        memberShipEndDate: new Date("2026-17-05"),
+        memberShipEndDate: new Date("2026-05-17"),
         memberShipStatus: "EXPIRED",
         fingerPrint: true,
       },
@@ -68,7 +68,7 @@ export const useClients = () => {
 
   const sortBy = (field: keyof ClientForm) => {
     dispatch({ type: "SORT", payload: field });
-  }; /* */
+  };
   return {
     clients: state.filteredClients,
     search: state.search,

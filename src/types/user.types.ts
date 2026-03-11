@@ -19,3 +19,5 @@ export interface User extends Person {
 
   createdAt: Date;
 }
+
+export type AuthUser = Pick<User, "username" | "role">;

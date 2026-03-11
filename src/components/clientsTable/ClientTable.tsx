@@ -1,19 +1,23 @@
-
 import type { ClientForm } from "../../types/client.types";
 import ClientRow from "./ClientRow";
 import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 interface Props {
   clients: ClientForm[];
+  totalClients: number;
+  activeClients: number;
   sortBy: (field: keyof ClientForm) => void;
   sortField: keyof ClientForm | null;
   sortDirection: "asc" | "desc";
 }
 
-const ClientTable = ({ clients, sortBy, sortField, sortDirection }: Props) => {
-  const totalClients = clients.length;
-  const activeClients = clients.filter(
-    (clients) => clients.memberShipStatus === "ACTIVE",
-  ).length;
+const ClientTable = ({
+  clients,
+  totalClients,
+  activeClients,
+  sortBy,
+  sortField,
+  sortDirection,
+}: Props) => {
   const renderSortIcon = (field: keyof ClientForm) => {
     if (sortField !== field) {
       return <ArrowUpDown size={14} className="sort icon" />;

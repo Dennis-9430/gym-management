@@ -1,4 +1,4 @@
-import useClientForm from "../../reducers/clientForm.reducer";
+import useClientForm from "../../hooks/useClientForm";
 import { useNavigate, useParams } from "react-router-dom";
 import { useClients } from "../../hooks/useListClientsHook";
 import React, { useEffect } from "react";
@@ -29,7 +29,7 @@ const FormClient = () => {
       updateField("emergencyPhone", clientToEdit.emergencyPhone || "");
       updateField("notes", clientToEdit.notes || "");
     }
-  }, [clientToEdit]);
+  }, [clientToEdit, updateField]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

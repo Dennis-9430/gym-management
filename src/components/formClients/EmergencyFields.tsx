@@ -1,8 +1,10 @@
 import type { ClientForm } from "../../types/client.types";
 
+type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
+
 type Props = {
   form: ClientForm;
-  updateField: (field: keyof ClientForm, value: any) => void;
+  updateField: UpdateField<ClientForm>;
 };
 
 const EmergencyFields = ({ form, updateField }: Props) => {

@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import {
   listEmployeesReducer,
   initialState,
-} from "../reducers/listEmploye.reduce";
+} from "./reducers/listEmploye.reduce";
 
 import type { User } from "../types/user.types";
 

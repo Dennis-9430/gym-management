@@ -1,4 +1,4 @@
-import type { User } from "../types/user.types";
+import type { User } from "../../types/user.types";
 
 type Action =
   | { type: "SET_EMPLOYEES"; payload: User[] }

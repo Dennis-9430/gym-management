@@ -12,6 +12,8 @@ const ListClients = () => {
     filterActiver,
     sortField,
     sortDirection,
+    totalClients,
+    activeClients,
   } = useClients();
   return (
     <>
@@ -24,6 +26,8 @@ const ListClients = () => {
         />
         <ClientTable
           clients={clients}
+          totalClients={totalClients}
+          activeClients={activeClients}
           sortBy={sortBy}
           sortField={sortField}
           sortDirection={sortDirection}

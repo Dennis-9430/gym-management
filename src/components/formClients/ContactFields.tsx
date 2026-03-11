@@ -1,10 +1,13 @@
 import type { Person } from "../../types/person.types";
-type Props = {
-  form: Person;
-  updateField: (field: keyof Person, value: any) => void;
+
+type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
+
+type Props<T extends Person> = {
+  form: T;
+  updateField: UpdateField<T>;
 };
 
-const ContactFields = ({ form, updateField }: Props) => {
+function ContactFields<T extends Person>({ form, updateField }: Props<T>) {
   return (
     <>
       <div className="form-group full-width">
@@ -36,6 +39,6 @@ const ContactFields = ({ form, updateField }: Props) => {
       </div>
     </>
   );
-};
+}
 
 export default ContactFields;

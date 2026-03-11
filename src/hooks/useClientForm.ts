@@ -1,12 +1,16 @@
 import { useReducer } from "react";
-import { clientReducer, initialState } from "./client.reducer";
+import type { ClientForm } from "../types/client.types";
+import { clientReducer, initialState } from "./reducers/client.reducer";
 
 const useClientForm = () => {
   const [state, dispatch] = useReducer(clientReducer, initialState);
-  const updateField = (field: string, value: string) => {
+  const updateField = <K extends keyof ClientForm>(
+    field: K,
+    value: ClientForm[K],
+  ) => {
     dispatch({
       type: "UPDATE_FIELD",
-      field: field as any,
+      field,
       value,
     });
   };

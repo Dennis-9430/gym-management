@@ -1,7 +1,10 @@
 import type { User } from "../../types/user.types";
+
+type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
+
 type Props = {
   form: User;
-  updateField: (field: keyof User, value: any) => void;
+  updateField: UpdateField<User>;
 };
 
 const EmployeePermissions = ({ form, updateField }: Props) => {

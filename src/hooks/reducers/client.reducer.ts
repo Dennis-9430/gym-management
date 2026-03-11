@@ -1,7 +1,7 @@
-import type { ClientForm } from "../types/client.types";
+import type { ClientForm } from "../../types/client.types";
 
 export type ClientAction =
-  | { type: "UPDATE_FIELD"; field: keyof ClientForm; value: string }
+  | { type: "UPDATE_FIELD"; field: keyof ClientForm; value: ClientForm[keyof ClientForm] }
   | { type: "RESET" }
   | { type: "LOAD_CLIENT"; payload: ClientForm };
 export const initialState: ClientForm = {

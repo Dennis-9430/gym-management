@@ -1,8 +1,8 @@
-import type { User } from "../types/user.types";
+import type { AuthUser } from "../types/user.types";
 interface AuthState {
-  user: User | null;
+  user: AuthUser | null;
 }
-type AuthAction = { type: "LOGIN"; payload: User } | { type: "LOGOUT" };
+type AuthAction = { type: "LOGIN"; payload: AuthUser } | { type: "LOGOUT" };
 
 export const authReducer = (
   state: AuthState,

@@ -1,5 +1,4 @@
-import React from "react";
-
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,9 +6,9 @@ import "./styles/index.css";
 import App from "./App.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <StrictMode>
     <AuthProvider>
       <App />
     </AuthProvider>
-  </React.StrictMode>,
+  </StrictMode>,
 );

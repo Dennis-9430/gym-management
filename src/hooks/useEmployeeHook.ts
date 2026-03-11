@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { User } from "../types/user.types";
 
+type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
+
 export const initialState: User = {
   id: 0,
   username: "",
@@ -16,14 +18,14 @@ export const initialState: User = {
   documentNumber: "",
 
   role: "EMPLOYEE",
-  
+
   createdAt: new Date(),
 };
 
 const useEmployeeForm = () => {
   const [form, setForm] = useState<User>(initialState);
 
-  const updateField = (field: keyof User, value: any) => {
+  const updateField: UpdateField<User> = (field, value) => {
     setForm((prev) => ({
       ...prev,
       [field]: value,

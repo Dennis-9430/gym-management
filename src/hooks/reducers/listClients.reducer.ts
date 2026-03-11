@@ -1,4 +1,4 @@
-import type { ClientForm } from "../types/client.types";
+import type { ClientForm } from "../../types/client.types";
 
 type Action =
   | { type: "SET_ClIENTS"; payload: ClientForm[] }
