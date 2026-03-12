@@ -8,10 +8,10 @@ import ListClients from "../pages/clients/ListClients";
 import DailyPayment from "../pages/payments/DailyPayment";
 import Productos from "../pages/products/Products";
 import Cart from "../pages/sales/Card";
-import DashboardEmployee from "../pages/admin/DashboardEmployee";
-import FormEmployee from "../pages/admin/employees/FormEmployee";
 import FinancialReport from "../pages/admin/FinancialReport";
 import ClientProfile from "../pages/clients/ClientProfile";
+import EmployeesPage from "../pages/employees/EmployeesPage";
+import EmployeeProfilePage from "../pages/employees/EmployeeProfilePage";
 
 function AppRouter() {
   return (
@@ -35,8 +35,8 @@ function AppRouter() {
           {/*Ventas */}
           <Route path="/sales" element={<Cart />} />
           {/*admin employee  */}
-          <Route path="/dashboardEmployee" element={<DashboardEmployee />} />
-          <Route path="/employee/register" element={<FormEmployee />} />
+          <Route path="/employees" element={<EmployeesPage />} />
+          <Route path="/employees/:id" element={<EmployeeProfilePage />} />
           {/*admin */}
 
           <Route path="/financial" element={<FinancialReport />} />

@@ -1,18 +1,21 @@
 import type { AuthUser } from "../types/user.types";
 
+const credentials: Record<string, { password: string; role: AuthUser["role"] }> = {
+  admin: { password: "admin123", role: "ADMIN" },
+  recepcion: { password: "recep123", role: "RECEPCIONISTA" },
+  entrenador: { password: "trainer123", role: "ENTRENADOR" },
+};
+
 export const LoginService = (
   username: string,
   password: string,
 ): AuthUser | null => {
-  const userMock: AuthUser[] = [
-    { username: "dennis", role: "EMPLOYEE" },
-    { username: "admin", role: "ADMIN" },
-  ];
-  const validUser = userMock.find(
-    (u) =>
-      u.username === username &&
-      ((u.role === "EMPLOYEE" && password === "1234") ||
-        (u.role === "ADMIN" && password === "987654")),
-  );
-  return validUser || null;
+  const normalized = username.trim().toLowerCase();
+  const record = credentials[normalized];
+
+  if (!record || record.password !== password) {
+    return null;
+  }
+
+  return { username: normalized, role: record.role };
 };

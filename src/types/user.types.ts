@@ -1,5 +1,5 @@
 import type { Person } from "./person.types";
-export type Role = "ADMIN" | "EMPLOYEE";
+export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
 
 export interface User extends Person {
   id: number;

@@ -9,7 +9,7 @@ import {
   UserPlus,
 } from "lucide-react";
 
-export type Role = "ADMIN" | "EMPLOYEE";
+export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
 export type SectionAction = "NAVIGATE" | "MODAL";
 export interface DashboardSection {
   title: string;
@@ -24,7 +24,7 @@ export const sections: DashboardSection[] = [
     path: "/payments",
     icon: DollarSign,
     action: "MODAL",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "RECEPCIONISTA"],
   },
 
   {
@@ -32,33 +32,33 @@ export const sections: DashboardSection[] = [
     path: "/clients/register",
     icon: UserPlus,
     action: "NAVIGATE",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "RECEPCIONISTA"],
   },
   {
     title: "Lista de Clientes",
     path: "/clients/list",
     icon: Users,
     action: "NAVIGATE",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "RECEPCIONISTA", "ENTRENADOR"],
   },
   {
     title: "Productos",
     path: "/products",
     icon: Package,
     action: "NAVIGATE",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "RECEPCIONISTA"],
   },
   {
     title: "Punto de Venta",
     path: "/sales",
     icon: ShoppingCart,
     action: "NAVIGATE",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "RECEPCIONISTA"],
   },
 
   {
     title: "Registrar Personal",
-    path: "/dashboardEmployee",
+    path: "/employees",
     icon: UserCog,
     action: "NAVIGATE",
     roles: ["ADMIN"],
