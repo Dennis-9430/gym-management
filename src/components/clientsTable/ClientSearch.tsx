@@ -1,13 +1,20 @@
-import { Search } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 interface Props {
   search: string;
   onSearch: (value: string) => void;
   showAll: () => void;
   filterActiver: () => void;
+  onAddClient: () => void;
 }
-const ClientSearch = ({ search, onSearch, showAll, filterActiver }: Props) => {
+const ClientSearch = ({
+  search,
+  onSearch,
+  showAll,
+  filterActiver,
+  onAddClient,
+}: Props) => {
   return (
-    <div className="clietn-search-bar">
+    <div className="client-search-bar">
       <div className="search-actions">
         <h2>Lista de Clientes</h2>
 
@@ -26,6 +33,10 @@ const ClientSearch = ({ search, onSearch, showAll, filterActiver }: Props) => {
           <button onClick={showAll}>Todos</button>
           <button className="active-filter" onClick={filterActiver}>
             Activos
+          </button>
+          <button className="btn-add-client" onClick={onAddClient}>
+            <Plus size={16} />
+            Agregar cliente
           </button>
         </div>
       </div>

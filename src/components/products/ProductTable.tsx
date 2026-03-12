@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from "lucide-react";
 import type { Product } from "../../types/product.types";
 import { PRODUCT_CATEGORY_LABELS } from "../../types/product.types";
 
@@ -40,6 +41,7 @@ const ProductTable = ({ products, onEdit, onDelete }: Props) => {
                   className="btn-edit"
                   onClick={() => onEdit(product)}
                 >
+                  <Pencil size={16} />
                   Editar
                 </button>
                 <button
@@ -47,6 +49,7 @@ const ProductTable = ({ products, onEdit, onDelete }: Props) => {
                   className="btn-delete"
                   onClick={() => onDelete(product.id)}
                 >
+                  <Trash2 size={16} />
                   Eliminar
                 </button>
               </td>

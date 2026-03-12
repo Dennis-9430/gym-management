@@ -19,6 +19,7 @@
 .search-filters {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .search-actions h2 {
@@ -47,9 +48,20 @@
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 .search-actions button:hover {
   background: #2563eb;
+}
+
+.btn-add-client {
+  background: #0f172a;
+}
+
+.btn-add-client:hover {
+  background: #1e293b;
 }
 
 /*search*/

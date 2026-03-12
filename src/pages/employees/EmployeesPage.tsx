@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Plus, X } from "lucide-react";
 import EmployeeForm from "../../components/employees/EmployeeForm";
+import EmployeeSearch from "../../components/employees/EmployeeSearch";
 import EmployeeTable from "../../components/employees/EmployeeTable";
 import { useEmployees } from "../../hooks/useEmployees";
 import type { Employee, EmployeeInput } from "../../types/employee.types";
@@ -8,13 +10,40 @@ import "../../styles/clientsRegister.css";
 import "../../styles/employees.css";
 
 const EmployeesPage = () => {
-  const { employees, error, addEmployee, updateEmployeeById, removeEmployee } =
-    useEmployees();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"add" | "list">("add");
+  const {
+    employees,
+    totalEmployees,
+    search,
+    setSearch,
+    error,
+    addEmployee,
+    updateEmployeeById,
+    removeEmployee,
+  } = useEmployees();
+  const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
+  const openNewForm = () => {
+    setEditingEmployee(null);
+    setShowForm(true);
+  };
+
+  const openEditForm = (employee: Employee) => {
+    setEditingEmployee(employee);
+    setShowForm(true);
+  };
+
+  const closeForm = () => {
+    setEditingEmployee(null);
+    setShowForm(false);
+  };
+
   const handleSubmit = (values: EmployeeInput) => {
+    const actionLabel = editingEmployee ? "actualizar" : "registrar";
+    if (!confirm(`Deseas ${actionLabel} este empleado?`)) {
+      return;
+    }
     try {
       if (editingEmployee) {
         const payload = { ...values };
@@ -22,19 +51,13 @@ const EmployeesPage = () => {
           delete payload.password;
         }
         updateEmployeeById(editingEmployee.id, payload);
-        setEditingEmployee(null);
       } else {
         addEmployee(values);
       }
-      setActiveTab("list");
+      closeForm();
     } catch {
       // error handled in hook
     }
-  };
-
-  const handleEdit = (employee: Employee) => {
-    setEditingEmployee({ ...employee, password: "" });
-    setActiveTab("add");
   };
 
   const handleDelete = (id: number) => {
@@ -43,55 +66,67 @@ const EmployeesPage = () => {
     }
   };
 
-  const handleCancelEdit = () => {
-    setEditingEmployee(null);
-  };
-
   return (
     <main className="employees-container">
-      <div className="tabs">
-        <button
-          className={activeTab === "add" ? "active-tab" : ""}
-          onClick={() => setActiveTab("add")}
-        >
-          Agregar
-        </button>
-        <button
-          className={activeTab === "list" ? "active-tab" : ""}
-          onClick={() => setActiveTab("list")}
-        >
-          Lista
-        </button>
+      <section className="employees-header">
+        <div>
+          <h2>Empleados</h2>
+          <p className="employees-subtitle">
+            Gestiona el personal del gimnasio.
+          </p>
+        </div>
+        <div className="employees-actions">
+          <EmployeeSearch value={search} onChange={setSearch} />
+          <button className="employee-add-btn" onClick={openNewForm}>
+            <Plus size={18} />
+            Agregar empleado
+          </button>
+        </div>
+      </section>
+
+      <div className="employees-stats">
+        Total empleados: {totalEmployees} | Mostrando: {employees.length}
       </div>
 
-      {activeTab === "add" && (
-        <div className="register-container">
-          <div className="register-card">
-            <h2>{editingEmployee ? "Editar empleado" : "Registrar empleado"}</h2>
+      <section className="employees-list">
+        <div className="employees-table-wrapper">
+          <EmployeeTable
+            employees={employees}
+            onSelect={(id) => navigate(`/employees/${id}`)}
+            onEdit={openEditForm}
+            onDelete={handleDelete}
+          />
+        </div>
+      </section>
+
+      {showForm && (
+        <div className="employee-modal-backdrop" onClick={closeForm}>
+          <div
+            className="employee-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="employee-modal-header">
+              <div>
+                <h3>{editingEmployee ? "Editar empleado" : "Agregar empleado"}</h3>
+                <p className="employees-subtitle">
+                  Completa los datos para registrar el empleado.
+                </p>
+              </div>
+              <button className="employee-modal-close" onClick={closeForm}>
+                <X size={18} />
+              </button>
+            </div>
             <EmployeeForm
+              idValue={editingEmployee?.id ?? null}
               initialValues={editingEmployee ?? undefined}
               onSubmit={handleSubmit}
-              onCancel={editingEmployee ? handleCancelEdit : undefined}
-              submitLabel={editingEmployee ? "Actualizar" : "Registrar"}
+              onCancel={closeForm}
+              submitLabel={editingEmployee ? "Actualizar" : "Guardar"}
               requirePassword={!editingEmployee}
             />
             {error && <p className="form-error">{error}</p>}
           </div>
         </div>
-      )}
-
-      {activeTab === "list" && (
-        <section className="clients-container">
-          <h2>Lista de empleados</h2>
-          <div className="employees-table-wrapper">
-            <EmployeeTable
-              employees={employees}
-              onSelect={(id) => navigate(`/employees/${id}`)}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          </div>
-        </section>
       )}
     </main>
   );

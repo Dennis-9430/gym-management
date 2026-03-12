@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
 import {
   getEmployees,
@@ -9,6 +9,7 @@ import {
 
 export const useEmployees = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [search, setSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const refresh = () => {
@@ -18,6 +19,16 @@ export const useEmployees = () => {
   useEffect(() => {
     refresh();
   }, []);
+
+  const filteredEmployees = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return employees;
+    return employees.filter((emp) =>
+      `${emp.firstName} ${emp.lastName} ${emp.email} ${emp.username} ${emp.role}`
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [employees, search]);
 
   const addEmployee = (input: EmployeeInput) => {
     setError(null);
@@ -55,7 +66,10 @@ export const useEmployees = () => {
   const getById = (id: number) => employees.find((emp) => emp.id === id) ?? null;
 
   return {
-    employees,
+    employees: filteredEmployees,
+    totalEmployees: employees.length,
+    search,
+    setSearch,
     error,
     refresh,
     addEmployee,

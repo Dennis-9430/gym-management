@@ -39,6 +39,9 @@ const EmployeeProfilePage = () => {
           <div className="card card-info">
             <h3>Informacion General</h3>
             <p>
+              <strong>Usuario:</strong> {employee.username}
+            </p>
+            <p>
               <strong>Nombre:</strong> {employee.firstName} {employee.lastName}
             </p>
             <p>

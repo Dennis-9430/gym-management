@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from "lucide-react";
 import type { Employee } from "../../types/employee.types";
 
 interface Props {
@@ -40,6 +41,7 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
                 className="btn-edit"
                 onClick={() => onEdit(emp)}
               >
+                <Pencil size={16} />
                 Editar
               </button>
               <button
@@ -47,6 +49,7 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
                 className="btn-delete"
                 onClick={() => onDelete(emp.id)}
               >
+                <Trash2 size={16} />
                 Eliminar
               </button>
             </td>

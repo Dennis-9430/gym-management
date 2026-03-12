@@ -5,6 +5,7 @@ const STORAGE_KEY = "gym-management.employees";
 const seedEmployees: Employee[] = [
   {
     id: 1,
+    username: "admin",
     documentNumber: "0102030405",
     firstName: "Admin",
     lastName: "Sistema",
@@ -19,20 +20,22 @@ const seedEmployees: Employee[] = [
   },
   {
     id: 2,
+    username: "dennis",
     documentNumber: "0203040506",
-    firstName: "Carla",
-    lastName: "Recepcion",
-    email: "recepcion@gym.com",
+    firstName: "Dennis",
+    lastName: "Empleado",
+    email: "dennis@gym.com",
     phone: "098888888",
-    address: "Direccion recepcion",
+    address: "Direccion empleado",
     notes: "",
-    password: "recep123",
+    password: "123456",
     role: "RECEPCIONISTA",
     status: "ACTIVO",
     createdAt: new Date().toISOString(),
   },
   {
     id: 3,
+    username: "trainer",
     documentNumber: "0304050607",
     firstName: "Luis",
     lastName: "Trainer",
@@ -48,9 +51,11 @@ const seedEmployees: Employee[] = [
 ];
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
+const normalizeUsername = (username: string) => username.trim().toLowerCase();
 
 const withDefaults = (employee: Employee): Employee => {
   return {
+    username: "",
     notes: "",
     phone: "",
     address: "",
@@ -94,9 +99,14 @@ export const getEmployeeById = (id: number): Employee | null => {
 export const createEmployee = (input: EmployeeInput): Employee => {
   const employees = loadEmployees();
   const email = normalizeEmail(input.email);
+  const username = normalizeUsername(input.username);
 
   if (employees.some((e) => normalizeEmail(e.email) === email)) {
     throw new Error("El email ya existe");
+  }
+
+  if (employees.some((e) => normalizeUsername(e.username) === username)) {
+    throw new Error("El usuario ya existe");
   }
 
   const nextId = employees.length
@@ -108,6 +118,7 @@ export const createEmployee = (input: EmployeeInput): Employee => {
     createdAt: new Date().toISOString(),
     ...input,
     email,
+    username,
   };
 
   const updated = [...employees, employee];
@@ -136,10 +147,23 @@ export const updateEmployee = (
     }
   }
 
+  if (update.username) {
+    const username = normalizeUsername(update.username);
+    const usernameUsed = employees.some(
+      (e) => e.id !== id && normalizeUsername(e.username) === username,
+    );
+    if (usernameUsed) {
+      throw new Error("El usuario ya existe");
+    }
+  }
+
   const updatedEmployee: Employee = {
     ...employees[index],
     ...update,
     email: update.email ? normalizeEmail(update.email) : employees[index].email,
+    username: update.username
+      ? normalizeUsername(update.username)
+      : employees[index].username,
   };
 
   const updatedEmployees = [...employees];

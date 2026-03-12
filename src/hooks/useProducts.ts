@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Product, ProductInput, ProductUpdate } from "../types/product.types";
+import type { Product, ProductInput, ProductUpdate, ProductCategory } from "../types/product.types";
 import { PRODUCT_CATEGORY_LABELS } from "../types/product.types";
 import {
   getProducts,
@@ -8,9 +8,12 @@ import {
   deleteProduct,
 } from "../services/products.service";
 
+type CategoryFilter = ProductCategory | "ALL";
+
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("ALL");
   const [error, setError] = useState<string | null>(null);
 
   const refresh = () => {
@@ -23,14 +26,19 @@ export const useProducts = () => {
 
   const filteredProducts = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return products;
-    return products.filter((product) => {
-      const categoryLabel = PRODUCT_CATEGORY_LABELS[product.category] ?? product.category;
+    const byCategory = categoryFilter === "ALL"
+      ? products
+      : products.filter((product) => product.category === categoryFilter);
+
+    if (!query) return byCategory;
+    return byCategory.filter((product) => {
+      const categoryLabel =
+        PRODUCT_CATEGORY_LABELS[product.category] ?? product.category;
       return `${product.name} ${product.description} ${categoryLabel}`
         .toLowerCase()
         .includes(query);
     });
-  }, [products, search]);
+  }, [products, search, categoryFilter]);
 
   const addProduct = (input: ProductInput) => {
     setError(null);
@@ -70,6 +78,8 @@ export const useProducts = () => {
     totalProducts: products.length,
     search,
     setSearch,
+    categoryFilter,
+    setCategoryFilter,
     error,
     refresh,
     addProduct,

@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import PersonalDataFields from "../../components/formClients/PersonalDataFields";
 import ContactFields from "../../components/formClients/ContactFields";
 import EmergencyFields from "../../components/formClients/EmergencyFields";
+import { createClient, updateClient } from "../../services/clients.service";
 
 import "../../styles/clientsRegister.css";
 
@@ -31,15 +32,46 @@ const FormClient = () => {
     }
   }, [clientToEdit, updateField]);
 
+  const validateRequiredFields = () => {
+    const missing: string[] = [];
+    if (!form.documentNumber?.trim()) missing.push("documento");
+    if (!form.firstName?.trim()) missing.push("nombres");
+    if (!form.lastName?.trim()) missing.push("apellidos");
+    if (!form.phone?.trim()) missing.push("telefono");
+    if (!form.email?.trim()) missing.push("email");
+    if (!form.address?.trim()) missing.push("direccion");
+
+    if (missing.length) {
+      alert(`Completa los campos obligatorios: ${missing.join(", ")}`);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log("cliente", form);
+    if (!validateRequiredFields()) return;
 
-    if (id) {
-      navigate(`/clients/${id}`);
-    } else {
-      navigate("/dashboard");
+    const actionLabel = id ? "actualizar" : "registrar";
+    if (!confirm(`Deseas ${actionLabel} este cliente?`)) {
+      return;
+    }
+
+    try {
+      if (id && clientToEdit) {
+        updateClient(clientToEdit.id, {
+          ...clientToEdit,
+          ...form,
+        });
+        navigate(`/clients/${id}`);
+      } else {
+        const created = createClient(form);
+        navigate(`/clients/${created.id}`);
+      }
+    } catch {
+      alert("No se pudo guardar el cliente.");
     }
   };
 

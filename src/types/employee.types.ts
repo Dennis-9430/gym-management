@@ -3,6 +3,7 @@ export type EmployeeStatus = "ACTIVO" | "INACTIVO";
 
 export interface Employee {
   id: number;
+  username: string;
   documentNumber: string;
   firstName: string;
   lastName: string;

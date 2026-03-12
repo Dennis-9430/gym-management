@@ -1,7 +1,10 @@
+import { useState } from "react";
 import ClientSearch from "../../components/clientsTable/ClientSearch";
 import ClientTable from "../../components/clientsTable/ClientTable";
+import ClientModal from "../../components/clients/ClientModal";
 import { useClients } from "../../hooks/useListClientsHook";
 import {} from "../../styles/listClients.css";
+
 const ListClients = () => {
   const {
     clients,
@@ -14,7 +17,15 @@ const ListClients = () => {
     sortDirection,
     totalClients,
     activeClients,
+    reloadClients,
   } = useClients();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleCreated = () => {
+    reloadClients();
+    setShowModal(false);
+  };
+
   return (
     <>
       <div className="clients-container">
@@ -23,6 +34,7 @@ const ListClients = () => {
           onSearch={searchClient}
           showAll={showAll}
           filterActiver={filterActiver}
+          onAddClient={() => setShowModal(true)}
         />
         <ClientTable
           clients={clients}
@@ -33,6 +45,13 @@ const ListClients = () => {
           sortDirection={sortDirection}
         />
       </div>
+
+      {showModal && (
+        <ClientModal
+          onClose={() => setShowModal(false)}
+          onCreated={handleCreated}
+        />
+      )}
     </>
   );
 };
