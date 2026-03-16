@@ -22,6 +22,8 @@ export const PRODUCT_CATEGORY_LABELS: Record<ProductCategory, string> = {
 };
 
 export interface Product {
+  price: any;
+  stock: number;
   id: number;
   name: string;
   description: string;

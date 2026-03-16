@@ -1,0 +1,30 @@
+.pos-form-group {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.9rem;
+}
+
+.pos-form-group label {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.pos-form-group input,
+.pos-form-group select {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+}
+
+.pos-btn-primary {
+  border: none;
+  background: #0f172a;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.pos-btn-primary:hover {
+  background: #1f2937;
+}

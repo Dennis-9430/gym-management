@@ -10,7 +10,11 @@ const clampDiscount = (unitPrice: number, discount: number) => {
   return Math.min(Math.max(discount, 0), unitPrice);
 };
 
-const calcSubtotal = (unitPrice: number, unitDiscount: number, quantity: number) => {
+const calcSubtotal = (
+  unitPrice: number,
+  unitDiscount: number,
+  quantity: number,
+) => {
   const discount = clampDiscount(unitPrice, unitDiscount);
   const base = Math.max(unitPrice - discount, 0);
   return round2(base * quantity);
@@ -19,7 +23,7 @@ const calcSubtotal = (unitPrice: number, unitDiscount: number, quantity: number)
 export const useCart = () => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [discountRate, setDiscountRate] = useState(0);
-  const [taxRate, setTaxRate] = useState(0.12);
+  const [taxRate, setTaxRate] = useState(0.15);
 
   const addItem = (item: CatalogItem) => {
     setItems((prev) => {
@@ -30,7 +34,11 @@ export const useCart = () => {
             ? {
                 ...i,
                 quantity: i.quantity + 1,
-                subtotal: calcSubtotal(i.unitPrice, i.unitDiscount, i.quantity + 1),
+                subtotal: calcSubtotal(
+                  i.unitPrice,
+                  i.unitDiscount,
+                  i.quantity + 1,
+                ),
               }
             : i,
         );
@@ -41,6 +49,7 @@ export const useCart = () => {
           key: item.key,
           id: item.id,
           name: item.name,
+          description: item.description,
           category: item.category,
           stock: item.stock,
           unitPrice: item.unitPrice,
@@ -96,16 +105,21 @@ export const useCart = () => {
   const totals = useMemo<CartTotals>(() => {
     const subtotal = round2(items.reduce((sum, i) => sum + i.subtotal, 0));
     const discountAmount = round2(subtotal * discountRate);
-    const taxableBase = Math.max(0, subtotal - discountAmount);
-    const taxAmount = round2(taxableBase * taxRate);
-    const total = round2(taxableBase + taxAmount);
+    const taxableSubtotal = Math.max(0, subtotal - discountAmount);
+    const vatSubtotal = round2(taxableSubtotal);
+    const taxAmount = round2(vatSubtotal * taxRate);
+    const iceAmount = 0;
+    const total = round2(taxableSubtotal + taxAmount + iceAmount);
 
     return {
       subtotal,
+      taxableSubtotal,
+      vatSubtotal,
       discountRate,
       discountAmount,
       taxRate,
       taxAmount,
+      iceAmount,
       total,
     };
   }, [items, discountRate, taxRate]);

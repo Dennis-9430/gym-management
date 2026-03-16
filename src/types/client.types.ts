@@ -1,8 +1,9 @@
-import type {Person  } from "./person.types";
+import type { Person } from "./person.types";
 
 export type DocumentType = "CEDULA" | "PASSPORT" | "DNI";
-export type MemberShipStatus = "ACTIVE" | "EXPIRED" | "NONE";
+export type MemberShipStatus = "ACTIVE" | "EXPIRED" | "NONE" | "PENDING";
 export interface ClientForm extends Person {
+  name?: string;
   id: number;
   documentType: DocumentType;
   documentNumber: string;

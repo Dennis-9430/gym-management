@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
 import { sections } from "../types/dashboard.section";
 import PaymentModal from "../pages/payments/PaymentModal";
-import ClientModal from "../components/clients/ClientModal";
 import "../styles/dashboard.css";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showClientModal, setShowClientModal] = useState(false);
   if (!user) return null;
   const filteredSections = sections.filter((section) =>
     section.roles.includes(user.role),
@@ -36,13 +33,6 @@ const Dashboard = () => {
               Accesos rapidos y registro de operaciones.
             </p>
           </div>
-          <button
-            className="dashboard__add-client"
-            onClick={() => setShowClientModal(true)}
-          >
-            <Plus size={18} />
-            Registrar cliente
-          </button>
         </div>
 
         <div className="dashboard__grid">
@@ -67,9 +57,6 @@ const Dashboard = () => {
       </div>
       {showPaymentModal && (
         <PaymentModal onClose={() => setShowPaymentModal(false)}></PaymentModal>
-      )}
-      {showClientModal && (
-        <ClientModal onClose={() => setShowClientModal(false)} />
       )}
     </main>
   );

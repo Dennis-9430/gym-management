@@ -15,6 +15,7 @@ export interface CartItem {
   key: string;
   id: number;
   name: string;
+  description: string;
   category: string;
   stock: number | null;
   unitPrice: number;
@@ -26,9 +27,14 @@ export interface CartItem {
 
 export interface CartTotals {
   subtotal: number;
+  taxableSubtotal: number;
+  vatSubtotal: number;
   discountRate: number;
   discountAmount: number;
   taxRate: number;
   taxAmount: number;
+  iceAmount: number;
   total: number;
 }
+
+

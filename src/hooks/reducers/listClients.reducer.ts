@@ -4,7 +4,7 @@ type Action =
   | { type: "SET_ClIENTS"; payload: ClientForm[] }
   | { type: "SEARCH"; payload: string }
   | { type: "FILTER_ACTIVE" }
-  | { type: "SHOW_ALL" }
+  | { type: "FILTER_INACTIVE" }
   | { type: "SORT"; payload: keyof ClientForm };
 
 interface State {
@@ -13,6 +13,7 @@ interface State {
   search: string;
   sortField: keyof ClientForm | null;
   sortDirection: "asc" | "desc";
+  filterMode: "ACTIVE" | "INACTIVE";
 }
 export const initialState: State = {
   clients: [],
@@ -20,44 +21,118 @@ export const initialState: State = {
   search: "",
   sortField: null,
   sortDirection: "asc",
+  filterMode: "ACTIVE",
+};
+
+const isActive = (client: ClientForm) => client.memberShipStatus === "ACTIVE";
+
+const sortInactiveDefault = (clients: ClientForm[]) => {
+  return [...clients].sort((a, b) => {
+    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : a.id;
+    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : b.id;
+    return dateB - dateA;
+  });
+};
+
+const applyFilters = (
+  clients: ClientForm[],
+  search: string,
+  filterMode: State["filterMode"],
+  sortField: State["sortField"],
+  sortDirection: State["sortDirection"],
+) => {
+  const normalized = search.toLowerCase().trim();
+  const filteredByMode = clients.filter((client) =>
+    filterMode === "ACTIVE" ? isActive(client) : !isActive(client),
+  );
+
+  const searched = normalized
+    ? filteredByMode.filter((client) =>
+        `${client.documentNumber} ${client.firstName} ${client.lastName}`
+          .toLowerCase()
+          .includes(normalized),
+      )
+    : filteredByMode;
+
+  if (sortField) {
+    const sorted = [...searched].sort((a, b) => {
+      const valueA = String(a[sortField]).toLowerCase();
+      const valueB = String(b[sortField]).toLocaleLowerCase();
+      if (valueA < valueB) return sortDirection === "asc" ? -1 : 1;
+      if (valueA > valueB) return sortDirection === "desc" ? 1 : -1;
+      return 0;
+    });
+    return sorted;
+  }
+
+  if (filterMode === "INACTIVE") {
+    return sortInactiveDefault(searched);
+  }
+
+  return searched;
 };
 
 export const listClientsReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case "SET_ClIENTS":
+    case "SET_ClIENTS": {
+      const filteredClients = applyFilters(
+        action.payload,
+        state.search,
+        state.filterMode,
+        state.sortField,
+        state.sortDirection,
+      );
       return {
         ...state,
         clients: action.payload,
-        filteredClients: action.payload.filter(
-          (client) => client.memberShipStatus === "ACTIVE",
-        ),
+        filteredClients,
       };
-    case "SEARCH":
-      const search = action.payload.toLowerCase().trim();
-      const filtered = state.clients.filter((client) =>
-        `${client.documentNumber} ${client.firstName} ${client.lastName}`
-          .toLowerCase()
-          .trim()
-          .includes(search),
+    }
+    case "SEARCH": {
+      const filteredClients = applyFilters(
+        state.clients,
+        action.payload,
+        state.filterMode,
+        state.sortField,
+        state.sortDirection,
       );
       return {
         ...state,
         search: action.payload,
-        filteredClients: filtered,
+        filteredClients,
       };
-    case "FILTER_ACTIVE":
+    }
+    case "FILTER_ACTIVE": {
+      const filterMode: State["filterMode"] = "ACTIVE";
+      const filteredClients = applyFilters(
+        state.clients,
+        state.search,
+        filterMode,
+        state.sortField,
+        state.sortDirection,
+      );
       return {
         ...state,
-        filteredClients: state.clients.filter(
-          (client) => client.memberShipStatus === "ACTIVE",
-        ),
+        filterMode,
+        filteredClients,
       };
-    case "SHOW_ALL":
+    }
+    case "FILTER_INACTIVE": {
+      const filterMode: State["filterMode"] = "INACTIVE";
+      const filteredClients = applyFilters(
+        state.clients,
+        state.search,
+        filterMode,
+        state.sortField,
+        state.sortDirection,
+      );
       return {
         ...state,
-        filteredClients: state.clients,
+        filterMode,
+        filteredClients,
       };
-    case "SORT":
+    }
+    case "SORT": {
       const field = action.payload;
       const direction =
         state.sortField === field && state.sortDirection === "asc"
@@ -76,6 +151,7 @@ export const listClientsReducer = (state: State, action: Action): State => {
         sortField: field,
         sortDirection: direction,
       };
+    }
     default:
       return state;
   }

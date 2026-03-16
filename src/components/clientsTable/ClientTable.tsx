@@ -8,6 +8,8 @@ interface Props {
   sortBy: (field: keyof ClientForm) => void;
   sortField: keyof ClientForm | null;
   sortDirection: "asc" | "desc";
+  showActions: boolean;
+  onRefresh: () => void;
 }
 
 const ClientTable = ({
@@ -17,6 +19,8 @@ const ClientTable = ({
   sortBy,
   sortField,
   sortDirection,
+  showActions,
+  onRefresh,
 }: Props) => {
   const renderSortIcon = (field: keyof ClientForm) => {
     if (sortField !== field) {
@@ -38,25 +42,28 @@ const ClientTable = ({
   return (
     <div className="clients-table-wrapper">
       <div className="clients-stats">
-        Clientes: {totalClients} | Activos: {activeClients}
+        Usuarios: {totalClients} | Activos: {activeClients}
       </div>
       <table className="client-table">
         <thead>
           <tr>
-            <th>N°</th>
-            <th>Cédula</th>
+            <th>N�</th>
+            <th>Cedula</th>
             {renderHeader("Apellidos", "lastName")}
             {renderHeader("Nombres", "firstName")}
-            {renderHeader("Membresía", "memberShip")}
-
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th>Expiracion</th>
             <th>Huella</th>
+            {showActions && <th>Acciones</th>}
           </tr>
         </thead>
         <tbody>
           {clients.map((client) => (
-            <ClientRow key={client.id} client={client}></ClientRow>
+            <ClientRow
+              key={client.id}
+              client={client}
+              showActions={showActions}
+              onRefresh={onRefresh}
+            />
           ))}
         </tbody>
       </table>

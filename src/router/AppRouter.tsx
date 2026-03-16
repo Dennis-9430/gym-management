@@ -7,11 +7,13 @@ import FormClients from "../pages/clients/FormClients";
 import ListClients from "../pages/clients/ListClients";
 import DailyPayment from "../pages/payments/DailyPayment";
 import Productos from "../pages/products/Products";
-import Cart from "../pages/sales/Card";
+
 import FinancialReport from "../pages/admin/FinancialReport";
 import ClientProfile from "../pages/clients/ClientProfile";
 import EmployeesPage from "../pages/employees/EmployeesPage";
 import EmployeeProfilePage from "../pages/employees/EmployeeProfilePage";
+import Card from "../pages/sales/SalesPages";
+import PendingSubscriptionsPage from "../pages/sales/PendingSubscriptionsPage";
 
 function AppRouter() {
   return (
@@ -33,7 +35,9 @@ function AppRouter() {
           {/*Productos */}
           <Route path="/products" element={<Productos />} />
           {/*Ventas */}
-          <Route path="/sales" element={<Cart />} />
+          <Route path="/sales" element={<Card />} />
+          <Route path="/sales/pending" element={<PendingSubscriptionsPage />} />
+
           {/*admin employee  */}
           <Route path="/employees" element={<EmployeesPage />} />
           <Route path="/employees/:id" element={<EmployeeProfilePage />} />

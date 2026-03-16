@@ -1,0 +1,42 @@
+.pos-pending {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+}
+
+.pos-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 1.3rem;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.pos-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.pos-card-header h3 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.pos-card-body {
+  color: #64748b;
+}
+
+.pos-btn-primary {
+  border: none;
+  background: #0f172a;
+  color: white;
+  padding: 0.5rem 0.9rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pos-btn-primary:hover {
+  background: #1f2937;
+}

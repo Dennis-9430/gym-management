@@ -4,14 +4,13 @@ import {
   initialState,
 } from "./reducers/listClients.reducer";
 import type { ClientForm } from "../types/client.types";
-import { getMembershipStatus } from "../utils/membership";
 import { getClients } from "../services/clients.service";
 
 export const useClients = () => {
   const [state, dispatch] = useReducer(listClientsReducer, initialState);
   const totalClients = state.clients.length;
   const activeClients = state.clients.filter(
-    (c) => getMembershipStatus(c.memberShipEndDate) === "ACTIVE",
+    (c) => c.memberShipStatus === "ACTIVE",
   ).length;
 
   const reloadClients = () => {
@@ -30,7 +29,7 @@ export const useClients = () => {
     dispatch({ type: "FILTER_ACTIVE" });
   };
   const showAll = () => {
-    dispatch({ type: "SHOW_ALL" });
+    dispatch({ type: "FILTER_INACTIVE" });
   };
 
   const sortBy = (field: keyof ClientForm) => {
@@ -48,5 +47,6 @@ export const useClients = () => {
     totalClients,
     activeClients,
     reloadClients,
+    filterMode: state.filterMode,
   };
 };

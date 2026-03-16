@@ -26,6 +26,7 @@ export interface SaleRecord {
   totals: CartTotals;
   client: SaleClientInfo;
   payment: SalePayment;
+  voucherCode?: string;
   createdBy?: string;
 }
 

@@ -63,7 +63,15 @@ const FormClient = () => {
       if (id && clientToEdit) {
         updateClient(clientToEdit.id, {
           ...clientToEdit,
-          ...form,
+          documentNumber: form.documentNumber,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          phone: form.phone,
+          email: form.email,
+          address: form.address,
+          emergencyContact: form.emergencyContact,
+          emergencyPhone: form.emergencyPhone,
+          notes: form.notes,
         });
         navigate(`/clients/${id}`);
       } else {
@@ -102,7 +110,7 @@ const FormClient = () => {
           </button>
 
           <button type="button" onClick={handleClose} className="btn-register">
-            {id ? "Volver al perfil" : "Cancelar"}
+            Cancelar
           </button>
         </form>
       </div>

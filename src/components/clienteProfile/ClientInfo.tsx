@@ -1,29 +1,28 @@
 import type { ClientProps } from "../../types/client.types";
-import { useNavigate } from "react-router-dom";
 
-const ClientInfo = ({ client }: ClientProps) => {
-  const navigate = useNavigate();
-  const handleEdit = () => {
-    navigate(`/clients/edit/${client.id}`);
-  };
+interface Props extends ClientProps {
+  onEdit: () => void;
+}
+
+const ClientInfo = ({ client, onEdit }: Props) => {
   return (
     <div className="card card-info">
-      <h3>Información Personal</h3>
+      <h3>Informacion Personal</h3>
 
       <p>
-        <strong>Cédula:</strong> {client.documentNumber}
+        <strong>Cedula:</strong> {client.documentNumber}
       </p>
       <p>
         <strong>Nombre:</strong> {client.firstName} {client.lastName}
       </p>
       <p>
-        <strong>Teléfono:</strong> {client.phone}
+        <strong>Telefono:</strong> {client.phone}
       </p>
       <p>
         <strong>Email:</strong> {client.email}
       </p>
       <p>
-        <strong>Dirección:</strong> {client.address}
+        <strong>Direccion:</strong> {client.address}
       </p>
       <p>
         <strong>Observaciones:</strong> {client.notes}
@@ -32,10 +31,10 @@ const ClientInfo = ({ client }: ClientProps) => {
         <strong>Contacto de Emergencia</strong> {client.emergencyContact}
       </p>
       <p>
-        <strong>Teléfono de Emergencia</strong> {client.emergencyPhone}
+        <strong>Telefono de Emergencia</strong> {client.emergencyPhone}
       </p>
-      <button className="btn-edit" onClick={handleEdit}>
-        Editar información
+      <button className="btn-edit" onClick={onEdit}>
+        Editar informacion
       </button>
     </div>
   );

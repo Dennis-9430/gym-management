@@ -4,21 +4,45 @@ import useClientForm from "../../hooks/useClientForm";
 import PersonalDataFields from "../formClients/PersonalDataFields";
 import ContactFields from "../formClients/ContactFields";
 import EmergencyFields from "../formClients/EmergencyFields";
-import { createClient } from "../../services/clients.service";
+import { createClient, updateClient } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";
 import "../../styles/clientsRegister.css";
 
 interface Props {
   onClose: () => void;
-  onCreated?: (client: ClientForm) => void;
+  onSaved?: (client: ClientForm) => void;
+  mode?: "create" | "edit";
+  initialClient?: ClientForm | null;
 }
 
-const ClientModal = ({ onClose, onCreated }: Props) => {
+const ClientModal = ({
+  onClose,
+  onSaved,
+  mode = "create",
+  initialClient = null,
+}: Props) => {
   const { form, updateField, resetForm } = useClientForm();
+  const isEdit = mode === "edit" && Boolean(initialClient);
 
   useEffect(() => {
-    resetForm();
-  }, [resetForm]);
+    if (!initialClient) {
+      resetForm();
+    }
+  }, [initialClient, resetForm]);
+
+  useEffect(() => {
+    if (initialClient) {
+      updateField("documentNumber", initialClient.documentNumber || "");
+      updateField("firstName", initialClient.firstName || "");
+      updateField("lastName", initialClient.lastName || "");
+      updateField("phone", initialClient.phone || "");
+      updateField("email", initialClient.email || "");
+      updateField("address", initialClient.address || "");
+      updateField("emergencyContact", initialClient.emergencyContact || "");
+      updateField("emergencyPhone", initialClient.emergencyPhone || "");
+      updateField("notes", initialClient.notes || "");
+    }
+  }, [initialClient, updateField]);
 
   const validateRequiredFields = () => {
     const missing: string[] = [];
@@ -42,13 +66,30 @@ const ClientModal = ({ onClose, onCreated }: Props) => {
 
     if (!validateRequiredFields()) return;
 
-    if (!confirm("Deseas registrar este cliente?")) {
+    const actionLabel = isEdit ? "actualizar" : "registrar";
+    if (!confirm(`Deseas ${actionLabel} este cliente?`)) {
       return;
     }
 
     try {
-      const created = createClient(form);
-      onCreated?.(created);
+      if (isEdit && initialClient) {
+        const updated = updateClient(initialClient.id, {
+          ...initialClient,
+          documentNumber: form.documentNumber,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          phone: form.phone,
+          email: form.email,
+          address: form.address,
+          emergencyContact: form.emergencyContact,
+          emergencyPhone: form.emergencyPhone,
+          notes: form.notes,
+        });
+        onSaved?.(updated);
+      } else {
+        const created = createClient(form);
+        onSaved?.(created);
+      }
       onClose();
     } catch {
       alert("No se pudo guardar el cliente.");
@@ -60,9 +101,10 @@ const ClientModal = ({ onClose, onCreated }: Props) => {
       <div className="client-modal" onClick={(e) => e.stopPropagation()}>
         <div className="client-modal-header">
           <div>
-            <h3>Registrar cliente</h3>
+            <h3>{isEdit ? "Editar cliente" : "Registrar cliente"}</h3>
             <p className="clients-modal-subtitle">
-              Completa los datos para registrar el cliente.
+              Completa los datos para {isEdit ? "actualizar" : "registrar"} el
+              cliente.
             </p>
           </div>
           <button className="client-modal-close" onClick={onClose}>
@@ -77,7 +119,7 @@ const ClientModal = ({ onClose, onCreated }: Props) => {
 
           <div className="form-buttons">
             <button className="btn-register" type="submit">
-              Registrar cliente
+              {isEdit ? "Actualizar cliente" : "Registrar cliente"}
             </button>
             <button type="button" onClick={onClose} className="btn-register">
               Cancelar

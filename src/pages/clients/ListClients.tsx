@@ -18,11 +18,20 @@ const ListClients = () => {
     totalClients,
     activeClients,
     reloadClients,
+    filterMode,
   } = useClients();
   const [showModal, setShowModal] = useState(false);
 
-  const handleCreated = () => {
+  const openNewModal = () => {
+    setShowModal(true);
+  };
+
+  const handleSaved = () => {
     reloadClients();
+    setShowModal(false);
+  };
+
+  const handleCloseModal = () => {
     setShowModal(false);
   };
 
@@ -34,7 +43,9 @@ const ListClients = () => {
           onSearch={searchClient}
           showAll={showAll}
           filterActiver={filterActiver}
-          onAddClient={() => setShowModal(true)}
+          onAddClient={openNewModal}
+          title="Usuarios"
+          filterMode={filterMode}
         />
         <ClientTable
           clients={clients}
@@ -43,14 +54,13 @@ const ListClients = () => {
           sortBy={sortBy}
           sortField={sortField}
           sortDirection={sortDirection}
+          showActions={filterMode === "INACTIVE"}
+          onRefresh={reloadClients}
         />
       </div>
 
       {showModal && (
-        <ClientModal
-          onClose={() => setShowModal(false)}
-          onCreated={handleCreated}
-        />
+        <ClientModal onClose={handleCloseModal} onSaved={handleSaved} />
       )}
     </>
   );

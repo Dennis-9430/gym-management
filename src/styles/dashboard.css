@@ -31,25 +31,6 @@
   font-size: 0.95rem;
 }
 
-.dashboard__add-client {
-  border: none;
-  border-radius: 10px;
-  padding: 0.7rem 1rem;
-  background: #0f172a;
-  color: white;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.2s ease;
-}
-
-.dashboard__add-client:hover {
-  background: #1e293b;
-  transform: translateY(-1px);
-}
-
 /*grid*/
 .dashboard__grid {
   display: grid;

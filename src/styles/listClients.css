@@ -1,6 +1,8 @@
 /*container*/
 .clients-container {
   padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /*search bar*/
@@ -54,6 +56,10 @@
 }
 .search-actions button:hover {
   background: #2563eb;
+}
+
+.active-filter {
+  background: #0f172a;
 }
 
 .btn-add-client {
@@ -175,23 +181,6 @@
   text-decoration: underline;
 }
 
-/* status*/
-
-.status-active {
-  color: #16a34a;
-  font-weight: bold;
-}
-
-.status-warning {
-  color: #f59e0b;
-  font-weight: bold;
-}
-
-.status-expired {
-  color: #dc2626;
-  font-weight: bold;
-}
-
 /*actions*/
 
 /*buttons global*/
@@ -219,16 +208,6 @@
   background: #059669;
 }
 
-/*button edit*/
-.btn-edit {
-  background: #3b82f6;
-  color: white;
-}
-
-.btn-edit:hover {
-  background: #2563eb;
-}
-
 /*fingerprint*/
 
 .btn-fingerprint-add {
@@ -247,6 +226,43 @@
 
 .btn-fingerprint-remove:hover {
   background: #dc2626;
+}
+
+.btn-fingerprint-disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.fingerprint-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.fingerprint-status span {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.fingerprint-hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.client-profile-modal {
+  width: min(1100px, 100%);
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalIn 0.2s ease;
 }
 
 /*responsive*/

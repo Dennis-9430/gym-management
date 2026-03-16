@@ -6,7 +6,6 @@ import {
   Package,
   ShoppingCart,
   UserCog,
-  UserPlus,
 } from "lucide-react";
 
 export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
@@ -28,14 +27,7 @@ export const sections: DashboardSection[] = [
   },
 
   {
-    title: "Registrar Cliente",
-    path: "/clients/register",
-    icon: UserPlus,
-    action: "NAVIGATE",
-    roles: ["ADMIN", "RECEPCIONISTA"],
-  },
-  {
-    title: "Lista de Clientes",
+    title: "Usuarios",
     path: "/clients/list",
     icon: Users,
     action: "NAVIGATE",
@@ -49,13 +41,12 @@ export const sections: DashboardSection[] = [
     roles: ["ADMIN", "RECEPCIONISTA"],
   },
   {
-    title: "Punto de Venta",
+    title: "Ventas",
     path: "/sales",
     icon: ShoppingCart,
     action: "NAVIGATE",
     roles: ["ADMIN", "RECEPCIONISTA"],
   },
-
   {
     title: "Registrar Personal",
     path: "/employees",
@@ -71,3 +62,4 @@ export const sections: DashboardSection[] = [
     roles: ["ADMIN"],
   },
 ];
+

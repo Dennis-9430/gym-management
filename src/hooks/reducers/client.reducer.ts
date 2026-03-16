@@ -21,8 +21,8 @@ export const initialState: ClientForm = {
 
   notes: "",
   createdAt: new Date(),
-  memberShip: "",
-  memberShipStatus: "ACTIVE",
+  memberShip: "Por registrar",
+  memberShipStatus: "NONE",
   memberShipStartDate: new Date(),
   memberShipEndDate: new Date(),
 
