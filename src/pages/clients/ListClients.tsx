@@ -3,6 +3,8 @@ import ClientSearch from "../../components/clientsTable/ClientSearch";
 import ClientTable from "../../components/clientsTable/ClientTable";
 import ClientModal from "../../components/clients/ClientModal";
 import { useClients } from "../../hooks/useListClientsHook";
+import { usePOS } from "../../hooks/features/usePOS";
+import SubscriptionModal from "../../components/sales/SubscriptionModal";
 import {} from "../../styles/listClients.css";
 
 const ListClients = () => {
@@ -20,6 +22,39 @@ const ListClients = () => {
     reloadClients,
     filterMode,
   } = useClients();
+  
+  const {
+    subscriptionModalOpen,
+    subscriptionClient,
+    subscriptionSearch,
+    setSubscriptionSearch,
+    subscriptionResults,
+    subscriptionService,
+    subscriptionShowServices,
+    setSubscriptionShowServices,
+    subscriptionPaymentMethod,
+    setSubscriptionPaymentMethod,
+    subscriptionCashAmount,
+    subscriptionTransferAmount,
+    subscriptionStartDate,
+    setSubscriptionStartDate,
+    subscriptionDiscountPercent,
+    subscriptionDiscountUsd,
+    subscriptionTotal,
+    subscriptionPaidValue,
+    subscriptionChange,
+    setSubscriptionPaid,
+    handleCloseSubscriptionModal,
+    handleSelectSubscriptionClient,
+    handleSelectService,
+    handleSubscriptionDiscountPercent,
+    handleSubscriptionDiscountUsd,
+    handleSubscriptionCashChange,
+    handleSubscriptionTransferChange,
+    handleRegisterSubscription,
+    handlePendingSubscription,
+  } = usePOS();
+
   const [showModal, setShowModal] = useState(false);
 
   const openNewModal = () => {
@@ -34,6 +69,8 @@ const ListClients = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  const showActions = filterMode === "INACTIVE" || filterMode === "ALL";
 
   return (
     <>
@@ -54,14 +91,45 @@ const ListClients = () => {
           sortBy={sortBy}
           sortField={sortField}
           sortDirection={sortDirection}
-          showActions={filterMode === "INACTIVE"}
-          onRefresh={reloadClients}
+          showActions={showActions}
         />
       </div>
 
       {showModal && (
         <ClientModal onClose={handleCloseModal} onSaved={handleSaved} />
       )}
+
+      <SubscriptionModal
+        isOpen={subscriptionModalOpen}
+        onClose={handleCloseSubscriptionModal}
+        search={subscriptionSearch}
+        onSearchChange={setSubscriptionSearch}
+        clientResults={subscriptionResults}
+        onSelectClient={handleSelectSubscriptionClient}
+        selectedClient={subscriptionClient}
+        selectedService={subscriptionService}
+        showServices={subscriptionShowServices}
+        onToggleServices={() => setSubscriptionShowServices(!subscriptionShowServices)}
+        onSelectService={handleSelectService}
+        startDate={subscriptionStartDate}
+        onStartDateChange={setSubscriptionStartDate}
+        paymentMethod={subscriptionPaymentMethod}
+        onPaymentMethodChange={setSubscriptionPaymentMethod}
+        cashAmount={subscriptionCashAmount}
+        transferAmount={subscriptionTransferAmount}
+        onCashChange={handleSubscriptionCashChange}
+        onTransferChange={handleSubscriptionTransferChange}
+        discountPercent={subscriptionDiscountPercent}
+        discountUsd={subscriptionDiscountUsd}
+        total={subscriptionTotal}
+        paidValue={subscriptionPaidValue}
+        change={subscriptionChange}
+        onDiscountPercentChange={handleSubscriptionDiscountPercent}
+        onDiscountUsdChange={handleSubscriptionDiscountUsd}
+        onPaidChange={setSubscriptionPaid}
+        onRegister={handleRegisterSubscription}
+        onPending={handlePendingSubscription}
+      />
     </>
   );
 };

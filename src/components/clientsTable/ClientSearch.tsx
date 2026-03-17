@@ -6,7 +6,7 @@ interface Props {
   filterActiver: () => void;
   onAddClient: () => void;
   title?: string;
-  filterMode: "ACTIVE" | "INACTIVE";
+  filterMode: "ACTIVE" | "INACTIVE" | "ALL";
 }
 const ClientSearch = ({
   search,

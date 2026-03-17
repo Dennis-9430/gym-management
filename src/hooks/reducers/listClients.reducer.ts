@@ -5,6 +5,7 @@ type Action =
   | { type: "SEARCH"; payload: string }
   | { type: "FILTER_ACTIVE" }
   | { type: "FILTER_INACTIVE" }
+  | { type: "FILTER_ALL" }
   | { type: "SORT"; payload: keyof ClientForm };
 
 interface State {
@@ -13,7 +14,7 @@ interface State {
   search: string;
   sortField: keyof ClientForm | null;
   sortDirection: "asc" | "desc";
-  filterMode: "ACTIVE" | "INACTIVE";
+  filterMode: "ACTIVE" | "INACTIVE" | "ALL";
 }
 export const initialState: State = {
   clients: [],
@@ -21,7 +22,7 @@ export const initialState: State = {
   search: "",
   sortField: null,
   sortDirection: "asc",
-  filterMode: "ACTIVE",
+  filterMode: "ALL",
 };
 
 const isActive = (client: ClientForm) => client.memberShipStatus === "ACTIVE";
@@ -34,6 +35,11 @@ const sortInactiveDefault = (clients: ClientForm[]) => {
   });
 };
 
+const sortByStatus = (clients: ClientForm[]) => {
+  const order: Record<string, number> = { NONE: 0, EXPIRED: 1, ACTIVE: 2 };
+  return [...clients].sort((a, b) => order[a.memberShipStatus] - order[b.memberShipStatus]);
+};
+
 const applyFilters = (
   clients: ClientForm[],
   search: string,
@@ -42,9 +48,11 @@ const applyFilters = (
   sortDirection: State["sortDirection"],
 ) => {
   const normalized = search.toLowerCase().trim();
-  const filteredByMode = clients.filter((client) =>
-    filterMode === "ACTIVE" ? isActive(client) : !isActive(client),
-  );
+  const filteredByMode = clients.filter((client) => {
+    if (filterMode === "ACTIVE") return isActive(client);
+    if (filterMode === "INACTIVE") return !isActive(client);
+    return true; // ALL
+  });
 
   const searched = normalized
     ? filteredByMode.filter((client) =>
@@ -67,6 +75,10 @@ const applyFilters = (
 
   if (filterMode === "INACTIVE") {
     return sortInactiveDefault(searched);
+  }
+
+  if (filterMode === "ALL") {
+    return sortByStatus(searched);
   }
 
   return searched;
@@ -119,6 +131,21 @@ export const listClientsReducer = (state: State, action: Action): State => {
     }
     case "FILTER_INACTIVE": {
       const filterMode: State["filterMode"] = "INACTIVE";
+      const filteredClients = applyFilters(
+        state.clients,
+        state.search,
+        filterMode,
+        state.sortField,
+        state.sortDirection,
+      );
+      return {
+        ...state,
+        filterMode,
+        filteredClients,
+      };
+    }
+    case "FILTER_ALL": {
+      const filterMode: State["filterMode"] = "ALL";
       const filteredClients = applyFilters(
         state.clients,
         state.search,

@@ -9,7 +9,6 @@ interface Props {
   sortField: keyof ClientForm | null;
   sortDirection: "asc" | "desc";
   showActions: boolean;
-  onRefresh: () => void;
 }
 
 const ClientTable = ({
@@ -20,7 +19,6 @@ const ClientTable = ({
   sortField,
   sortDirection,
   showActions,
-  onRefresh,
 }: Props) => {
   const renderSortIcon = (field: keyof ClientForm) => {
     if (sortField !== field) {
@@ -47,7 +45,7 @@ const ClientTable = ({
       <table className="client-table">
         <thead>
           <tr>
-            <th>N°</th>
+            <th>Nï¿½</th>
             <th>Cedula</th>
             {renderHeader("Apellidos", "lastName")}
             {renderHeader("Nombres", "firstName")}
@@ -62,7 +60,6 @@ const ClientTable = ({
               key={client.id}
               client={client}
               showActions={showActions}
-              onRefresh={onRefresh}
             />
           ))}
         </tbody>

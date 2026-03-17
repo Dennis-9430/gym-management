@@ -17,13 +17,19 @@
  * ============================================================
  */
 import { useAuth } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
 import { usePOS } from "../../hooks/features/usePOS";
 import SalesDashboard from "../../components/sales/SalesDashboard";
 import SaleModal from "../../components/sales/SaleModal";
 import SubscriptionModal from "../../components/sales/SubscriptionModal";
+import type { ClientForm } from "../../types/client.types";
 import "../../styles/pos.css";
 
 const SalesPages = () => {
+  const location = useLocation();
+  const state = location.state as { openSubscriptionModal?: boolean; client?: ClientForm } | null;
+  const initialClient = state?.client;
+
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
 
@@ -43,6 +49,7 @@ const SalesPages = () => {
     filteredCatalog,
 
     // Subscription state
+    subscriptionClient,
     subscriptionSearch,
     subscriptionService,
     subscriptionShowServices,
@@ -99,7 +106,7 @@ const SalesPages = () => {
     handlePendingSubscription,
     updateItemDiscount,
     removeItem,
-  } = usePOS();
+  } = usePOS(initialClient);
 
   const discountPercent = Number((discountRate * 100).toFixed(2));
   const taxPercent = Number((taxRate * 100).toFixed(2));
@@ -153,6 +160,7 @@ const SalesPages = () => {
         onSearchChange={setSubscriptionSearch}
         clientResults={subscriptionResults}
         onSelectClient={handleSelectSubscriptionClient}
+        selectedClient={subscriptionClient}
         selectedService={subscriptionService}
         showServices={subscriptionShowServices}
         onToggleServices={() =>

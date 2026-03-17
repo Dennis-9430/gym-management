@@ -20,6 +20,7 @@ interface SubscriptionModalProps {
   onSearchChange: (value: string) => void;
   clientResults: ClientForm[];
   onSelectClient: (client: ClientForm) => void;
+  selectedClient: ClientForm | null;
 
   // Service
   selectedService: Service | null;
@@ -61,6 +62,7 @@ const SubscriptionModal = ({
   onSearchChange,
   clientResults,
   onSelectClient,
+  selectedClient,
   selectedService,
   showServices,
   onToggleServices,
@@ -109,7 +111,10 @@ const SubscriptionModal = ({
               <UserRound size={18} />
               <h4>Cliente</h4>
             </div>
-            <div className="pos-search-wrapper">
+            <div 
+              className="pos-search-wrapper"
+              style={{ marginBottom: (search.trim().length > 0 || selectedClient) ? '20px' : '0' }}
+            >
               <div className="pos-search">
                 <Search size={16} />
                 <input
@@ -128,10 +133,13 @@ const SubscriptionModal = ({
                           onClick={() => onSelectClient(client)}
                         >
                           <span className="pos-suggestion-title">
-                            {client.firstName} {client.lastName}
+                            {client.firstName} {client.lastName} 
+                            <span className="sep">|</span> {client.email}
+                            <span className="sep">|</span> {client.phone}
+                            <span className="sep">|</span> {client.address}
                           </span>
                           <span className="pos-suggestion-meta">
-                            Cedula: {client.documentNumber}
+                            <span className="sep-right">Cedula:</span> {client.documentNumber}
                           </span>
                         </button>
                       </li>

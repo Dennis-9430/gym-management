@@ -1,15 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import type { ClientForm } from "../../types/client.types";
-import { Fingerprint, RefreshCcw, Trash2, BadgeCheck } from "lucide-react";
-import { updateClient } from "../../services/clients.service";
+import { Fingerprint, Trash2, BadgePlus, UserPlus } from "lucide-react";
 
 interface Props {
   client: ClientForm;
   showActions: boolean;
-  onRefresh: () => void;
 }
 
-const ClientRow = ({ client, showActions, onRefresh }: Props) => {
+const ClientRow = ({ client, showActions }: Props) => {
   const navigate = useNavigate();
   const gotoProfile = () => {
     navigate(`/clients/${client.id}`);
@@ -22,32 +20,8 @@ const ClientRow = ({ client, showActions, onRefresh }: Props) => {
   const removeFingerPrint = () => {
   };
 
-  const handleRenew = () => {
-    const start = new Date();
-    const end = new Date();
-    end.setDate(end.getDate() + 30);
-    updateClient(client.id, {
-      ...client,
-      memberShipStatus: "ACTIVE",
-      memberShip: client.memberShip || "Mensual",
-      memberShipStartDate: start,
-      memberShipEndDate: end,
-    });
-    onRefresh();
-  };
-
-  const handleRegisterSubscription = () => {
-    const start = new Date();
-    const end = new Date();
-    end.setDate(end.getDate() + 30);
-    updateClient(client.id, {
-      ...client,
-      memberShipStatus: "ACTIVE",
-      memberShip: "Mensual",
-      memberShipStartDate: start,
-      memberShipEndDate: end,
-    });
-    onRefresh();
+  const handleOpenSubscription = () => {
+    navigate('/sales', { state: { openSubscriptionModal: true, client } });
   };
 
   const allowFingerprint = client.memberShipStatus === "ACTIVE";
@@ -102,15 +76,15 @@ const ClientRow = ({ client, showActions, onRefresh }: Props) => {
             <button
               type="button"
               className="btn-renew"
-              onClick={handleRegisterSubscription}
+              onClick={handleOpenSubscription}
             >
-              <BadgeCheck size={18} /> Registrar suscripcion
+              <UserPlus size={18} /> Registrar suscripcion
             </button>
-          ) : (
-            <button type="button" className="btn-renew" onClick={handleRenew}>
-              <RefreshCcw size={18} /> Renovar
+          ) : client.memberShipStatus === "EXPIRED" ? (
+            <button type="button" className="btn-renew" onClick={handleOpenSubscription}>
+              <BadgePlus size={18} /> Renovar
             </button>
-          )}
+          ) : null}
         </td>
       )}
     </tr>

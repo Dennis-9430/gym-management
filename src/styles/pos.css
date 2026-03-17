@@ -267,14 +267,32 @@
   background: #f1f5f9;
 }
 
+.pos-search-dropdown:not(:empty) {
+  margin-bottom: 20px;
+}
+
 .pos-suggestion-title {
   font-weight: 600;
   color: #0f172a;
+  display: block;
+  margin-bottom: 4px;
 }
 
 .pos-suggestion-meta {
   font-size: 0.85rem;
   color: #64748b;
+  display: block;
+}
+
+.pos-suggestion-title .sep {
+  margin: 0 8px;
+  color: #94a3b8;
+}
+
+.pos-suggestion-meta .sep-right {
+  margin-right: 8px;
+  color: #0f172a;
+  font-weight: 600;
 }
 
 .pos-suggestion-empty {
@@ -563,6 +581,7 @@
 .pos-modal-body .pos-section:first-child {
   border-top: none;
   padding-top: 0;
+  
 }
 
 .pos-section-title {

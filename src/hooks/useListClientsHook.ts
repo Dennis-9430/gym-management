@@ -29,7 +29,7 @@ export const useClients = () => {
     dispatch({ type: "FILTER_ACTIVE" });
   };
   const showAll = () => {
-    dispatch({ type: "FILTER_INACTIVE" });
+    dispatch({ type: "FILTER_ALL" });
   };
 
   const sortBy = (field: keyof ClientForm) => {
