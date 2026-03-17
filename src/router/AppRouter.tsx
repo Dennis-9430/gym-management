@@ -5,10 +5,10 @@ import MainLouyt from "../layouts/MainLouyt";
 import RegisterClient from "../pages/clients/RegistetClient";
 import FormClients from "../pages/clients/FormClients";
 import ListClients from "../pages/clients/ListClients";
-import DailyPayment from "../pages/payments/DailyPayment";
 import Productos from "../pages/products/Products";
-
 import FinancialReport from "../pages/admin/FinancialReport";
+import FinancialDashboard from "../pages/admin/FinancialDashboard";
+import FinancialMonthlyReport from "../pages/admin/FinancialMonthlyReport";
 import ClientProfile from "../pages/clients/ClientProfile";
 import EmployeesPage from "../pages/employees/EmployeesPage";
 import EmployeeProfilePage from "../pages/employees/EmployeeProfilePage";
@@ -30,8 +30,7 @@ function AppRouter() {
 
           <Route path="/clients/list" element={<ListClients />} />
 
-          {/*Pagos */}
-          <Route path="/payments" element={<DailyPayment />} />
+
           {/*Productos */}
           <Route path="/products" element={<Productos />} />
           {/*Ventas */}
@@ -44,6 +43,8 @@ function AppRouter() {
           {/*admin */}
 
           <Route path="/financial" element={<FinancialReport />} />
+          <Route path="/financial/dashboard" element={<FinancialDashboard />} />
+          <Route path="/financial/monthly" element={<FinancialMonthlyReport />} />
           {/*perfil cliente y editar*/}
           <Route path="/clients/:id" element={<ClientProfile />} />
           <Route path="/clients/edit/:id" element={<FormClients />} />

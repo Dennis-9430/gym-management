@@ -1,5 +1,6 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import type { CartItem } from "../../types/pos.types";
+import { round2, parseDecimal } from "../../utils/format/number";
 
 interface Props {
   items: CartItem[];
@@ -8,15 +9,6 @@ interface Props {
   onDiscountChange: (key: string, discount: number) => void;
   onRemove: (key: string) => void;
 }
-
-const round2 = (value: number) => Math.round(value * 100) / 100;
-
-const parseDecimal = (raw: string) => {
-  const normalized = raw.replace(",", ".").replace(/[^0-9.]/g, "");
-  const [whole, decimal] = normalized.split(".");
-  const value = Number(decimal !== undefined ? `${whole}.${decimal}` : whole);
-  return Number.isFinite(value) ? value : 0;
-};
 
 const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: Props) => {
   return (

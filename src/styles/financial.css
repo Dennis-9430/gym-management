@@ -1,0 +1,739 @@
+.financial-report {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.financial-report__header {
+  margin-bottom: 2rem;
+}
+
+.financial-report__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.financial-report__subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.financial-report__section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.transactions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.transactions-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.transactions-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.transactions-list::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+.transaction-item {
+  display: grid;
+  grid-template-columns: 80px 120px 1fr 100px 120px 60px;
+  align-items: center;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  transition: box-shadow 0.2s ease;
+}
+
+.transaction-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.transaction-time {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.transaction-employee {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.transaction-items {
+  font-size: 0.9rem;
+  color: #1f2937;
+  padding-right: 1rem;
+}
+
+.transaction-amount {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.transaction-method {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+}
+
+.method-cash {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.method-transfer {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.method-mixed {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.method-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-edit-transaction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-edit-transaction:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.transactions-empty {
+  padding: 3rem;
+  text-align: center;
+  color: #9ca3af;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px dashed #d1d5db;
+}
+
+.summary-table-wrapper {
+  overflow-x: auto;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.summary-table thead {
+  background: #f8fafc;
+}
+
+.summary-table th {
+  text-align: left;
+  padding: 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.summary-table td {
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-top: 1px solid #e5e7eb;
+}
+
+.services-cell {
+  color: #3b82f6;
+}
+
+.bar-cell {
+  color: #10b981;
+}
+
+.cash-cell {
+  color: #166534;
+}
+
+.transfer-cell {
+  color: #1e40af;
+}
+
+.total-cell {
+  color: #1f2937;
+  font-size: 1.1rem;
+}
+
+.total-row {
+  background: #f8fafc !important;
+  font-weight: 700;
+}
+
+.total-row .total-label {
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.employee-cell {
+  color: #6b7280;
+}
+
+.financial-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.financial-dashboard-btn:hover {
+  background: #7c3aed;
+}
+
+.financial-dashboard {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.financial-dashboard__header {
+  margin-bottom: 2rem;
+}
+
+.financial-dashboard__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.financial-dashboard__subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.financial-dashboard__summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.summary-card.services {
+  border-left: 4px solid #3b82f6;
+}
+
+.summary-card.bar {
+  border-left: 4px solid #10b981;
+}
+
+.summary-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.financial-dashboard__charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+}
+
+.chart-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.chart-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #9ca3af;
+}
+
+.transaction-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.transaction-edit-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.transaction-edit-form label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.transaction-edit-form input,
+.transaction-edit-form select {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transaction-edit-form input:focus,
+.transaction-edit-form select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.items-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.item-edit-row input {
+  flex: 1;
+}
+
+.item-price {
+  font-weight: 600;
+  color: #6b7280;
+  min-width: 80px;
+  text-align: right;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.btn-cancel {
+  padding: 0.65rem 1.25rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+.btn-save {
+  padding: 0.65rem 1.25rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-save:hover {
+  background: #2563eb;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transactions-header .section-title {
+  margin-bottom: 0;
+}
+
+.financial-dashboard__section {
+  margin-bottom: 2rem;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background 0.2s ease;
+}
+
+.btn-back:hover {
+  background: #e5e7eb;
+}
+
+.transfers-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.transfers-table thead {
+  background: #f8fafc;
+}
+
+.transfers-table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.transfers-table td {
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  color: #1f2937;
+  border-top: 1px solid #e5e7eb;
+}
+
+.transfers-table .no-data {
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem;
+}
+
+.btn-save-report {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: background 0.2s ease;
+}
+
+.btn-save-report:hover {
+  background: #059669;
+}
+
+@media (max-width: 768px) {
+  .transaction-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .financial-dashboard__charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.financial-report__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.financial-report__actions .financial-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.financial-report__actions .financial-dashboard-btn:hover {
+  background: #7c3aed;
+}
+
+.date-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.date-selector-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.date-selector svg {
+  color: #6b7280;
+}
+
+.date-input {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.transfers-table-wrapper {
+  max-width: 500px;
+}
+
+.transfers-table {
+  width: 100%;
+  max-width: 450px;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.transfers-table thead {
+  background: #f8fafc;
+}
+
+.transfers-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.transfers-table td {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: #1f2937;
+  border-top: 1px solid #e5e7eb;
+}
+
+.transfers-table .no-data {
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem;
+}
+
+.voucher-link {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.voucher-link:hover {
+  color: #2563eb;
+}
+
+.voucher-modal-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.voucher-placeholder {
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+}
+
+.voucher-placeholder p {
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.voucher-code-display {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937 !important;
+}
+
+.voucher-hint {
+  font-size: 0.8rem;
+  color: #9ca3af !important;
+  font-style: italic;
+}
+
+.btn-monthly-report {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #059669;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: background 0.2s ease;
+}
+
+.btn-monthly-report:hover {
+  background: #047857;
+}
+
+.month-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #374151;
+  background: white;
+  min-width: 180px;
+}
+
+.month-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn-toggle-clients {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: background 0.2s ease;
+}
+
+.btn-toggle-clients:hover {
+  background: #d97706;
+}
+
+.clients-chart-section {
+  margin-top: 1rem;
+}
