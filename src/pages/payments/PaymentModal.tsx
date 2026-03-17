@@ -23,13 +23,6 @@ const PaymentModal = ({ onClose }: Props) => {
       return;
     }
 
-    console.log("Pago registrado:", {
-      service: selectedService.name,
-      price: selectedService.price,
-      method: paymentMethod,
-      date: new Date(),
-    });
-
     onClose();
   };
 

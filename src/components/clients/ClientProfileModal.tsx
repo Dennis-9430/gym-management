@@ -1,8 +1,8 @@
 import type { ClientForm } from "../../types/client.types";
-import ClientInfo from "../clienteProfile/ClientInfo";
-import ClientMembership from "../clienteProfile/ClientMembership";
-import ClientStats from "../clienteProfile/ClientStats";
-import ClientPayments from "../clienteProfile/ClientPayments";
+import ClientInfo from "../clientProfile/ClientInfo";
+import ClientMembership from "../clientProfile/ClientMembership";
+import ClientStats from "../clientProfile/ClientStats";
+import ClientPayments from "../clientProfile/ClientPayments";
 import { X } from "lucide-react";
 import "../../styles/clientProfileCss/ClientProfile.css";
 

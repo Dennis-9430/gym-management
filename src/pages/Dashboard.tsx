@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { sections } from "../types/dashboard.section";
+import { sections, type DashboardSection } from "../types/dashboard.section";
 import PaymentModal from "../pages/payments/PaymentModal";
 import "../styles/dashboard.css";
 
@@ -13,7 +13,7 @@ const Dashboard = () => {
   const filteredSections = sections.filter((section) =>
     section.roles.includes(user.role),
   );
-  const handleAccess = (section: any) => {
+  const handleAccess = (section: DashboardSection) => {
     if (section.action === "NAVIGATE" && section.path) {
       setTimeout(() => {
         navigate(section.path);
@@ -43,6 +43,11 @@ const Dashboard = () => {
                 className="dashboard__card"
                 key={section.title}
                 onClick={() => handleAccess(section)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleAccess(section);
+                  }
+                }}
                 role="button"
                 tabIndex={0}
               >

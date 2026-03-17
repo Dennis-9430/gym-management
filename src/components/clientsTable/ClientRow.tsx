@@ -18,10 +18,8 @@ const ClientRow = ({ client, showActions, onRefresh }: Props) => {
     if (client.memberShipStatus !== "ACTIVE") {
       return;
     }
-    console.log("Registrar huella", client.id);
   };
   const removeFingerPrint = () => {
-    console.log("Eliminar huella", client.id);
   };
 
   const handleRenew = () => {

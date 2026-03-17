@@ -55,12 +55,12 @@ const normalizeUsername = (username: string) => username.trim().toLowerCase();
 
 const withDefaults = (employee: Employee): Employee => {
   return {
-    username: "",
-    notes: "",
-    phone: "",
-    address: "",
-    documentNumber: "",
     ...employee,
+    username: employee.username || "",
+    notes: employee.notes || "",
+    phone: employee.phone || "",
+    address: employee.address || "",
+    documentNumber: employee.documentNumber || "",
   };
 };
 

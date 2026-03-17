@@ -5,7 +5,7 @@ import EmployeeForm from "../../components/employees/EmployeeForm";
 import EmployeeSearch from "../../components/employees/EmployeeSearch";
 import EmployeeTable from "../../components/employees/EmployeeTable";
 import { useEmployees } from "../../hooks/useEmployees";
-import type { Employee, EmployeeInput } from "../../types/employee.types";
+import type { Employee, EmployeeInput, EmployeeUpdate } from "../../types/employee.types";
 import "../../styles/clientsRegister.css";
 import "../../styles/employees.css";
 
@@ -46,11 +46,11 @@ const EmployeesPage = () => {
     }
     try {
       if (editingEmployee) {
-        const payload = { ...values };
-        if (!payload.password.trim()) {
+        const payload: Record<string, unknown> = { ...values };
+        if (!payload.password || !(payload.password as string).trim()) {
           delete payload.password;
         }
-        updateEmployeeById(editingEmployee.id, payload);
+        updateEmployeeById(editingEmployee.id, payload as EmployeeUpdate);
       } else {
         addEmployee(values);
       }
