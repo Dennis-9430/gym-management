@@ -1,0 +1,87 @@
+# Commits del Proyecto - Gym Management
+
+## Commit 1: Refactorización del buscador de clientes en SaleModal y SubscriptionModal
+
+### Descripción:
+Se refactorizó la funcionalidad de búsqueda de clientes en los modales de venta y suscripción para mostrar coincidencias con más información y permitir visualizar los datos del cliente seleccionado.
+
+### Cambios realizados:
+
+**Archivos modificados:**
+
+1. `src/components/sales/SaleModal.tsx`
+   - Agregado prop `selectedClient` y `onSelectClient`
+   - Implementado dropdown de búsqueda que muestra: nombre, email, teléfono, dirección, cédula
+   - Agregada tarjeta de información del cliente debajo del buscador cuando se selecciona
+   - Grid de 2 columnas para mostrar: Cédula|Dirección - Email|Teléfono
+   - Botón "Consumidor final" con estilo pequeño y en la misma línea del buscador
+
+2. `src/components/sales/SubscriptionModal.tsx`
+   - Mismos cambios que SaleModal
+   - Dropdown con toda la información del cliente
+   - Tarjeta de cliente con grid 2x2
+   - Input deshabilitado cuando hay cliente seleccionado
+
+3. `src/hooks/features/usePOSClients.ts`
+   - Actualizado `saleClientResults` para buscar por: documento, nombre, apellido, email, teléfono, dirección
+   - Agregado parámetro `saleClientInput` para recibir el valor del estado externo
+   - Removido estado interno duplicado de `saleClientInput`
+
+4. `src/hooks/features/usePOS.ts`
+   - Reordenado el uso de hooks para sincronizar `saleClientInput` entre usePOSClients y usePOSSales
+   - Removidas funciones `handleClearSaleClient` y `handleConsumerFinal` del hook (la lógica de consumidor final ahora usa el cliente seed)
+
+5. `src/pages/sales/SalesPages.tsx`
+   - Actualizado paso de props a SaleModal y SubscriptionModal
+   - Removidas props `onClearClient` y `handleConsumerFinal` de SaleModal
+
+6. `src/pages/clients/ListClients.tsx`
+   - Removida prop `onClearClient` de SubscriptionModal
+
+7. `src/styles/pos.css`
+   - Agregados estilos para `.pos-client-actions`, `.pos-client-search`, `.pos-client-card`
+   - Estilos para la tarjeta de cliente con grid de 2 columnas
+
+8. `src/services/clients.service.ts`
+   - Agregado cliente "Consumidor Final" con documento "99999999" a los seed data
+   - ID: 999, Nombre: "Consumidor Final"
+
+### Lógica implementada:
+- El buscador permite filtrar clientes por cualquier campo (nombre, documento, email, teléfono, dirección)
+- Al seleccionar un cliente, se muestra una tarjeta con sus datos organizados en grid
+- El input se deshabilita cuando hay un cliente seleccionado
+- El botón "Consumidor Final" permite marcar ventas sin datos de cliente específico
+
+---
+
+## Commit 2: Ajustes al módulo de empleados
+
+### Descripción:
+Se ajustó el tamaño del formulario de empleado y se agregó icono al botón volver en el perfil.
+
+### Cambios realizados:
+
+1. `src/pages/employees/EmployeeProfilePage.tsx`
+   - Importado `ArrowLeft` de lucide-react
+   - Agregado icono al botón "Volver" en ambos casos (empleado encontrado y no encontrado)
+
+2. `src/styles/employees.css`
+   - Reducido gap de `.employee-form` de 0.8rem a 0.5rem
+   - Agregado padding de 0.8rem al formulario
+   - Reducido margin-bottom de `.form-group` a 0.3rem
+   - Reducido font-size de labels a 0.75rem
+   - Reducido font-size de inputs a 0.85rem
+   - Reducido padding de inputs
+   - Estilos más compactos para botones del formulario
+
+### Lógica implementada:
+- Formulario de empleado más compacto y pequeño
+- Botón "Volver" con icono de flecha izquierda
+
+---
+
+## Nota:
+Para que el cliente "Consumidor Final" aparezca, puede ser necesario limpiar el localStorage:
+```javascript
+localStorage.removeItem("gym-management.clients")
+```

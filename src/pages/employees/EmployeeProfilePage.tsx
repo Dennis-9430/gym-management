@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import EmployeePermissions from "../../components/employees/EmployeePermissions";
 import { getEmployeeById } from "../../services/employees.service";
 import "../../styles/clientProfileCss/ClientProfile.css";
@@ -19,6 +20,7 @@ const EmployeeProfilePage = () => {
       <main className="client-profile-container">
         <p>Empleado no encontrado</p>
         <button className="btn-back" onClick={() => navigate("/employees")}>
+          <ArrowLeft size={18} />
           Volver
         </button>
       </main>
@@ -30,6 +32,7 @@ const EmployeeProfilePage = () => {
       <div className="client-profile-container">
         <div className="profile-header">
           <button className="btn-back" onClick={() => navigate("/employees")}>
+            <ArrowLeft size={18} />
             Volver
           </button>
           <h2 className="profile-title">Perfil del Empleado</h2>
