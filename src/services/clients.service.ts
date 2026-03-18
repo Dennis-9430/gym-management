@@ -13,6 +13,25 @@ type StoredClient = Omit<
 
 const seedClients: StoredClient[] = [
   {
+    id: 999,
+    documentType: "CEDULA",
+    documentNumber: "99999999",
+    firstName: "Consumidor",
+    lastName: "Final",
+    phone: "",
+    email: "",
+    address: "",
+    emergencyContact: "",
+    emergencyPhone: "",
+    notes: "Consumidor final - sin factura",
+    createdAt: new Date().toISOString(),
+    memberShip: "Por registrar",
+    memberShipStartDate: new Date().toISOString(),
+    memberShipEndDate: new Date().toISOString(),
+    memberShipStatus: "NONE",
+    fingerPrint: false,
+  },
+  {
     id: 1,
     documentType: "CEDULA",
     documentNumber: "0102030405",
