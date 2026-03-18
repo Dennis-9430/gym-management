@@ -1,21 +1,3 @@
-/*
- * ============================================================
- * REFACTORIZADO: Card.tsx -> SalesPages.tsx
- * Fecha: 2026-03-16
- *
- * Cambios realizados:
- * - Extraída toda la lógica de negocio al hook usePOS
- * - Extraídos componentes de UI a src/components/sales/
- * - Eliminado código redundante (funciones ya existentes en utils)
- * - Estructura más limpia y mantenible
- *
- * Componentes extraídos:
- * - SalesDashboard.tsx: Cards de navegación
- * - PendingSubscriptions.tsx: Tabla de suscripciones pendientes
- * - SaleModal.tsx: Modal de venta de productos
- * - SubscriptionModal.tsx: Modal de suscripciones
- * ============================================================
- */
 import { useAuth } from "../../context/AuthContext";
 import { useLocation } from "react-router-dom";
 import { usePOS } from "../../hooks/features/usePOS";
@@ -27,7 +9,10 @@ import "../../styles/pos.css";
 
 const SalesPages = () => {
   const location = useLocation();
-  const state = location.state as { openSubscriptionModal?: boolean; client?: ClientForm } | null;
+  const state = location.state as {
+    openSubscriptionModal?: boolean;
+    client?: ClientForm;
+  } | null;
   const initialClient = state?.client;
 
   const { user } = useAuth();
@@ -45,6 +30,7 @@ const SalesPages = () => {
     transferAmount,
     voucherCode,
     saleClientResults,
+    matchedSaleClient,
     search,
     filteredCatalog,
 
@@ -125,6 +111,7 @@ const SalesPages = () => {
         onClientInputChange={setSaleClientInput}
         clientResults={saleClientResults}
         onSelectClient={handleSelectSaleClient}
+        selectedClient={matchedSaleClient}
         onSelectConsumerFinal={handleConsumerFinal}
         paymentMethod={paymentMethod}
         onPaymentMethodChange={setPaymentMethod}

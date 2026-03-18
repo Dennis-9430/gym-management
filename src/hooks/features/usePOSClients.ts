@@ -13,27 +13,34 @@ export interface UsePOSClientsReturn {
   setSubscriptionSearch: (value: string) => void;
   subscriptionClient: ClientForm | null;
   setSubscriptionClient: (client: ClientForm | null) => void;
+  clearSubscriptionClient: () => void;
   subscriptionResults: ClientForm[];
-  saleClientInput: string;
-  setSaleClientInput: (value: string) => void;
   saleClientResults: ClientForm[];
   matchedSaleClient: ClientForm | null;
   reloadClients: () => void;
 }
 
-export const usePOSClients = (initialSubscriptionClient?: ClientForm): UsePOSClientsReturn => {
-  const [clients, setClients] = useState<ClientForm[]>([]);
+export const usePOSClients = (
+  initialSubscriptionClient?: ClientForm,
+  saleClientInput?: string,
+): UsePOSClientsReturn => {
+  const [clients, setClients] = useState<ClientForm[]>(() => getClients());
   const [search, setSearch] = useState("");
   
   const [subscriptionSearch, setSubscriptionSearch] = useState(initialSubscriptionClient?.documentNumber || "");
   const [subscriptionClient, setSubscriptionClient] = useState<ClientForm | null>(initialSubscriptionClient || null);
-  
-  const [saleClientInput, setSaleClientInput] = useState("");
 
-  const reloadClients = useCallback(() => setClients(getClients()), []);
+  const reloadClients = useCallback(() => {
+    const loadedClients = getClients();
+    setClients(loadedClients);
+    return loadedClients;
+  }, []);
 
   useEffect(() => {
-    setClients(getClients());
+    const loadedClients = getClients();
+    if (loadedClients.length > 0 && clients.length === 0) {
+      setClients(loadedClients);
+    }
   }, []);
 
   const pendingClients = useMemo(
@@ -54,19 +61,21 @@ export const usePOSClients = (initialSubscriptionClient?: ClientForm): UsePOSCli
   }, [clients, subscriptionSearch]);
 
   const saleClientResults = useMemo(() => {
-    if (!saleClientInput.trim()) {
+    const input = saleClientInput || "";
+    if (!input.trim()) {
       return [];
     }
     return clients.filter((client) =>
       matchesQuery(
-        `${client.documentNumber} ${client.firstName} ${client.lastName}`,
-        saleClientInput,
+        `${client.documentNumber} ${client.firstName} ${client.lastName} ${client.email} ${client.phone} ${client.address}`,
+        input,
       ),
     );
   }, [clients, saleClientInput]);
 
   const matchedSaleClient = useMemo(() => {
-    const normalized = normalizeDocument(saleClientInput);
+    const input = saleClientInput || "";
+    const normalized = normalizeDocument(input);
     if (!normalized) {
       return null;
     }
@@ -106,9 +115,11 @@ export const usePOSClients = (initialSubscriptionClient?: ClientForm): UsePOSCli
     setSubscriptionSearch,
     subscriptionClient,
     setSubscriptionClient,
+    clearSubscriptionClient: useCallback(() => {
+      setSubscriptionSearch("");
+      setSubscriptionClient(null);
+    }, [setSubscriptionSearch, setSubscriptionClient]),
     subscriptionResults,
-    saleClientInput,
-    setSaleClientInput,
     saleClientResults,
     matchedSaleClient,
     reloadClients,

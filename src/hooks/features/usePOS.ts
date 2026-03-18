@@ -118,6 +118,7 @@ export interface UsePOSReturn {
   handleOpenSubscriptionModal: (client?: ReturnType<typeof usePOSClients>["clients"][number]) => void;
   handleCloseSubscriptionModal: () => void;
   handleSelectSubscriptionClient: (client: ReturnType<typeof usePOSClients>["clients"][number]) => void;
+  handleClearSubscriptionClient: () => void;
   handleSelectService: (service: Service) => void;
   handleSubscriptionDiscountPercent: (value: number) => void;
   handleSubscriptionDiscountUsd: (value: number) => void;
@@ -138,9 +139,15 @@ export interface UsePOSReturn {
 
 export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => {
   const cart = useCart();
-  const clients = usePOSClients(initialSubscriptionClient);
-  const sales = usePOSSales(cart.totals, cart.items, cart.clearCart, clients.matchedSaleClient);
+  const sales = usePOSSales(cart.totals, cart.items, cart.clearCart, null);
+  const clients = usePOSClients(initialSubscriptionClient, sales.saleClientInput);
   const subscription = usePOSSubscription(clients.clients, clients.reloadClients, initialSubscriptionClient);
+
+  useEffect(() => {
+    if (!clients.clients.length) {
+      clients.reloadClients();
+    }
+  }, [clients.clients, clients.reloadClients]);
 
   useEffect(() => {
     if (initialSubscriptionClient) {
@@ -271,6 +278,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     handleOpenSubscriptionModal: subscription.handleOpenSubscriptionModal,
     handleCloseSubscriptionModal: subscription.handleCloseSubscriptionModal,
     handleSelectSubscriptionClient: subscription.handleSelectSubscriptionClient,
+    handleClearSubscriptionClient: clients.clearSubscriptionClient,
     handleSelectService: subscription.handleSelectService,
     handleSubscriptionDiscountPercent: subscription.handleSubscriptionDiscountPercent,
     handleSubscriptionDiscountUsd: subscription.handleSubscriptionDiscountUsd,

@@ -22,7 +22,7 @@ export const initialState: State = {
   search: "",
   sortField: null,
   sortDirection: "asc",
-  filterMode: "ALL",
+  filterMode: "ACTIVE",
 };
 
 const isActive = (client: ClientForm) => client.memberShipStatus === "ACTIVE";
