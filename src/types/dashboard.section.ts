@@ -16,14 +16,18 @@ export interface DashboardSection {
   action: SectionAction;
   icon: LucideIcon;
   roles: Role[];
+  buttonLabel?: string;
+  description?: string;
 }
 export const sections: DashboardSection[] = [
   {
-    title: "Registro de Pago",
+    title: "Registro de Pago Diario",
     path: "/payments",
     icon: DollarSign,
     action: "MODAL",
     roles: ["ADMIN", "RECEPCIONISTA"],
+    buttonLabel: "Registrar",
+    description: "Registra pagos de membresías",
   },
 
   {
@@ -32,6 +36,8 @@ export const sections: DashboardSection[] = [
     icon: Users,
     action: "NAVIGATE",
     roles: ["ADMIN", "RECEPCIONISTA", "ENTRENADOR"],
+    buttonLabel: "Ver lista",
+    description: "Gestiona clientes del gimnasio",
   },
   {
     title: "Productos",
@@ -39,6 +45,8 @@ export const sections: DashboardSection[] = [
     icon: Package,
     action: "NAVIGATE",
     roles: ["ADMIN", "RECEPCIONISTA"],
+    buttonLabel: "Ver productos",
+    description: "Administra inventario",
   },
   {
     title: "Ventas",
@@ -46,6 +54,8 @@ export const sections: DashboardSection[] = [
     icon: ShoppingCart,
     action: "NAVIGATE",
     roles: ["ADMIN", "RECEPCIONISTA"],
+    buttonLabel: "Ir a ventas",
+    description: "Registro de ventas y suscripciones",
   },
   {
     title: "Registrar Personal",
@@ -53,6 +63,8 @@ export const sections: DashboardSection[] = [
     icon: UserCog,
     action: "NAVIGATE",
     roles: ["ADMIN"],
+    buttonLabel: "Ver personal",
+    description: "Gestiona empleados",
   },
   {
     title: "Reporte Financiero",
@@ -60,6 +72,7 @@ export const sections: DashboardSection[] = [
     icon: BarChart3,
     action: "NAVIGATE",
     roles: ["ADMIN"],
+    buttonLabel: "Ver reportes",
+    description: "Análisis financiero del negocio",
   },
 ];
-

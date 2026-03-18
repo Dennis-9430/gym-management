@@ -3,12 +3,31 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 67px);
+  box-sizing: border-box;
 }
 
-/*search bar*/
-
 .client-search-bar {
+  flex-shrink: 0;
   margin-bottom: 1rem;
+}
+
+.client-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+  border-radius: 10px;
+}
+
+/*table*/
+.client-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .search-actions {

@@ -22,14 +22,14 @@ export const PRODUCT_CATEGORY_LABELS: Record<ProductCategory, string> = {
 };
 
 export interface Product {
-  price?: number;
-  stock?: number;
   id: number;
+  code: string;
   name: string;
   description: string;
   category: ProductCategory;
   unitPrice: number;
   quantity: number;
+  minStock: number;
   createdAt: string;
 }
 

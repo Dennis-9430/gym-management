@@ -2,6 +2,10 @@
   padding: 2rem clamp(1rem, 3vw, 2.5rem);
   background: #eef2f7;
   min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 67px);
+  box-sizing: border-box;
 }
 
 .products-header {
@@ -10,6 +14,15 @@
   align-items: center;
   gap: 1.5rem;
   flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.products-list {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+  border-radius: 10px;
+  margin-top: 1rem;
 }
 
 .products-header h2 {
@@ -58,7 +71,9 @@
   border: 1px solid #d1d5db;
   background: white;
   font-size: 0.95rem;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .product-search:focus {
@@ -87,7 +102,9 @@
   color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
 }
 
 .product-add-btn:hover {
@@ -143,23 +160,44 @@
   background: #f9fafb;
 }
 
+.product-table .btn-edit,
+.product-table .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+  min-width: 80px;
+}
+
 .product-table .actions {
   display: flex;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .product-table .btn-edit,
 .product-table .btn-delete {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.35rem;
   padding: 0.35rem 0.7rem;
   border-radius: 8px;
+  margin: 0;
   border: none;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.2s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease;
 }
 
 .product-table .btn-edit {
@@ -192,10 +230,10 @@
 }
 
 .product-modal {
-  width: min(720px, 100%);
+  width: min(500px, 100%);
   background: white;
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1.25rem;
   border: 1px solid #e5e7eb;
   box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
   max-height: 90vh;
@@ -253,11 +291,18 @@
 .input-with-icon textarea,
 .input-with-icon select {
   width: 100%;
-  padding-left: 2.4rem;
+  padding-left: 2.2rem;
+  font-size: 0.85rem;
+}
+
+.input-with-icon input,
+.input-with-icon textarea,
+.input-with-icon select {
+  padding: 0.4rem 0.5rem;
 }
 
 .input-with-icon textarea {
-  min-height: 100px;
+  min-height: 60px;
 }
 
 .textarea-field svg {
