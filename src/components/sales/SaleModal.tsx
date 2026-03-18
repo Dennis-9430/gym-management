@@ -20,6 +20,7 @@ interface SaleModalProps {
   clientInput: string;
   onClientInputChange: (value: string) => void;
   clientResults: ClientForm[];
+  selectedClient: ClientForm | null;
   onSelectClient: (client: ClientForm) => void;
   onSelectConsumerFinal: () => void;
   
@@ -61,6 +62,7 @@ const SaleModal = ({
   clientInput,
   onClientInputChange,
   clientResults,
+  selectedClient,
   onSelectClient,
   onSelectConsumerFinal,
   paymentMethod,
@@ -104,51 +106,78 @@ const SaleModal = ({
           </button>
         </div>
 
-        <div className="pos-modal-body">
-          {/* Cliente */}
-          <div className="pos-section">
-            <div className="pos-section-title">
-              <UserRound size={18} />
-              <h4>Cliente</h4>
-            </div>
-            <div className="pos-search-wrapper">
-              <div className="pos-search">
-                <Search size={16} />
-                <input
-                  value={clientInput}
-                  onChange={(e) => onClientInputChange(e.target.value)}
-                  placeholder="Buscar por cedula o nombre"
-                />
+          <div className="pos-modal-body">
+            {/* Cliente */}
+            <div className="pos-section">
+              <div className="pos-section-title">
+                <UserRound size={18} />
+                <h4>Cliente</h4>
               </div>
-              {clientInput.trim().length > 0 && (
-                <ul className="pos-search-dropdown">
-                  {clientResults.length > 0 ? (
-                    clientResults.map((client) => (
-                      <li key={client.id}>
-                        <button type="button" onClick={() => onSelectClient(client)}>
-                          <span className="pos-suggestion-title">
-                            {client.firstName} {client.lastName}
-                          </span>
-                          <span className="pos-suggestion-meta">
-                            Cedula: {client.documentNumber}
-                          </span>
-                        </button>
-                      </li>
-                    ))
-                  ) : (
-                    <li className="pos-suggestion-empty">Sin coincidencias</li>
+              <div 
+                className="pos-client-actions"
+                style={{ marginBottom: (clientInput.trim().length > 0 || selectedClient) ? '20px' : '0' }}
+              >
+                <div className="pos-search-wrapper">
+                  <div className="pos-search">
+                    <Search size={16} />
+                  <input
+                    value={clientInput}
+                    onChange={(e) => onClientInputChange(e.target.value)}
+                    placeholder="Buscar por cedula o nombre"
+                    disabled={!!selectedClient}
+                  />
+                  </div>
+                  {clientInput.trim().length > 0 && clientInput.trim() !== "99999999" && !selectedClient && (
+                    <ul className="pos-search-dropdown">
+                      {clientResults.length > 0 ? (
+                        clientResults.map((client) => (
+                          <li key={client.id}>
+                            <button type="button" onClick={() => onSelectClient(client)}>
+                              <span className="pos-suggestion-title">
+                                {client.firstName} {client.lastName}
+                                <span className="sep">|</span> {client.email}
+                                <span className="sep">|</span> {client.phone}
+                                <span className="sep">|</span> {client.address}
+                              </span>
+                              <span className="pos-suggestion-meta">
+                                <span className="sep-right">Cedula:</span> {client.documentNumber}
+                              </span>
+                            </button>
+                          </li>
+                        ))
+                      ) : (
+                        <li className="pos-suggestion-empty">Sin coincidencias</li>
+                      )}
+                    </ul>
                   )}
-                </ul>
+                </div>
+                {!selectedClient && (
+                  <button
+                    type="button"
+                    className="pos-consumer-btn"
+                    onClick={() => {
+                      onSelectConsumerFinal();
+                      onClientInputChange("99999999");
+                    }}
+                  >
+                    Consumidor final
+                  </button>
+                )}
+              </div>
+              {selectedClient && (
+                <div className="pos-client-card" style={{ marginTop: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <strong>{selectedClient.firstName} {selectedClient.lastName}</strong>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', fontSize: '0.85rem', color: '#64748b' }}>
+                    <div>Cedula:<br/><strong style={{color: '#0f172a'}}>{selectedClient.documentNumber}</strong></div>
+                    {selectedClient.address && <div>Direccion:<br/><strong style={{color: '#0f172a'}}>{selectedClient.address}</strong></div>}
+                    {selectedClient.email && <div>Email:<br/><strong style={{color: '#0f172a'}}>{selectedClient.email}</strong></div>}
+                    {selectedClient.phone && <div>Telefono:<br/><strong style={{color: '#0f172a'}}>{selectedClient.phone}</strong></div>}
+                  </div>
+                </div>
               )}
             </div>
-            <button
-              type="button"
-              className="pos-consumer-btn"
-              onClick={onSelectConsumerFinal}
-            >
-              Consumidor final
-            </button>
-          </div>
 
           {/* Pago */}
           <div className="pos-section">

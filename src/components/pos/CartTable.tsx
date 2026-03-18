@@ -1,4 +1,4 @@
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import type { CartItem } from "../../types/pos.types";
 import { round2, parseDecimal } from "../../utils/format/number";
 
@@ -15,14 +15,14 @@ const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: 
     <table className="pos-cart-table">
       <thead>
         <tr>
-          <th>Codigo</th>
+          <th>Cod</th>
           <th>Nombre</th>
           <th>Descripcion</th>
           <th>Cantidad</th>
-          <th>Precio unitario</th>
-          <th>Descuento unitario</th>
+          <th>Precio</th>
+          <th>Desc %</th>
           <th>IVA</th>
-          <th>Precio total</th>
+          <th>Total</th>
           <th></th>
         </tr>
       </thead>
@@ -45,12 +45,6 @@ const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: 
                 <td className="pos-description">{description}</td>
                 <td>
                   <div className="pos-qty-control">
-                    <button
-                      type="button"
-                      onClick={() => onQtyChange(item.key, item.quantity - 1)}
-                    >
-                      <Minus size={14} />
-                    </button>
                     <input
                       type="number"
                       min="1"
@@ -58,13 +52,22 @@ const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: 
                       onChange={(e) =>
                         onQtyChange(item.key, Number(e.target.value))
                       }
+                      className="pos-qty-input"
                     />
-                    <button
-                      type="button"
-                      onClick={() => onQtyChange(item.key, item.quantity + 1)}
-                    >
-                      <Plus size={14} />
-                    </button>
+                    <div className="pos-qty-buttons">
+                      <button
+                        type="button"
+                        onClick={() => onQtyChange(item.key, item.quantity + 1)}
+                      >
+                        ↑
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onQtyChange(item.key, Math.max(1, item.quantity - 1))}
+                      >
+                        ↓
+                      </button>
+                    </div>
                   </div>
                 </td>
                 <td>${item.unitPrice.toFixed(2)}</td>
@@ -73,7 +76,8 @@ const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: 
                     className="pos-discount-input"
                     type="text"
                     inputMode="decimal"
-                    value={item.unitDiscount}
+                    placeholder="%"
+                    value={item.unitDiscount > 0 ? `${item.unitDiscount}%` : ""}
                     onChange={(e) =>
                       onDiscountChange(item.key, parseDecimal(e.target.value))
                     }

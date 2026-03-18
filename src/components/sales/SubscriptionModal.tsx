@@ -121,9 +121,10 @@ const SubscriptionModal = ({
                   value={search}
                   onChange={(e) => onSearchChange(e.target.value)}
                   placeholder="Buscar por cedula o nombre"
+                  disabled={!!selectedClient}
                 />
               </div>
-              {search.trim().length > 0 && (
+              {search.trim().length > 0 && !selectedClient && (
                 <ul className="pos-search-dropdown">
                   {clientResults.length > 0 ? (
                     clientResults.map((client) => (
@@ -133,7 +134,7 @@ const SubscriptionModal = ({
                           onClick={() => onSelectClient(client)}
                         >
                           <span className="pos-suggestion-title">
-                            {client.firstName} {client.lastName} 
+                            {client.firstName} {client.lastName}
                             <span className="sep">|</span> {client.email}
                             <span className="sep">|</span> {client.phone}
                             <span className="sep">|</span> {client.address}
@@ -150,6 +151,19 @@ const SubscriptionModal = ({
                 </ul>
               )}
             </div>
+            {selectedClient && (
+              <div className="pos-client-card" style={{ marginTop: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <strong>{selectedClient.firstName} {selectedClient.lastName}</strong>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', fontSize: '0.85rem', color: '#64748b' }}>
+                  <div>Cedula:<br/><strong style={{color: '#0f172a'}}>{selectedClient.documentNumber}</strong></div>
+                  {selectedClient.address && <div>Direccion:<br/><strong style={{color: '#0f172a'}}>{selectedClient.address}</strong></div>}
+                  {selectedClient.email && <div>Email:<br/><strong style={{color: '#0f172a'}}>{selectedClient.email}</strong></div>}
+                  {selectedClient.phone && <div>Telefono:<br/><strong style={{color: '#0f172a'}}>{selectedClient.phone}</strong></div>}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Suscripcion */}

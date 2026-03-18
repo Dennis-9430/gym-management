@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Hash, Package, FileText, Tag, DollarSign, Layers } from "lucide-react";
+import { Package, FileText, Tag, DollarSign, Layers, AlertTriangle } from "lucide-react";
 import type { ProductInput } from "../../types/product.types";
 import {
   PRODUCT_CATEGORIES,
@@ -15,15 +15,16 @@ interface Props {
 }
 
 const defaultValues: ProductInput = {
+  code: "",
   name: "",
   description: "",
   category: "SUPLEMENTOS",
   unitPrice: 0,
   quantity: 0,
+  minStock: 5,
 };
 
 const ProductForm = ({
-  idValue,
   initialValues,
   onSubmit,
   onCancel,
@@ -54,13 +55,18 @@ const ProductForm = ({
     e.preventDefault();
     setError(null);
 
+    if (!form.code.trim()) {
+      setError("El código del producto es obligatorio");
+      return;
+    }
+
     if (!form.name.trim()) {
       setError("El nombre es obligatorio");
       return;
     }
 
     if (!form.description.trim()) {
-      setError("La descripcion es obligatoria");
+      setError("La descripción es obligatoria");
       return;
     }
 
@@ -76,6 +82,7 @@ const ProductForm = ({
 
     onSubmit({
       ...form,
+      code: form.code.trim(),
       name: form.name.trim(),
       description: form.description.trim(),
     });
@@ -84,13 +91,13 @@ const ProductForm = ({
   return (
     <form className="register-form product-form" onSubmit={handleSubmit}>
       <div className="form-group">
-        <label>ID</label>
+        <label>Código del producto</label>
         <div className="input-with-icon">
-          <Hash size={16} />
+          <Tag size={16} />
           <input
-            value={idValue ? String(idValue) : ""}
-            placeholder="Automatico"
-            disabled
+            value={form.code}
+            onChange={(e) => updateField("code", e.target.value)}
+            placeholder="Código SKU o barras"
           />
         </div>
       </div>
@@ -108,19 +115,19 @@ const ProductForm = ({
       </div>
 
       <div className="form-group full-width">
-        <label>Descripcion</label>
+        <label>Descripción</label>
         <div className="input-with-icon textarea-field">
           <FileText size={16} />
           <textarea
             value={form.description}
             onChange={(e) => updateField("description", e.target.value)}
-            placeholder="Descripcion"
+            placeholder="Descripción"
           />
         </div>
       </div>
 
       <div className="form-group">
-        <label>Categoria</label>
+        <label>Categoría</label>
         <div className="input-with-icon">
           <Tag size={16} />
           <select
@@ -165,6 +172,20 @@ const ProductForm = ({
             step="1"
             value={form.quantity}
             onChange={(e) => updateField("quantity", Number(e.target.value))}
+          />
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label>Stock mínimo</label>
+        <div className="input-with-icon">
+          <AlertTriangle size={16} />
+          <input
+            type="number"
+            min="0"
+            step="1"
+            value={form.minStock}
+            onChange={(e) => updateField("minStock", Number(e.target.value))}
           />
         </div>
       </div>

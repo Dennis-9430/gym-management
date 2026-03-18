@@ -38,7 +38,7 @@ const ClientTable = ({
     );
   };
   return (
-    <div className="clients-table-wrapper">
+    <div className="client-table-wrapper">
       <div className="clients-stats">
         Usuarios: {totalClients} | Activos: {activeClients}
       </div>
