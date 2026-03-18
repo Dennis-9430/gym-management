@@ -3,17 +3,21 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { sections, type DashboardSection } from "../types/dashboard.section";
 import PaymentModal from "../pages/payments/PaymentModal";
+import DashboardCard from "../components/dashboard/DashboardCard";
 import "../styles/dashboard.css";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+
   if (!user) return null;
+
   const filteredSections = sections.filter((section) =>
     section.roles.includes(user.role),
   );
-  const handleAccess = (section: DashboardSection) => {
+
+  const handleAction = (section: DashboardSection) => {
     if (section.action === "NAVIGATE" && section.path) {
       setTimeout(() => {
         navigate(section.path);
@@ -23,6 +27,7 @@ const Dashboard = () => {
       setShowPaymentModal(true);
     }
   };
+
   return (
     <main className="dashboard">
       <div className="dashboard__container">
@@ -39,27 +44,19 @@ const Dashboard = () => {
           {filteredSections.map((section) => {
             const Icon = section.icon;
             return (
-              <div
-                className="dashboard__card"
+              <DashboardCard
                 key={section.title}
-                onClick={() => handleAccess(section)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handleAccess(section);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-              >
-                <div className="dashboard__icon">
-                  <Icon size={42} strokeWidth={1.8}></Icon>
-                </div>
-                <h3 className="dashboard__card-title">{section.title}</h3>
-              </div>
+                title={section.title}
+                icon={<Icon size={32} strokeWidth={1.8} />}
+                description={section.description}
+                buttonLabel={section.buttonLabel || "Abrir"}
+                onClick={() => handleAction(section)}
+              />
             );
           })}
         </div>
       </div>
+
       {showPaymentModal && (
         <PaymentModal onClose={() => setShowPaymentModal(false)}></PaymentModal>
       )}
