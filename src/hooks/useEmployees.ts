@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
 import {
   getEmployees,
@@ -8,16 +8,12 @@ import {
 } from "../services/employees.service";
 
 export const useEmployees = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>(() => getEmployees());
   const [search, setSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     setEmployees(getEmployees());
-  };
-
-  useEffect(() => {
-    refresh();
   }, []);
 
   const filteredEmployees = useMemo(() => {

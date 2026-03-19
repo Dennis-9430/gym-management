@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import type { SaleRecord, PaymentMethod } from "../../types/sales.types";
 import Modal from "../common/Modal";
 
@@ -16,17 +16,20 @@ const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
 ];
 
 const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) => {
-  const [method, setMethod] = useState<PaymentMethod>("CASH");
-  const [cashAmount, setCashAmount] = useState("");
-  const [transferAmount, setTransferAmount] = useState("");
-
-  useEffect(() => {
-    if (transaction) {
-      setMethod(transaction.payment.method);
-      setCashAmount(transaction.payment.cashAmount.toString());
-      setTransferAmount(transaction.payment.transferAmount.toString());
+  const initialValues = useMemo(() => {
+    if (!transaction) {
+      return { method: "CASH" as PaymentMethod, cashAmount: "", transferAmount: "" };
     }
+    return {
+      method: transaction.payment.method,
+      cashAmount: transaction.payment.cashAmount.toString(),
+      transferAmount: transaction.payment.transferAmount.toString(),
+    };
   }, [transaction]);
+
+  const [method, setMethod] = useState<PaymentMethod>(initialValues.method);
+  const [cashAmount, setCashAmount] = useState(initialValues.cashAmount);
+  const [transferAmount, setTransferAmount] = useState(initialValues.transferAmount);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

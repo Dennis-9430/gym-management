@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useEffect } from "react";
+import { useMemo, useCallback, useEffect, useRef } from "react";
 import { getProducts } from "../../services/products.service";
 import { services } from "../../types/payment.types";
 import type { CatalogItem } from "../../types/pos.types";
@@ -142,18 +142,14 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
   const sales = usePOSSales(cart.totals, cart.items, cart.clearCart, null);
   const clients = usePOSClients(initialSubscriptionClient, sales.saleClientInput);
   const subscription = usePOSSubscription(clients.clients, clients.reloadClients, initialSubscriptionClient);
+  const hasOpenedModal = useRef(false);
 
   useEffect(() => {
-    if (!clients.clients.length) {
-      clients.reloadClients();
-    }
-  }, [clients.clients, clients.reloadClients]);
-
-  useEffect(() => {
-    if (initialSubscriptionClient) {
+    if (initialSubscriptionClient && !hasOpenedModal.current) {
+      hasOpenedModal.current = true;
       subscription.setSubscriptionModalOpen(true);
     }
-  }, []);
+  }, [initialSubscriptionClient, subscription]);
   
   const catalog = useMemo(() => buildCatalog(), []);
 
@@ -172,17 +168,17 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
       return;
     }
     cart.updateQuantity(key, quantity);
-  }, [cart.updateQuantity]);
+  }, [cart]);
 
   const handleDiscountChange = useCallback((value: number) => {
     const percent = Math.min(Math.max(value, 0), 100);
     cart.setDiscountRate(percent / 100);
-  }, [cart.setDiscountRate]);
+  }, [cart]);
 
   const handleTaxChange = useCallback((value: number) => {
     const percent = Math.min(Math.max(value, 0), 100);
     cart.setTaxRate(percent / 100);
-  }, [cart.setTaxRate]);
+  }, [cart]);
 
   const handleClear = useCallback(() => {
     if (!cart.items.length) {
@@ -191,12 +187,12 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     if (confirm("Deseas limpiar el carrito?")) {
       cart.clearCart();
     }
-  }, [cart.items.length, cart.clearCart]);
+  }, [cart]);
 
   const handleAddFromSearch = useCallback((item: CatalogItem) => {
     cart.addItem(item);
     clients.setSearch("");
-  }, [cart.addItem, clients.setSearch]);
+  }, [cart, clients]);
 
   const discountPercent = Number((cart.discountRate * 100).toFixed(2));
   const taxPercent = Number((cart.taxRate * 100).toFixed(2));

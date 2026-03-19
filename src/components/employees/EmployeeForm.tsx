@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 import { User, IdCard, Mail, Phone, MapPin, Lock, Shield } from "lucide-react";
 import type {
   EmployeeInput,
@@ -39,16 +39,12 @@ const EmployeeForm = ({
   submitLabel = "Guardar",
   requirePassword = true,
 }: Props) => {
-  const [form, setForm] = useState<EmployeeInput>(
-    initialValues ? { ...defaultValues, ...initialValues } : defaultValues,
+  const initialForm = useMemo(
+    () => (initialValues ? { ...defaultValues, ...initialValues } : defaultValues),
+    [initialValues],
   );
+  const [form, setForm] = useState<EmployeeInput>(initialForm);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialValues) {
-      setForm({ ...defaultValues, ...initialValues });
-    }
-  }, [initialValues]);
 
   const updateField = <K extends keyof EmployeeInput>(
     field: K,

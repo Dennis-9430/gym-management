@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 import { Package, FileText, Tag, DollarSign, Layers, AlertTriangle } from "lucide-react";
 import type { ProductInput } from "../../types/product.types";
 import {
@@ -30,16 +30,12 @@ const ProductForm = ({
   onCancel,
   submitLabel = "Guardar",
 }: Props) => {
-  const [form, setForm] = useState<ProductInput>(
-    initialValues ? { ...defaultValues, ...initialValues } : defaultValues,
+  const initialForm = useMemo(
+    () => (initialValues ? { ...defaultValues, ...initialValues } : defaultValues),
+    [initialValues],
   );
+  const [form, setForm] = useState<ProductInput>(initialForm);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialValues) {
-      setForm({ ...defaultValues, ...initialValues });
-    }
-  }, [initialValues]);
 
   const updateField = <K extends keyof ProductInput>(
     field: K,

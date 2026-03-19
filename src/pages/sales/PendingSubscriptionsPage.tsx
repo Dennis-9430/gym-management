@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { ClientForm } from "../../types/client.types";
 import { getClients, updateClient } from "../../services/clients.service";
@@ -7,13 +7,9 @@ import "../../styles/pos.css";
 
 const PendingSubscriptionsPage = () => {
   const navigate = useNavigate();
-  const [clients, setClients] = useState<ClientForm[]>([]);
+  const [clients, setClients] = useState<ClientForm[]>(() => getClients());
 
-  useEffect(() => {
-    setClients(getClients());
-  }, []);
-
-  const reloadClients = () => setClients(getClients());
+  const reloadClients = useCallback(() => setClients(getClients()), []);
 
   const pendingClients = clients.filter(
     (client) => client.memberShipStatus === "NONE"

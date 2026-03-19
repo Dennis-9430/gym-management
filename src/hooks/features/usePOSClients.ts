@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { getClients } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";
 import { matchesQuery, normalizeDocument } from "../../utils/string/normalize";
@@ -34,13 +34,6 @@ export const usePOSClients = (
     const loadedClients = getClients();
     setClients(loadedClients);
     return loadedClients;
-  }, []);
-
-  useEffect(() => {
-    const loadedClients = getClients();
-    if (loadedClients.length > 0 && clients.length === 0) {
-      setClients(loadedClients);
-    }
   }, []);
 
   const pendingClients = useMemo(
@@ -86,8 +79,14 @@ export const usePOSClients = (
     );
   }, [clients, saleClientInput]);
 
-  useEffect(() => {
-    const normalized = normalizeDocument(subscriptionSearch);
+  const clearSubscriptionClient = useCallback(() => {
+    setSubscriptionSearch("");
+    setSubscriptionClient(null);
+  }, []);
+
+  const handleSubscriptionSearchChange = useCallback((value: string) => {
+    setSubscriptionSearch(value);
+    const normalized = normalizeDocument(value);
     if (!normalized) {
       setSubscriptionClient(null);
       return;
@@ -95,15 +94,8 @@ export const usePOSClients = (
     const match = clients.find(
       (client) => normalizeDocument(client.documentNumber) === normalized,
     );
-    if (match) {
-      setSubscriptionClient(match);
-    } else if (
-      subscriptionClient &&
-      normalizeDocument(subscriptionClient.documentNumber) !== normalized
-    ) {
-      setSubscriptionClient(null);
-    }
-  }, [clients, subscriptionClient, subscriptionSearch]);
+    setSubscriptionClient(match || null);
+  }, [clients]);
 
   return {
     clients,
@@ -112,13 +104,10 @@ export const usePOSClients = (
     filteredCatalog: [],
     pendingClients,
     subscriptionSearch,
-    setSubscriptionSearch,
+    setSubscriptionSearch: handleSubscriptionSearchChange,
     subscriptionClient,
     setSubscriptionClient,
-    clearSubscriptionClient: useCallback(() => {
-      setSubscriptionSearch("");
-      setSubscriptionClient(null);
-    }, [setSubscriptionSearch, setSubscriptionClient]),
+    clearSubscriptionClient,
     subscriptionResults,
     saleClientResults,
     matchedSaleClient,

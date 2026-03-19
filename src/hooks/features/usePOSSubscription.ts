@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
 import type { PaymentMethod } from "../../types/sales.types";
@@ -93,22 +93,23 @@ export const usePOSSubscription = (
     Math.max(subscriptionPaidValue - subscriptionTotal, 0),
   );
 
-  useEffect(() => {
-    if (subscriptionPaymentMethod === "CASH") {
-      setSubscriptionCashAmount(subscriptionTotal);
+  const handleSubscriptionPaymentMethodChange = useCallback((value: PaymentMethod) => {
+    const total = subscriptionTotal;
+    setSubscriptionPaymentMethod(value);
+    if (value === "CASH") {
+      setSubscriptionCashAmount(total);
       setSubscriptionTransferAmount(0);
-      setSubscriptionPaid(subscriptionTotal);
-      return;
-    }
-    if (subscriptionPaymentMethod === "TRANSFER") {
+      setSubscriptionPaid(total);
+    } else if (value === "TRANSFER") {
       setSubscriptionCashAmount(0);
-      setSubscriptionTransferAmount(subscriptionTotal);
-      setSubscriptionPaid(subscriptionTotal);
-      return;
+      setSubscriptionTransferAmount(total);
+      setSubscriptionPaid(total);
+    } else {
+      setSubscriptionCashAmount(total);
+      setSubscriptionTransferAmount(0);
+      setSubscriptionPaid(0);
     }
-    setSubscriptionCashAmount(subscriptionTotal);
-    setSubscriptionTransferAmount(0);
-  }, [subscriptionPaymentMethod, subscriptionTotal]);
+  }, [subscriptionTotal]);
 
   const handleOpenSubscriptionModal = useCallback((client?: ClientForm) => {
     if (client) {
@@ -124,7 +125,6 @@ export const usePOSSubscription = (
     setSubscriptionClient(null);
     setSubscriptionService(null);
     setSubscriptionShowServices(false);
-    setSubscriptionPaymentMethod("CASH");
     setSubscriptionCashAmount(0);
     setSubscriptionTransferAmount(0);
     setSubscriptionPaid(0);
@@ -272,7 +272,7 @@ export const usePOSSubscription = (
     subscriptionShowServices,
     setSubscriptionShowServices,
     subscriptionPaymentMethod,
-    setSubscriptionPaymentMethod,
+    setSubscriptionPaymentMethod: handleSubscriptionPaymentMethodChange,
     subscriptionCashAmount,
     setSubscriptionCashAmount,
     subscriptionTransferAmount,

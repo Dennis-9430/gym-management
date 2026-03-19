@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import type { Product, ProductInput, ProductUpdate, ProductCategory } from "../types/product.types";
 import { PRODUCT_CATEGORY_LABELS } from "../types/product.types";
 import {
@@ -11,17 +11,13 @@ import {
 type CategoryFilter = ProductCategory | "ALL";
 
 export const useProducts = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(() => getProducts());
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("ALL");
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     setProducts(getProducts());
-  };
-
-  useEffect(() => {
-    refresh();
   }, []);
 
   const filteredProducts = useMemo(() => {
