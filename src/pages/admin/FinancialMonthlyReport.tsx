@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTransactions } from "../../hooks/useTransactions";
 import FinancialSummaryTable from "../../components/financial/FinancialSummaryTable";
-import { ArrowLeft, Calendar, Users } from "lucide-react";
+import { ArrowLeft, Calendar } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -22,12 +22,6 @@ interface DailyData {
   total: number;
 }
 
-interface ClientData {
-  clientName: string;
-  visits: number;
-  total: number;
-}
-
 const FinancialMonthlyReport = () => {
   const navigate = useNavigate();
   const { transactions } = useTransactions();
@@ -35,7 +29,6 @@ const FinancialMonthlyReport = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>(
     new Date().toISOString().slice(0, 7)
   );
-  const [showClientsChart, setShowClientsChart] = useState(false);
 
   const months = useMemo(() => {
     const monthSet = new Set<string>();
@@ -120,24 +113,6 @@ const FinancialMonthlyReport = () => {
     return Object.values(daily).sort((a, b) => a.date.localeCompare(b.date));
   }, [monthTransactions]);
 
-  const clientData = useMemo(() => {
-    const clients: Record<string, ClientData> = {};
-    
-    for (const txn of monthTransactions) {
-      const clientName = txn.client.firstName && txn.client.lastName
-        ? `${txn.client.firstName} ${txn.client.lastName}`
-        : txn.client.documentNumber || "Cliente";
-      
-      if (!clients[clientName]) {
-        clients[clientName] = { clientName, visits: 0, total: 0 };
-      }
-      clients[clientName].visits += 1;
-      clients[clientName].total += txn.totals.total;
-    }
-    
-    return Object.values(clients).sort((a, b) => b.total - a.total);
-  }, [monthTransactions]);
-
   const formatMonthLabel = (monthKey: string) => {
     const [year, month] = monthKey.split("-");
     const date = new Date(parseInt(year), parseInt(month) - 1);
@@ -215,9 +190,25 @@ const FinancialMonthlyReport = () => {
                   border: "1px solid #e5e7eb",
                   borderRadius: "8px",
                 }}
-                formatter={(value) => [formatCurrency(Number(value)), "Ingreso"]}
+                formatter={(value, name) => {
+                  const labels: Record<string, string> = {
+                    total: "Total de Ingresos",
+                    services: "Servicios (Membresías)",
+                    bar: "Bar (Productos)"
+                  };
+                  return [formatCurrency(Number(value)), labels[String(name)] || name];
+                }}
               />
-              <Legend />
+              <Legend 
+                formatter={(value) => {
+                  const labels: Record<string, string> = {
+                    total: "Total de Ingresos",
+                    services: "Servicios (Membresías)",
+                    bar: "Bar (Productos)"
+                  };
+                  return labels[value] || value;
+                }}
+              />
               <Line
                 type="monotone"
                 dataKey="total"
@@ -245,57 +236,6 @@ const FinancialMonthlyReport = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </section>
-
-      <section className="financial-dashboard__section">
-        <button 
-          className="btn-toggle-clients"
-          onClick={() => setShowClientsChart(!showClientsChart)}
-        >
-          <Users size={18} />
-          {showClientsChart ? "Ocultar" : "Ver"} Evolución de Clientes
-        </button>
-
-        {showClientsChart && (
-          <div className="clients-chart-section">
-            <div className="chart-wrapper">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={clientData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis 
-                    dataKey="clientName" 
-                    tick={{ fontSize: 10 }} 
-                    stroke="#6b7280"
-                    angle={-45}
-                    textAnchor="end"
-                    height={80}
-                  />
-                  <YAxis tick={{ fontSize: 12 }} stroke="#6b7280" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#fff",
-                      border: "1px solid #e5e7eb",
-                      borderRadius: "8px",
-                    }}
-                    formatter={(value, name) => [
-                      name === "total" ? formatCurrency(Number(value)) : value,
-                      name === "total" ? "Total" : "Visitas",
-                    ]}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    name="Ingreso"
-                    stroke="#f59e0b"
-                    strokeWidth={3}
-                    dot={{ fill: "#f59e0b", strokeWidth: 2 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        )}
       </section>
     </div>
   );
