@@ -50,8 +50,9 @@ const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) =
   if (!transaction) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Editar Método de Pago" size="sm" centered>
-      <form onSubmit={handleSubmit} className="transaction-edit-form">
+    <div className="transaction-edit-modal">
+      <Modal isOpen={isOpen} onClose={onClose} title="Editar Método de Pago" size="sm" centered>
+        <form onSubmit={handleSubmit} className="transaction-edit-form">
         <div className="form-group">
           <label htmlFor="method">Método de Pago</label>
           <select
@@ -103,7 +104,8 @@ const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) =
           </button>
         </div>
       </form>
-    </Modal>
+      </Modal>
+    </div>
   );
 };
 

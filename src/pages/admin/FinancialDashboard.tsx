@@ -179,7 +179,8 @@ const FinancialDashboard = () => {
         isOpen={showVoucherModal}
         onClose={() => setShowVoucherModal(false)}
         title={`Comprobante: ${selectedVoucher}`}
-        size="lg"
+        size="sm"
+        centered
       >
         <div className="voucher-modal-content">
           <div className="voucher-placeholder">
