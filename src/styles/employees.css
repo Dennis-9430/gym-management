@@ -52,7 +52,9 @@
   border: 1px solid #d1d5db;
   background: white;
   font-size: 0.95rem;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .employee-search:focus {
@@ -72,7 +74,9 @@
   color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
 }
 
 .employee-add-btn:hover {
@@ -147,14 +151,17 @@
 .employee-table .btn-delete {
   display: inline-flex;
   align-items: center;
+  margin: 0;
   gap: 0.35rem;
-  padding: 0.35rem 0.7rem;
+  padding: 0.5rem 0.7rem;
   border-radius: 8px;
   border: none;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.2s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease;
 }
 
 .employee-table .btn-edit {

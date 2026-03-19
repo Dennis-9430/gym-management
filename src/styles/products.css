@@ -41,7 +41,6 @@
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  flex-wrap: wrap;
 }
 
 .products-search {
@@ -142,7 +141,7 @@
 
 .product-table th {
   text-align: left;
-  padding: 0.85rem 1rem;
+  padding: 0.85rem;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -150,7 +149,7 @@
 }
 
 .product-table td {
-  padding: 0.85rem 1rem;
+  padding: 0.85rem;
   font-size: 0.9rem;
   color: #1f2937;
   border-top: 1px solid #e5e7eb;
@@ -165,21 +164,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 80px;
   gap: 0.35rem;
-  padding: 0.35rem 0.7rem;
   border-radius: 6px;
   border: none;
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.2s ease;
-  min-width: 80px;
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease;
 }
 
 .product-table .actions {
   display: flex;
   gap: 0.5rem;
-  justify-content: center;
+  padding-right: 0;
 }
 
 .product-table .btn-edit,
@@ -188,7 +188,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  padding: 0.35rem 0.7rem;
+  padding: 0.35rem;
   border-radius: 8px;
   margin: 0;
   border: none;

@@ -138,6 +138,12 @@
   max-height: 90vh;
 }
 
+.modal-centered {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .modal-sm {
   width: min(500px, 92vw);
 }

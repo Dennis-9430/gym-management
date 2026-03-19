@@ -17,11 +17,10 @@ const ClientRow = ({ client, showActions }: Props) => {
       return;
     }
   };
-  const removeFingerPrint = () => {
-  };
+  const removeFingerPrint = () => {};
 
   const handleOpenSubscription = () => {
-    navigate('/sales', { state: { openSubscriptionModal: true, client } });
+    navigate("/sales", { state: { openSubscriptionModal: true, client } });
   };
 
   const allowFingerprint = client.memberShipStatus === "ACTIVE";
@@ -50,14 +49,15 @@ const ClientRow = ({ client, showActions }: Props) => {
               onClick={removeFingerPrint}
             >
               <Trash2 size={16} />
-              Eliminar
             </button>
           </div>
         ) : (
           <button
             type="button"
             className={
-              allowFingerprint ? "btn-fingerprint-add" : "btn-fingerprint-disabled"
+              allowFingerprint
+                ? "btn-fingerprint-add"
+                : "btn-fingerprint-disabled"
             }
             onClick={registerFingerPrint}
             disabled={!allowFingerprint}
@@ -81,7 +81,11 @@ const ClientRow = ({ client, showActions }: Props) => {
               <UserPlus size={18} /> Registrar suscripcion
             </button>
           ) : client.memberShipStatus === "EXPIRED" ? (
-            <button type="button" className="btn-renew" onClick={handleOpenSubscription}>
+            <button
+              type="button"
+              className="btn-renew"
+              onClick={handleOpenSubscription}
+            >
               <BadgePlus size={18} /> Renovar
             </button>
           ) : null}

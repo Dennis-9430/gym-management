@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ClientSearch from "../../components/clientsTable/ClientSearch";
 import ClientTable from "../../components/clientsTable/ClientTable";
-import ClientModal from "../../components/clients/ClientModal";
+import ClientModal from "../../components/clientsModal/ClientModal";
 import { useClients } from "../../hooks/useListClientsHook";
 import { usePOS } from "../../hooks/features/usePOS";
 import SubscriptionModal from "../../components/sales/SubscriptionModal";
@@ -22,7 +22,7 @@ const ListClients = () => {
     reloadClients,
     filterMode,
   } = useClients();
-  
+
   const {
     subscriptionModalOpen,
     subscriptionClient,
@@ -109,7 +109,9 @@ const ListClients = () => {
         selectedClient={subscriptionClient}
         selectedService={subscriptionService}
         showServices={subscriptionShowServices}
-        onToggleServices={() => setSubscriptionShowServices(!subscriptionShowServices)}
+        onToggleServices={() =>
+          setSubscriptionShowServices(!subscriptionShowServices)
+        }
         onSelectService={handleSelectService}
         startDate={subscriptionStartDate}
         onStartDateChange={setSubscriptionStartDate}

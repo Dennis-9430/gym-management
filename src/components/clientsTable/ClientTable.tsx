@@ -45,7 +45,7 @@ const ClientTable = ({
       <table className="client-table">
         <thead>
           <tr>
-            <th>N�</th>
+            <th>N°</th>
             <th>Cedula</th>
             {renderHeader("Apellidos", "lastName")}
             {renderHeader("Nombres", "firstName")}

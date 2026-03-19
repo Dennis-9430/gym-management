@@ -5,7 +5,7 @@ import ClientInfo from "../../components/clientProfile/ClientInfo";
 import ClientStats from "../../components/clientProfile/ClientStats";
 import ClientMembership from "../../components/clientProfile/ClientMembership";
 import ClientPayments from "../../components/clientProfile/ClientPayments";
-import ClientModal from "../../components/clients/ClientModal";
+import ClientModal from "../../components/clientsModal/ClientModal";
 import { ArrowLeft } from "lucide-react";
 import "../../styles/clientProfileCss/ClientProfile.css";
 //import ClientAttendance from "../../components/clientProfile/ClientAttendance";

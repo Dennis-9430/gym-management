@@ -9,6 +9,7 @@ interface ModalProps {
   children: ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
   showCloseButton?: boolean;
+  centered?: boolean;
 }
 
 const Modal = ({
@@ -19,6 +20,7 @@ const Modal = ({
   children,
   size = "md",
   showCloseButton = true,
+  centered = false,
 }: ModalProps) => {
   if (!isOpen) return null;
 
@@ -32,7 +34,7 @@ const Modal = ({
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div
-        className={`modal ${sizeClasses[size]}`}
+        className={`modal ${sizeClasses[size]} ${centered ? "modal-centered" : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
         {(title || showCloseButton) && (
