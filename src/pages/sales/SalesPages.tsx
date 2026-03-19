@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/index.ts";
 import { useLocation } from "react-router-dom";
 import { usePOS } from "../../hooks/features/usePOS";
 import SalesDashboard from "../../components/sales/SalesDashboard";

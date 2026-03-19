@@ -3,7 +3,7 @@ import { Plus, X } from "lucide-react";
 import ProductForm from "../../components/products/ProductForm";
 import ProductSearch from "../../components/products/ProductSearch";
 import ProductTable from "../../components/products/ProductTable";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/index.ts";
 import { useProducts } from "../../hooks/useProducts";
 import type { Product, ProductInput } from "../../types/product.types";
 import "../../styles/clientsRegister.css";

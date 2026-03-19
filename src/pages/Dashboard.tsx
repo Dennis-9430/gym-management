@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/index.ts";
 import { useNavigate } from "react-router-dom";
 import { sections, type DashboardSection } from "../types/dashboard.section";
 import PaymentModal from "../pages/payments/PaymentModal";

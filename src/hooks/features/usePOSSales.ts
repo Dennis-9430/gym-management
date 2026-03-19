@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import type { CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod, SaleClientInfo } from "../../types/sales.types";
 import type { ClientForm } from "../../types/client.types";
 import { createSale } from "../../services/sales.service";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/index.ts";
 import { round2 } from "../../utils/format/number";
 
 const defaultClientLabel = "Consumidor final";
@@ -45,21 +45,20 @@ export const usePOSSales = (
   const [voucherCode, setVoucherCode] = useState("");
   const [saleModalOpen, setSaleModalOpen] = useState(false);
 
-  useEffect(() => {
+  const handlePaymentMethodChange = useCallback((value: PaymentMethod) => {
     const total = totals.total;
-    if (paymentMethod === "CASH") {
+    setPaymentMethod(value);
+    if (value === "CASH") {
       setCashAmount(total);
       setTransferAmount(0);
-      return;
-    }
-    if (paymentMethod === "TRANSFER") {
+    } else if (value === "TRANSFER") {
       setCashAmount(0);
       setTransferAmount(total);
-      return;
+    } else {
+      setCashAmount(total);
+      setTransferAmount(0);
     }
-    setCashAmount(total);
-    setTransferAmount(0);
-  }, [paymentMethod, totals.total]);
+  }, [totals.total]);
 
   const handleCheckout = useCallback(() => {
     if (!items.length) {
@@ -150,7 +149,8 @@ export const usePOSSales = (
     clearCart();
     setSaleClientInput("");
     setVoucherCode("");
-    setPaymentMethod("CASH");
+    setCashAmount(0);
+    setTransferAmount(0);
     setSaleModalOpen(false);
   }, [items.length, clearCart]);
 
@@ -158,7 +158,7 @@ export const usePOSSales = (
     saleClientInput,
     setSaleClientInput,
     paymentMethod,
-    setPaymentMethod,
+    setPaymentMethod: handlePaymentMethodChange,
     cashAmount,
     setCashAmount,
     transferAmount,

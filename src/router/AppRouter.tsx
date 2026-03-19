@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
-import MainLouyt from "../layouts/MainLouyt";
+import MainLayout from "../layouts/MainLayout";
 import RegisterClient from "../pages/clients/RegistetClient";
 import FormClients from "../pages/clients/FormClients";
 import ListClients from "../pages/clients/ListClients";
@@ -14,40 +14,30 @@ import EmployeesPage from "../pages/employees/EmployeesPage";
 import EmployeeProfilePage from "../pages/employees/EmployeeProfilePage";
 import Card from "../pages/sales/SalesPages";
 import PendingSubscriptionsPage from "../pages/sales/PendingSubscriptionsPage";
+import { ProtectedRoute } from "../components/common/ProtectedRoute";
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/*Login */}
         <Route path="/" element={<Login />} />
-        {/*rutas protegidas */}
-        <Route element={<MainLouyt />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/*Registro Clientes*/}
-          <Route path="/clients" element={<FormClients />} />
-          <Route path="/clients/register" element={<RegisterClient />} />
-
-          <Route path="/clients/list" element={<ListClients />} />
-
-
-          {/*Productos */}
-          <Route path="/products" element={<Productos />} />
-          {/*Ventas */}
-          <Route path="/sales" element={<Card />} />
-          <Route path="/sales/pending" element={<PendingSubscriptionsPage />} />
-
-          {/*admin employee  */}
-          <Route path="/employees" element={<EmployeesPage />} />
-          <Route path="/employees/:id" element={<EmployeeProfilePage />} />
-          {/*admin */}
-
-          <Route path="/financial" element={<FinancialReport />} />
-          <Route path="/financial/dashboard" element={<FinancialDashboard />} />
-          <Route path="/financial/monthly" element={<FinancialMonthlyReport />} />
-          {/*perfil cliente y editar*/}
-          <Route path="/clients/:id" element={<ClientProfile />} />
-          <Route path="/clients/edit/:id" element={<FormClients />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/clients" element={<FormClients />} />
+            <Route path="/clients/register" element={<RegisterClient />} />
+            <Route path="/clients/list" element={<ListClients />} />
+            <Route path="/products" element={<Productos />} />
+            <Route path="/sales" element={<Card />} />
+            <Route path="/sales/pending" element={<PendingSubscriptionsPage />} />
+            <Route path="/employees" element={<EmployeesPage />} />
+            <Route path="/employees/:id" element={<EmployeeProfilePage />} />
+            <Route path="/financial" element={<FinancialReport />} />
+            <Route path="/financial/dashboard" element={<FinancialDashboard />} />
+            <Route path="/financial/monthly" element={<FinancialMonthlyReport />} />
+            <Route path="/clients/:id" element={<ClientProfile />} />
+            <Route path="/clients/edit/:id" element={<FormClients />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
