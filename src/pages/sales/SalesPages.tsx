@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { useAuth } from "../../context/index.ts";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { usePOS } from "../../hooks/features/usePOS";
 import SalesDashboard from "../../components/sales/SalesDashboard";
 import SaleModal from "../../components/sales/SaleModal";
 import SubscriptionModal from "../../components/sales/SubscriptionModal";
+import MembershipModal from "../../components/sales/MembershipModal";
 import type { ClientForm } from "../../types/client.types";
+import type { Service } from "../../types/payment.types";
+import { services } from "../../types/payment.types";
 import "../../styles/pos.css";
 
 const SalesPages = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state as {
     openSubscriptionModal?: boolean;
     client?: ClientForm;
@@ -17,6 +22,22 @@ const SalesPages = () => {
 
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
+  const [membershipModalOpen, setMembershipModalOpen] = useState(false);
+  const [membershipServices, setMembershipServices] = useState<Service[]>(services);
+
+  const handleSaveMembership = (service: Service) => {
+    setMembershipServices((prev) => {
+      const existing = prev.find((s) => s.id === service.id);
+      if (existing) {
+        return prev.map((s) => (s.id === service.id ? service : s));
+      }
+      return [...prev, service];
+    });
+  };
+
+  const handleDeleteMembership = (id: number) => {
+    setMembershipServices((prev) => prev.filter((s) => s.id !== id));
+  };
 
   const {
     // State
@@ -102,6 +123,8 @@ const SalesPages = () => {
       <SalesDashboard
         onOpenSubscriptionModal={() => handleOpenSubscriptionModal()}
         onOpenSaleModal={() => setSaleModalOpen(true)}
+        onOpenMembershipModal={isAdmin ? () => setMembershipModalOpen(true) : undefined}
+        onOpenConfigModal={isAdmin ? () => navigate("/sales/config") : undefined}
       />
 
       <SaleModal
@@ -173,6 +196,16 @@ const SalesPages = () => {
         onRegister={handleRegisterSubscription}
         onPending={handlePendingSubscription}
       />
+
+      {isAdmin && (
+        <MembershipModal
+          isOpen={membershipModalOpen}
+          onClose={() => setMembershipModalOpen(false)}
+          services={membershipServices}
+          onSave={handleSaveMembership}
+          onDelete={handleDeleteMembership}
+        />
+      )}
     </main>
   );
 };

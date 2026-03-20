@@ -6,6 +6,7 @@ import {
   Package,
   ShoppingCart,
   UserCog,
+  ClipboardCheck,
 } from "lucide-react";
 
 export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
@@ -74,5 +75,14 @@ export const sections: DashboardSection[] = [
     roles: ["ADMIN"],
     buttonLabel: "Ver reportes",
     description: "Análisis financiero del negocio",
+  },
+  {
+    title: "Historial de Asistencia",
+    path: "/attendance",
+    icon: ClipboardCheck,
+    action: "NAVIGATE",
+    roles: ["ADMIN", "RECEPCIONISTA", "ENTRENADOR"],
+    buttonLabel: "Ver asistencia",
+    description: "Control de entrada y salida",
   },
 ];

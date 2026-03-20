@@ -3,16 +3,22 @@ import {
   BadgeDollarSign,
   ClipboardList,
   ShoppingCart,
+  Settings,
+  CreditCard,
 } from "lucide-react";
 
 interface SalesDashboardProps {
   onOpenSubscriptionModal: () => void;
   onOpenSaleModal: () => void;
+  onOpenMembershipModal?: () => void;
+  onOpenConfigModal?: () => void;
 }
 
 const SalesDashboard = ({
   onOpenSubscriptionModal,
   onOpenSaleModal,
+  onOpenMembershipModal,
+  onOpenConfigModal,
 }: SalesDashboardProps) => {
   const navigate = useNavigate();
 
@@ -71,6 +77,38 @@ const SalesDashboard = ({
             Agregar venta
           </button>
         </div>
+        {onOpenMembershipModal && (
+          <div className="pos-dashboard-card">
+            <div className="pos-card-icon">
+              <CreditCard size={22} />
+            </div>
+            <h3>Membresías</h3>
+            <p>Configura los planes disponibles.</p>
+            <button
+              type="button"
+              className="pos-card-btn secondary"
+              onClick={onOpenMembershipModal}
+            >
+              Gestionar
+            </button>
+          </div>
+        )}
+        {onOpenConfigModal && (
+          <div className="pos-dashboard-card">
+            <div className="pos-card-icon">
+              <Settings size={22} />
+            </div>
+            <h3>Configuración</h3>
+            <p>Datos del negocio y preferencias.</p>
+            <button
+              type="button"
+              className="pos-card-btn secondary"
+              onClick={onOpenConfigModal}
+            >
+              Configurar
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
