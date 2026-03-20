@@ -1,12 +1,14 @@
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "../../context/index.ts";
 import EmployeePermissions from "../../components/employees/EmployeePermissions";
 import { getEmployeeById } from "../../services/employees.service";
 import "../../styles/clientProfileCss/ClientProfile.css";
 
 const EmployeeProfilePage = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const employee = useMemo(() => {
@@ -74,7 +76,11 @@ const EmployeeProfilePage = () => {
             </p>
           </div>
 
-          <EmployeePermissions role={employee.role} />
+          <EmployeePermissions 
+            role={employee.role} 
+            isAdmin={user?.role === "ADMIN"}
+            employeeId={employee.id}
+          />
         </div>
       </div>
     </main>
