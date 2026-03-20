@@ -14,6 +14,8 @@ import EmployeesPage from "../pages/employees/EmployeesPage";
 import EmployeeProfilePage from "../pages/employees/EmployeeProfilePage";
 import Card from "../pages/sales/SalesPages";
 import PendingSubscriptionsPage from "../pages/sales/PendingSubscriptionsPage";
+import ConfigPage from "../pages/sales/ConfigPage";
+import AttendancePage from "../pages/attendance/AttendancePage";
 import { ProtectedRoute } from "../components/common/ProtectedRoute";
 
 function AppRouter() {
@@ -30,6 +32,7 @@ function AppRouter() {
             <Route path="/products" element={<Productos />} />
             <Route path="/sales" element={<Card />} />
             <Route path="/sales/pending" element={<PendingSubscriptionsPage />} />
+            <Route path="/sales/config" element={<ConfigPage />} />
             <Route path="/employees" element={<EmployeesPage />} />
             <Route path="/employees/:id" element={<EmployeeProfilePage />} />
             <Route path="/financial" element={<FinancialReport />} />
@@ -37,6 +40,7 @@ function AppRouter() {
             <Route path="/financial/monthly" element={<FinancialMonthlyReport />} />
             <Route path="/clients/:id" element={<ClientProfile />} />
             <Route path="/clients/edit/:id" element={<FormClients />} />
+            <Route path="/attendance" element={<AttendancePage />} />
           </Route>
         </Route>
       </Routes>

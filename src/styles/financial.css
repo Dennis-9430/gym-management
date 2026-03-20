@@ -782,3 +782,133 @@
 .clients-chart-section {
   margin-top: 1rem;
 }
+
+/* Financial Summary */
+.financial-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.financial-summary__card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.financial-summary__card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.financial-summary__card--total {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border: none;
+}
+
+.financial-summary__card--total .financial-summary__value,
+.financial-summary__card--total .financial-summary__label {
+  color: white;
+}
+
+.financial-summary__card--total .financial-summary__icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.financial-summary__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.financial-summary__icon--cash {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.financial-summary__icon--transfer {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.financial-summary__icon--services {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+
+.financial-summary__content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.financial-summary__value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.financial-summary__label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.financial-report__filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.financial-report__filter-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.financial-report__filter-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.financial-report__filter-btn--active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.financial-report__filter-btn--active:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+@media (max-width: 640px) {
+  .financial-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .financial-summary__card--total {
+    grid-column: span 2;
+  }
+}
