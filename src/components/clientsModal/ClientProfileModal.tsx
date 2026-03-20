@@ -38,7 +38,7 @@ const ClientProfileModal = ({ client, onClose }: Props) => {
             }}
           />
           <ClientMembership client={client} />
-          <ClientStats />
+          <ClientStats client={client} />
           <ClientPayments />
         </div>
       </div>

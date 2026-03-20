@@ -45,7 +45,7 @@ const ClientProfile = () => {
 
           <ClientMembership client={client} />
 
-          <ClientStats />
+          <ClientStats client={client} />
 
           <ClientPayments />
         </div>
