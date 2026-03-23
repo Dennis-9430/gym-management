@@ -226,24 +226,6 @@ const AttendancePage = () => {
         </table>
       </div>
 
-      <div className="attendance-summary">
-        <div className="attendance-summary__item">
-          <span className="attendance-summary__label">Total registros:</span>
-          <span className="attendance-summary__value">{filteredRecords.length}</span>
-        </div>
-        <div className="attendance-summary__item">
-          <span className="attendance-summary__label">En gym:</span>
-          <span className="attendance-summary__value">
-            {filteredRecords.filter((r) => !r.checkOut).length}
-          </span>
-        </div>
-        <div className="attendance-summary__item">
-          <span className="attendance-summary__label">Completados:</span>
-          <span className="attendance-summary__value">
-            {filteredRecords.filter((r) => r.checkOut).length}
-          </span>
-        </div>
-      </div>
     </main>
   );
 };
