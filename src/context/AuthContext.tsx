@@ -3,6 +3,7 @@ import type { AuthUser } from "../types/user.types";
 
 interface AuthContextProps {
   user: AuthUser | null;
+  isInitialized: boolean;
   login: (user: AuthUser) => void;
   logout: () => void;
 }

@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useState } from "react";
 import type { AuthUser } from "../types/user.types";
 import { authReducer } from "../hooks/authHook";
 import { AuthContext } from "./AuthContext";
@@ -13,11 +13,20 @@ const initialState = {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const storeUser = localStorage.getItem("user");
-    if (storeUser) {
-      dispatch({ type: "LOGIN", payload: JSON.parse(storeUser) });
+    try {
+      const storeUser = localStorage.getItem("user");
+      if (storeUser) {
+        const parsedUser = JSON.parse(storeUser);
+        dispatch({ type: "LOGIN", payload: parsedUser });
+      }
+    } catch (error) {
+      console.error("Error restoring auth state:", error);
+      localStorage.removeItem("user");
+    } finally {
+      setIsInitialized(true);
     }
   }, []);
 
@@ -35,6 +44,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext
       value={{
         user: state.user,
+        isInitialized,
         login,
         logout,
       }}
