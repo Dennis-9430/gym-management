@@ -4,6 +4,8 @@ from contextlib import asynccontextmanager
 
 from app.config import settings
 from app.database import connect_to_mongo, close_mongo_connection
+from app.auth.router import router as auth_router
+from app.routers.employees import router as employees_router
 
 
 @asynccontextmanager
@@ -26,6 +28,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router)
+app.include_router(employees_router)
 
 
 @app.get("/")
