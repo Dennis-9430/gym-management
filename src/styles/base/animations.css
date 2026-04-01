@@ -1,0 +1,271 @@
+/* ==========================================================================
+   ANIMATIONS - Keyframes y clases de animación
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Fade In
+   -------------------------------------------------------------------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Fade In Up (desliza desde abajo)
+   -------------------------------------------------------------------------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Fade In Down (desliza desde arriba)
+   -------------------------------------------------------------------------- */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Scale In (escala desde 0)
+   -------------------------------------------------------------------------- */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Slide Up (desliza desde abajo)
+   -------------------------------------------------------------------------- */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Modal In
+   -------------------------------------------------------------------------- */
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Modal Fade (fade para modales)
+   -------------------------------------------------------------------------- */
+@keyframes modalFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Backdrop Fade
+   -------------------------------------------------------------------------- */
+@keyframes backdropFade {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Float (flotación suave)
+   -------------------------------------------------------------------------- */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Pulse
+   -------------------------------------------------------------------------- */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Spin (rotación)
+   -------------------------------------------------------------------------- */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Bounce
+   -------------------------------------------------------------------------- */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Shake (sacudida)
+   -------------------------------------------------------------------------- */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Flip (volteo)
+   -------------------------------------------------------------------------- */
+@keyframes flip {
+  from {
+    transform: perspective(400px) rotateY(0);
+  }
+  to {
+    transform: perspective(400px) rotateY(180deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Clases de animación
+   -------------------------------------------------------------------------- */
+.animate-fadeIn {
+  animation: fadeIn var(--transition-base) ease forwards;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp var(--transition-slow) ease forwards;
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown var(--transition-slow) ease forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn var(--transition-base) ease forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp var(--transition-slow) ease forwards;
+}
+
+.animate-modalIn {
+  animation: modalIn var(--transition-base) ease forwards;
+}
+
+.animate-modalFade {
+  animation: modalFade var(--transition-base) ease forwards;
+}
+
+.animate-backdropFade {
+  animation: backdropFade var(--transition-base) ease forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s ease infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Delays de animación
+   -------------------------------------------------------------------------- */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* --------------------------------------------------------------------------
+   Durations
+   -------------------------------------------------------------------------- */
+.duration-fast { animation-duration: var(--transition-fast); }
+.duration-base { animation-duration: var(--transition-base); }
+.duration-slow { animation-duration: var(--transition-slow); }
+.duration-slower { animation-duration: var(--transition-slower); }
