@@ -1,0 +1,351 @@
+/* ==========================================================================
+   MODALS - Sistema de modales
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Modal Backdrop
+   -------------------------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal-backdrop);
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: backdropFade var(--transition-base) ease forwards;
+}
+
+.modal-backdrop-dark {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   Modal Container
+   -------------------------------------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+  overflow-y: auto;
+}
+
+.modal-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-modal);
+  animation: modalIn var(--transition-base) ease forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Modal Sizes
+   -------------------------------------------------------------------------- */
+.modal-sm {
+  max-width: 400px;
+}
+
+.modal-md {
+  max-width: 500px;
+}
+
+.modal-lg {
+  max-width: 700px;
+}
+
+.modal-xl {
+  max-width: 900px;
+}
+
+.modal-2xl {
+  max-width: 1100px;
+}
+
+.modal-fullscreen {
+  max-width: none;
+  width: calc(100% - var(--spacing-8));
+  height: calc(100% - var(--spacing-8));
+}
+
+/* --------------------------------------------------------------------------
+   Modal Header
+   -------------------------------------------------------------------------- */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-5) var(--spacing-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-header-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.modal-header-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-1);
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.modal-close:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Modal Body
+   -------------------------------------------------------------------------- */
+.modal-body {
+  padding: var(--spacing-6);
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Modal Footer
+   -------------------------------------------------------------------------- */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+}
+
+.modal-footer-left {
+  justify-content: flex-start;
+}
+
+.modal-footer-between {
+  justify-content: space-between;
+}
+
+/* --------------------------------------------------------------------------
+   Modal Sections
+   -------------------------------------------------------------------------- */
+.modal-section {
+  margin-bottom: var(--spacing-5);
+}
+
+.modal-section:last-child {
+  margin-bottom: 0;
+}
+
+.modal-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-3);
+}
+
+/* --------------------------------------------------------------------------
+   Modal Content Variants
+   -------------------------------------------------------------------------- */
+.modal-content-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-8);
+}
+
+.modal-content-center .modal-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--spacing-4);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content-center .modal-icon-success {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.modal-content-center .modal-icon-danger {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.modal-content-center .modal-icon-warning {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+/* --------------------------------------------------------------------------
+   POS Modal (Custom)
+   -------------------------------------------------------------------------- */
+.pos-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.pos-modal-container {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-modal-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalIn var(--transition-base) ease forwards;
+}
+
+.pos-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.pos-modal-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.pos-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+}
+
+.pos-modal-close:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.pos-modal-body {
+  padding: var(--spacing-5);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.pos-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Slide Modal (from bottom)
+   -------------------------------------------------------------------------- */
+.slide-modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-modal);
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-3xl) var(--radius-3xl) 0 0;
+  box-shadow: var(--shadow-modal-lg);
+  animation: slideUp var(--transition-slow) ease forwards;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Confirm Modal
+   -------------------------------------------------------------------------- */
+.confirm-modal-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--spacing-4);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-modal-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-align: center;
+  margin-bottom: var(--spacing-2);
+}
+
+.confirm-modal-message {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: var(--breakpoint-sm)) {
+  .modal {
+    padding: var(--spacing-2);
+  }
+
+  .modal-container {
+    max-width: none;
+    border-radius: var(--radius-xl);
+  }
+
+  .modal-header {
+    padding: var(--spacing-4);
+  }
+
+  .modal-body {
+    padding: var(--spacing-4);
+  }
+
+  .modal-footer {
+    padding: var(--spacing-3) var(--spacing-4);
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
