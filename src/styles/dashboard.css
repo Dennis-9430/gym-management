@@ -1,7 +1,11 @@
+/* ==========================================================================
+   DASHBOARD - Página principal
+   ========================================================================== */
+
 .dashboard {
   min-height: calc(100vh - 67px);
-  padding: 2.5rem;
-  background: #f8fafc;
+  padding: var(--spacing-10);
+  background: var(--color-bg-secondary);
   box-sizing: border-box;
 }
 
@@ -15,66 +19,67 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--spacing-6);
   flex-wrap: wrap;
-  margin-bottom: 2.5rem;
+  margin-bottom: var(--spacing-10);
 }
 
 .dashboard__title {
-  font-size: 1.9rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
-  color: #0f172a;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-primary);
 }
 
 .dashboard__subtitle {
   margin: 0;
-  color: #64748b;
-  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
 }
 
 .dashboard__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: var(--spacing-6);
 }
 
+/* Responsive */
 @media (max-width: 1200px) {
   .dashboard__grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--breakpoint-lg)) {
   .dashboard {
-    padding: 1.5rem 1rem;
+    padding: var(--spacing-6) var(--spacing-4);
   }
 
   .dashboard__grid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: var(--spacing-5);
   }
 
   .dashboard__header {
     align-items: flex-start;
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-8);
   }
 
   .dashboard__title {
-    font-size: 1.5rem;
+    font-size: var(--font-size-2xl);
   }
 
   .dashboard__subtitle {
-    font-size: 0.9rem;
+    font-size: var(--font-size-sm);
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: var(--breakpoint-sm)) {
   .dashboard {
-    padding: 1rem 0.75rem;
+    padding: var(--spacing-4) var(--spacing-3);
   }
 
   .dashboard__title {
-    font-size: 1.35rem;
+    font-size: var(--font-size-xl);
   }
 }
