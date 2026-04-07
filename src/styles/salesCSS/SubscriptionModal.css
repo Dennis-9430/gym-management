@@ -1,30 +1,30 @@
 .pos-form-group {
   display: grid;
-  gap: 0.3rem;
-  margin-bottom: 0.9rem;
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-3);
 }
 
 .pos-form-group label {
-  font-size: 0.9rem;
-  color: #475569;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
 .pos-form-group input,
 .pos-form-group select {
-  padding: 0.55rem 0.7rem;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
+  padding: 0.55rem var(--spacing-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-dark);
 }
 
 .pos-btn-primary {
   border: none;
-  background: #0f172a;
-  color: white;
-  padding: 0.6rem 1rem;
-  border-radius: 10px;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-lg);
   cursor: pointer;
 }
 
 .pos-btn-primary:hover {
-  background: #1f2937;
+  background: var(--color-primary-hover);
 }

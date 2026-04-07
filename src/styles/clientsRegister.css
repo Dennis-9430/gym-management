@@ -3,28 +3,28 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 2rem;
+  padding: var(--spacing-8);
   background: #c1c6ca;
 }
 /*card*/
 .register-card {
   width: 100%;
   max-width: 600px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  background: var(--color-bg-primary);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-modal-lg);
 }
 .register-card h2 {
-  margin-bottom: 0.8rem;
-  font-size: 1.5rem;
-  font-weight: 600;
+  margin-bottom: var(--spacing-3);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
 }
 /*form*/
 .register-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
+  gap: var(--spacing-2);
 }
 /*group*/
 .form-group {
@@ -33,25 +33,25 @@
 }
 /*label*/
 .register-form {
-  font-size: 0.9rem;
-  color: #475569;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 /*input*/
 .form-group input {
-  padding: 0.65rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 0.95rem;
-  transition: border 0.2s;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-dark);
+  font-size: var(--font-size-base);
+  transition: border var(--transition-fast);
 }
 /*focus*/
 .form-group input:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--color-action);
 }
 .form-group textarea {
   overflow: none;
-  border-color: #2563eb;
+  border-color: var(--color-action);
 }
 .full-width {
   grid-column: span 2;
@@ -59,42 +59,42 @@
 /*buttons*/
 .btn-register {
   grid-column: span 1;
-  margin-top: 0.75rem;
-  padding: 0.5rem 1rem;
-  background: #2563eb;
-  color: white;
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-4);
+  background: var(--color-action);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: var(--spacing-2);
 }
 /*hover*/
 .btn-register:hover {
-  background: #1d4ed8;
+  background: var(--color-action-hover);
 }
 .btn-back {
   border: none;
-  background: #f3f4f6;
-  padding: 8px;
-  border-radius: 8px;
+  background: var(--slate-100);
+  padding: var(--spacing-2);
+  border-radius: var(--radius-md);
   cursor: pointer;
 }
 
 .btn-back:hover {
-  background: #e5e7eb;
+  background: var(--color-border);
 }
 
 .form-buttons {
   grid-column: span 2;
   display: flex;
-  gap: 0.6rem;
+  gap: var(--spacing-2);
 }
 
 .input-with-icon {
@@ -106,7 +106,7 @@
 .input-with-icon svg {
   position: absolute;
   left: 12px;
-  color: #94a3b8;
+  color: var(--color-text-light);
 }
 
 .input-with-icon input,
@@ -126,56 +126,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  z-index: 2000;
+  padding: var(--spacing-6);
+  z-index: var(--z-modal-backdrop);
 }
 
 .client-modal {
   width: min(720px, 100%);
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-6);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-modal);
   max-height: 90vh;
   overflow-y: auto;
-  animation: modalIn 0.2s ease;
+  animation: modalIn var(--transition-fast);
 }
 
 .client-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
 }
 
 .client-modal-header h3 {
   margin: 0;
-  font-size: 1.3rem;
-  color: #0f172a;
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
 }
 
 .clients-modal-subtitle {
-  margin: 0.2rem 0 0;
-  color: #64748b;
-  font-size: 0.9rem;
+  margin: var(--spacing-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 
 .client-modal-close {
   border: none;
-  background: #f1f5f9;
-  border-radius: 10px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
   width: 36px;
   height: 36px;
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background var(--transition-fast);
 }
 
 .client-modal-close:hover {
-  background: #e2e8f0;
+  background: var(--slate-200);
 }
 
 @keyframes modalIn {
@@ -190,7 +190,7 @@
 }
 
 /*responsive*/
-@media (max-width: 768px) {
+@media (max-width: var(--breakpoint-lg)) {
   .register-form {
     grid-template-columns: 1fr;
   }

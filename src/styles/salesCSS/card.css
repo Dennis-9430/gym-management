@@ -1,25 +1,25 @@
 .pos-container {
-  padding: 2rem clamp(1rem, 3vw, 2.5rem);
-  background: #eef2f7;
+  padding: var(--spacing-8) clamp(1rem, 3vw, 2.5rem);
+  background: var(--slate-100);
   min-height: calc(100vh - 70px);
 }
 
 .pos-actions {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
 }
 
 .pos-actions button {
   border: none;
-  border-radius: 10px;
-  padding: 0.6rem 1rem;
-  background: #0f172a;
-  color: white;
-  font-weight: 600;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2) var(--spacing-4);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
 }
 
 .pos-actions button:hover {
-  background: #1f2937;
+  background: var(--color-primary-hover);
 }

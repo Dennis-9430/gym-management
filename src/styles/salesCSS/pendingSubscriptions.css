@@ -1,13 +1,13 @@
 .pos-pending {
   max-width: 1100px;
-  margin: 2rem auto 0;
+  margin: var(--spacing-8) auto 0;
 }
 
 .pos-card {
-  background: white;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  padding: 1.3rem;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-5);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
 }
 
@@ -15,28 +15,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.8rem;
+  margin-bottom: var(--spacing-3);
 }
 
 .pos-card-header h3 {
   margin: 0;
-  color: #0f172a;
+  color: var(--color-primary);
 }
 
 .pos-card-body {
-  color: #64748b;
+  color: var(--color-text-muted);
 }
 
 .pos-btn-primary {
   border: none;
-  background: #0f172a;
-  color: white;
-  padding: 0.5rem 0.9rem;
-  border-radius: 10px;
-  font-weight: 600;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
 }
 
 .pos-btn-primary:hover {
-  background: #1f2937;
+  background: var(--color-primary-hover);
 }

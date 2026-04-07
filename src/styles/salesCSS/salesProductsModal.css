@@ -4,29 +4,29 @@
   background: rgba(15, 23, 42, 0.55);
   display: grid;
   place-items: center;
-  z-index: 80;
+  z-index: var(--z-modal);
 }
 
 .pos-modal {
   width: min(1100px, 92vw);
-  background: white;
-  border-radius: 18px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-modal-lg);
   display: flex;
   flex-direction: column;
 }
 
 .pos-modal-header {
-  padding: 1rem 1.4rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .pos-modal-body {
-  padding: 1.2rem 1.4rem;
+  padding: var(--spacing-4) var(--spacing-5);
 }
 
 .pos-table {
@@ -36,44 +36,44 @@
 
 .pos-table th {
   text-align: left;
-  padding: 0.7rem;
-  font-size: 0.8rem;
-  background: #f8fafc;
+  padding: var(--spacing-2);
+  font-size: var(--font-size-xs);
+  background: var(--color-bg-secondary);
 }
 
 .pos-table td {
-  padding: 0.7rem;
-  border-top: 1px solid #e5e7eb;
+  padding: var(--spacing-2);
+  border-top: 1px solid var(--color-border);
 }
 
 .pos-table input {
   width: 70px;
-  padding: 0.3rem;
+  padding: var(--spacing-1);
 }
 
 .pos-totals {
-  margin-top: 1rem;
+  margin-top: var(--spacing-4);
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-4);
   align-items: center;
 }
 
 .pos-total {
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
 }
 
 .pos-modal-footer {
-  padding: 1rem 1.4rem;
-  border-top: 1px solid #e5e7eb;
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
-  gap: 0.6rem;
+  gap: var(--spacing-2);
 }
 
 .pos-modal-footer button {
   border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 10px;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-lg);
   cursor: pointer;
 }
