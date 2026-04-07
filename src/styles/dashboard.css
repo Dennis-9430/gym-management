@@ -44,7 +44,7 @@
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
+@media (max-width: var(--breakpoint-2xl)) {
   .dashboard__grid {
     grid-template-columns: repeat(2, 1fr);
   }

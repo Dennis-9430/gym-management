@@ -340,7 +340,7 @@
   color: #991b1b;
 }
 
-@media (max-width: 600px) {
+@media (max-width: var(--breakpoint-sm)) {
   .client-stats__grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -520,7 +520,7 @@
   border-color: var(--slate-300);
 }
 
-@media (max-width: 600px) {
+@media (max-width: var(--breakpoint-sm)) {
   .employee-permissions__row {
     grid-template-columns: 1fr repeat(4, 0.6fr);
   }
