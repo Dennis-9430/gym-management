@@ -112,6 +112,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin: auto;
 }
 
 .pos-modal-header {
@@ -614,6 +615,16 @@
   gap: var(--spacing-1);
 }
 
+.pos-field-date {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.pos-field-full {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
 .pos-field-inline {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -1000,6 +1011,7 @@
   display: flex;
   flex-direction: column;
   animation: slideUp var(--transition-base) ease-out;
+  margin: auto;
 }
 
 .membership-modal__header {
@@ -1210,9 +1222,80 @@
 }
 
 /* Responsive */
-@media (max-width: var(--breakpoint-xl)) {
+@media (max-width: 1024px) {
+  .pos-container {
+    padding: var(--spacing-6) var(--spacing-4);
+  }
+
   .pos-dashboard-grid {
     grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .pos-dashboard-header {
+    text-align: center;
+  }
+
+  .pos-dashboard-header h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .pos-dashboard-header p {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 640px) {
+  .pos-container {
+    padding: var(--spacing-4) var(--spacing-3);
+  }
+
+  .pos-dashboard-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .pos-dashboard-header p {
+    font-size: var(--font-size-xs);
+  }
+
+  .pos-dashboard-card {
+    padding: var(--spacing-4);
+  }
+
+  .pos-dashboard-card h3 {
+    font-size: var(--font-size-base);
+  }
+
+  .pos-dashboard-card p {
+    font-size: var(--font-size-xs);
+  }
+
+  .pos-modal-backdrop {
+    padding: var(--spacing-2);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pos-modal {
+    width: 95vw;
+    max-height: 85vh;
+    margin: auto;
+  }
+
+  .pos-modal-header {
+    padding: var(--spacing-3) var(--spacing-4);
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .pos-modal-body {
+    padding: var(--spacing-3) var(--spacing-4);
+    overflow-y: auto;
+  }
+
+  .pos-modal-close {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -1254,5 +1337,83 @@
   .pos-pending-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .membership-modal-backdrop {
+    padding: var(--spacing-2);
+  }
+
+  .membership-modal {
+    width: 95vw;
+    max-height: 85vh;
+    margin: auto;
+  }
+
+  .membership-modal__header {
+    padding: var(--spacing-3) var(--spacing-4);
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .membership-modal__header h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .membership-modal__table-wrapper {
+    padding: var(--spacing-2);
+    overflow-x: auto;
+  }
+
+  .membership-modal__table {
+    font-size: var(--font-size-xs);
+  }
+
+  .membership-modal__table th,
+  .membership-modal__table td {
+    padding: var(--spacing-2);
+  }
+
+  .membership-form__row {
+    grid-template-columns: 1fr;
+  }
+
+  .membership-form__actions {
+    flex-direction: column;
+  }
+
+  .membership-form__save,
+  .membership-form__cancel {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .pos-field-date {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pos-field-date input[type="date"] {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pos-subscription-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .pos-subscription-grid .pos-field-full {
+    width: 100%;
+  }
+
+  .pos-subscription-grid .pos-select-trigger {
+    width: 100%;
+    text-align: left;
   }
 }

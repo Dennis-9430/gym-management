@@ -16,6 +16,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--spacing-3);
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
 }
 
 .pos-card-header h3 {
@@ -39,4 +41,32 @@
 
 .pos-btn-primary:hover {
   background: var(--color-primary-hover);
+}
+
+/* Responsive */
+@media (max-width: var(--breakpoint-lg)) {
+  .pos-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pos-card {
+    padding: var(--spacing-4);
+  }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .pos-pending {
+    margin: var(--spacing-4) auto 0;
+    padding: 0 var(--spacing-2);
+  }
+
+  .pos-card {
+    padding: var(--spacing-3);
+  }
+
+  .pos-btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
 }
