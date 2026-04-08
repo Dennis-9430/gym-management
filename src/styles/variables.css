@@ -111,18 +111,16 @@
   --radius-full: 9999px;
 
   /* --------------------------------------------------------------------------
-     BREAKPOINTS - Mobile first
+     BREAKPOINTS - Tailwind CSS standard
      -------------------------------------------------------------------------- */
-  --breakpoint-xs: 400px;
-  --breakpoint-sm: 480px;
-  --breakpoint-md: 640px;
-  --breakpoint-lg: 768px;
-  --breakpoint-xl: 900px;
-  --breakpoint-2xl: 1024px;
-  --breakpoint-3xl: 1280px;
+  --breakpoint-sm: 640px;   /* phones / tablets pequeñas */
+  --breakpoint-md: 768px;   /* tablets */
+  --breakpoint-lg: 1024px;  /* laptops / tablets landscape */
+  --breakpoint-xl: 1280px;  /* desktops */
+  --breakpoint-2xl: 1536px; /* pantallas grandes */
 
   /* Alias para media queries */
-  --media-sm: 480px;
+  --media-sm: 640px;
   --media-md: 768px;
   --media-lg: 1024px;
   --media-xl: 1280px;

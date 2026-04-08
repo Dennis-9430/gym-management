@@ -309,8 +309,11 @@
   color: var(--color-text-light);
 }
 
-/* Responsive */
-@media (max-width: var(--breakpoint-xl)) {
+/* ==========================================================================
+   RESPONSIVE - Mobile/Tablet Only
+   ========================================================================== */
+
+@media (max-width: 1023px) {
   .login {
     flex-direction: column;
   }
@@ -320,15 +323,33 @@
   }
 
   .login__split--right {
+    min-height: 100vh;
     padding: var(--spacing-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--color-bg-primary) 0%, rgba(248, 250, 252, 0.95) 100%);
   }
 
   .login__card {
+    width: 100%;
+    max-width: 420px;
     padding: var(--spacing-8) var(--spacing-6);
+    border-radius: var(--radius-2xl);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
   }
-}
 
-@media (max-width: var(--breakpoint-sm)) {
+  .login__header {
+    margin-bottom: var(--spacing-6);
+  }
+
+  .login__icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--spacing-4);
+  }
+
   .login__title {
     font-size: var(--font-size-xl);
   }
@@ -337,8 +358,65 @@
     font-size: var(--font-size-sm);
   }
 
+  .login__form {
+    gap: var(--spacing-4);
+  }
+
+  .login__label {
+    font-size: var(--font-size-sm);
+  }
+
+  .login__input {
+    padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-10);
+    font-size: 16px;
+  }
+
+  .login__button {
+    padding: var(--spacing-3) var(--spacing-4);
+    min-height: 48px;
+    margin-top: var(--spacing-4);
+  }
+
+  .login__footer {
+    margin-top: var(--spacing-6);
+    padding-top: var(--spacing-4);
+  }
+}
+
+@media (max-width: 640px) {
+  .login__split--right {
+    padding: var(--spacing-8) var(--spacing-4);
+    align-items: center;
+    background: linear-gradient(180deg, var(--color-bg-primary) 0%, rgba(241, 245, 249, 0.9) 100%);
+  }
+
   .login__card {
     padding: var(--spacing-6) var(--spacing-4);
-    border-radius: var(--radius-2xl);
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+  }
+
+  .login__title {
+    font-size: var(--font-size-lg);
+  }
+
+  .login__input {
+    padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) 2.75rem;
+    font-size: 16px;
+  }
+
+  .login__toggle-password {
+    right: 10px;
+  }
+
+  .login__input-icon {
+    left: 12px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .login__button {
+    width: 100%;
   }
 }
