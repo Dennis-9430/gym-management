@@ -23,9 +23,31 @@ const FinancialReport = () => {
 
   const [editingTransaction, setEditingTransaction] = useState<SaleRecord | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [dateFilter, setDateFilter] = useState<DateFilter>("today");
-  const [customStartDate, setCustomStartDate] = useState("");
-  const [customEndDate, setCustomEndDate] = useState("");
+  const [dateFilter, setDateFilter] = useState<DateFilter>(() => {
+    const saved = localStorage.getItem("financial_dateFilter");
+    return (saved as DateFilter) || "today";
+  });
+  const [customStartDate, setCustomStartDate] = useState(() => {
+    return localStorage.getItem("financial_customStartDate") || "";
+  });
+  const [customEndDate, setCustomEndDate] = useState(() => {
+    return localStorage.getItem("financial_customEndDate") || "";
+  });
+
+  const handleSetDateFilter = (filter: DateFilter) => {
+    setDateFilter(filter);
+    localStorage.setItem("financial_dateFilter", filter);
+  };
+
+  const handleSetCustomStartDate = (date: string) => {
+    setCustomStartDate(date);
+    localStorage.setItem("financial_customStartDate", date);
+  };
+
+  const handleSetCustomEndDate = (date: string) => {
+    setCustomEndDate(date);
+    localStorage.setItem("financial_customEndDate", date);
+  };
 
   const getDateRange = () => {
     const now = new Date();
@@ -133,7 +155,7 @@ const FinancialReport = () => {
           className={`financial-report__filter-btn ${
             dateFilter === "today" ? "financial-report__filter-btn--active" : ""
           }`}
-          onClick={() => setDateFilter("today")}
+          onClick={() => handleSetDateFilter("today")}
         >
           Hoy
         </button>
@@ -141,7 +163,7 @@ const FinancialReport = () => {
           className={`financial-report__filter-btn ${
             dateFilter === "week" ? "financial-report__filter-btn--active" : ""
           }`}
-          onClick={() => setDateFilter("week")}
+          onClick={() => handleSetDateFilter("week")}
         >
           Esta Semana
         </button>
@@ -149,7 +171,7 @@ const FinancialReport = () => {
           className={`financial-report__filter-btn ${
             dateFilter === "month" ? "financial-report__filter-btn--active" : ""
           }`}
-          onClick={() => setDateFilter("month")}
+          onClick={() => handleSetDateFilter("month")}
         >
           Este Mes
         </button>
@@ -157,7 +179,7 @@ const FinancialReport = () => {
           className={`financial-report__filter-btn ${
             dateFilter === "custom" ? "financial-report__filter-btn--active" : ""
           }`}
-          onClick={() => setDateFilter("custom")}
+          onClick={() => handleSetDateFilter("custom")}
         >
           Personalizado
         </button>
@@ -167,13 +189,13 @@ const FinancialReport = () => {
               type="date"
               className="date-input"
               value={customStartDate}
-              onChange={(e) => setCustomStartDate(e.target.value)}
+              onChange={(e) => handleSetCustomStartDate(e.target.value)}
             />
             <input
               type="date"
               className="date-input"
               value={customEndDate}
-              onChange={(e) => setCustomEndDate(e.target.value)}
+              onChange={(e) => handleSetCustomEndDate(e.target.value)}
             />
           </>
         )}
