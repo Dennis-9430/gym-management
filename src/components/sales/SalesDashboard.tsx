@@ -86,7 +86,7 @@ const SalesDashboard = ({
             <p>Configura los planes disponibles.</p>
             <button
               type="button"
-              className="pos-card-btn secondary"
+              className="pos-card-btn primary"
               onClick={onOpenMembershipModal}
             >
               Gestionar
@@ -102,7 +102,7 @@ const SalesDashboard = ({
             <p>Datos del negocio y preferencias.</p>
             <button
               type="button"
-              className="pos-card-btn secondary"
+              className="pos-card-btn primary"
               onClick={onOpenConfigModal}
             >
               Configurar

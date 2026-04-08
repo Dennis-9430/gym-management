@@ -172,8 +172,8 @@ const SubscriptionModal = ({
               <ClipboardList size={18} />
               <h4>Suscripcion</h4>
             </div>
-            <div className="pos-two-col">
-              <div className="pos-field">
+            <div className="pos-two-col pos-subscription-grid">
+              <div className="pos-field pos-field-full">
                 <label>Tipo de suscripcion</label>
                 <div className="pos-select">
                   <button
@@ -192,7 +192,7 @@ const SubscriptionModal = ({
                           key={service.id}
                           onClick={() => onSelectService(service)}
                         >
-                          {service.name} - $${service.price}
+                          {service.name} - ${service.price}
                         </li>
                       ))}
                     </ul>
@@ -200,7 +200,7 @@ const SubscriptionModal = ({
                 </div>
               </div>
 
-              <div className="pos-field">
+              <div className="pos-field pos-field-date">
                 <label>Fecha de inicio</label>
                 <input
                   type="date"
