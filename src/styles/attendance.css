@@ -256,3 +256,15 @@
     gap: var(--spacing-4);
   }
 }
+
+@media (max-width: 600px) {
+  .attendance-date-filter {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .attendance-date-filter__select {
+    width: 100%;
+    text-align: center;
+  }
+}
