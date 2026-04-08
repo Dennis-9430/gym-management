@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTransactions } from "../../hooks/useTransactions";
 import FinancialSummaryTable from "../../components/financial/FinancialSummaryTable";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, Calendar, TrendingUp } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -24,11 +24,13 @@ interface DailyData {
 
 const FinancialMonthlyReport = () => {
   const navigate = useNavigate();
-  const { transactions } = useTransactions();
+  const { transactions, groupByYear } = useTransactions();
 
   const [selectedMonth, setSelectedMonth] = useState<string>(
     new Date().toISOString().slice(0, 7)
   );
+  const [viewMode, setViewMode] = useState<"monthly" | "yearly">("monthly");
+  const currentYear = new Date().getFullYear();
 
   const months = useMemo(() => {
     const monthSet = new Set<string>();
@@ -113,6 +115,10 @@ const FinancialMonthlyReport = () => {
     return Object.values(daily).sort((a, b) => a.date.localeCompare(b.date));
   }, [monthTransactions]);
 
+  const yearlyData = useMemo(() => {
+    return groupByYear(transactions, currentYear);
+  }, [groupByYear, transactions, currentYear]);
+
   const formatMonthLabel = (monthKey: string) => {
     const [year, month] = monthKey.split("-");
     const date = new Date(parseInt(year), parseInt(month) - 1);
@@ -141,102 +147,176 @@ const FinancialMonthlyReport = () => {
         <h2 className="financial-dashboard__title">Reporte Mensual</h2>
       </div>
 
-      <div className="date-selector">
-        <span className="date-selector-label">Buscar Reporte</span>
-        <Calendar size={18} />
-        <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          className="month-select"
+      <div className="report-view-toggle">
+        <button
+          className={`report-view-btn ${viewMode === "monthly" ? "report-view-btn--active" : ""}`}
+          onClick={() => setViewMode("monthly")}
         >
-          {months.map((month) => (
-            <option key={month} value={month}>
-              {formatMonthLabel(month)}
-            </option>
-          ))}
-        </select>
+          <Calendar size={16} />
+          Mensual
+        </button>
+        <button
+          className={`report-view-btn ${viewMode === "yearly" ? "report-view-btn--active" : ""}`}
+          onClick={() => setViewMode("yearly")}
+        >
+          <TrendingUp size={16} />
+          Anual {currentYear}
+        </button>
       </div>
 
-      <section className="financial-dashboard__section">
-        <h3 className="section-title">Resumen del Mes</h3>
-        <FinancialSummaryTable 
-          summary={{
-            services: totalSummary.services,
-            bar: totalSummary.bar,
-            cash: totalSummary.cash,
-            transfer: totalSummary.transfer,
-            total: totalSummary.total,
-          }} 
-          employeeData={summaryByEmployee} 
-        />
-      </section>
+      {viewMode === "monthly" && (
+        <>
+          <div className="date-selector">
+            <span className="date-selector-label">Buscar Reporte</span>
+            <Calendar size={18} />
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="month-select"
+            >
+              {months.map((month) => (
+                <option key={month} value={month}>
+                  {formatMonthLabel(month)}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      <section className="financial-dashboard__section">
-        <h3 className="section-title">Evolución de Ingresos</h3>
-        <div className="chart-wrapper">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={dailyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis 
-                dataKey="date" 
-                tick={{ fontSize: 11 }} 
-                stroke="#6b7280"
-                tickFormatter={formatDayLabel}
-              />
-              <YAxis tick={{ fontSize: 12 }} stroke="#6b7280" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "8px",
-                }}
-                formatter={(value, name) => {
-                  const labels: Record<string, string> = {
-                    total: "Total de Ingresos",
-                    services: "Servicios (Membresías)",
-                    bar: "Bar (Productos)"
-                  };
-                  return [formatCurrency(Number(value)), labels[String(name)] || name];
-                }}
-              />
-              <Legend 
-                formatter={(value) => {
-                  const labels: Record<string, string> = {
-                    total: "Total de Ingresos",
-                    services: "Servicios (Membresías)",
-                    bar: "Bar (Productos)"
-                  };
-                  return labels[value] || value;
-                }}
-              />
-              <Line
-                type="monotone"
-                dataKey="total"
-                name="Total"
-                stroke="#8b5cf6"
-                strokeWidth={3}
-                dot={{ fill: "#8b5cf6", strokeWidth: 2 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="services"
-                name="Servicios"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                dot={{ fill: "#3b82f6" }}
-              />
-              <Line
-                type="monotone"
-                dataKey="bar"
-                name="Bar"
-                stroke="#10b981"
-                strokeWidth={2}
-                dot={{ fill: "#10b981" }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
+          <section className="financial-dashboard__section">
+            <h3 className="section-title">Resumen del Mes</h3>
+            <FinancialSummaryTable 
+              summary={{
+                services: totalSummary.services,
+                bar: totalSummary.bar,
+                cash: totalSummary.cash,
+                transfer: totalSummary.transfer,
+                total: totalSummary.total,
+              }} 
+              employeeData={summaryByEmployee} 
+            />
+          </section>
+
+          <section className="financial-dashboard__section">
+            <h3 className="section-title">Evolución de Ingresos</h3>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={dailyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fontSize: 11 }} 
+                    stroke="#6b7280"
+                    tickFormatter={formatDayLabel}
+                  />
+                  <YAxis tick={{ fontSize: 12 }} stroke="#6b7280" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                    }}
+                    formatter={(value, name) => {
+                      const labels: Record<string, string> = {
+                        total: "Total de Ingresos",
+                        services: "Servicios (Membresías)",
+                        bar: "Bar (Productos)"
+                      };
+                      return [formatCurrency(Number(value)), labels[String(name)] || name];
+                    }}
+                  />
+                  <Legend 
+                    formatter={(value) => {
+                      const labels: Record<string, string> = {
+                        total: "Total de Ingresos",
+                        services: "Servicios (Membresías)",
+                        bar: "Bar (Productos)"
+                      };
+                      return labels[value] || value;
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="total"
+                    name="Total"
+                    stroke="#8b5cf6"
+                    strokeWidth={3}
+                    dot={{ fill: "#8b5cf6", strokeWidth: 2 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="services"
+                    name="Servicios"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={{ fill: "#3b82f6" }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="bar"
+                    name="Bar"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ fill: "#10b981" }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+        </>
+      )}
+
+      {viewMode === "yearly" && (
+        <>
+          <section className="financial-dashboard__section">
+            <h3 className="section-title">Resumen del Año {currentYear}</h3>
+            <FinancialSummaryTable 
+              summary={{
+                services: yearlyData.reduce((acc, _m) => acc, 0),
+                bar: yearlyData.reduce((acc, _m) => acc, 0),
+                cash: 0,
+                transfer: 0,
+                total: yearlyData.reduce((acc, m) => acc + m.total, 0),
+              }} 
+              employeeData={{}} 
+            />
+          </section>
+
+          <section className="financial-dashboard__section">
+            <h3 className="section-title">Progreso por Meses</h3>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={yearlyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="month" 
+                    tick={{ fontSize: 12 }} 
+                    stroke="#6b7280"
+                  />
+                  <YAxis tick={{ fontSize: 12 }} stroke="#6b7280" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                    }}
+                    formatter={(value) => [formatCurrency(Number(value)), "Ingresos Totales"]}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="total"
+                    name="Total"
+                    stroke="#8b5cf6"
+                    strokeWidth={3}
+                    dot={{ fill: "#8b5cf6", strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+        </>
+      )}
     </div>
   );
 };
