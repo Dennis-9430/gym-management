@@ -68,6 +68,13 @@ const FinancialTransactionsList = ({
           <div className={`transaction-method ${getMethodClass(transaction.payment.method)}`}>
             {getMethodIcon(transaction.payment.method)}
             <span>{formatMethodLabel(transaction.payment.method)}</span>
+            <button
+              type="button"
+              className="btn-edit-transaction btn-edit-transaction--inline"
+              onClick={() => onEdit(transaction)}
+            >
+              <Pencil size={14} />
+            </button>
           </div>
           <div className="transaction-actions">
             <button

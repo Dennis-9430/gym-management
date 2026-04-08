@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import type { SaleRecord, PaymentMethod } from "../../types/sales.types";
-import Modal from "../common/Modal";
+import { X } from "lucide-react";
 
 interface Props {
   isOpen: boolean;
@@ -50,16 +50,21 @@ const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) =
     onClose();
   };
 
-  if (!transaction) return null;
+  if (!transaction || !isOpen) return null;
 
   return (
-    <div className="transaction-edit-modal">
-      <Modal isOpen={isOpen} onClose={onClose} title="Editar Método de Pago" size="sm" centered>
-        <form onSubmit={handleSubmit} className="transaction-edit-form">
-        <div className="form-group">
-          <label htmlFor="method">Método de Pago</label>
+    <div className="edit-payment-backdrop" onClick={onClose}>
+      <div className="edit-payment-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="edit-payment-header">
+          <h3>Editar Método de Pago</h3>
+          <button type="button" className="edit-payment-close" onClick={onClose}>
+            <X size={18} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="edit-payment-form">
+        <div className="edit-payment-field">
+          <label>Método de Pago</label>
           <select
-            id="method"
             value={method}
             onChange={(e) => setMethod(e.target.value as PaymentMethod)}
           >
@@ -73,10 +78,9 @@ const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) =
 
         {method === "MIXED" && (
           <>
-            <div className="form-group">
-              <label htmlFor="cashAmount">Monto en Efectivo</label>
+            <div className="edit-payment-field">
+              <label>Efectivo</label>
               <input
-                id="cashAmount"
                 type="number"
                 step="0.01"
                 value={cashAmount}
@@ -84,10 +88,9 @@ const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) =
                 placeholder="0.00"
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="transferAmount">Monto en Transferencia</label>
+            <div className="edit-payment-field">
+              <label>Transferencia</label>
               <input
-                id="transferAmount"
                 type="number"
                 step="0.01"
                 value={transferAmount}
@@ -98,16 +101,16 @@ const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) =
           </>
         )}
 
-        <div className="form-actions">
-          <button type="button" className="btn-cancel" onClick={onClose}>
+        <div className="edit-payment-actions">
+          <button type="button" className="edit-payment-btn edit-payment-btn--cancel" onClick={onClose}>
             Cancelar
           </button>
-          <button type="submit" className="btn-save">
+          <button type="submit" className="edit-payment-btn edit-payment-btn--save">
             Guardar
           </button>
         </div>
-      </form>
-      </Modal>
+        </form>
+      </div>
     </div>
   );
 };
