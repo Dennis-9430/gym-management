@@ -19,6 +19,22 @@ export interface MonthlyData {
   total: number;
 }
 
+export interface WeeklyData {
+  week: string;
+  weekNumber: number;
+  startDate: string;
+  endDate: string;
+  services: number;
+  bar: number;
+  total: number;
+}
+
+export interface YearlyData {
+  month: string;
+  monthKey: string;
+  total: number;
+}
+
 const SERVICE_KEYWORDS = ["mensual", "quincenal", "semanal", "diario", "promo"];
 
 const isServiceItem = (item: CartItem): boolean => {
@@ -109,6 +125,85 @@ export const useTransactions = () => {
     return Object.values(grouped).sort((a, b) => a.monthKey.localeCompare(b.monthKey));
   }, []);
 
+  const groupByWeek = useCallback((txns: SaleRecord[], monthKey: string): WeeklyData[] => {
+    const filtered = txns.filter(t => t.createdAt.startsWith(monthKey));
+    const weeks: Record<number, WeeklyData> = {};
+
+    const getWeekNumber = (date: Date): number => {
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      const dayOfMonth = date.getDate();
+      return Math.ceil((dayOfMonth + firstDay.getDay()) / 7);
+    };
+
+    const getWeekRange = (weekNum: number, month: Date): { start: Date; end: Date } => {
+      const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
+      const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+      
+      const startDay = (weekNum - 1) * 7 + 1 - firstDay.getDay();
+      const start = new Date(month.getFullYear(), month.getMonth(), Math.max(1, startDay));
+      const end = new Date(month.getFullYear(), month.getMonth(), Math.min(lastDay.getDate(), startDay + 6));
+      
+      return { start, end };
+    };
+
+    const monthDate = new Date(monthKey + "-01");
+
+    for (const txn of filtered) {
+      const date = new Date(txn.createdAt);
+      const weekNum = getWeekNumber(date);
+      const range = getWeekRange(weekNum, monthDate);
+
+      if (!weeks[weekNum]) {
+        weeks[weekNum] = {
+          week: `Semana ${weekNum}`,
+          weekNumber: weekNum,
+          startDate: range.start.toISOString().split("T")[0],
+          endDate: range.end.toISOString().split("T")[0],
+          services: 0,
+          bar: 0,
+          total: 0,
+        };
+      }
+
+      for (const item of txn.items) {
+        if (isServiceItem(item)) {
+          weeks[weekNum].services += item.subtotal;
+        } else {
+          weeks[weekNum].bar += item.subtotal;
+        }
+        weeks[weekNum].total += item.subtotal;
+      }
+    }
+
+    return Object.values(weeks).sort((a, b) => a.weekNumber - b.weekNumber);
+  }, []);
+
+  const groupByYear = useCallback((txns: SaleRecord[], year: number): YearlyData[] => {
+    const filtered = txns.filter(t => t.createdAt.startsWith(String(year)));
+    const months: Record<string, YearlyData> = {};
+
+    for (let i = 0; i < 12; i++) {
+      const monthKey = `${year}-${String(i + 1).padStart(2, "0")}`;
+      const date = new Date(year, i);
+      months[monthKey] = {
+        month: date.toLocaleDateString("es-ES", { month: "long" }),
+        monthKey,
+        total: 0,
+      };
+    }
+
+    for (const txn of filtered) {
+      const monthKey = txn.createdAt.slice(0, 7);
+      if (months[monthKey]) {
+        for (const item of txn.items) {
+          months[monthKey].total += item.subtotal;
+        }
+      }
+    }
+
+    return Object.values(months);
+  }, []);
+
   const updateTransaction = useCallback((id: number, update: Partial<SaleRecord>) => {
     updateSale(id, update as SaleRecord);
     reload();
@@ -145,6 +240,8 @@ export const useTransactions = () => {
     getTransactionsByDate,
     calculateSummary,
     groupByMonth,
+    groupByWeek,
+    groupByYear,
     updateTransaction,
     addTransaction,
     todaySummary,
