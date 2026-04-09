@@ -1,5 +1,5 @@
 .attendance-page {
-  padding: var(--spacing-6);
+  padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -8,34 +8,33 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--spacing-6);
+  margin-bottom: 24px;
   flex-wrap: wrap;
-  gap: var(--spacing-4);
+  gap: 16px;
 }
 
 .attendance-header__left {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-4);
+  flex-direction: column;
+  gap: 8px;
 }
 
 .attendance-title {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   margin: 0;
 }
 
 .attendance-subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  margin: var(--spacing-1) 0 0 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
   text-transform: capitalize;
 }
 
 .attendance-filters {
   display: flex;
-  gap: var(--spacing-4);
+  gap: 16px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -54,12 +53,12 @@
 }
 
 .attendance-search__input {
-  padding: 0.625rem var(--spacing-4) 0.625rem 2.5rem;
+  padding: 0.625rem 16px 0.625rem 2.5rem;
   border: 1px solid var(--slate-200);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   width: 280px;
-  transition: all var(--transition-base);
+  transition: all 250ms ease;
 }
 
 .attendance-search__input:focus {
@@ -71,18 +70,18 @@
 .attendance-date-filter {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   color: var(--color-text-muted);
 }
 
 .attendance-date-filter__select {
-  padding: 0.625rem var(--spacing-4);
+  padding: 0.625rem 16px;
   border: 1px solid var(--slate-200);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   background: var(--color-bg-primary);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 250ms ease;
 }
 
 .attendance-date-filter__select:focus {
@@ -92,27 +91,27 @@
 
 .attendance-tabs {
   display: flex;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-6);
+  gap: 8px;
+  margin-bottom: 24px;
   background: var(--color-bg-tertiary);
-  padding: var(--spacing-1);
-  border-radius: var(--radius-xl);
+  padding: 4px;
+  border-radius: 12px;
   width: fit-content;
 }
 
 .attendance-tab {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: 0.625rem var(--spacing-5);
+  gap: 8px;
+  padding: 0.625rem 20px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   background: transparent;
   color: var(--color-text-muted);
-  transition: all var(--transition-base);
+  transition: all 250ms ease;
 }
 
 .attendance-tab:hover {
@@ -127,7 +126,7 @@
 
 .attendance-table-wrapper {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   box-shadow: var(--shadow-card);
   overflow: hidden;
 }
@@ -139,18 +138,18 @@
 
 .attendance-table th {
   background: var(--color-bg-secondary);
-  padding: var(--spacing-4);
+  padding: 16px;
   text-align: left;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
+  color: var(--color-text-primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--slate-200);
 }
 
 .attendance-table td {
-  padding: var(--spacing-4);
+  padding: 16px;
   border-bottom: 1px solid var(--color-bg-tertiary);
   font-size: var(--font-size-sm);
   color: var(--color-primary-light);
@@ -184,8 +183,8 @@
 
 .attendance-badge {
   display: inline-flex;
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  border-radius: 9999px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
 }
@@ -202,23 +201,28 @@
 
 .attendance-empty {
   text-align: center;
-  padding: var(--spacing-12) !important;
+  padding: 48px !important;
   color: var(--color-text-light);
+}
+
+.attendance-th--hide-mobile,
+.attendance-td--hide-mobile {
+  display: table-cell;
 }
 
 .attendance-summary {
   display: flex;
-  gap: var(--spacing-8);
-  margin-top: var(--spacing-6);
-  padding: var(--spacing-4);
+  gap: 32px;
+  margin-top: 24px;
+  padding: 16px;
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
 }
 
 .attendance-summary__item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
 }
 
 .attendance-summary__label {
@@ -238,9 +242,16 @@
     align-items: stretch;
   }
 
+  .attendance-header__left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   .attendance-filters {
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
   }
 
   .attendance-search__input {
@@ -253,18 +264,82 @@
 
   .attendance-summary {
     flex-wrap: wrap;
-    gap: var(--spacing-4);
+    gap: 16px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+  .attendance-page {
+    padding: 12px;
+  }
+
+  .attendance-header {
+    align-items: center;
+  }
+
+  .attendance-header__left {
+    align-items: center;
+    text-align: center;
+  }
+
+  .attendance-title {
+    font-size: var(--font-size-lg);
+    text-align: center;
+  }
+
+  .attendance-subtitle {
+    text-align: center;
+  }
+
+  .attendance-filters {
+    gap: 12px;
+  }
+
+  .attendance-search__input {
+    text-align: center;
+    padding-left: 12px;
+  }
+
+  .attendance-search__icon {
+    display: none;
+  }
+
   .attendance-date-filter {
-    justify-content: center;
+    justify-content: stretch;
     flex-wrap: wrap;
   }
 
   .attendance-date-filter__select {
-    width: 100%;
+    flex: 1;
     text-align: center;
+  }
+
+  .attendance-tabs {
+    width: 100%;
+  }
+
+  .attendance-tab {
+    flex: 1;
+    justify-content: center;
+    padding: 12px 8px;
+  }
+
+  .attendance-th--hide-mobile,
+  .attendance-td--hide-mobile {
+    display: none;
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    padding: 12px;
+  }
+
+  .attendance-document {
+    font-size: var(--font-size-xs);
+  }
+
+  .attendance-name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
   }
 }

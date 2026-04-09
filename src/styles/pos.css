@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .pos-container {
-  padding: var(--spacing-8) clamp(1rem, 3vw, var(--spacing-10));
+  padding: 32px clamp(1rem, 3vw, 40px);
   background: #eef2f7;
   min-height: calc(100vh - 70px);
 }
@@ -21,26 +21,26 @@
 }
 
 .pos-dashboard-header p {
-  margin: var(--spacing-1) 0 0;
+  margin: 4px 0 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-base);
 }
 
 .pos-dashboard-grid {
-  margin-top: var(--spacing-6);
+  margin-top: 24px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--spacing-4);
+  gap: 16px;
 }
 
 .pos-dashboard-card {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   border: 1px solid var(--color-border);
-  padding: var(--spacing-5) var(--spacing-4);
+  padding: 20px 16px;
   box-shadow: var(--shadow-md);
   display: grid;
-  gap: var(--spacing-3);
+  gap: 12px;
   justify-items: center;
 }
 
@@ -59,7 +59,7 @@
 .pos-card-icon {
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   background: var(--color-bg-tertiary);
   display: grid;
   place-items: center;
@@ -68,14 +68,14 @@
 
 .pos-card-btn {
   border: none;
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: 10px;
+  padding: 8px 16px;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
-  transition: all var(--transition-fast);
+  gap: 8px;
+  transition: all 150ms ease;
 }
 
 .pos-card-btn.primary {
@@ -98,15 +98,15 @@
   background: rgba(15, 23, 42, 0.55);
   display: grid;
   place-items: center;
-  z-index: var(--z-modal);
-  padding: var(--spacing-4);
+  z-index: 500;
+  padding: 16px;
 }
 
 .pos-modal {
-  width: min(900px, 92vw);
-  max-height: 90vh;
+  width: min(700px, 95vw);
+  height: min(90vh, 800px);
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-modal-lg);
   display: flex;
@@ -116,12 +116,12 @@
 }
 
 .pos-modal-header {
-  padding: var(--spacing-4) var(--spacing-5) var(--spacing-3);
+  padding: 16px 20px 12px;
   border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: var(--spacing-4);
+  gap: 16px;
 }
 
 .pos-modal-header h3 {
@@ -131,7 +131,7 @@
 }
 
 .pos-modal-header p {
-  margin: var(--spacing-1) 0 0;
+  margin: 4px 0 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
@@ -142,7 +142,7 @@
   color: var(--color-text-secondary);
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -153,14 +153,19 @@
 }
 
 .pos-modal-body {
-  padding: var(--spacing-4) var(--spacing-5) var(--spacing-5);
+  padding: 16px 20px 20px;
   overflow-y: auto;
-  display: grid;
-  gap: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  flex: 1;
 }
 
 .pos-content {
-  margin-top: var(--spacing-6);
+  margin-top: 24px;
   max-width: 980px;
   margin-left: auto;
   margin-right: auto;
@@ -168,21 +173,21 @@
 
 .pos-panel {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
-  padding: var(--spacing-5);
+  padding: 20px;
 }
 
 .pos-cart-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-5);
+  gap: 20px;
 }
 
 .pos-catalog {
   display: grid;
-  gap: var(--spacing-3);
+  gap: 12px;
 }
 
 .pos-search-wrapper {
@@ -191,7 +196,7 @@
 
 .pos-client-actions {
   display: flex;
-  gap: var(--spacing-2);
+  gap: 8px;
   align-items: flex-start;
 }
 
@@ -211,9 +216,9 @@
 .pos-search {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-lg);
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
   border: 1px solid var(--color-border-dark);
   background: var(--color-bg-secondary);
   width: 100%;
@@ -234,19 +239,19 @@
 
 .pos-search-dropdown {
   position: absolute;
-  top: calc(100% + var(--spacing-2));
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
   background: var(--color-bg-primary);
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-lg);
   max-height: 260px;
   overflow-y: auto;
-  z-index: var(--z-dropdown);
+  z-index: 100;
   list-style: none;
   margin: 0;
-  padding: var(--spacing-1);
+  padding: 4px;
 }
 
 .pos-search-dropdown li {
@@ -257,11 +262,11 @@
   width: 100%;
   border: none;
   background: transparent;
-  padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-lg);
+  padding: 8px 12px;
+  border-radius: 10px;
   text-align: left;
   display: grid;
-  gap: var(--spacing-1);
+  gap: 4px;
   cursor: pointer;
 }
 
@@ -283,24 +288,24 @@
 }
 
 .pos-suggestion-title .sep {
-  margin: 0 var(--spacing-2);
+  margin: 0 8px;
   color: var(--color-text-light);
 }
 
 .pos-suggestion-meta .sep-right {
-  margin-right: var(--spacing-2);
+  margin-right: 8px;
   color: var(--color-primary);
   font-weight: var(--font-weight-semibold);
 }
 
 .pos-suggestion-empty {
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: 8px 12px;
   color: var(--color-text-light);
   font-size: var(--font-size-sm);
 }
 
 .pos-catalog-header h3 {
-  margin: 0 0 var(--spacing-2);
+  margin: 0 0 8px;
   color: var(--color-primary);
   font-size: var(--font-size-lg);
 }
@@ -310,16 +315,16 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: var(--spacing-3);
+  gap: 12px;
 }
 
 .pos-catalog-item {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: var(--spacing-4);
-  padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--radius-xl);
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
   border: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
 }
@@ -331,7 +336,7 @@
 }
 
 .pos-item-meta {
-  margin: var(--spacing-1) 0 0;
+  margin: 4px 0 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
@@ -340,7 +345,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--spacing-2);
+  gap: 8px;
   min-width: 140px;
 }
 
@@ -351,18 +356,18 @@
 
 .pos-add-btn {
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   background: var(--color-action);
   color: var(--color-text-inverse);
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: 8px 12px;
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition:
-    background var(--transition-fast),
-    transform var(--transition-fast);
+    background 150ms ease,
+    transform 150ms ease;
 }
 
 .pos-add-btn:hover {
@@ -372,20 +377,20 @@
 
 .pos-cart-section {
   display: grid;
-  gap: var(--spacing-4);
+  gap: 16px;
 }
 
 .pos-cart-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: 16px;
 }
 
 .pos-cart-title {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   color: var(--color-primary);
 }
 
@@ -398,14 +403,14 @@
   border: none;
   background: var(--color-danger-light);
   color: var(--color-danger-dark);
-  padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-lg);
+  padding: 8px 12px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .pos-clear-btn:hover {
@@ -414,7 +419,7 @@
 }
 
 .pos-cart-table-wrapper {
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid var(--color-border);
   overflow-x: auto;
 }
@@ -430,7 +435,7 @@
 
 .pos-cart-table th {
   text-align: left;
-  padding: var(--spacing-2) var(--spacing-2);
+  padding: 8px 8px;
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -439,7 +444,7 @@
 }
 
 .pos-cart-table td {
-  padding: var(--spacing-2) var(--spacing-2);
+  padding: 8px 8px;
   border-top: 1px solid var(--color-border);
   color: var(--color-primary);
   font-size: var(--font-size-sm);
@@ -458,8 +463,8 @@
 
 .pos-discount-input {
   width: 55px;
-  padding: var(--spacing-1) var(--spacing-1);
-  border-radius: var(--radius-sm);
+  padding: 4px 4px;
+  border-radius: 6px;
   border: 1px solid var(--color-border-dark);
   font-size: var(--font-size-xs);
   text-align: center;
@@ -468,10 +473,10 @@
 .pos-qty-control {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   background: var(--color-bg-tertiary);
-  padding: var(--spacing-1);
-  border-radius: var(--radius-sm);
+  padding: 4px;
+  border-radius: 6px;
 }
 
 .pos-qty-control .pos-qty-input {
@@ -493,14 +498,15 @@
 .pos-qty-buttons button {
   border: none;
   background: transparent;
-  width: 18px;
-  height: 14px;
+  width: 100%;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-muted);
   cursor: pointer;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
   line-height: 1;
 }
 
@@ -514,11 +520,11 @@
   color: var(--color-danger);
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .pos-remove-btn:hover {
@@ -527,18 +533,18 @@
 }
 
 .pos-summary {
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   background: var(--color-bg-secondary);
-  padding: var(--spacing-4);
+  padding: 16px;
   display: grid;
-  gap: var(--spacing-2);
+  gap: 8px;
 }
 
 .pos-summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-3);
+  gap: 12px;
   color: var(--color-text-secondary);
   font-size: var(--font-size-base);
 }
@@ -546,17 +552,17 @@
 .pos-summary-inline {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-3);
+  gap: 12px;
 }
 
 .pos-rate-input {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   background: var(--color-bg-primary);
   border: 1px solid var(--color-border-dark);
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: var(--radius-md);
+  padding: 4px 12px;
+  border-radius: 8px;
 }
 
 .pos-rate-input input {
@@ -576,21 +582,26 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   border-top: 1px solid var(--color-border);
-  padding-top: var(--spacing-2);
-  margin-top: var(--spacing-1);
+  padding-top: 8px;
+  margin-top: 4px;
 }
 
 .pos-summary-actions {
   display: flex;
-  gap: var(--spacing-3);
-  margin-top: var(--spacing-2);
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .pos-section {
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--spacing-4);
-  display: grid;
-  gap: var(--spacing-2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pos-modal-body .pos-section:first-child {
+  padding-top: 0;
 }
 
 .pos-modal-body .pos-section:first-child {
@@ -601,7 +612,7 @@
 .pos-section-title {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   color: var(--color-primary);
 }
 
@@ -612,36 +623,42 @@
 
 .pos-field {
   display: grid;
-  gap: var(--spacing-1);
+  gap: 4px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pos-field-date {
   display: grid;
-  gap: var(--spacing-1);
+  gap: 4px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pos-field-full {
   display: grid;
-  gap: var(--spacing-1);
+  gap: 4px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pos-field-inline {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--spacing-3);
+  gap: 12px;
   align-items: center;
 }
 
 .pos-consumer-btn {
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   background: var(--color-border);
   color: var(--color-text-primary);
-  padding: var(--spacing-1) var(--spacing-3);
+  padding: 4px 12px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  margin-top: var(--spacing-2);
+  margin-top: 8px;
   display: inline-block;
   width: auto;
 }
@@ -652,7 +669,7 @@
 
 .pos-client-search {
   display: flex;
-  gap: var(--spacing-2);
+  gap: 8px;
   align-items: flex-start;
 }
 
@@ -670,17 +687,17 @@
 }
 
 .pos-client-selected {
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
-  padding: var(--spacing-3);
+  padding: 12px;
 }
 
 .pos-client-info-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-2);
+  margin-bottom: 8px;
 }
 
 .pos-client-info-name {
@@ -695,12 +712,12 @@
   color: var(--color-danger-hover);
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .pos-client-clear:hover {
@@ -710,10 +727,10 @@
 
 .pos-client-info-details {
   display: grid;
-  gap: var(--spacing-1);
+  gap: 4px;
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-  margin-bottom: var(--spacing-2);
+  margin-bottom: 8px;
 }
 
 .pos-client-info-doc {
@@ -729,14 +746,23 @@
 
 .pos-field input,
 .pos-field select {
-  padding: var(--spacing-2) var(--spacing-2);
-  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  border-radius: 8px;
   border: 1px solid var(--color-border-dark);
-  font-size: var(--font-size-sm);
-  color: var(--color-primary);
   background: var(--color-bg-primary);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
   width: 100%;
+  transition: all 150ms ease;
+  font-family: inherit;
   box-sizing: border-box;
+}
+
+.pos-field input:focus,
+.pos-field select:focus {
+  outline: none;
+  border-color: var(--color-action);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .pos-field input:focus,
@@ -749,24 +775,40 @@
 .pos-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
 
 .pos-client-card {
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
-  padding: var(--spacing-3);
+  padding: 12px;
   display: grid;
-  gap: var(--spacing-1);
+  gap: 4px;
+}
+
+.pos-client-change-btn {
+  padding: 4px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.pos-client-change-btn:hover {
+  border-color: var(--color-action);
+  color: var(--color-action);
 }
 
 .pos-client-row {
   display: flex;
   justify-content: space-between;
-  gap: var(--spacing-2);
+  gap: 8px;
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
 }
@@ -780,23 +822,33 @@
 .pos-payment-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--spacing-3);
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pos-subscription-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pos-checkout-btn {
   border: none;
   background: var(--color-action);
   color: var(--color-text-inverse);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  border-radius: 6px;
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-2);
+  gap: 8px;
 }
 
 .pos-checkout-btn:hover {
@@ -807,8 +859,8 @@
   border: 1px solid var(--color-border);
   background: var(--color-bg-tertiary);
   color: var(--color-text-secondary);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  border-radius: 6px;
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
   cursor: pointer;
@@ -825,22 +877,22 @@
 
 .pos-empty-row {
   text-align: center;
-  padding: var(--spacing-4);
+  padding: 16px;
   color: var(--color-text-light);
   font-size: var(--font-size-sm);
 }
 
 .pos-pending {
   max-width: 1100px;
-  margin: var(--spacing-8) auto 0;
+  margin: 32px auto 0;
 }
 
 .pos-pending-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-3);
+  gap: 16px;
+  margin-bottom: 12px;
 }
 
 .pos-pending-header h3 {
@@ -857,7 +909,7 @@
 
 .pos-pending-table-wrapper {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
   overflow-x: auto;
@@ -871,7 +923,7 @@
 
 .pos-pending-table th {
   text-align: left;
-  padding: var(--spacing-3) var(--spacing-3);
+  padding: 12px 12px;
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -880,7 +932,7 @@
 }
 
 .pos-pending-table td {
-  padding: var(--spacing-3) var(--spacing-3);
+  padding: 12px 12px;
   border-top: 1px solid var(--color-border);
   color: var(--color-primary);
   font-size: var(--font-size-sm);
@@ -888,14 +940,14 @@
 
 .pos-table-actions {
   display: inline-flex;
-  gap: var(--spacing-2);
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .pos-action-btn {
   border: none;
-  border-radius: var(--radius-md);
-  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: 8px;
+  padding: 8px 12px;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   font-size: var(--font-size-sm);
@@ -918,9 +970,9 @@
 .pos-select-trigger {
   width: 100%;
   border: 1px solid var(--color-border-dark);
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   background: var(--color-bg-primary);
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: 8px 12px;
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--color-primary);
@@ -929,24 +981,24 @@
 
 .pos-select-dropdown {
   position: absolute;
-  top: calc(100% + var(--spacing-2));
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
   background: var(--color-bg-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   box-shadow: var(--shadow-lg);
   list-style: none;
-  padding: var(--spacing-1);
+  padding: 4px;
   margin: 0;
   max-height: 240px;
   overflow-y: auto;
-  z-index: var(--z-dropdown);
+  z-index: 100;
 }
 
 .pos-select-dropdown li {
-  padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: var(--font-size-sm);
   color: var(--color-primary);
@@ -958,36 +1010,39 @@
 
 .pos-modal-actions {
   display: flex;
-  gap: var(--spacing-3);
+  gap: 12px;
   justify-content: flex-end;
   flex-wrap: wrap;
-  margin-top: var(--spacing-2);
+  margin-top: 8px;
 }
 
 .pos-pending-btn {
   border: none;
-  background: var(--color-warning);
+  background: var(--color-action);
   color: var(--color-text-inverse);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  border-radius: 6px;
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .pos-pending-btn:hover {
-  background: var(--color-warning-hover);
+  background: var(--color-action-hover);
 }
 
 .pos-modal-sm {
-  width: min(760px, 92vw);
+  width: min(700px, 95vw);
+  height: min(90vh, 750px);
 }
 
 .pos-two-col {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--spacing-3);
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* MembershipModal */
@@ -998,19 +1053,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--z-modal);
-  padding: var(--spacing-4);
+  z-index: 500;
+  padding: 16px;
 }
 
 .membership-modal {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   width: min(600px, 95vw);
   max-height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  animation: slideUp var(--transition-base) ease-out;
+  animation: slideUp 250ms ease ease-out;
   margin: auto;
 }
 
@@ -1018,7 +1073,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: var(--spacing-5);
+  padding: 20px;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -1029,7 +1084,7 @@
 }
 
 .membership-modal__header p {
-  margin: var(--spacing-1) 0 0;
+  margin: 4px 0 0;
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
@@ -1039,8 +1094,8 @@
   border: none;
   color: var(--color-text-light);
   cursor: pointer;
-  padding: var(--spacing-1);
-  transition: color var(--transition-fast);
+  padding: 4px;
+  transition: color 150ms ease;
 }
 
 .membership-modal__close:hover {
@@ -1048,23 +1103,23 @@
 }
 
 .membership-modal__actions {
-  padding: var(--spacing-4);
+  padding: 16px;
   border-bottom: 1px solid var(--color-border);
 }
 
 .membership-modal__add {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
+  gap: 8px;
+  padding: 8px 16px;
   background: var(--color-action);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .membership-modal__add:hover {
@@ -1074,7 +1129,7 @@
 .membership-modal__table-wrapper {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-4);
+  padding: 16px;
 }
 
 .membership-modal__table {
@@ -1084,7 +1139,7 @@
 
 .membership-modal__table th {
   text-align: left;
-  padding: var(--spacing-3);
+  padding: 12px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-muted);
@@ -1095,7 +1150,7 @@
 }
 
 .membership-modal__table td {
-  padding: var(--spacing-3);
+  padding: 12px;
   border-bottom: 1px solid var(--color-bg-tertiary);
   font-size: var(--font-size-sm);
   color: var(--color-primary-light);
@@ -1107,17 +1162,17 @@
 
 .membership-modal__actions-cell {
   display: flex;
-  gap: var(--spacing-2);
+  gap: 8px;
 }
 
 .membership-modal__btn-edit,
 .membership-modal__btn-delete {
   background: none;
   border: none;
-  padding: var(--spacing-1);
-  border-radius: var(--radius-sm);
+  padding: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .membership-modal__btn-edit {
@@ -1137,11 +1192,11 @@
 }
 
 .membership-modal__form {
-  padding: var(--spacing-5);
+  padding: 20px;
 }
 
 .membership-form__group {
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 16px;
 }
 
 .membership-form__group label {
@@ -1149,16 +1204,16 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-1);
+  margin-bottom: 4px;
 }
 
 .membership-form__group input {
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: 8px 12px;
   border: 1px solid var(--color-border-dark);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .membership-form__group input:focus {
@@ -1170,35 +1225,35 @@
 .membership-form__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-4);
+  gap: 16px;
 }
 
 .membership-form__error {
   color: var(--color-danger-hover);
   font-size: var(--font-size-sm);
-  margin: 0 0 var(--spacing-4);
-  padding: var(--spacing-2);
+  margin: 0 0 16px;
+  padding: 8px;
   background: var(--color-danger-light);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
 }
 
 .membership-form__actions {
   display: flex;
-  gap: var(--spacing-3);
-  margin-top: var(--spacing-5);
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .membership-form__save,
 .membership-form__cancel {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-5);
-  border-radius: var(--radius-md);
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .membership-form__save {
@@ -1224,12 +1279,12 @@
 /* Responsive */
 @media (max-width: 1024px) {
   .pos-container {
-    padding: var(--spacing-6) var(--spacing-4);
+    padding: 24px 16px;
   }
 
   .pos-dashboard-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-4);
+    gap: 16px;
   }
 
   .pos-dashboard-header {
@@ -1247,7 +1302,7 @@
 
 @media (max-width: 640px) {
   .pos-container {
-    padding: var(--spacing-4) var(--spacing-3);
+    padding: 16px 12px;
   }
 
   .pos-dashboard-header h2 {
@@ -1259,7 +1314,7 @@
   }
 
   .pos-dashboard-card {
-    padding: var(--spacing-4);
+    padding: 16px;
   }
 
   .pos-dashboard-card h3 {
@@ -1271,7 +1326,7 @@
   }
 
   .pos-modal-backdrop {
-    padding: var(--spacing-2);
+    padding: 8px;
     align-items: center;
     justify-content: center;
   }
@@ -1283,13 +1338,13 @@
   }
 
   .pos-modal-header {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 12px 16px;
     flex-direction: column;
-    gap: var(--spacing-2);
+    gap: 8px;
   }
 
   .pos-modal-body {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 12px 16px;
     overflow-y: auto;
   }
 
@@ -1342,7 +1397,7 @@
 
 @media (max-width: 640px) {
   .membership-modal-backdrop {
-    padding: var(--spacing-2);
+    padding: 8px;
   }
 
   .membership-modal {
@@ -1352,9 +1407,9 @@
   }
 
   .membership-modal__header {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 12px 16px;
     flex-direction: column;
-    gap: var(--spacing-2);
+    gap: 8px;
   }
 
   .membership-modal__header h3 {
@@ -1362,7 +1417,7 @@
   }
 
   .membership-modal__table-wrapper {
-    padding: var(--spacing-2);
+    padding: 8px;
     overflow-x: auto;
   }
 
@@ -1372,7 +1427,7 @@
 
   .membership-modal__table th,
   .membership-modal__table td {
-    padding: var(--spacing-2);
+    padding: 8px;
   }
 
   .membership-form__row {
@@ -1405,7 +1460,7 @@
   .pos-subscription-grid {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-3);
+    gap: 12px;
   }
 
   .pos-subscription-grid .pos-field-full {

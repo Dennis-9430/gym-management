@@ -10,10 +10,10 @@
   align-items: center;
   justify-content: center;
 
-  padding: var(--spacing-6);
+  padding: 24px;
   overflow-y: auto;
 
-  z-index: var(--z-modal-backdrop);
+  z-index: 400;
 }
 
 /* modal */
@@ -23,14 +23,14 @@
   max-width: 440px;
   background: #e9ebee;
 
-  border-radius: var(--radius-3xl);
-  padding: var(--spacing-8);
+  border-radius: 18px;
+  padding: 32px;
 
   box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.08),
     0 2px 10px rgba(0, 0, 0, 0.04);
 
-  animation: modalFade var(--transition-base);
+  animation: modalFade 250ms ease;
 }
 
 @keyframes modalFade {
@@ -45,7 +45,7 @@
 }
 
 .modal-content h2 {
-  margin: 0 0 var(--spacing-6) 0;
+  margin: 0 0 24px 0;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: var(--color-primary);
@@ -62,13 +62,13 @@
   display: flex;
   flex-direction: column;
 
-  margin-bottom: var(--spacing-5);
+  margin-bottom: 20px;
   width: 100%;
   min-width: 0;
 }
 
 .form-group label {
-  margin-bottom: var(--spacing-2);
+  margin-bottom: 8px;
 
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -80,15 +80,15 @@
 .custom-select {
   position: relative;
   border: 1px solid #9ea7b3;
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   width: 100%;
 }
 
 .select-trigger {
   width: 100%;
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 12px 16px;
 
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid var(--slate-200);
   background: var(--color-bg-secondary);
 
@@ -97,7 +97,7 @@
   color: var(--color-primary);
 
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .select-trigger:hover {
@@ -120,25 +120,25 @@
   width: 100%;
 
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid #9ea7b3;
 
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 
   list-style: none;
-  padding: var(--spacing-2) 0;
+  padding: 8px 0;
   margin: 0;
 
   max-height: 220px;
   overflow-y: auto;
 
-  z-index: var(--z-dropdown);
+  z-index: 100;
 }
 
 .select-dropdown li {
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: 8px 16px;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .select-dropdown li:hover {
@@ -150,20 +150,20 @@
 
 .modal-actions {
   display: flex;
-  gap: var(--spacing-4);
-  margin-top: var(--spacing-8);
+  gap: 16px;
+  margin-top: 32px;
 }
 
 .btn-primary,
 .btn-secondary {
   flex: 1;
-  padding: var(--spacing-3);
-  border-radius: var(--radius-xl);
+  padding: 12px;
+  border-radius: 12px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   border: 1px solid #9ea7b3;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 /* Primary */
@@ -200,7 +200,7 @@
 @media (max-width: var(--breakpoint-lg)) {
   .modal-content {
     max-width: 100%;
-    padding: var(--spacing-6);
+    padding: 24px;
   }
 
   .modal-actions {
@@ -210,8 +210,8 @@
 
 @media (max-width: var(--breakpoint-sm)) {
   .modal-content {
-    padding: var(--spacing-5);
-    border-radius: var(--radius-2xl);
+    padding: 20px;
+    border-radius: 16px;
   }
 
   .modal-content h2 {

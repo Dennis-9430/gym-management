@@ -3,20 +3,20 @@
    ========================================================================== */
 
 .financial-report {
-  padding: var(--spacing-5);
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .financial-report__header {
-  margin-bottom: var(--spacing-8);
+  margin-bottom: 32px;
 }
 
 .financial-report__title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-2);
+  margin-bottom: 8px;
 }
 
 .financial-report__subtitle {
@@ -26,23 +26,23 @@
 }
 
 .financial-report__section {
-  margin-bottom: var(--spacing-8);
+  margin-bottom: 32px;
 }
 
 .section-title {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: #374151;
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 16px;
 }
 
 .transactions-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
+  gap: 12px;
   max-height: 400px;
   overflow-y: auto;
-  padding-right: var(--spacing-2);
+  padding-right: 8px;
 }
 
 .transactions-list::-webkit-scrollbar {
@@ -67,11 +67,11 @@
   display: grid;
   grid-template-columns: 80px 120px 1fr 100px 120px 60px;
   align-items: center;
-  padding: var(--spacing-4);
+  padding: 16px;
   background: var(--color-bg-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  transition: box-shadow var(--transition-fast);
+  border-radius: 10px;
+  transition: box-shadow 150ms ease;
 }
 
 .transaction-item:hover {
@@ -93,13 +93,13 @@
 .transaction-items {
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
-  padding-right: var(--spacing-4);
+  padding-right: 16px;
 }
 
 .transaction-amount {
   display: flex;
   align-items: center;
-  gap: var(--spacing-1);
+  gap: 4px;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
   color: var(--color-success-hover);
@@ -108,11 +108,11 @@
 .transaction-method {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: 8px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  border-radius: 6px;
 }
 
 .method-cash {
@@ -142,11 +142,11 @@
   width: 32px;
   height: 32px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   background: #f3f4f6;
   color: #6b7280;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .btn-edit-transaction:hover {
@@ -159,11 +159,11 @@
 }
 
 .transactions-empty {
-  padding: var(--spacing-12);
+  padding: 48px;
   text-align: center;
   color: #9ca3af;
   background: #f9fafb;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   border: 1px dashed var(--color-border-dark);
 }
 
@@ -175,7 +175,7 @@
   width: 100%;
   border-collapse: collapse;
   background: var(--color-bg-primary);
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -186,7 +186,7 @@
 
 .summary-table th {
   text-align: left;
-  padding: var(--spacing-4);
+  padding: 16px;
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -195,7 +195,7 @@
 }
 
 .summary-table td {
-  padding: var(--spacing-4);
+  padding: 16px;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   border-top: 1px solid var(--color-border);
@@ -239,16 +239,16 @@
 .financial-dashboard-btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-5);
+  gap: 8px;
+  padding: 12px 20px;
   background: var(--color-violet);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .financial-dashboard-btn:hover {
@@ -256,20 +256,20 @@
 }
 
 .financial-dashboard {
-  padding: var(--spacing-5);
+  padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
 .financial-dashboard__header {
-  margin-bottom: var(--spacing-8);
+  margin-bottom: 32px;
 }
 
 .financial-dashboard__title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-2);
+  margin-bottom: 8px;
 }
 
 .financial-dashboard__subtitle {
@@ -280,17 +280,17 @@
 .financial-dashboard__summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-8);
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
 .summary-card {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
-  padding: var(--spacing-5);
+  gap: 8px;
+  padding: 20px;
   background: var(--color-bg-primary);
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid var(--color-border);
 }
 
@@ -318,13 +318,13 @@
 .financial-dashboard__charts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: var(--spacing-8);
+  gap: 32px;
 }
 
 .chart-wrapper {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-5);
+  border-radius: 12px;
+  padding: 20px;
   border: 1px solid var(--color-border);
 }
 
@@ -332,7 +332,7 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: #374151;
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 16px;
 }
 
 .chart-empty {
@@ -347,9 +347,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 16px;
   flex-wrap: wrap;
-  gap: var(--spacing-2);
+  gap: 8px;
 }
 
 .chart-controls .chart-title {
@@ -358,20 +358,20 @@
 
 .chart-selectors {
   display: flex;
-  gap: var(--spacing-2);
+  gap: 8px;
   align-items: center;
 }
 
 .chart-view-btn {
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: 8px 12px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   background: var(--color-bg-primary);
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .chart-view-btn:hover {
@@ -393,27 +393,27 @@
 
 .report-view-toggle {
   display: flex;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-5);
-  padding: var(--spacing-1);
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 4px;
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   width: fit-content;
 }
 
 .report-view-btn {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-4);
+  gap: 8px;
+  padding: 12px 16px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   background: transparent;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .report-view-btn:hover {
@@ -436,12 +436,12 @@
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  padding: var(--spacing-4);
+  padding: 16px;
 }
 
 .edit-payment-modal {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: 16px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-modal-lg);
   width: min(400px, 95vw);
@@ -453,7 +453,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-4);
+  padding: 16px;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -466,7 +466,7 @@
 .edit-payment-close {
   background: var(--color-bg-tertiary);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   width: 32px;
   height: 32px;
   display: flex;
@@ -474,7 +474,7 @@
   justify-content: center;
   cursor: pointer;
   color: var(--color-text-muted);
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .edit-payment-close:hover {
@@ -482,16 +482,16 @@
 }
 
 .edit-payment-form {
-  padding: var(--spacing-4);
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
+  gap: 12px;
 }
 
 .edit-payment-field {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: 4px;
 }
 
 .edit-payment-field label {
@@ -502,13 +502,13 @@
 
 .edit-payment-field input,
 .edit-payment-field select {
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 12px 16px;
   border: 1px solid var(--color-border-dark);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-base);
   color: var(--color-primary);
   background: var(--color-bg-primary);
-  transition: border-color var(--transition-fast);
+  transition: border-color 150ms ease;
 }
 
 .edit-payment-field input:focus,
@@ -520,18 +520,18 @@
 
 .edit-payment-actions {
   display: flex;
-  gap: var(--spacing-2);
-  margin-top: var(--spacing-2);
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .edit-payment-btn {
   flex: 1;
-  padding: var(--spacing-3);
-  border-radius: var(--radius-md);
+  padding: 12px;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
   border: none;
 }
 
@@ -562,7 +562,7 @@
   }
 
   .edit-payment-header {
-    padding: var(--spacing-4);
+    padding: 16px;
   }
 
   .edit-payment-header h3 {
@@ -570,13 +570,13 @@
   }
 
   .edit-payment-form {
-    padding: var(--spacing-4);
-    gap: var(--spacing-3);
+    padding: 16px;
+    gap: 12px;
   }
 
   .edit-payment-field input,
   .edit-payment-field select {
-    padding: var(--spacing-3);
+    padding: 12px;
     font-size: var(--font-size-base);
   }
 
@@ -592,24 +592,24 @@
 .voucher-modal-content {
   max-height: 300px;
   overflow-y: auto;
-  padding: var(--spacing-2) 0;
+  padding: 8px 0;
 }
 
 .voucher-placeholder {
   text-align: center;
-  padding: var(--spacing-4);
+  padding: 16px;
 }
 
 .items-edit-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
+  gap: 12px;
 }
 
 .item-edit-row {
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: 16px;
 }
 
 .item-edit-row input {
@@ -626,20 +626,20 @@
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--spacing-3);
-  margin-top: var(--spacing-2);
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .btn-cancel {
-  padding: var(--spacing-3) var(--spacing-5);
+  padding: 12px 20px;
   background: var(--color-bg-tertiary);
   color: var(--color-primary-light);
   border: 1px solid #9ea7b3;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .btn-cancel:hover {
@@ -647,15 +647,15 @@
 }
 
 .btn-save {
-  padding: var(--spacing-3) var(--spacing-5);
+  padding: 12px 20px;
   background: var(--color-action);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .btn-save:hover {
@@ -673,23 +673,23 @@
 }
 
 .financial-dashboard__section {
-  margin-bottom: var(--spacing-8);
+  margin-bottom: 32px;
 }
 
 .btn-back {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
+  gap: 8px;
+  padding: 8px 16px;
   background: #f3f4f6;
   color: #374151;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  margin-bottom: var(--spacing-4);
-  transition: background var(--transition-fast);
+  margin-bottom: 16px;
+  transition: background 150ms ease;
 }
 
 .btn-back:hover {
@@ -700,7 +700,7 @@
   width: 100%;
   border-collapse: collapse;
   background: var(--color-bg-primary);
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -711,7 +711,7 @@
 
 .transfers-table th {
   text-align: left;
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 12px 16px;
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -720,7 +720,7 @@
 }
 
 .transfers-table td {
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 12px 16px;
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   border-top: 1px solid var(--color-border);
@@ -729,13 +729,13 @@
 .transfers-table .no-data {
   text-align: center;
   color: #9ca3af;
-  padding: var(--spacing-8);
+  padding: 32px;
 }
 
 .transfers-table-wrapper--scroll {
   max-height: 300px;
   overflow-y: auto;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
 }
 
 .transfers-table-wrapper--scroll::-webkit-scrollbar {
@@ -759,17 +759,17 @@
 .btn-save-report {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-5);
+  gap: 8px;
+  padding: 12px 20px;
   background: var(--color-success);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  margin-bottom: var(--spacing-8);
-  transition: background var(--transition-fast);
+  margin-bottom: 32px;
+  transition: background 150ms ease;
 }
 
 .btn-save-report:hover {
@@ -777,22 +777,22 @@
 }
 
 .financial-report__actions {
-  margin-bottom: var(--spacing-5);
+  margin-bottom: 20px;
 }
 
 .financial-report__actions .financial-dashboard-btn {
   display: flex;
   justify-content: flex-start;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
+  gap: 8px;
+  padding: 8px 16px;
   background: var(--color-violet);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .financial-report__actions .financial-dashboard-btn:hover {
@@ -802,12 +802,12 @@
 .date-selector {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-5);
-  padding: var(--spacing-3) var(--spacing-4);
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
   background: var(--color-bg-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   width: fit-content;
 }
 
@@ -822,9 +822,9 @@
 }
 
 .date-input {
-  padding: var(--spacing-2);
+  padding: 8px;
   border: 1px solid var(--color-border-dark);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   font-size: var(--font-size-base);
   color: #374151;
 }
@@ -852,19 +852,19 @@
 
 .voucher-modal-content {
   text-align: center;
-  padding: var(--spacing-8);
+  padding: 32px;
 }
 
 .voucher-placeholder {
   background: #f9fafb;
   border: 2px dashed var(--color-border-dark);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-12) var(--spacing-8);
+  border-radius: 12px;
+  padding: 48px 32px;
 }
 
 .voucher-placeholder p {
   color: #6b7280;
-  margin-bottom: var(--spacing-2);
+  margin-bottom: 8px;
 }
 
 .voucher-code-display {
@@ -882,17 +882,17 @@
 .btn-monthly-report {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-5);
+  gap: 8px;
+  padding: 12px 20px;
   background: var(--color-success-hover);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  margin-bottom: var(--spacing-8);
-  transition: background var(--transition-fast);
+  margin-bottom: 32px;
+  transition: background 150ms ease;
 }
 
 .btn-monthly-report:hover {
@@ -900,9 +900,9 @@
 }
 
 .month-select {
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: 8px 12px;
   border: 1px solid var(--color-border-dark);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   font-size: var(--font-size-base);
   color: #374151;
   background: var(--color-bg-primary);
@@ -918,17 +918,17 @@
 .btn-toggle-clients {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-5);
+  gap: 8px;
+  padding: 12px 20px;
   background: var(--color-warning);
   color: var(--color-text-inverse);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  margin-bottom: var(--spacing-5);
-  transition: background var(--transition-fast);
+  margin-bottom: 20px;
+  transition: background 150ms ease;
 }
 
 .btn-toggle-clients:hover {
@@ -936,26 +936,26 @@
 }
 
 .clients-chart-section {
-  margin-top: var(--spacing-4);
+  margin-top: 16px;
 }
 
 .financial-summary {
   display: flex;
   justify-content: center;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-5);
+  gap: 12px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
 .financial-summary__card {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-4);
+  gap: 12px;
+  padding: 16px;
   background: var(--color-bg-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  transition: all var(--transition-fast);
+  border-radius: 12px;
+  transition: all 150ms ease;
   min-width: 180px;
   flex: 1;
   max-width: 280px;
@@ -986,7 +986,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   background: var(--color-bg-tertiary);
   color: var(--color-text-muted);
   flex-shrink: 0;
@@ -1028,21 +1028,21 @@
 
 .financial-report__filters {
   display: flex;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-5);
+  gap: 8px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
 .financial-report__filter-btn {
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: 8px 16px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   background: var(--color-bg-primary);
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
 
 .financial-report__filter-btn:hover {
@@ -1067,7 +1067,7 @@
   .financial-summary {
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-2);
+    gap: 8px;
   }
 
   .financial-summary__card {
@@ -1078,8 +1078,8 @@
   .transaction-item {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2);
-    padding: var(--spacing-3);
+    gap: 8px;
+    padding: 12px;
   }
 
   .transaction-time,
@@ -1114,7 +1114,7 @@
   .date-selector {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--spacing-2);
+    gap: 8px;
     width: 100%;
   }
 
@@ -1130,16 +1130,16 @@
 
 @media (max-width: 640px) {
   .financial-report {
-    padding: var(--spacing-3);
+    padding: 12px;
   }
 
   .financial-dashboard {
-    padding: var(--spacing-3);
+    padding: 12px;
   }
 
   .transaction-item {
-    padding: var(--spacing-4);
-    gap: var(--spacing-3);
+    padding: 16px;
+    gap: 12px;
   }
 
   .transaction-time {
@@ -1161,14 +1161,14 @@
 
   .transaction-method {
     font-size: var(--font-size-sm);
-    padding: var(--spacing-2) var(--spacing-3);
+    padding: 8px 12px;
   }
 }
 
 @media (max-width: var(--breakpoint-md)) {
   .financial-summary {
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-2);
+    gap: 8px;
   }
 
   .financial-summary__card--total {
@@ -1183,7 +1183,7 @@
   .date-selector {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--spacing-2);
+    gap: 8px;
     width: 100%;
   }
 
@@ -1234,15 +1234,15 @@
   }
 
   .financial-report {
-    padding: var(--spacing-4);
+    padding: 16px;
   }
 
   .financial-dashboard {
-    padding: var(--spacing-4);
+    padding: 16px;
   }
 
   .chart-wrapper {
-    padding: var(--spacing-4);
+    padding: 16px;
   }
 
   .chart-title {
@@ -1258,7 +1258,7 @@
   .date-selector-label {
     width: 100%;
     text-align: center;
-    margin-bottom: var(--spacing-2);
+    margin-bottom: 8px;
   }
 
   .financial-summary {

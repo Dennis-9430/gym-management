@@ -1,7 +1,7 @@
 .pos-form-group {
   display: grid;
-  gap: var(--spacing-1);
-  margin-bottom: var(--spacing-3);
+  gap: 4px;
+  margin-bottom: 12px;
 }
 
 .pos-form-group label {
@@ -11,8 +11,8 @@
 
 .pos-form-group input,
 .pos-form-group select {
-  padding: 0.55rem var(--spacing-2);
-  border-radius: var(--radius-lg);
+  padding: 0.55rem 8px;
+  border-radius: 10px;
   border: 1px solid var(--color-border-dark);
 }
 
@@ -20,10 +20,10 @@
   border: none;
   background: var(--color-primary);
   color: var(--color-text-inverse);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-lg);
+  padding: 8px 16px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .pos-btn-primary:hover {

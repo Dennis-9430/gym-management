@@ -9,15 +9,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
+  gap: 8px;
+  padding: 8px 16px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
   white-space: nowrap;
   text-decoration: none;
 }
@@ -31,17 +31,17 @@
    Button Sizes
    -------------------------------------------------------------------------- */
 .btn-sm {
-  padding: var(--spacing-1) var(--spacing-3);
+  padding: 4px 12px;
   font-size: var(--font-size-xs);
 }
 
 .btn-md {
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: 8px 16px;
   font-size: var(--font-size-sm);
 }
 
 .btn-lg {
-  padding: var(--spacing-3) var(--spacing-6);
+  padding: 12px 24px;
   font-size: var(--font-size-base);
 }
 
@@ -204,16 +204,16 @@
    Icon Button
    -------------------------------------------------------------------------- */
 .btn-icon {
-  padding: var(--spacing-2);
+  padding: 8px;
   aspect-ratio: 1;
 }
 
 .btn-icon.btn-sm {
-  padding: var(--spacing-1);
+  padding: 4px;
 }
 
 .btn-icon.btn-lg {
-  padding: var(--spacing-3);
+  padding: 12px;
 }
 
 /* --------------------------------------------------------------------------
@@ -228,11 +228,11 @@
 }
 
 .btn-group .btn:first-child {
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  border-radius: 8px 0 0 8px;
 }
 
 .btn-group .btn:last-child {
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  border-radius: 0 8px 8px 0;
 }
 
 .btn-group .btn:not(:last-child) {
@@ -288,5 +288,5 @@
   line-height: 18px;
   color: var(--color-text-inverse);
   background-color: var(--color-danger);
-  border-radius: var(--radius-full);
+  border-radius: 9999px;
 }

@@ -202,35 +202,35 @@
    Clases de animación
    -------------------------------------------------------------------------- */
 .animate-fadeIn {
-  animation: fadeIn var(--transition-base) ease forwards;
+  animation: fadeIn 250ms ease ease forwards;
 }
 
 .animate-fadeInUp {
-  animation: fadeInUp var(--transition-slow) ease forwards;
+  animation: fadeInUp 350ms ease ease forwards;
 }
 
 .animate-fadeInDown {
-  animation: fadeInDown var(--transition-slow) ease forwards;
+  animation: fadeInDown 350ms ease ease forwards;
 }
 
 .animate-scaleIn {
-  animation: scaleIn var(--transition-base) ease forwards;
+  animation: scaleIn 250ms ease ease forwards;
 }
 
 .animate-slideUp {
-  animation: slideUp var(--transition-slow) ease forwards;
+  animation: slideUp 350ms ease ease forwards;
 }
 
 .animate-modalIn {
-  animation: modalIn var(--transition-base) ease forwards;
+  animation: modalIn 250ms ease ease forwards;
 }
 
 .animate-modalFade {
-  animation: modalFade var(--transition-base) ease forwards;
+  animation: modalFade 250ms ease ease forwards;
 }
 
 .animate-backdropFade {
-  animation: backdropFade var(--transition-base) ease forwards;
+  animation: backdropFade 250ms ease ease forwards;
 }
 
 .animate-float {
@@ -265,7 +265,7 @@
 /* --------------------------------------------------------------------------
    Durations
    -------------------------------------------------------------------------- */
-.duration-fast { animation-duration: var(--transition-fast); }
-.duration-base { animation-duration: var(--transition-base); }
-.duration-slow { animation-duration: var(--transition-slow); }
-.duration-slower { animation-duration: var(--transition-slower); }
+.duration-fast { animation-duration: 150ms ease; }
+.duration-base { animation-duration: 250ms ease; }
+.duration-slow { animation-duration: 350ms ease; }
+.duration-slower { animation-duration: 500ms ease; }

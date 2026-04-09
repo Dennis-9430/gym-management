@@ -1,19 +1,19 @@
 .pos-container {
-  padding: var(--spacing-8) clamp(1rem, 3vw, 2.5rem);
+  padding: 32px clamp(1rem, 3vw, 2.5rem);
   background: var(--slate-100);
   min-height: calc(100vh - 70px);
 }
 
 .pos-actions {
   display: flex;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .pos-actions button {
   border: none;
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: 10px;
+  padding: 8px 16px;
   background: var(--color-primary);
   color: var(--color-text-inverse);
   font-weight: var(--font-weight-semibold);
@@ -26,12 +26,12 @@
 
 @media (max-width: var(--breakpoint-lg)) {
   .pos-container {
-    padding: var(--spacing-6) var(--spacing-4);
+    padding: 24px 16px;
   }
 
   .pos-actions {
     flex-direction: column;
-    gap: var(--spacing-3);
+    gap: 12px;
   }
 
   .pos-actions button {

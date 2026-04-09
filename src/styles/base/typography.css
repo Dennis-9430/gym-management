@@ -14,7 +14,7 @@ h6 {
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-2);
+  margin-bottom: 8px;
 }
 
 h1 {
@@ -24,7 +24,7 @@ h1 {
 }
 
 h2 {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   letter-spacing: var(--letter-spacing-tight);
 }
 
@@ -48,7 +48,7 @@ h6 {
    Párrafos
    -------------------------------------------------------------------------- */
 p {
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 16px;
   line-height: var(--line-height-relaxed);
 }
 
@@ -178,16 +178,16 @@ pre,
 }
 
 code {
-  padding: var(--spacing-1) var(--spacing-2);
+  padding: 4px 8px;
   background-color: var(--color-bg-tertiary);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   font-size: var(--font-size-sm);
 }
 
 pre {
-  padding: var(--spacing-4);
+  padding: 16px;
   background-color: var(--color-bg-tertiary);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   overflow-x: auto;
 }
 
@@ -202,7 +202,7 @@ pre code {
 .link {
   color: var(--color-action);
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: color 150ms ease;
 }
 
 .link:hover {

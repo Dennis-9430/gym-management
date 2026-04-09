@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .employees-container {
-  padding: var(--spacing-8) clamp(1rem, 3vw, var(--spacing-10));
+  padding: 32px clamp(1rem, 3vw, 40px);
   background: #eef2f7;
   min-height: calc(100vh - 70px);
 }
@@ -12,7 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-6);
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .employees-subtitle {
-  margin: var(--spacing-1) 0 0;
+  margin: 4px 0 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
@@ -31,7 +31,7 @@
 .employees-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: 16px;
   flex-wrap: wrap;
 }
 
@@ -39,7 +39,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
+  gap: 12px;
 }
 
 .employees-search .search-icon {
@@ -51,14 +51,14 @@
 .employee-search {
   width: 100%;
   min-width: 240px;
-  padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-10);
-  border-radius: var(--radius-lg);
+  padding: 12px 16px 12px 40px;
+  border-radius: 10px;
   border: 1px solid var(--color-border-dark);
   background: var(--color-bg-primary);
   font-size: var(--font-size-base);
   transition:
-    border var(--transition-fast),
-    box-shadow var(--transition-fast);
+    border 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .employee-search:focus {
@@ -70,17 +70,17 @@
 .employee-add-btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--radius-lg);
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
   border: none;
   background: var(--color-primary);
   color: var(--color-text-inverse);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition:
-    background var(--transition-fast),
-    transform var(--transition-fast);
+    background 150ms ease,
+    transform 150ms ease;
 }
 
 .employee-add-btn:hover {
@@ -89,18 +89,18 @@
 }
 
 .employees-stats {
-  margin: var(--spacing-4) 0 var(--spacing-3);
+  margin: 16px 0 12px;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
 
 .employees-list {
-  padding: var(--spacing-2) 0 0;
+  padding: 8px 0 0;
 }
 
 .employees-table-wrapper {
   background: var(--color-bg-primary);
-  border-radius: var(--radius-xl);
+  border-radius: 12px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
   overflow-x: auto;
@@ -118,7 +118,7 @@
 
 .employee-table th {
   text-align: left;
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 12px 16px;
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -126,7 +126,7 @@
 }
 
 .employee-table td {
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 12px 16px;
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   border-top: 1px solid var(--color-border);
@@ -148,7 +148,7 @@
 
 .employee-table .actions {
   display: flex;
-  gap: var(--spacing-2);
+  gap: 8px;
 }
 
 .employee-table .btn-edit,
@@ -156,16 +156,16 @@
   display: inline-flex;
   align-items: center;
   margin: 0;
-  gap: var(--spacing-1);
-  padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-md);
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 8px;
   border: none;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition:
-    transform var(--transition-fast),
-    background var(--transition-fast);
+    transform 150ms ease,
+    background 150ms ease;
 }
 
 .employee-table .btn-edit {
@@ -194,28 +194,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-4);
-  z-index: var(--z-modal);
+  padding: 16px;
+  z-index: 500;
 }
 
 .employee-modal {
   width: min(760px, 100%);
   background: var(--color-bg-primary);
-  border-radius: var(--radius-2xl);
-  padding: var(--spacing-5);
+  border-radius: 16px;
+  padding: 20px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-modal);
   max-height: 90vh;
   overflow-y: auto;
-  animation: modalIn var(--transition-base) ease;
+  animation: modalIn 250ms ease ease;
 }
 
 .employee-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-4);
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .employee-modal-header h3 {
@@ -227,13 +227,13 @@
 .employee-modal-close {
   border: none;
   background: var(--color-bg-tertiary);
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   width: 36px;
   height: 36px;
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background 150ms ease;
 }
 
 .employee-modal-close:hover {
@@ -241,32 +241,32 @@
 }
 
 .employee-form {
-  gap: var(--spacing-2);
-  padding: var(--spacing-3);
+  gap: 8px;
+  padding: 12px;
 }
 
 .employee-form .form-group {
-  margin-bottom: var(--spacing-1);
+  margin-bottom: 4px;
 }
 
 .employee-form .form-group label {
   font-size: var(--font-size-xs);
-  margin-bottom: var(--spacing-1);
+  margin-bottom: 4px;
 }
 
 .employee-form .input-with-icon input,
 .employee-form .input-with-icon select {
-  padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-10);
+  padding: 8px 8px 8px 40px;
   font-size: var(--font-size-sm);
 }
 
 .employee-form .form-buttons {
-  margin-top: var(--spacing-2);
-  gap: var(--spacing-2);
+  margin-top: 8px;
+  gap: 8px;
 }
 
 .employee-form .btn-register {
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: 8px 16px;
   font-size: var(--font-size-sm);
 }
 
@@ -286,7 +286,7 @@
 .input-with-icon textarea,
 .input-with-icon select {
   width: 100%;
-  padding-left: var(--spacing-10);
+  padding-left: 40px;
 }
 
 .input-with-icon textarea {
@@ -301,12 +301,12 @@
 /* Responsive */
 @media (max-width: var(--breakpoint-xl)) {
   .employees-container {
-    padding: var(--spacing-6) var(--spacing-4);
+    padding: 24px 16px;
   }
 
   .employee-table th,
   .employee-table td {
-    padding: var(--spacing-3);
+    padding: 12px;
   }
 }
 
@@ -325,7 +325,7 @@
   }
 
   .employee-modal {
-    padding: var(--spacing-5);
+    padding: 20px;
   }
 }
 
