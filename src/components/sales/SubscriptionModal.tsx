@@ -119,9 +119,19 @@ const SubscriptionModal = ({
                 <Search size={16} />
                 <input
                   value={search}
-                  onChange={(e) => onSearchChange(e.target.value)}
+                  onChange={(e) => {
+                    if (selectedClient && e.target.value.trim() !== '') {
+                      onSelectClient(null as any);
+                    }
+                    onSearchChange(e.target.value);
+                  }}
+                  onFocus={() => {
+                    if (selectedClient) {
+                      onSelectClient(null as any);
+                      onSearchChange('');
+                    }
+                  }}
                   placeholder="Buscar por cedula o nombre"
-                  disabled={!!selectedClient}
                 />
               </div>
               {search.trim().length > 0 && !selectedClient && (

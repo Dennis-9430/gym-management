@@ -4,15 +4,15 @@
   background: rgba(15, 23, 42, 0.55);
   display: grid;
   place-items: center;
-  z-index: var(--z-modal);
-  padding: var(--spacing-4);
+  z-index: 500;
+  padding: 16px;
 }
 
 .pos-modal {
   width: min(1100px, 95vw);
   max-height: 90vh;
   background: var(--color-bg-primary);
-  border-radius: var(--radius-3xl);
+  border-radius: 18px;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-modal-lg);
   display: flex;
@@ -21,17 +21,17 @@
 }
 
 .pos-modal-header {
-  padding: var(--spacing-4) var(--spacing-5);
+  padding: 16px 20px;
   border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-3);
+  gap: 12px;
   flex-shrink: 0;
 }
 
 .pos-modal-body {
-  padding: var(--spacing-4) var(--spacing-5);
+  padding: 16px 20px;
   overflow-x: auto;
   flex: 1;
 }
@@ -44,25 +44,25 @@
 
 .pos-table th {
   text-align: left;
-  padding: var(--spacing-2);
+  padding: 8px;
   font-size: var(--font-size-xs);
   background: var(--color-bg-secondary);
 }
 
 .pos-table td {
-  padding: var(--spacing-2);
+  padding: 8px;
   border-top: 1px solid var(--color-border);
 }
 
 .pos-table input {
   width: 70px;
-  padding: var(--spacing-1);
+  padding: 4px;
 }
 
 .pos-totals {
-  margin-top: var(--spacing-4);
+  margin-top: 16px;
   display: flex;
-  gap: var(--spacing-4);
+  gap: 16px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -73,55 +73,55 @@
 }
 
 .pos-modal-footer {
-  padding: var(--spacing-4) var(--spacing-5);
+  padding: 16px 20px;
   border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
-  gap: var(--spacing-2);
+  gap: 8px;
   flex-wrap: wrap;
   flex-shrink: 0;
 }
 
 .pos-modal-footer button {
   border: none;
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-lg);
+  padding: 8px 16px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
 /* Responsive */
 @media (max-width: var(--breakpoint-md)) {
   .pos-modal-header {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 12px 16px;
   }
 
   .pos-modal-body {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 12px 16px;
   }
 
   .pos-modal-footer {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 12px 16px;
   }
 
   .pos-totals {
-    gap: var(--spacing-2);
+    gap: 8px;
   }
 }
 
 @media (max-width: var(--breakpoint-sm)) {
   .pos-modal-backdrop {
-    padding: var(--spacing-2);
+    padding: 8px;
   }
 
   .pos-modal {
     width: 98vw;
-    border-radius: var(--radius-xl);
+    border-radius: 12px;
   }
 
   .pos-modal-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-2);
+    gap: 8px;
   }
 
   .pos-modal-footer {

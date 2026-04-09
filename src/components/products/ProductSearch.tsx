@@ -17,16 +17,6 @@ const ProductSearch = ({
 }: Props) => {
   return (
     <div className="products-search">
-      <div className="search-input-wrapper">
-        <Search className="search-icon" size={18} />
-        <input
-          className="product-search"
-          type="text"
-          placeholder="Buscar producto"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      </div>
       <select
         className="product-filter"
         value={category}
@@ -41,6 +31,16 @@ const ProductSearch = ({
           </option>
         ))}
       </select>
+      <div className="search-input-wrapper">
+        <Search className="search-icon" size={18} />
+        <input
+          className="product-search"
+          type="text"
+          placeholder="Buscar producto"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </div>
     </div>
   );
 };
