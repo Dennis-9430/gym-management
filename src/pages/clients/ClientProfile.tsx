@@ -3,12 +3,9 @@ import { useState } from "react";
 import { useClients } from "../../hooks/useListClientsHook";
 import ClientInfo from "../../components/clientProfile/ClientInfo";
 import ClientStats from "../../components/clientProfile/ClientStats";
-import ClientMembership from "../../components/clientProfile/ClientMembership";
-import ClientPayments from "../../components/clientProfile/ClientPayments";
 import ClientModal from "../../components/clientsModal/ClientModal";
 import { ArrowLeft } from "lucide-react";
 import "../../styles/clientProfileCss/ClientProfile.css";
-//import ClientAttendance from "../../components/clientProfile/ClientAttendance";
 
 const ClientProfile = () => {
   const { id } = useParams();
@@ -43,11 +40,9 @@ const ClientProfile = () => {
         <div className="profile-grid">
           <ClientInfo client={client} onEdit={() => setShowEdit(true)} />
 
-          <ClientMembership client={client} />
-
-          <ClientStats client={client} />
-
-          <ClientPayments />
+          <div className="profile-right">
+            <ClientStats client={client} />
+          </div>
         </div>
       </div>
 
