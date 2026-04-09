@@ -7,13 +7,24 @@ import {
   LogOut,
   Dumbbell,
 } from "lucide-react";
+
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   const handleLogout = () => {
     logout();
     navigate("/");
   };
+
+  const getDisplayName = () => {
+    if (!user) return "";
+    if (user.role === "ADMIN") {
+      return `admin - ${user.username}`;
+    }
+    return user.username;
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar__containner">
@@ -24,7 +35,7 @@ const Navbar = () => {
             {user && (
               <span className="navbar__username">
                 <User size={22} />
-                <span className="navbar__username-text">admin - {user.username}</span>
+                <span className="navbar__username-text">{getDisplayName()}</span>
               </span>
             )}
           </h1>
