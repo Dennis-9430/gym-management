@@ -36,6 +36,31 @@ const ClientInfo = ({ client, onEdit }: Props) => {
       <button className="btn-edit" onClick={onEdit}>
         Editar informacion
       </button>
+
+      {(client.memberShip || client.memberShipStartDate || client.memberShipEndDate) && (
+        <>
+          <hr className="profile-divider" />
+          <div className="card-membership-inline">
+            {client.memberShip && (
+              <p>
+                <strong>Membresia:</strong> {client.memberShip}
+              </p>
+            )}
+            {client.memberShipStartDate && (
+              <p>
+                <strong>Fecha de inicio:</strong>{" "}
+                {new Date(client.memberShipStartDate).toLocaleDateString()}
+              </p>
+            )}
+            {client.memberShipEndDate && (
+              <p>
+                <strong>Fecha de fin:</strong>{" "}
+                {new Date(client.memberShipEndDate).toLocaleDateString()}
+              </p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
