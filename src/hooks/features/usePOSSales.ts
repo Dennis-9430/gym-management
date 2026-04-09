@@ -25,7 +25,7 @@ export interface UsePOSSalesReturn {
   handleCheckout: () => void;
   handleCashChange: (value: number) => void;
   handleTransferChange: (value: number) => void;
-  handleSelectSaleClient: (client: ClientForm) => void;
+  handleSelectSaleClient: (client: ClientForm | null) => void;
   handleConsumerFinal: () => void;
   handleCloseModal: () => void;
 }
@@ -134,8 +134,12 @@ export const usePOSSales = (
     setCashAmount(round2(Math.max(total - normalized, 0)));
   }, [totals.total]);
 
-  const handleSelectSaleClient = useCallback((client: ClientForm) => {
-    setSaleClientInput(client.documentNumber);
+  const handleSelectSaleClient = useCallback((client: ClientForm | null) => {
+    if (client === null) {
+      setSaleClientInput("");
+    } else {
+      setSaleClientInput(client.documentNumber);
+    }
   }, []);
 
   const handleConsumerFinal = useCallback(() => {

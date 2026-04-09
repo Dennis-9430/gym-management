@@ -59,13 +59,13 @@ const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: 
                         type="button"
                         onClick={() => onQtyChange(item.key, item.quantity + 1)}
                       >
-                        ↑
+                        &#9650;
                       </button>
                       <button
                         type="button"
                         onClick={() => onQtyChange(item.key, Math.max(1, item.quantity - 1))}
                       >
-                        ↓
+                        &#9660;
                       </button>
                     </div>
                   </div>

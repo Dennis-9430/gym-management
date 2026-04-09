@@ -1,6 +1,6 @@
 import type { ClientForm } from "../../types/client.types";
 import ClientRow from "./ClientRow";
-import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
+
 interface Props {
   clients: ClientForm[];
   totalClients: number;
@@ -22,14 +22,15 @@ const ClientTable = ({
 }: Props) => {
   const renderSortIcon = (field: keyof ClientForm) => {
     if (sortField !== field) {
-      return <ArrowUpDown size={14} className="sort icon" />;
+      return <span className="sort-icon">&#9660; &#9650;</span>;
     }
     return sortDirection === "asc" ? (
-      <ArrowUp size={14} className="sort-icon active" />
+      <span className="sort-icon active">&#9650;</span>
     ) : (
-      <ArrowDown size={14} className="sort-icon active" />
+      <span className="sort-icon active">&#9660;</span>
     );
   };
+  
   const renderHeader = (label: string, field: keyof ClientForm) => {
     return (
       <th onClick={() => sortBy(field)} className="sortable">
@@ -37,6 +38,7 @@ const ClientTable = ({
       </th>
     );
   };
+  
   return (
     <div className="client-table-wrapper">
       <div className="clients-stats">

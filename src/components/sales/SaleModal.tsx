@@ -21,7 +21,7 @@ interface SaleModalProps {
   onClientInputChange: (value: string) => void;
   clientResults: ClientForm[];
   selectedClient: ClientForm | null;
-  onSelectClient: (client: ClientForm) => void;
+  onSelectClient: (client: ClientForm | null) => void;
   onSelectConsumerFinal: () => void;
   
   // Payment
@@ -122,9 +122,18 @@ const SaleModal = ({
                     <Search size={16} />
                   <input
                     value={clientInput}
-                    onChange={(e) => onClientInputChange(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      const oldValue = clientInput;
+                      
+                      if (selectedClient && oldValue && newValue.length > oldValue.length) {
+                        onSelectClient(null);
+                        onClientInputChange(newValue);
+                      } else {
+                        onClientInputChange(newValue);
+                      }
+                    }}
                     placeholder="Buscar por cedula o nombre"
-                    disabled={!!selectedClient}
                   />
                   </div>
                   {clientInput.trim().length > 0 && clientInput.trim() !== "99999999" && !selectedClient && (
@@ -164,19 +173,19 @@ const SaleModal = ({
                   </button>
                 )}
               </div>
-              {selectedClient && (
-                <div className="pos-client-card" style={{ marginTop: '10px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <strong>{selectedClient.firstName} {selectedClient.lastName}</strong>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', fontSize: '0.85rem', color: '#64748b' }}>
-                    <div>Cedula:<br/><strong style={{color: '#0f172a'}}>{selectedClient.documentNumber}</strong></div>
-                    {selectedClient.address && <div>Direccion:<br/><strong style={{color: '#0f172a'}}>{selectedClient.address}</strong></div>}
-                    {selectedClient.email && <div>Email:<br/><strong style={{color: '#0f172a'}}>{selectedClient.email}</strong></div>}
-                    {selectedClient.phone && <div>Telefono:<br/><strong style={{color: '#0f172a'}}>{selectedClient.phone}</strong></div>}
-                  </div>
+            {selectedClient && (
+              <div className="pos-client-card" style={{ marginTop: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <strong>{selectedClient.firstName} {selectedClient.lastName}</strong>
                 </div>
-              )}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', fontSize: '0.85rem', color: '#64748b' }}>
+                  <div>Cedula:<br/><strong style={{color: '#0f172a'}}>{selectedClient.documentNumber}</strong></div>
+                  {selectedClient.address && <div>Direccion:<br/><strong style={{color: '#0f172a'}}>{selectedClient.address}</strong></div>}
+                  {selectedClient.email && <div>Email:<br/><strong style={{color: '#0f172a'}}>{selectedClient.email}</strong></div>}
+                  {selectedClient.phone && <div>Telefono:<br/><strong style={{color: '#0f172a'}}>{selectedClient.phone}</strong></div>}
+                </div>
+              </div>
+            )}
             </div>
 
           {/* Pago */}

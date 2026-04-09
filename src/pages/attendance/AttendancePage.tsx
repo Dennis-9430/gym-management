@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, Filter, Users, UserCog } from "lucide-react";
+import { Search, Filter, Users, UserCog } from "lucide-react";
 import { getClients } from "../../services/clients.service";
 import { getEmployees } from "../../services/employees.service";
 import "../../styles/attendance.css";
@@ -19,7 +18,6 @@ interface AttendanceRecord {
 }
 
 const AttendancePage = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<PersonType>("clients");
   const [dateFilter, setDateFilter] = useState<DateFilter>("today");
   const [searchQuery, setSearchQuery] = useState("");
@@ -125,14 +123,8 @@ const AttendancePage = () => {
     <main className="attendance-page">
       <div className="attendance-header">
         <div className="attendance-header__left">
-          <button className="btn-back" onClick={() => navigate("/dashboard")}>
-            <ArrowLeft size={20} />
-            Volver
-          </button>
-          <div>
-            <h2 className="attendance-title">Historial de Asistencia</h2>
-            <p className="attendance-subtitle">{formatDateLabel()}</p>
-          </div>
+          <h2 className="attendance-title">Historial de Asistencia</h2>
+          <p className="attendance-subtitle">{formatDateLabel()}</p>
         </div>
 
         <div className="attendance-filters">
@@ -186,15 +178,13 @@ const AttendancePage = () => {
               <th>Cédula</th>
               <th>Nombre Completo</th>
               {activeTab === "clients" && <th>Expira Membresía</th>}
-              <th>Hora Entrada</th>
-              <th>Hora Salida</th>
-              <th>Estado</th>
+              <th className="attendance-th--hide-mobile">Hora Entrada</th>
             </tr>
           </thead>
           <tbody>
             {filteredRecords.length === 0 ? (
               <tr>
-                <td colSpan={activeTab === "clients" ? 6 : 5} className="attendance-empty">
+                <td colSpan={activeTab === "clients" ? 4 : 3} className="attendance-empty">
                   No hay registros de asistencia
                 </td>
               </tr>
@@ -208,17 +198,7 @@ const AttendancePage = () => {
                       {record.membershipExpiry || "-"}
                     </td>
                   )}
-                  <td className="attendance-time">{record.checkIn}</td>
-                  <td className="attendance-time">{record.checkOut || "-"}</td>
-                  <td className="attendance-status">
-                    <span
-                      className={`attendance-badge ${
-                        record.checkOut ? "attendance-badge--out" : "attendance-badge--in"
-                      }`}
-                    >
-                      {record.checkOut ? "Completado" : "En gym"}
-                    </span>
-                  </td>
+                  <td className="attendance-time attendance-td--hide-mobile">{record.checkIn}</td>
                 </tr>
               ))
             )}

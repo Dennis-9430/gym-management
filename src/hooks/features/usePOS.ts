@@ -112,7 +112,7 @@ export interface UsePOSReturn {
   handleCashChange: (value: number) => void;
   handleTransferChange: (value: number) => void;
   handleAddFromSearch: (item: CatalogItem) => void;
-  handleSelectSaleClient: (client: ReturnType<typeof usePOSClients>["clients"][number]) => void;
+  handleSelectSaleClient: (client: ReturnType<typeof usePOSClients>["clients"][number] | null) => void;
   handleConsumerFinal: () => void;
   handleCloseModal: () => void;
   handleOpenSubscriptionModal: (client?: ReturnType<typeof usePOSClients>["clients"][number]) => void;
