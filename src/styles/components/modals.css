@@ -38,7 +38,7 @@
   max-width: 500px;
   background-color: var(--color-bg-primary);
   border-radius: 18px;
-  box-shadow: var(--shadow-modal);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
   animation: modalIn 250ms ease ease forwards;
 }
 
@@ -219,7 +219,7 @@
   max-height: 90vh;
   background-color: var(--color-bg-primary);
   border-radius: 18px;
-  box-shadow: var(--shadow-modal-lg);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -285,7 +285,7 @@
   z-index: 500;
   background-color: var(--color-bg-primary);
   border-radius: 18px 18px 0 0;
-  box-shadow: var(--shadow-modal-lg);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
   animation: slideUp 350ms ease ease forwards;
   max-height: 90vh;
   display: flex;
@@ -322,7 +322,7 @@
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
-@media (max-width: var(--breakpoint-sm)) {
+@media (max-width: 640px) {
   .modal {
     padding: 8px;
   }

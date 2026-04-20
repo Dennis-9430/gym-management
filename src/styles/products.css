@@ -124,7 +124,7 @@
   background: var(--color-bg-primary);
   border-radius: 12px;
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-card-hover);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
 }
 
@@ -216,7 +216,7 @@
   border-radius: 16px;
   padding: 20px;
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-modal);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
   max-height: 90vh;
   overflow-y: auto;
   animation: modalIn 150ms ease;

@@ -24,7 +24,7 @@
   background: var(--color-primary-hover);
 }
 
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
   .pos-container {
     padding: 24px 16px;
   }

@@ -153,7 +153,7 @@
   transform: translateY(0);
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
   .config-row {
     grid-template-columns: 1fr;
   }

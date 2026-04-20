@@ -8,7 +8,7 @@
 .card {
   background-color: var(--color-bg-primary);
   border-radius: 12px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   overflow: hidden;
 }
 
@@ -17,7 +17,7 @@
 }
 
 .card-hover:hover {
-  box-shadow: var(--shadow-card-hover);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -66,7 +66,7 @@
 }
 
 .card-elevated {
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 /* --------------------------------------------------------------------------
@@ -135,13 +135,13 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
   .card-grid-4 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
   .card-grid-2,
   .card-grid-3,
   .card-grid-4 {

@@ -197,7 +197,7 @@
 
 /* resposive */
 
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
   .modal-content {
     max-width: 100%;
     padding: 24px;
@@ -208,7 +208,7 @@
   }
 }
 
-@media (max-width: var(--breakpoint-sm)) {
+@media (max-width: 640px) {
   .modal-content {
     padding: 20px;
     border-radius: 16px;

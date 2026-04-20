@@ -44,7 +44,7 @@
 }
 
 /* Responsive */
-@media (max-width: var(--breakpoint-lg)) {
+@media (max-width: 1024px) {
   .pos-card-header {
     flex-direction: column;
     align-items: flex-start;
@@ -55,7 +55,7 @@
   }
 }
 
-@media (max-width: var(--breakpoint-sm)) {
+@media (max-width: 640px) {
   .pos-pending {
     margin: 16px auto 0;
     padding: 0 8px;
