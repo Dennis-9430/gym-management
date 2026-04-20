@@ -6,6 +6,11 @@ import PaymentModal from "../pages/payments/PaymentModal";
 import DashboardCard from "../components/dashboard/DashboardCard";
 import "../styles/dashboard.css";
 
+/**
+ * Página principal del dashboard
+ * Muestra tarjetas de acceso rápido según el rol del usuario
+ * @returns {JSX.Element} Panel principal con cards de navegación
+ */
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -13,10 +18,18 @@ const Dashboard = () => {
 
   if (!user) return null;
 
+  /**
+   * Filtra las secciones disponibles según el rol del usuario
+   * @returns {DashboardSection[]} secciones permitidas
+   */
   const filteredSections = sections.filter((section) =>
     section.roles.includes(user.role),
   );
 
+  /**
+   * Maneja la acción de cada tarjeta según su tipo
+   * @param {DashboardSection} section - sección seleccionada
+   */
   const handleAction = (section: DashboardSection) => {
     if (section.action === "NAVIGATE" && section.path) {
       setTimeout(() => {

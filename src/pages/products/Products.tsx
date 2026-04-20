@@ -9,6 +9,11 @@ import type { Product, ProductInput } from "../../types/product.types";
 import "../../styles/clientsRegister.css";
 import "../../styles/products.css";
 
+/**
+ * Página de gestión de productos e inventario
+ * Permite CRUD de productos con búsqueda y filtros
+ * @returns {JSX.Element} Panel de productos
+ */
 const Products = () => {
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
@@ -27,26 +32,37 @@ const Products = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
+  /**
+   * Calcula el valor total del inventario
+   * @returns {number} valor total en dinero
+   */
   const totalInventoryValue = products.reduce(
     (sum, product) => sum + product.unitPrice * product.quantity,
     0,
   );
 
+  /** Abre formulario para nuevo producto */
   const openNewForm = () => {
     setEditingProduct(null);
     setShowForm(true);
   };
 
+  /** Abre formulario para editar producto */
   const openEditForm = (product: Product) => {
     setEditingProduct(product);
     setShowForm(true);
   };
 
+  /** Cierra el formulario y limpia el estado */
   const closeForm = () => {
     setEditingProduct(null);
     setShowForm(false);
   };
 
+  /**
+   * Maneja el submit del formulario
+   * @param {ProductInput} values - datos del producto
+   */
   const handleSubmit = (values: ProductInput) => {
     const actionLabel = editingProduct ? "actualizar" : "registrar";
     if (!confirm(`Deseas ${actionLabel} este producto?`)) {

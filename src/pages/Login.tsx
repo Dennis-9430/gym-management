@@ -6,6 +6,11 @@ import type { AuthUser } from "../types/user.types";
 import { User, Lock, Eye, EyeOff, Dumbbell, Loader2 } from "lucide-react";
 import "../styles/login.css";
 
+/**
+ * Página de inicio de sesión
+ * Valida credenciales y redirige al dashboard
+ * @returns {JSX.Element} Formulario de login
+ */
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +22,10 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  /**
+   * Valida que los campos no estén vacíos
+   * @returns {boolean} true si es válido
+   */
   const validateForm = (): boolean => {
     const errors = { username: "", password: "" };
     let isValid = true;
@@ -35,6 +44,10 @@ const Login = () => {
     return isValid;
   };
 
+  /**
+   *-envía credenciales al servicio de auth
+   * @param {React.FormEvent} e - evento del formulario
+   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
