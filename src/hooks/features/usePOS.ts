@@ -1,3 +1,4 @@
+/* Hook principal para el sistema POS */
 import { useMemo, useCallback, useEffect, useRef } from "react";
 import { getProducts } from "../../services/products.service";
 import { services } from "../../types/payment.types";

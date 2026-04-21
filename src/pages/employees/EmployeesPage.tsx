@@ -1,3 +1,4 @@
+/* Pagina de gestion de empleados */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, X } from "lucide-react";

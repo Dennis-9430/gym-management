@@ -1,3 +1,4 @@
+/* Hook para manejar registro de ventas */
 import { useState, useCallback } from "react";
 import type { CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod, SaleClientInfo } from "../../types/sales.types";

@@ -7,11 +7,7 @@ import { usePOS } from "../../hooks/features/usePOS";
 import SubscriptionModal from "../../components/sales/SubscriptionModal";
 import {} from "../../styles/listClients.css";
 
-/**
- * Página de lista de clientes
- * Muestra tabla con búsqueda, filtros y acciones
- * @returns {JSX.Element} Panel de clientes
- */
+/* Pagina de listado de clientes con busqueda y filtros */
 const ListClients = () => {
   const {
     clients,

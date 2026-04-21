@@ -1,3 +1,4 @@
+/* Reducer para autenticacion */
 import type { AuthUser } from "../types/user.types";
 interface AuthState {
   user: AuthUser | null;

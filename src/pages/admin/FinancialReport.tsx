@@ -1,3 +1,4 @@
+/* Pagina de reporte financiero con transacciones */
 import { useState, useMemo } from "react";
 import { useTransactions } from "../../hooks/useTransactions";
 import type { SaleRecord } from "../../types/sales.types";

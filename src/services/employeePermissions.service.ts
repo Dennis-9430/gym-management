@@ -1,3 +1,4 @@
+/* Servicio para gestionar permisos por rol */
 export interface ModulePermission {
   module: string;
   actions: PermissionAction[];

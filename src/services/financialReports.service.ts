@@ -1,3 +1,4 @@
+/* Servicio para reportes financieros diarios */
 export interface FinancialReport {
   id?: number;
   date: string;

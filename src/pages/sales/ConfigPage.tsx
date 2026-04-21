@@ -1,3 +1,4 @@
+/* Pagina de configuracion del negocio */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, Building2, Percent, Clock } from "lucide-react";

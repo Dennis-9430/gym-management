@@ -1,3 +1,4 @@
+/* Pagina principal de ventas POS */
 import { useState } from "react";
 import { useAuth } from "../../context/index.ts";
 import { useLocation, useNavigate } from "react-router-dom";

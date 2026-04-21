@@ -7,6 +7,7 @@ import ClientModal from "../../components/clientsModal/ClientModal";
 import { ArrowLeft } from "lucide-react";
 import "../../styles/clientProfileCss/ClientProfile.css";
 
+/* Perfil de cliente con informacion y estadisticas */
 const ClientProfile = () => {
   const { id } = useParams();
   const { clients, reloadClients } = useClients();

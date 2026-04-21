@@ -1,3 +1,4 @@
+/* Hook para gestionar empleados */
 import { useMemo, useState, useCallback } from "react";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
 import {

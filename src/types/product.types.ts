@@ -1,3 +1,4 @@
+/* Tipos para productos e inventario */
 export type ProductCategory =
   | "SUPLEMENTOS"
   | "BEBIDAS"

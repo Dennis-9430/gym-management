@@ -1,3 +1,4 @@
+/* Hook para manejar suscripciones de membresia */
 import { useState, useMemo, useCallback } from "react";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";

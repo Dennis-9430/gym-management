@@ -1,3 +1,4 @@
+/* Pagina de perfil de empleado con permisos */
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";

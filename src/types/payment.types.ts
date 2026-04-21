@@ -1,3 +1,4 @@
+/* Tipos para servicios y pagos */
 export type PaymentMethod = "CASH" | "TRANSFER";
 
 export interface Service {

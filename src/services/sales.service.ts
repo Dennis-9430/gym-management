@@ -1,3 +1,4 @@
+/* Servicio para gestionar ventas y transacciones */
 import type { SaleInput, SaleRecord } from "../types/sales.types";
 
 const STORAGE_KEY = "gym-management.sales";

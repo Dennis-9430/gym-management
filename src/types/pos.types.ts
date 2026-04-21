@@ -1,3 +1,4 @@
+/* Tipos para sistema POS (carrito de compras) */
 export type CatalogSource = "PRODUCT" | "MEMBERSHIP";
 
 export interface CatalogItem {

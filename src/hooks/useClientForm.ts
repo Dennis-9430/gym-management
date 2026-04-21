@@ -1,3 +1,4 @@
+/* Hook para manejar formulario de cliente */
 import { useCallback, useReducer } from "react";
 import type { ClientForm } from "../types/client.types";
 import { clientReducer, initialState } from "./reducers/client.reducer";

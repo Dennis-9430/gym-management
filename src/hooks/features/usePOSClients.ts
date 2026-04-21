@@ -1,3 +1,4 @@
+/* Hook para buscar clientes en el POS */
 import { useState, useMemo, useCallback } from "react";
 import { getClients } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";

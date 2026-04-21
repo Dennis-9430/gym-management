@@ -1,3 +1,4 @@
+/* Hook generico para formularios con validacion */
 import { useState, useCallback } from "react";
 
 export type ValidationFn = (value: string) => boolean;
