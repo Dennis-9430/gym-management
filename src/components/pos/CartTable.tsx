@@ -2,6 +2,7 @@ import { Trash2 } from "lucide-react";
 import type { CartItem } from "../../types/pos.types";
 import { round2, parseDecimal } from "../../utils/format/number";
 
+/* Tabla del carrito de compras */
 interface Props {
   items: CartItem[];
   taxRate: number;

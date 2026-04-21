@@ -6,6 +6,7 @@ import type {
   EmployeeStatus,
 } from "../../types/employee.types";
 
+/* Formulario para crear o editar empleados */
 interface Props {
   idValue?: number | null;
   initialValues?: EmployeeInput;

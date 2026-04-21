@@ -6,6 +6,7 @@ import {
 import type { ClientForm } from "../types/client.types";
 import { getClients } from "../services/clients.service";
 
+/* Hook que maneja el estado de la lista de clientes */
 export const useClients = () => {
   const [state, dispatch] = useReducer(listClientsReducer, initialState);
   const totalClients = state.clients.length;

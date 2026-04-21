@@ -12,6 +12,7 @@ import type { CatalogItem, CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod } from "../../types/sales.types";
 import { parseDecimal } from "../../utils/format/number";
 
+/* Modal completo para registrar ventas con cliente, productos y pago */
 interface SaleModalProps {
   isOpen: boolean;
   onClose: () => void;

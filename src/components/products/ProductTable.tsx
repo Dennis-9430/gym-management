@@ -2,6 +2,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import type { Product } from "../../types/product.types";
 import { PRODUCT_CATEGORY_LABELS } from "../../types/product.types";
 
+/* Tabla de productos con acciones de editar y eliminar */
 interface Props {
   products: Product[];
   onEdit: (product: Product) => void;

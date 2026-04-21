@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import type { ProductCategory } from "../../types/product.types";
 import { PRODUCT_CATEGORIES, PRODUCT_CATEGORY_LABELS } from "../../types/product.types";
 
+/* Buscador de productos con filtro por categoria */
 interface Props {
   value: string;
   onChange: (value: string) => void;

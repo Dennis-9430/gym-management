@@ -6,6 +6,7 @@ import ClientPayments from "../clientProfile/ClientPayments";
 import { X } from "lucide-react";
 import "../../styles/clientProfileCss/ClientProfile.css";
 
+/* Modal que muestra el perfil completo del cliente */
 interface Props {
   client: ClientForm;
   onClose: () => void;

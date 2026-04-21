@@ -1,6 +1,7 @@
 import type { ClientForm } from "../../types/client.types";
 import ClientRow from "./ClientRow";
 
+/* Tabla de clientes con ordenamiento y estadisticas */
 interface Props {
   clients: ClientForm[];
   totalClients: number;

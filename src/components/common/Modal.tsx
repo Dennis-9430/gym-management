@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
 
+/* Modal reutilizable con titulo y contenido */
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;

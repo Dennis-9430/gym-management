@@ -1,6 +1,9 @@
 import type { Person } from "./person.types";
+
+/* Roles disponibles en el sistema */
 export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
 
+/* Tipo que representa un usuario del sistema */
 export interface User extends Person {
   id: number;
 

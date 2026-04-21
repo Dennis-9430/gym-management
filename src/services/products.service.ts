@@ -3,6 +3,7 @@ import { services } from "../types/payment.types";
 
 const STORAGE_KEY = "gym-management.products";
 
+/* Productos de ejemplo para desarrollo */
 const seedProducts: Product[] = [
   {
     id: 1,

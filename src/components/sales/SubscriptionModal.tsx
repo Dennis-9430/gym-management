@@ -11,6 +11,7 @@ import type { PaymentMethod } from "../../types/sales.types";
 import { services } from "../../types/payment.types";
 import { parseDecimal } from "../../utils/format/number";
 
+/* Modal para registrar suscripciones de membresia */
 interface SubscriptionModalProps {
   isOpen: boolean;
   onClose: () => void;

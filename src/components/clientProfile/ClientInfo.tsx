@@ -1,5 +1,6 @@
 import type { ClientProps } from "../../types/client.types";
 
+/* Muestra informacion personal y de membresia del cliente */
 interface Props extends ClientProps {
   onEdit: () => void;
 }

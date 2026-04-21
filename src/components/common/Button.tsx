@@ -1,5 +1,6 @@
 import type { ReactNode, MouseEvent } from "react";
 
+/* Boton reutilizable con variantes de estilo */
 interface ButtonProps {
   children: ReactNode;
   type?: "button" | "submit" | "reset";

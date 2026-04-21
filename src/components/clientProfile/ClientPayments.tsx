@@ -1,3 +1,4 @@
+/* Muestra historial de membresias del cliente */
 const ClientPayments = () => {
   return (
     <div className="card card-history card-full">

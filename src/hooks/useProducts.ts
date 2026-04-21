@@ -10,6 +10,7 @@ import {
 
 type CategoryFilter = ProductCategory | "ALL";
 
+/* Hook que maneja el estado CRUD de productos */
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>(() => getProducts());
   const [search, setSearch] = useState("");

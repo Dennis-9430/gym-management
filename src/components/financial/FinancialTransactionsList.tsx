@@ -3,6 +3,7 @@ import type { SaleRecord, PaymentMethod } from "../../types/sales.types";
 import type { CartItem } from "../../types/pos.types";
 import { formatCurrency } from "../../utils/format/currency";
 
+/* Lista de transacciones financieras */
 interface Props {
   transactions: SaleRecord[];
   onEdit: (transaction: SaleRecord) => void;

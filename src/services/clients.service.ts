@@ -2,6 +2,7 @@ import type { ClientForm } from "../types/client.types";
 
 const STORAGE_KEY = "gym-management.clients";
 
+/* Tipo que representa un cliente almacenado */
 type StoredClient = Omit<
   ClientForm,
   "createdAt" | "memberShipStartDate" | "memberShipEndDate"
@@ -11,6 +12,7 @@ type StoredClient = Omit<
   memberShipEndDate: string | Date;
 };
 
+/* Clientes de ejemplo para desarrollo */
 const seedClients: StoredClient[] = [
   {
     id: 999,

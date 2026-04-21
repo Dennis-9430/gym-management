@@ -1,5 +1,6 @@
 import type { ClientForm } from "../../types/client.types";
 
+/* Componente que muestra membresías pendientes */
 interface PendingSubscriptionsProps {
   clients: ClientForm[];
   onRegisterPayment: (client: ClientForm) => void;

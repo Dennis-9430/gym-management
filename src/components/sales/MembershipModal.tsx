@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Plus, Pencil, Trash2, Save } from "lucide-react";
 import type { Service } from "../../types/payment.types";
 
+/* Datos del formulario de membresía */
 interface MembershipFormData {
   id?: number;
   name: string;

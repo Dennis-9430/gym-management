@@ -6,6 +6,7 @@ import {
   type RolePermissions,
 } from "../../services/employeePermissions.service";
 
+/* Componente para ver y editar permisos de empleado por modulo */
 interface Props {
   role: EmployeeRole;
   isAdmin: boolean;

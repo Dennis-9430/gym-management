@@ -6,6 +6,7 @@ import {
   PRODUCT_CATEGORY_LABELS,
 } from "../../types/product.types";
 
+/* Formulario para crear o editar productos */
 interface Props {
   idValue?: number | null;
   initialValues?: ProductInput;

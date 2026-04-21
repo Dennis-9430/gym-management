@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import type { ClientForm } from "../../types/client.types";
 import { Fingerprint, Trash2, BadgePlus, UserPlus } from "lucide-react";
 
+/* Fila de cliente con acciones de perfil, huella y suscripcion */
 interface Props {
   client: ClientForm;
   showActions: boolean;

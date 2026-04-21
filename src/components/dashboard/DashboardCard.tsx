@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import "../../styles/dashboardCard.css";
 
+/* Tarjeta de acceso rapido del dashboard */
 interface DashboardCardProps {
   title: string;
   icon: ReactNode;

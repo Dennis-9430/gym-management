@@ -8,6 +8,7 @@ import {
   Dumbbell,
 } from "lucide-react";
 
+/* Barra de navegacion principal con logout */
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();

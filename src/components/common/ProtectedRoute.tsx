@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context";
 
+/* Protege rutas verificando autenticacion */
 export const ProtectedRoute = () => {
   const { user, isInitialized } = useAuth();
 

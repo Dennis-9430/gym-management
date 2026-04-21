@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import type { SaleRecord, PaymentMethod } from "../../types/sales.types";
 import { X } from "lucide-react";
 
+/* Modal para editar metodo de pago de una transaccion */
 interface Props {
   isOpen: boolean;
   onClose: () => void;

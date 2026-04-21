@@ -1,3 +1,4 @@
+/* Formatea número a moneda */
 export const formatCurrency = (value: number, currency = "USD"): string => {
   return new Intl.NumberFormat("es-EC", {
     style: "currency",

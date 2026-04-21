@@ -1,3 +1,4 @@
+/* Filtra array por termino de busqueda en campos especificados */
 export const filterBySearch = <T>(
   items: T[],
   search: string,
@@ -15,6 +16,7 @@ export const filterBySearch = <T>(
   );
 };
 
+/* Agrupa array por clave generada */
 export const groupBy = <T, K extends string | number>(
   items: T[],
   key: (item: T) => K,

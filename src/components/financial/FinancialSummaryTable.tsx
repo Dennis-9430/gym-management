@@ -9,6 +9,7 @@ interface EmployeeSummary {
   total: number;
 }
 
+/* Tabla de resumen financiero por empleado */
 interface Props {
   summary: TransactionSummary;
   employeeData?: Record<string, EmployeeSummary>;

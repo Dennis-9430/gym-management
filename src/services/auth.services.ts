@@ -1,5 +1,6 @@
 import type { AuthUser } from "../types/user.types";
 
+/* Credenciales válidas para el sistema */
 const credentials: Record<string, { password: string; role: AuthUser["role"] }> = {
   admin: { password: "admin123", role: "ADMIN" },
   recepcion: { password: "recep123", role: "RECEPCIONISTA" },
@@ -7,6 +8,7 @@ const credentials: Record<string, { password: string; role: AuthUser["role"] }> 
   dennis: { password: "123456", role: "RECEPCIONISTA" },
 };
 
+/* Valida credenciales y retorna usuario si es válido */
 export const LoginService = (
   username: string,
   password: string,

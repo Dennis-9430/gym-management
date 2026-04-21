@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import type { CatalogItem, CartItem, CartTotals } from "../types/pos.types";
 
+/* Redondea a 2 decimales */
 const round2 = (value: number) => Math.round(value * 100) / 100;
 
+/* Limita el descuento entre 0 y el precio unitario */
 const clampDiscount = (unitPrice: number, discount: number) => {
   if (Number.isNaN(discount) || !Number.isFinite(discount)) {
     return 0;

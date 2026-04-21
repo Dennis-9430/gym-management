@@ -5,6 +5,7 @@ import { getClients, updateClient } from "../../services/clients.service";
 import PendingSubscriptionsList from "../../components/sales/PendingSubscriptions";
 import "../../styles/pos.css";
 
+/* Pagina de suscripciones pendientes por registrar */
 const PendingSubscriptionsPage = () => {
   const navigate = useNavigate();
   const [clients, setClients] = useState<ClientForm[]>(() => getClients());

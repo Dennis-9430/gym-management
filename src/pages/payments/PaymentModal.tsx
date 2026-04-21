@@ -3,6 +3,7 @@ import type { PaymentMethod, Service } from "../../types/payment.types";
 import { services } from "../../types/payment.types";
 import "../../styles/paymentModal.css";
 
+/* Modal para registrar pagos de servicios */
 interface Props {
   onClose: () => void;
 }

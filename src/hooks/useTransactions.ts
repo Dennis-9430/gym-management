@@ -3,6 +3,7 @@ import type { SaleRecord, SaleInput, PaymentMethod } from "../types/sales.types"
 import type { CartItem } from "../types/pos.types";
 import { getSales, updateSale, createSale } from "../services/sales.service";
 
+/* Resumen de transacciones por método de pago */
 export interface TransactionSummary {
   services: number;
   bar: number;
@@ -11,6 +12,7 @@ export interface TransactionSummary {
   total: number;
 }
 
+/* Datos mensuales para gráficos */
 export interface MonthlyData {
   month: string;
   monthKey: string;
@@ -19,6 +21,7 @@ export interface MonthlyData {
   total: number;
 }
 
+/* Datos semanales para gráficos */
 export interface WeeklyData {
   week: string;
   weekNumber: number;
@@ -29,6 +32,7 @@ export interface WeeklyData {
   total: number;
 }
 
+/* Datos anuales */
 export interface YearlyData {
   month: string;
   monthKey: string;

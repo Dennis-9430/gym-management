@@ -22,6 +22,7 @@ interface DailyData {
   total: number;
 }
 
+/* Reporte financiero mensual y anual con graficos */
 const FinancialMonthlyReport = () => {
   const navigate = useNavigate();
   const { transactions, groupByYear } = useTransactions();

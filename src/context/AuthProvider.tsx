@@ -11,6 +11,7 @@ const initialState = {
   user: null as AuthUser | null,
 };
 
+/* Proveedor de autenticación que envuelve la aplicación */
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   const [isInitialized, setIsInitialized] = useState(false);

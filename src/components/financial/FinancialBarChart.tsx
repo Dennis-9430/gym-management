@@ -18,6 +18,7 @@ interface ChartDataItem {
   bar: number;
 }
 
+/* Grafico de barras de ingresos semanales por servicios y bar */
 interface Props {
   data: MonthlyData[];
 }

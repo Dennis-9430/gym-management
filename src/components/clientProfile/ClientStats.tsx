@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { ClientForm } from "../../types/client.types";
 
+/* Stats del cliente con métricas de actividad */
 interface ClientStatsProps {
   client: ClientForm;
 }

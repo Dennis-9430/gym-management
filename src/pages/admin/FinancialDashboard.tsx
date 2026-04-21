@@ -11,6 +11,7 @@ import {
 import Modal from "../../components/common/Modal";
 import "../../styles/financial.css";
 
+/* Dashboard financiero con resumen diario y graficos */
 const FinancialDashboard = () => {
   const navigate = useNavigate();
   const { transactions, groupByMonth, getTransactionsByDate } =

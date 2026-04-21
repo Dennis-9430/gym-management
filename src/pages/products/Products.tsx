@@ -9,11 +9,7 @@ import type { Product, ProductInput } from "../../types/product.types";
 import "../../styles/clientsRegister.css";
 import "../../styles/products.css";
 
-/**
- * Página de gestión de productos e inventario
- * Permite CRUD de productos con búsqueda y filtros
- * @returns {JSX.Element} Panel de productos
- */
+/* Pagina de gestion de productos e inventario */
 const Products = () => {
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";

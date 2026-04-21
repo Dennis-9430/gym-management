@@ -2,6 +2,7 @@ import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.
 
 const STORAGE_KEY = "gym-management.employees";
 
+/* Empleados de ejemplo para desarrollo */
 const seedEmployees: Employee[] = [
   {
     id: 1,

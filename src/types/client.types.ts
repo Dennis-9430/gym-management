@@ -1,7 +1,12 @@
 import type { Person } from "./person.types";
 
+/* Tipos de documento válidos */
 export type DocumentType = "CEDULA" | "PASSPORT" | "DNI";
+
+/* Estados de membresía */
 export type MemberShipStatus = "ACTIVE" | "EXPIRED" | "NONE" | "PENDING";
+
+/* Tipo que representa un cliente del gimnasio */
 export interface ClientForm extends Person {
   name?: string;
   id: number;

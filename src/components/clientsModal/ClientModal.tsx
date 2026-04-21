@@ -8,6 +8,7 @@ import { createClient, updateClient } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";
 import "../../styles/clientsRegister.css";
 
+/* Modal de creación/edición de clientes */
 interface Props {
   onClose: () => void;
   onSaved?: (client: ClientForm) => void;

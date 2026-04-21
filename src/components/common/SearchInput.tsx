@@ -1,6 +1,7 @@
 import type { ChangeEvent, KeyboardEvent } from "react";
 import { Search } from "lucide-react";
 
+/* Input de busqueda con icono */
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;

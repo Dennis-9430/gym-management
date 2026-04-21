@@ -7,6 +7,7 @@ import {
   CreditCard,
 } from "lucide-react";
 
+/* Dashboard de ventas con opciones principales */
 interface SalesDashboardProps {
   onOpenSubscriptionModal: () => void;
   onOpenSaleModal: () => void;

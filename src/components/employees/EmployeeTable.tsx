@@ -1,6 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
 import type { Employee } from "../../types/employee.types";
 
+/* Tabla de empleados con acciones de seleccionar, editar y eliminar */
 interface Props {
   employees: Employee[];
   onSelect: (id: number) => void;

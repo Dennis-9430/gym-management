@@ -1,5 +1,6 @@
 import type { ClientProps } from "../../types/client.types";
 
+/* Muestra detalles de membresia actual del cliente */
 const ClientMembership = ({ client }: ClientProps) => {
   return (
     <div className="card">

@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import type { CatalogItem } from "../../types/pos.types";
 
+/* Lista de catalogo de productos para POS */
 interface Props {
   title: string;
   items: CatalogItem[];

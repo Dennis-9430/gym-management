@@ -1,4 +1,5 @@
 import { Search, Plus } from "lucide-react";
+/* Barra de busqueda y filtros para clientes */
 interface Props {
   search: string;
   onSearch: (value: string) => void;

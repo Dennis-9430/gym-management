@@ -1,6 +1,7 @@
 import { DollarSign, Banknote, CreditCard } from "lucide-react";
 import type { TransactionSummary } from "../../hooks/useTransactions";
 
+/* Resumen financiero con totales por método de pago */
 interface Props {
   summary: TransactionSummary;
 }

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { BarChart3 } from "lucide-react";
 import { Button } from "../common";
 
+/* Boton para navegar al dashboard financiero */
 const FinancialDashboardButton = () => {
   const navigate = useNavigate();
 

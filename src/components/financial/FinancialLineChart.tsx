@@ -16,6 +16,7 @@ interface ChartDataItem {
   total: number;
 }
 
+/* Grafico de tendencia de ingresos mensuales */
 interface Props {
   data: MonthlyData[];
 }

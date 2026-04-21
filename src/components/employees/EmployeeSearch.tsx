@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 
+/* Buscador de empleados */
 interface Props {
   value: string;
   onChange: (value: string) => void;
