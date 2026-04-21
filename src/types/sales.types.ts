@@ -1,3 +1,4 @@
+/* Tipos para ventas y transacciones */
 import type { DocumentType } from "./client.types";
 import type { CartItem, CartTotals } from "./pos.types";
 

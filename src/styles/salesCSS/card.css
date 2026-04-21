@@ -25,7 +25,8 @@
 }
 
 @media (max-width: 1024px) {
-  .pos-container {
+/* Estilos para tarjetas de ventas */
+.pos-container {
     padding: 24px 16px;
   }
 

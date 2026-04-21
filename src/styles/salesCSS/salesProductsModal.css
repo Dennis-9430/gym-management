@@ -109,7 +109,8 @@
 }
 
 @media (max-width: 640px) {
-  .pos-modal-backdrop {
+/* Estilos para modal de productos de venta */
+.pos-modal-backdrop {
     padding: 8px;
   }
 

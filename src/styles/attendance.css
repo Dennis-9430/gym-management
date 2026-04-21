@@ -269,7 +269,8 @@
 }
 
 @media (max-width: 640px) {
-  .attendance-page {
+/* Estilos para página de asistencia */
+.attendance-page {
     padding: 12px;
   }
 

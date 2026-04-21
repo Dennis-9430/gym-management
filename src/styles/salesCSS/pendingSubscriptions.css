@@ -56,7 +56,8 @@
 }
 
 @media (max-width: 640px) {
-  .pos-pending {
+/* Estilos para suscripciones pendientes */
+.pos-pending {
     margin: 16px auto 0;
     padding: 0 8px;
   }

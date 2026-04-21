@@ -1,3 +1,4 @@
+/* Tipos para empleados y permisos */
 export type EmployeeRole = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
 export type EmployeeStatus = "ACTIVO" | "INACTIVO";
 

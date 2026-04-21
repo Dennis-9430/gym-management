@@ -369,7 +369,8 @@
 }
 
 @media (max-width: 640px) {
-  .products-container {
+/* Estilos para página de productos */
+.products-container {
     padding: 12px;
     height: auto;
     min-height: calc(100vh - 67px);
