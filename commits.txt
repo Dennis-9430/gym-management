@@ -445,6 +445,16 @@ direccion del archivo:
 
 ---
 
+5. docs(readme): agregar descripción del sistema
+
+descripcion: Actualiza README.md con descripción completa del sistema, tecnologías, estructura, funcionalidades e instrucciones de instalación.
+
+direccion del archivo:
+- README.md
+
+
+---
+
 ## FIXES
 
 ---
@@ -477,5 +487,6 @@ direccion del archivo:
 - Comentarios: Formato /* */ en frontend, # en backend
 - Total commits frontend: 29
 - Total commits backend: 3
+- Total fixes: 2
 - Total fixes: 2
 - Total fixes: 2

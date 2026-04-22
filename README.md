@@ -1,73 +1,89 @@
-# React + TypeScript + Vite
+# Gym Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema completo de gestión de gimnasio con frontend React/TypeScript y backend FastAPI/MongoDB.
 
-Currently, two official plugins are available:
+## Tecnologías
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Frontend
+- React 18 + TypeScript
+- Vite (build tool)
+- React Router (navegación)
+- Context API + useReducer (gestión de estado)
+- CSS Modules / Variables CSS
 
-## React Compiler
+### Backend
+- Python 3.11 + FastAPI
+- MongoDB (Motor async)
+- JWT + bcrypt (autenticación)
+- Pydantic (validación de datos)
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Estructura
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+gym-management/
+├── src/                    # Frontend React
+│   ├── pages/              # Páginas del sistema
+│   ├── components/        # Componentes reutilizables
+│   ├── hooks/             # Custom hooks
+│   ├── services/          # Servicios API
+│   ├── types/             # Tipos TypeScript
+│   ├── utils/             # Utilidades
+│   ├── styles/            # Estilos CSS
+│   └── router/            # Configuración de rutas
+├── backend/app/            # Backend FastAPI
+│   ├── auth/              # Autenticación JWT
+│   ├── models/            # Modelos MongoDB
+│   └── routers/           # Endpoints API
+└── dist/                  # Build de producción
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Funcionalidades
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Clientes**: Registro, perfil, membresías, pagos
+- **Empleados**: Gestión de empleados y permisos
+- **Productos**: Inventario y ventas POS
+- **Servicios**: Membresías y servicios adicionales
+- **Asistencia**: Registro de entrada/salida
+- **Reportes**: Estados financieros y reportes
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Setup
+
+### Requisitos
+- Node.js 18+
+- Python 3.11+
+- MongoDB 6.0+
+
+### Instalación Frontend
+```bash
+npm install
+npm run dev
 ```
+
+### Instalación Backend
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+### Variables de Entorno
+```env
+# Backend (.env)
+MONGODB_URL=mongodb://localhost:27017
+MONGODB_DB_NAME=gym_db
+JWT_SECRET_KEY=your-secret-key
+```
+
+## Scripts
+
+### Frontend
+- `npm run dev` - Desarrollo
+- `npm run build` - Build producción
+- `npm run preview` - Preview producción
+- `npm run test` - Ejecutar tests
+
+### Backend
+- `uvicorn app.main:app --reload` - Desarrollo
+- `uvicorn app.main:app --host 0.0.0.0 --port 8000` - Producción
