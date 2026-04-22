@@ -1,11 +1,18 @@
-/* Configuración de Vite con code splitting optimizado */
+/* Configuración de Vite con code splitting optimizado y tests */
 /* Relacionado con: src/router/AppRouter.tsx */
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import vitest from 'vitest/config'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.ts'],
+    include: ['src/tests/**/*.test.{ts,tsx}'],
+  },
   build: {
     rollupOptions: {
       output: {
