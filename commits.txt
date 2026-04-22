@@ -490,14 +490,14 @@ direccion del archivo:
 
 ---
 
-6. fix(vite): separar configuración de Vitest
+6. test(vitest): agregar tests para utils
 
-descripcion: Crea vitest.config.ts separado y elimina import de vitest desde vite.config.ts para resolver errores de build.
+descripcion: Agrega tests para array utils (filterBySearch, groupBy), string utils (normalizeText, normalizeDocument, matchesQuery) y membership utils (getDaysRemaining, getMembershipStatus).
 
 direccion del archivo:
-- vite.config.ts
-- vitest.config.ts (nuevo)
-- src/tests/setup.ts
+- src/tests/array.test.ts
+- src/tests/string.test.ts
+- src/tests/membership.test.ts
 
 
 ---
@@ -508,7 +508,7 @@ direccion del archivo:
 - Backend: Python + FastAPI + MongoDB
 - Autenticación: JWT con bcrypt
 - Comentarios: Formato /* */ en frontend, # en backend
-- Total commits frontend: 30
+- Total commits frontend: 31
 - Total commits backend: 3
 - Total fixes: 4
 - Total fixes: 2
