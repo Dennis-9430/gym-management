@@ -479,14 +479,37 @@ direccion del archivo:
 
 ---
 
+5. test(vitest): agregar tests para format, date y productos
+
+descripcion: Agrega archivos de test para format utils (parseDecimal, round2, clampPercent, formatCurrency), date utils (parseDateInput, addDays) y tipos de productos (PRODUCT_CATEGORIES, PRODUCT_CATEGORY_LABELS).
+
+direccion del archivo:
+- src/tests/format.test.ts
+- src/tests/date.test.ts
+- src/tests/products.test.ts
+
+---
+
+6. fix(vite): separar configuración de Vitest
+
+descripcion: Crea vitest.config.ts separado y elimina import de vitest desde vite.config.ts para resolver errores de build.
+
+direccion del archivo:
+- vite.config.ts
+- vitest.config.ts (nuevo)
+- src/tests/setup.ts
+
+
+---
+
 ## NOTAS
 
 - Frontend: React + TypeScript + Vite
 - Backend: Python + FastAPI + MongoDB
 - Autenticación: JWT con bcrypt
 - Comentarios: Formato /* */ en frontend, # en backend
-- Total commits frontend: 29
+- Total commits frontend: 30
 - Total commits backend: 3
-- Total fixes: 2
+- Total fixes: 4
 - Total fixes: 2
 - Total fixes: 2
