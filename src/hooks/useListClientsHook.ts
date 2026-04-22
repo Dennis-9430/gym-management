@@ -16,7 +16,7 @@ export const useClients = () => {
 
   const reloadClients = () => {
     const clients: ClientForm[] = getClients();
-    dispatch({ type: "SET_ClIENTS", payload: clients });
+    dispatch({ type: "SET_CLIENTS", payload: clients });
   };
 
   useEffect(() => {

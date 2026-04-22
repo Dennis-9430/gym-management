@@ -1,13 +1,16 @@
+/* Reducer para listado de clientes con filtros y ordenamiento */
 import type { ClientForm } from "../../types/client.types";
 
 type Action =
-  | { type: "SET_ClIENTS"; payload: ClientForm[] }
+  | { type: "SET_CLIENTS"; payload: ClientForm[] }
   | { type: "SEARCH"; payload: string }
   | { type: "FILTER_ACTIVE" }
   | { type: "FILTER_INACTIVE" }
   | { type: "FILTER_ALL" }
   | { type: "SORT"; payload: keyof ClientForm };
 
+/* Estado del listado de clientes */
+/* Relacionado con: useListClientsHook.ts, ListClients.tsx */
 interface State {
   clients: ClientForm[];
   filteredClients: ClientForm[];
@@ -16,6 +19,8 @@ interface State {
   sortDirection: "asc" | "desc";
   filterMode: "ACTIVE" | "INACTIVE" | "ALL";
 }
+
+/* Estado inicial vacio */
 export const initialState: State = {
   clients: [],
   filteredClients: [],
@@ -86,7 +91,7 @@ const applyFilters = (
 
 export const listClientsReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case "SET_ClIENTS": {
+    case "SET_CLIENTS": {
       const filteredClients = applyFilters(
         action.payload,
         state.search,
