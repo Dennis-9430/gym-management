@@ -430,6 +430,18 @@ descripcion: Completa la documentación del backend.
 direccion del archivo:
 - Archivos Python del backend
 
+---
+
+4. test(vitest): configurar testing con Vitest
+
+descripcion: Instala Vitest y dependencias de testing (jsdom, @testing-library/react). Configura scripts de prueba en package.json y crea archivos de setup.
+
+direccion del archivo:
+- package.json
+- src/tests/setup.ts
+- src/tests/utils.test.ts
+- src/tests/services.test.ts
+
 
 ---
 
@@ -465,4 +477,5 @@ direccion del archivo:
 - Comentarios: Formato /* */ en frontend, # en backend
 - Total commits frontend: 29
 - Total commits backend: 3
+- Total fixes: 2
 - Total fixes: 2
