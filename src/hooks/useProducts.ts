@@ -11,17 +11,53 @@ import {
   deleteProductAPI,
 } from "../services/products.service";
 
+/**
+ * Tipo que representa el filtro de categoria para productos.
+ * Puede ser cualquier categoria de producto o "ALL" para mostrar todos.
+ */
 type CategoryFilter = ProductCategory | "ALL";
 
-/* Hook que maneja el estado CRUD de productos con MongoDB */
+/**
+ * Hook personalizados para manejar el estado CRUD de productos con persistencia en MongoDB.
+ * Provee funcionalidades para listar, buscar, filtrar, crear, actualizar y eliminar productos.
+ * 
+ * @returns Objeto con el estado y funciones para gestionar productos
+ * 
+ * @example
+ * ```tsx
+ * const {
+ *   products,
+ *   totalProducts,
+ *   search,
+ *   setSearch,
+ *   categoryFilter,
+ *   setCategoryFilter,
+ *   error,
+ *   loading,
+ *   refresh,
+ *   addProduct,
+ *   updateProductById,
+ *   removeProduct
+ * } = useProducts();
+ * ```
+ */
 export const useProducts = () => {
+  // Estado principal de productos
   const [products, setProducts] = useState<Product[]>([]);
+  
+  // Estado para la busqueda de productos
   const [search, setSearch] = useState("");
+  
+  // Estado para el filtro de categoria
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("ALL");
+  
+  // Estado para manejar errores
   const [error, setError] = useState<string | null>(null);
+  
+  // Estado de carga
   const [loading, setLoading] = useState(false);
 
-  // Carga productos desde API
+  // Carga productos desde la API
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
@@ -34,6 +70,7 @@ export const useProducts = () => {
     }
   }, []);
 
+  // Memoizacion de productos filtrados por busqueda y categoria
   const filteredProducts = useMemo(() => {
     const query = search.trim().toLowerCase();
     const byCategory = categoryFilter === "ALL"
@@ -50,6 +87,7 @@ export const useProducts = () => {
     });
   }, [products, search, categoryFilter]);
 
+  // Crea un nuevo producto, intenta primero con API y fallback local
   const addProduct = async (input: ProductInput) => {
     setError(null);
     try {
@@ -70,6 +108,7 @@ export const useProducts = () => {
     }
   };
 
+  // Actualiza un producto existente por ID
   const updateProductById = async (id: number, update: ProductUpdate) => {
     setError(null);
     try {
@@ -94,6 +133,7 @@ export const useProducts = () => {
     }
   };
 
+  // Elimina un producto por ID
   const removeProduct = async (id: number) => {
     setError(null);
     try {
@@ -113,6 +153,22 @@ export const useProducts = () => {
     }
   };
 
+  /**
+   * Retorna el estado y funciones del hook
+   * @typedef {Object} UseProductsReturn
+   * @property {Product[]} products - Lista de productos filtrados
+   * @property {number} totalProducts - Total de productos sin filtro
+   * @property {string} search - Termino de busqueda actual
+   * @property {React.Dispatch<React.SetStateAction<string>>} setSearch - Funcion para actualizar busqueda
+   * @property {CategoryFilter} categoryFilter - Filtro de categoria actual
+   * @property {React.Dispatch<React.SetStateAction<CategoryFilter>>} setCategoryFilter - Funcion para actualizar filtro
+   * @property {string | null} error - Mensaje de error si existe
+   * @property {boolean} loading - Estado de carga
+   * @property {() => Promise<void>} refresh - Funcion para recargar productos
+   * @property {(input: ProductInput) => Promise<Product>} addProduct - Funcion para crear producto
+   * @property {(id: number, update: ProductUpdate) => Promise<Product>} updateProductById - Funcion para actualizar producto
+   * @property {(id: number) => Promise<void>} removeProduct - Funcion para eliminar producto
+   */
   return {
     products: filteredProducts,
     totalProducts: products.length,
@@ -128,3 +184,4 @@ export const useProducts = () => {
     removeProduct,
   };
 };
+

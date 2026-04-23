@@ -1,4 +1,12 @@
-/* Hook principal para el sistema POS */
+/**
+ * usePOS.ts - Hook Principal del Sistema POS
+ * 
+ * Hook central que integra: useCart, usePOSClients, usePOSSales, usePOSSubscription
+ * Gestiona el carrito, clientes, ventas y suscripciones del POS.
+ * @author Sistema de Gestión Gimnasio
+ * @version 1.0.0
+ */
+
 import { useMemo, useCallback, useEffect, useRef, useState } from "react";
 import { getProducts } from "../../services/products.service";
 import { services } from "../../types/payment.types";
@@ -14,6 +22,7 @@ import { usePOSSales } from "./usePOSSales";
 import { usePOSSubscription } from "./usePOSSubscription";
 import { matchesQuery } from "../../utils/string/normalize";
 
+// Construye el catálogo unificado de productos y membresías
 const buildCatalog = (products: Product[]): CatalogItem[] => {
   const productItems: CatalogItem[] = products
     .filter((product) => product.category !== "SERVICIOS_GYM")
@@ -42,6 +51,7 @@ const buildCatalog = (products: Product[]): CatalogItem[] => {
   return [...productItems, ...membershipItems];
 };
 
+// Interfaz de retorno del hook usePOS
 export interface UsePOSReturn {
   clients: ReturnType<typeof usePOSClients>["clients"];
   catalog: CatalogItem[];
@@ -138,6 +148,7 @@ export interface UsePOSReturn {
   totals: ReturnType<typeof useCart>["totals"];
 }
 
+// Hook principal del POS
 export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => {
   const cart = useCart();
   const sales = usePOSSales(cart.totals, cart.items, cart.clearCart, null);

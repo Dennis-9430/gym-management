@@ -1,10 +1,25 @@
+/* Hook para gestionar el carrito de compras (POS) */
+// Direccion del archivo: src/hooks/useCart.ts
+// Relacionado con: SalesPages.tsx, CartTable.tsx, src/types/pos.types.ts
+
 import { useMemo, useState } from "react";
 import type { CatalogItem, CartItem, CartTotals } from "../types/pos.types";
 
-/* Redondea a 2 decimales */
+// Funciones helper de calculo
+
+/**
+ * Redondea valor a 2 decimales
+ * @param value - Numero a redondear
+ * @returns Numero redondeado
+ */
 const round2 = (value: number) => Math.round(value * 100) / 100;
 
-/* Limita el descuento entre 0 y el precio unitario */
+/**
+ * Limita descuento entre 0 y precio unitario
+ * @param unitPrice - Precio unitario
+ * @param discount - Descuento a validar
+ * @returns Descuento valido
+ */
 const clampDiscount = (unitPrice: number, discount: number) => {
   if (Number.isNaN(discount) || !Number.isFinite(discount)) {
     return 0;
@@ -12,6 +27,13 @@ const clampDiscount = (unitPrice: number, discount: number) => {
   return Math.min(Math.max(discount, 0), unitPrice);
 };
 
+/**
+ * Calcula subtotal de un item
+ * @param unitPrice - Precio unitario
+ * @param unitDiscount - Descuento unitario
+ * @param quantity - Cantidad
+ * @returns Subtotal calculado
+ */
 const calcSubtotal = (
   unitPrice: number,
   unitDiscount: number,
@@ -22,6 +44,12 @@ const calcSubtotal = (
   return round2(base * quantity);
 };
 
+// Hook principal
+
+/**
+ * Hook para gestionar el carrito de compras
+ * @returns Funciones y estado del carrito
+ */
 export const useCart = () => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [discountRate, setDiscountRate] = useState(0);

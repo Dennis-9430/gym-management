@@ -1,4 +1,11 @@
-/* Hook para manejar registro de ventas */
+/**
+ * usePOSSales.ts - Hook para Registro de Ventas
+ * 
+ * Gestiona el proceso de venta: cliente, pago, checkout.
+ * @author Sistema de Gestión Gimnasio
+ * @version 1.0.0
+ */
+
 import { useState, useCallback } from "react";
 import type { CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod, SaleClientInfo } from "../../types/sales.types";
@@ -10,6 +17,7 @@ import { round2 } from "../../utils/format/number";
 const defaultClientLabel = "Consumidor final";
 const defaultClientDocument = "99999999";
 
+// Interfaz de retorno
 export interface UsePOSSalesReturn {
   saleClientInput: string;
   setSaleClientInput: (value: string) => void;
@@ -31,6 +39,7 @@ export interface UsePOSSalesReturn {
   handleCloseModal: () => void;
 }
 
+// Hook de ventas del POS
 export const usePOSSales = (
   totals: CartTotals,
   items: CartItem[],
@@ -61,7 +70,8 @@ export const usePOSSales = (
     }
   }, [totals.total]);
 
-  const handleCheckout = useCallback(() => {
+  // Handler: registro de venta
+const handleCheckout = useCallback(() => {
     if (!items.length) {
       alert("Agrega productos o membresias al carrito.");
       return;

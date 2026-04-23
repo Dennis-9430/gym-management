@@ -1,9 +1,16 @@
+/* Servicio para gestionar clientes */
+// Direccion del archivo: src/services/clients.service.ts
+// Relacionado con: useListClientsHook.ts, ListClients.tsx, backend/app/routers/clients.py
+
 import type { ClientForm } from "../types/client.types";
 
+// Constantes de configuracion
+// Relacionado con: backend/app/routers/clients.py
 const API_BASE = "/api/clients";
 const STORAGE_KEY = "gym-management.clients";
 
-/* Obtiene clientes desde MongoDB */
+// Obtiene clientes desde MongoDB
+// Relacionado con: backend/app/routers/clients.py (list_clients)
 export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
   try {
     const response = await fetch(`${API_BASE}?active_only=false`);
@@ -18,7 +25,8 @@ export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
   }
 };
 
-/* Obtiene clientes (intenta API, fallback localStorage) */
+// Obtiene clientes (intenta API, fallback localStorage)
+// Relacionado con: useListClientsHook.ts
 export const getClients = async (): Promise<ClientForm[]> => {
   try {
     return await getClientsFromAPI();
@@ -27,7 +35,13 @@ export const getClients = async (): Promise<ClientForm[]> => {
   }
 };
 
-/*Funciones locales (fallback) */
+// Funciones locales (fallback)
+
+/**
+ * Busca cliente por numero de documento
+ * @param documentNumber - Numero de documento a buscar
+ * @returns Cliente o null
+ */
 export const findClientByDocument = (documentNumber: string): ClientForm | null => {
   const normalized = normalizeDocument(documentNumber);
   if (!normalized) {
@@ -331,6 +345,13 @@ const seedClients: StoredClient[] = [
   },
 ];
 
+// Funciones helper
+
+/**
+ * Convierte valor a Date
+ * @param value - Valor a convertir
+ * @returns Date
+ */
 const toDate = (value: string | Date | undefined | null) => {
   if (!value) {
     return new Date();
@@ -338,6 +359,11 @@ const toDate = (value: string | Date | undefined | null) => {
   return value instanceof Date ? value : new Date(value);
 };
 
+/**
+ * Normaliza cliente de almacenamiento a formato de formulario
+ * @param client - Cliente almacenado
+ * @returns Cliente en formato de formulario
+ */
 const normalizeClient = (client: StoredClient): ClientForm => ({
   ...client,
   createdAt: client.createdAt ? new Date(client.createdAt) : undefined,
@@ -345,6 +371,12 @@ const normalizeClient = (client: StoredClient): ClientForm => ({
   memberShipEndDate: toDate(client.memberShipEndDate),
 });
 
+// Funciones de manejo de datos locales (Fallback)
+
+/**
+ * Carga clientes desde localStorage
+ * @returns Array de clientes
+ */
 const loadClients = (): ClientForm[] => {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
@@ -364,6 +396,7 @@ const loadClients = (): ClientForm[] => {
 };
 
 const saveClients = (clients: ClientForm[]) => {
+  // Convierte fechas a strings para localStorage
   const payload: StoredClient[] = clients.map((client) => ({
     ...client,
     createdAt: client.createdAt ? client.createdAt.toISOString() : null,
@@ -373,17 +406,35 @@ const saveClients = (clients: ClientForm[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 };
 
+/**
+ * Normaliza numero de documento (移除 caracteres especiales)
+ * @param value - Numero de documento
+ * @returns Documento normalizado
+ */
 const normalizeDocument = (value: string) =>
   value
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "")
     .trim();
 
+/**
+ * Ordena clientes por estado de membresia
+ * @param a - Cliente A
+ * @param b - Cliente B
+ * @returns Valor de ordenamiento
+ */
 const sortByStatus = (a: ClientForm, b: ClientForm): number => {
   const order: Record<string, number> = { NONE: 0, EXPIRED: 1, ACTIVE: 2 };
   return order[a.memberShipStatus] - order[b.memberShipStatus];
 };
 
+// Funciones locales (Fallback)
+
+/**
+ * Crea cliente en localStorage (fallback)
+ * @param input - Datos del cliente
+ * @returns Cliente creado
+ */
 export const createClient = (input: Omit<ClientForm, "id" | "createdAt">): ClientForm => {
   const clients = loadClients();
   const nextId = clients.length

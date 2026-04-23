@@ -1,9 +1,16 @@
+/* Servicio para gestionar empleados */
+// Direccion del archivo: src/services/employees.service.ts
+// Relacionado con: useEmployees.ts, EmployeesPage.tsx, backend/app/routers/employees.py
+
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
 
+// Constantes de configuracion
+// Relacionado con: backend/app/routers/employees.py
 const API_BASE = "/api/employees";
 const STORAGE_KEY = "gym-management.employees";
 
-/* Obtiene empleados desde MongoDB */
+// Obtiene empleados desde MongoDB
+// Relacionado con: backend/app/routers/employees.py (list_employees)
 export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
   try {
     const response = await fetch(`${API_BASE}?status=ACTIVE`);
@@ -97,6 +104,7 @@ export const deleteEmployeeAPI = async (id: number): Promise<boolean> => {
 };
 
 /* Empleados de ejemplo para desarrollo */
+// Relacionado con: getEmployees (fallback)
 const seedEmployees: Employee[] = [
   {
     id: 1,
@@ -148,6 +156,11 @@ const seedEmployees: Employee[] = [
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 const normalizeUsername = (username: string) => username.trim().toLowerCase();
 
+/**
+ * Agrega valores por defecto a empleado
+ * @param employee - Empleado a normalizar
+ * @returns Empleado con valores por defecto
+ */
 const withDefaults = (employee: Employee): Employee => {
   return {
     ...employee,
@@ -159,6 +172,12 @@ const withDefaults = (employee: Employee): Employee => {
   };
 };
 
+// Funciones de manejo de datos locales (Fallback)
+
+/**
+ * Carga empleados desde localStorage
+ * @returns Array de empleados
+ */
 const loadEmployees = (): Employee[] => {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
@@ -181,6 +200,14 @@ const saveEmployees = (employees: Employee[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
 };
 
+// Funciones locales (Fallback)
+
+/**
+ * Crea empleado en localStorage (fallback)
+ * @param input - Datos del empleado
+ * @returns Empleado creado
+ * @throws Error si email o usuario ya existe
+ */
 export const createEmployee = (input: EmployeeInput): Employee => {
   const employees = loadEmployees();
   const email = normalizeEmail(input.email);
@@ -211,6 +238,13 @@ export const createEmployee = (input: EmployeeInput): Employee => {
   return employee;
 };
 
+/**
+ * Actualiza empleado en localStorage (fallback)
+ * @param id - ID del empleado
+ * @param update - Campos a actualizar
+ * @returns Empleado actualizado
+ * @throws Error si no existe o email/usuario ya existe
+ */
 export const updateEmployee = (
   id: number,
   update: EmployeeUpdate,
@@ -258,6 +292,10 @@ export const updateEmployee = (
   return updatedEmployee;
 };
 
+/**
+ * Elimina empleado de localStorage (fallback)
+ * @param id - ID del empleado
+ */
 export const deleteEmployee = (id: number) => {
   const employees = loadEmployees();
   const updatedEmployees = employees.filter((e) => e.id !== id);

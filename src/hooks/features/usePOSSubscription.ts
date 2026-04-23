@@ -1,4 +1,11 @@
-/* Hook para manejar suscripciones de membresia */
+/**
+ * usePOSSubscription.ts - Hook para Suscripciones
+ * 
+ * Gestiona suscripciones de membresías: cliente, servicio, descuento, pago.
+ * @author Sistema de Gestión Gimnasio
+ * @version 1.0.0
+ */
+
 import { useState, useMemo, useCallback } from "react";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
@@ -8,6 +15,7 @@ import { round2, clampPercent } from "../../utils/format/number";
 import { parseDateInput, addDays } from "../../utils/date/date";
 import { getMembershipDays } from "../../utils/membership/days";
 
+// Interfaz de retorno
 export interface UsePOSSubscriptionReturn {
   subscriptionModalOpen: boolean;
   setSubscriptionModalOpen: (value: boolean) => void;
@@ -52,6 +60,7 @@ export interface UsePOSSubscriptionReturn {
   handleDeletePending: (client: ClientForm) => void;
 }
 
+// Hook de suscripciones
 export const usePOSSubscription = (
   clients: ClientForm[],
   reloadClients: () => void,
@@ -177,7 +186,8 @@ export const usePOSSubscription = (
     );
   }, [subscriptionTotal]);
 
-  const handleRegisterSubscription = useCallback(() => {
+  // Handler: registrar suscripción activa
+const handleRegisterSubscription = useCallback(() => {
     if (!subscriptionClient) {
       alert("Selecciona un cliente.");
       return;
@@ -220,7 +230,8 @@ export const usePOSSubscription = (
     handleCloseSubscriptionModal,
   ]);
 
-  const handlePendingSubscription = useCallback(() => {
+  // Handler: registrar suscripción pendiente
+const handlePendingSubscription = useCallback(() => {
     if (!subscriptionClient) {
       alert("Selecciona un cliente.");
       return;

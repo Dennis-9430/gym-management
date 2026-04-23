@@ -1,9 +1,17 @@
-/* Hook para buscar clientes en el POS */
+/**
+ * usePOSClients.ts - Hook para Búsqueda de Clientes
+ * 
+ * Gestiona búsqueda y filtrado de clientes en el POS.
+ * @author Sistema de Gestión Gimnasio
+ * @version 1.0.0
+ */
+
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { getClients } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";
 import { matchesQuery, normalizeDocument } from "../../utils/string/normalize";
 
+// Interfaz de retorno
 export interface UsePOSClientsReturn {
   clients: ClientForm[];
   search: string;
@@ -21,6 +29,7 @@ export interface UsePOSClientsReturn {
   reloadClients: () => void;
 }
 
+// Hook de búsqueda de clientes
 export const usePOSClients = (
   initialSubscriptionClient?: ClientForm,
   saleClientInput?: string,
@@ -31,7 +40,8 @@ export const usePOSClients = (
   const [subscriptionSearch, setSubscriptionSearch] = useState(initialSubscriptionClient?.documentNumber || "");
   const [subscriptionClient, setSubscriptionClient] = useState<ClientForm | null>(initialSubscriptionClient || null);
 
-  const reloadClients = useCallback(async () => {
+  // Carga clientes desde API
+const reloadClients = useCallback(async () => {
     const loadedClients = await getClients();
     setClients(loadedClients);
     return loadedClients;

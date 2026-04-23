@@ -30,8 +30,20 @@ export const initialState: State = {
   filterMode: "ACTIVE",
 };
 
+// Funciones helper de filtrado y ordenamiento
+
+/**
+ * Verifica si cliente tiene membresia activa
+ * @param client - Cliente a verificar
+ * @returns true si membresia activa
+ */
 const isActive = (client: ClientForm) => client.memberShipStatus === "ACTIVE";
 
+/**
+ * Ordena clientes inactivos por fecha (mas reciente primero)
+ * @param clients - Array de clientes
+ * @returns Clientes ordenados
+ */
 const sortInactiveDefault = (clients: ClientForm[]) => {
   return [...clients].sort((a, b) => {
     const dateA = a.createdAt ? new Date(a.createdAt).getTime() : a.id;

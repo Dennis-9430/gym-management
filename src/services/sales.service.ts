@@ -1,17 +1,38 @@
 /* Servicio para gestionar ventas y transacciones */
+// Direccion del archivo: src/services/sales.service.ts
+// Relacionado con: useTransactions.ts, SalesPages.tsx, backend/app/routers/sales.py
+
 import type { SaleInput, SaleRecord } from "../types/sales.types";
 
+// Constantes de configuracion
+// Relacionado con: backend/app/routers/sales.py
 const API_BASE = "/api/sales";
 const STORAGE_KEY = "gym-management.sales";
 
+// Funciones helper de fechas
+
+/**
+ * Calcula la fecha de hace N dias
+ * @param days - Numero de dias hacia atras
+ * @returns Fecha en formato ISO
+ */
 const getDaysAgo = (days: number) => {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 };
 
+/**
+ * Convierte fecha (year, month, day) a formato ISO
+ * @param year - Año
+ * @param month - Mes (1-12)
+ * @param day - Dia
+ * @returns Fecha en formato ISO
+ */
 const getDateString = (year: number, month: number, day: number) => {
   return new Date(year, month - 1, day).toISOString();
 };
 
+// Datos de ejemplo para desarrollo
+// Relacionado con: getSales (fallback)
 const sampleSales: SaleRecord[] = [
   // ABRIL 2026 (mes actual)
   {
@@ -304,6 +325,8 @@ const sampleSales: SaleRecord[] = [
 ];
 
 const loadSales = (): SaleRecord[] => {
+  // Carga ventas desde localStorage
+  // Relacionado con: getSales (fallback)
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleSales));
@@ -314,16 +337,26 @@ const loadSales = (): SaleRecord[] => {
     const parsed = JSON.parse(raw) as SaleRecord[];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
+    // Manejo de errores para parsing de JSON
+    // Relacionado con: localStorage corrupto
     return [];
   }
 };
 
-/* Guarda ventas en localStorage (utilidad) */
+// Funciones de manejo de datos locales (Fallback)
+
+/**
+ * Guarda ventas en localStorage
+ * @param sales - Array de ventas a guardar
+ */
 export const saveSalesLocally = (sales: SaleRecord[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
 };
 
-/* Obtiene ventas desde MongoDB */
+// Funciones de API (MongoDB)
+
+// Obtiene ventas desde MongoDB
+// Relacionado con: backend/app/routers/sales.py (list_sales)
 export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
   try {
     const response = await fetch(`${API_BASE}?limit=100`);
@@ -338,7 +371,8 @@ export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
   }
 };
 
-/* Obtiene ventas (intenta API, fallback localStorage) */
+// Obtiene ventas (intenta API, fallback localStorage)
+// Relacionado con: useTransactions.ts
 export const getSales = async (): Promise<SaleRecord[]> => {
   try {
     return await getSalesFromAPI();
@@ -347,7 +381,8 @@ export const getSales = async (): Promise<SaleRecord[]> => {
   }
 };
 
-/* Crea venta en MongoDB */
+// Crea venta en MongoDB
+// Relacionado con: backend/app/routers/sales.py (create_sale)
 export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null> => {
   try {
     const response = await fetch(API_BASE, {
@@ -365,7 +400,7 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
   }
 };
 
-/* Actualiza venta en MongoDB */
+// Actualiza venta en MongoDB
 export const updateSaleAPI = async (id: number, update: Partial<SaleRecord>): Promise<SaleRecord | null> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
