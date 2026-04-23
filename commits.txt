@@ -507,6 +507,15 @@ descripcion: Ajusta left y padding-left de inputs para separar iconos del placeh
 direccion del archivo:
 - src/styles/products.css
 
+---
+
+8. feat(sales): filtrar servicios menores o iguales a $7 en registro diario
+
+descripcion: Filtra los servicios en el dropdown del modal de suscripcion para mostrar solo los que cuestan $7 o menos (servicios diarios). Se muestra dinamicamente segun la configuracion en MembershipModal.
+
+direccion del archivo:
+- src/components/sales/SubscriptionModal.tsx
+
 
 ---
 
@@ -516,8 +525,9 @@ direccion del archivo:
 - Backend: Python + FastAPI + MongoDB
 - Autenticación: JWT con bcrypt
 - Comentarios: Formato /* */ en frontend, # en backend
-- Total commits frontend: 32
+- Total commits frontend: 33
 - Total commits backend: 3
 - Total fixes: 5
+- Total features: 1
 - Total fixes: 2
 - Total fixes: 2

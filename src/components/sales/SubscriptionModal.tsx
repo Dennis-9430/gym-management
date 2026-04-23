@@ -198,14 +198,16 @@ const SubscriptionModal = ({
                   </button>
                   {showServices && (
                     <ul className="pos-select-dropdown">
-                      {services.map((service) => (
-                        <li
-                          key={service.id}
-                          onClick={() => onSelectService(service)}
-                        >
-                          {service.name} - ${service.price}
-                        </li>
-                      ))}
+                      {services
+                        .filter((service) => service.price <= 7)
+                        .map((service) => (
+                          <li
+                            key={service.id}
+                            onClick={() => onSelectService(service)}
+                          >
+                            {service.name} - ${service.price}
+                          </li>
+                        ))}
                     </ul>
                   )}
                 </div>
