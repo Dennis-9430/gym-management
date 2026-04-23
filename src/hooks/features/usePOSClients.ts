@@ -1,5 +1,5 @@
 /* Hook para buscar clientes en el POS */
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { getClients } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";
 import { matchesQuery, normalizeDocument } from "../../utils/string/normalize";
@@ -25,17 +25,21 @@ export const usePOSClients = (
   initialSubscriptionClient?: ClientForm,
   saleClientInput?: string,
 ): UsePOSClientsReturn => {
-  const [clients, setClients] = useState<ClientForm[]>(() => getClients());
+  const [clients, setClients] = useState<ClientForm[]>([]);
   const [search, setSearch] = useState("");
-  
+
   const [subscriptionSearch, setSubscriptionSearch] = useState(initialSubscriptionClient?.documentNumber || "");
   const [subscriptionClient, setSubscriptionClient] = useState<ClientForm | null>(initialSubscriptionClient || null);
 
-  const reloadClients = useCallback(() => {
-    const loadedClients = getClients();
+  const reloadClients = useCallback(async () => {
+    const loadedClients = await getClients();
     setClients(loadedClients);
     return loadedClients;
   }, []);
+
+  useEffect(() => {
+    reloadClients();
+  }, [reloadClients]);
 
   const pendingClients = useMemo(
     () => clients.filter((client) => client.memberShipStatus === "NONE"),

@@ -9,6 +9,30 @@ export interface FinancialReport {
   transfersByEmployee: { name: string; count: number }[];
 }
 
+export interface FinancialSummary {
+  period: { start: string | null; end: string | null };
+  summary: {
+    totalSales: number;
+    totalRevenue: number;
+    cashRevenue: number;
+    cardRevenue: number;
+    transferRevenue: number;
+  };
+}
+
+export interface DailyReport {
+  year: number;
+  month: number;
+  data: { date: string; sales: number; revenue: number }[];
+}
+
+export interface AttendanceSummary {
+  period: string;
+  total: number;
+  daily: { date: string; count: number }[];
+}
+
+const API_BASE = "/api/reports";
 const STORAGE_KEY = "gym-management.financial-reports";
 
 const loadReports = (): FinancialReport[] => {
@@ -25,7 +49,94 @@ const saveReports = (reports: FinancialReport[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(reports));
 };
 
-export const getFinancialReports = (): FinancialReport[] => {
+/* Obtiene resumen financiero desde MongoDB */
+export const getFinancialSummary = async (
+  startDate?: string,
+  endDate?: string
+): Promise<FinancialSummary | null> => {
+  try {
+    let url = `${API_BASE}/financial/summary`;
+    const params = new URLSearchParams();
+    if (startDate) params.append("start_date", startDate);
+    if (endDate) params.append("end_date", endDate);
+    if (params.toString()) url += `?${params.toString()}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error al obtener resumen financiero");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error cargando resumen financiero:", error);
+    return null;
+  }
+};
+
+/* Obtiene reporte diario desde MongoDB */
+export const getDailyReport = async (
+  year: number,
+  month: number
+): Promise<DailyReport | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/financial/daily?year=${year}&month=${month}`);
+    if (!response.ok) {
+      throw new Error("Error al obtener reporte diario");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error cargando reporte diario:", error);
+    return null;
+  }
+};
+
+/* Obtiene resumen de clientes desde MongoDB */
+export const getClientsSummary = async (): Promise<{
+  total: number;
+  active: number;
+  expired: number;
+  none: number;
+} | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/clients/summary`);
+    if (!response.ok) {
+      throw new Error("Error al obtener resumen de clientes");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error cargando resumen de clientes:", error);
+    return null;
+  }
+};
+
+/* Obtiene resumen de asistencia desde MongoDB */
+export const getAttendanceSummary = async (
+  days: number = 7
+): Promise<AttendanceSummary | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/attendance/summary?days=${days}`);
+    if (!response.ok) {
+      throw new Error("Error al obtener resumen de asistencia");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error cargando resumen de asistencia:", error);
+    return null;
+  }
+};
+
+export const getFinancialSummaryAsync = async (
+  startDate?: string,
+  endDate?: string
+): Promise<FinancialSummary | null> => {
+  return getFinancialSummary(startDate, endDate);
+};
+
+/* Obtiene reportes financieros (fallback localStorage) */
+export const getFinancialReports = async (): Promise<FinancialReport[]> => {
+  const apiData = await getFinancialSummary();
+  if (apiData) {
+    return [];
+  }
   return loadReports();
 };
 

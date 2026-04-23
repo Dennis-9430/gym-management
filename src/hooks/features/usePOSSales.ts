@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import type { CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod, SaleClientInfo } from "../../types/sales.types";
 import type { ClientForm } from "../../types/client.types";
-import { createSale } from "../../services/sales.service";
+import { createSaleAPI } from "../../services/sales.service";
 import { useAuth } from "../../context/index.ts";
 import { round2 } from "../../utils/format/number";
 
@@ -91,7 +91,7 @@ export const usePOSSales = (
         };
 
     if (confirm("Deseas registrar esta venta?")) {
-      createSale({
+      createSaleAPI({
         items,
         totals,
         client: saleClient,
@@ -102,11 +102,14 @@ export const usePOSSales = (
         },
         voucherCode: voucherCode.trim() || undefined,
         createdBy: user?.username,
-      });
-      clearCart();
-      setSaleClientInput("");
-      setVoucherCode("");
-      setPaymentMethod("CASH");
+      })
+        .then(() => {
+          clearCart();
+          setSaleClientInput("");
+          setVoucherCode("");
+          setPaymentMethod("CASH");
+        })
+        .catch(console.error);
     }
   }, [
     items,

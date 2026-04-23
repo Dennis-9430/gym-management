@@ -1,5 +1,5 @@
 /* Pagina de perfil de empleado con permisos */
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "../../context/index.ts";
@@ -11,12 +11,28 @@ const EmployeeProfilePage = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [employee, setEmployee] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const employee = useMemo(() => {
+  useEffect(() => {
     const parsedId = Number(id);
-    if (Number.isNaN(parsedId)) return null;
-    return getEmployeeById(parsedId);
+    if (!Number.isNaN(parsedId)) {
+      getEmployeeById(parsedId)
+        .then(setEmployee)
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, [id]);
+
+  if (loading) {
+    return (
+      <main className="client-profile-container">
+        <p>Cargando...</p>
+      </main>
+    );
+  }
 
   if (!employee) {
     return (
@@ -60,7 +76,7 @@ const EmployeeProfilePage = () => {
               <strong>Telefono:</strong> {employee.phone}
             </p>
             <p>
-              <strong>Direccion:</strong> {employee.address}
+              <strong>Direccion:</strong> {employee.address || "N/A"}
             </p>
             <p>
               <strong>Rol:</strong> {employee.role}
@@ -69,20 +85,24 @@ const EmployeeProfilePage = () => {
               <strong>Estado:</strong> {employee.status}
             </p>
             <p>
-              <strong>Observaciones:</strong> {employee.notes || "-"}
+              <strong>Notas:</strong> {employee.notes || "Sin notas"}
             </p>
             <p>
-              <strong>Registrado:</strong>{" "}
-              {new Date(employee.createdAt).toLocaleDateString()}
+              <strong>Creado:</strong> {employee.createdAt ? new Date(employee.createdAt).toLocaleDateString("es-ES") : "N/A"}
             </p>
           </div>
-
-          <EmployeePermissions 
-            role={employee.role} 
-            isAdmin={user?.role === "ADMIN"}
-            employeeId={employee.id}
-          />
         </div>
+
+        {user?.role === "ADMIN" && (
+          <div className="permissions-section">
+            <h3>Permisos del Empleado</h3>
+            <EmployeePermissions 
+              role={employee.role} 
+              isAdmin={user?.role === "ADMIN"} 
+              employeeId={employee.id} 
+            />
+          </div>
+        )}
       </div>
     </main>
   );

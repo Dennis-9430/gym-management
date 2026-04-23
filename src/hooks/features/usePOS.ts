@@ -1,5 +1,5 @@
 /* Hook principal para el sistema POS */
-import { useMemo, useCallback, useEffect, useRef } from "react";
+import { useMemo, useCallback, useEffect, useRef, useState } from "react";
 import { getProducts } from "../../services/products.service";
 import { services } from "../../types/payment.types";
 import type { CatalogItem } from "../../types/pos.types";
@@ -7,14 +7,14 @@ import { PRODUCT_CATEGORY_LABELS } from "../../types/product.types";
 import type { PaymentMethod } from "../../types/sales.types";
 import type { Service } from "../../types/payment.types";
 import type { ClientForm } from "../../types/client.types";
+import type { Product } from "../../types/product.types";
 import { useCart } from "../../hooks/useCart";
 import { usePOSClients } from "./usePOSClients";
 import { usePOSSales } from "./usePOSSales";
 import { usePOSSubscription } from "./usePOSSubscription";
 import { matchesQuery } from "../../utils/string/normalize";
 
-const buildCatalog = (): CatalogItem[] => {
-  const products = getProducts();
+const buildCatalog = (products: Product[]): CatalogItem[] => {
   const productItems: CatalogItem[] = products
     .filter((product) => product.category !== "SERVICIOS_GYM")
     .map((product) => ({
@@ -144,6 +144,12 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
   const clients = usePOSClients(initialSubscriptionClient, sales.saleClientInput);
   const subscription = usePOSSubscription(clients.clients, clients.reloadClients, initialSubscriptionClient);
   const hasOpenedModal = useRef(false);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  // Carga productos desde API
+  useEffect(() => {
+    getProducts().then(setProducts).catch(console.error);
+  }, []);
 
   useEffect(() => {
     if (initialSubscriptionClient && !hasOpenedModal.current) {
@@ -151,8 +157,8 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
       subscription.setSubscriptionModalOpen(true);
     }
   }, [initialSubscriptionClient, subscription]);
-  
-  const catalog = useMemo(() => buildCatalog(), []);
+
+  const catalog = useMemo(() => buildCatalog(products), [products]);
 
   const filteredCatalog = useMemo(() => {
     if (!clients.search.trim()) {

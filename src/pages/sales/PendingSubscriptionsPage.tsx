@@ -1,16 +1,23 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import type { ClientForm } from "../../types/client.types";
-import { getClients, updateClient } from "../../services/clients.service";
+import { getClients, updateClientAPI } from "../../services/clients.service";
 import PendingSubscriptionsList from "../../components/sales/PendingSubscriptions";
 import "../../styles/pos.css";
 
 /* Pagina de suscripciones pendientes por registrar */
 const PendingSubscriptionsPage = () => {
   const navigate = useNavigate();
-  const [clients, setClients] = useState<ClientForm[]>(() => getClients());
+  const [clients, setClients] = useState<ClientForm[]>([]);
 
-  const reloadClients = useCallback(() => setClients(getClients()), []);
+  const reloadClients = useCallback(async () => {
+    const data = await getClients();
+    setClients(data);
+  }, []);
+
+  useEffect(() => {
+    reloadClients();
+  }, [reloadClients]);
 
   const pendingClients = clients.filter(
     (client) => client.memberShipStatus === "NONE"
@@ -20,11 +27,11 @@ const PendingSubscriptionsPage = () => {
     navigate("/sales", { state: { openSubscriptionModal: true, client } });
   };
 
-  const handleDeletePending = (client: ClientForm) => {
+  const handleDeletePending = async (client: ClientForm) => {
     if (!confirm("Deseas eliminar esta suscripcion pendiente?")) {
       return;
     }
-    updateClient(client.id, {
+    await updateClientAPI(client.id, {
       ...client,
       memberShipStatus: "EXPIRED",
     });

@@ -1,6 +1,7 @@
 /* Servicio para gestionar ventas y transacciones */
 import type { SaleInput, SaleRecord } from "../types/sales.types";
 
+const API_BASE = "/api/sales";
 const STORAGE_KEY = "gym-management.sales";
 
 const getDaysAgo = (days: number) => {
@@ -317,40 +318,69 @@ const loadSales = (): SaleRecord[] => {
   }
 };
 
-const saveSales = (sales: SaleRecord[]) => {
+/* Guarda ventas en localStorage (utilidad) */
+export const saveSalesLocally = (sales: SaleRecord[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
 };
 
-export const getSales = (): SaleRecord[] => {
-  return loadSales();
-};
-
-export const createSale = (input: SaleInput): SaleRecord => {
-  const sales = loadSales();
-  const nextId = sales.length ? Math.max(...sales.map((sale) => sale.id)) + 1 : 1;
-
-  const record: SaleRecord = {
-    id: nextId,
-    createdAt: new Date().toISOString(),
-    ...input,
-  };
-
-  saveSales([...sales, record]);
-  return record;
-};
-
-export const updateSale = (id: number, update: Partial<SaleRecord>): SaleRecord => {
-  const sales = loadSales();
-  const index = sales.findIndex((sale) => sale.id === id);
-
-  if (index === -1) {
-    throw new Error("Venta no encontrada");
+/* Obtiene ventas desde MongoDB */
+export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
+  try {
+    const response = await fetch(`${API_BASE}?limit=100`);
+    if (!response.ok) {
+      throw new Error("Error al obtener ventas");
+    }
+    const data = await response.json();
+    return data.sales || [];
+  } catch (error) {
+    console.error("Error cargando ventas desde API:", error);
+    throw error;
   }
+};
 
-  const updated = { ...sales[index], ...update };
-  sales[index] = updated;
-  saveSales(sales);
-  return updated;
+/* Obtiene ventas (intenta API, fallback localStorage) */
+export const getSales = async (): Promise<SaleRecord[]> => {
+  try {
+    return await getSalesFromAPI();
+  } catch {
+    return loadSales();
+  }
+};
+
+/* Crea venta en MongoDB */
+export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null> => {
+  try {
+    const response = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    if (!response.ok) {
+      throw new Error("Error al crear venta");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error creando venta:", error);
+    return null;
+  }
+};
+
+/* Actualiza venta en MongoDB */
+export const updateSaleAPI = async (id: number, update: Partial<SaleRecord>): Promise<SaleRecord | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(update),
+    });
+    if (!response.ok) {
+      throw new Error("Error al actualizar venta");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error actualizando venta:", error);
+    return null;
+  }
 };
 
 export const clearSalesData = () => {
