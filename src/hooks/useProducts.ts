@@ -4,21 +4,34 @@ import { PRODUCT_CATEGORY_LABELS } from "../types/product.types";
 import {
   getProducts,
   createProduct,
+  createProductAPI,
   updateProduct,
+  updateProductAPI,
   deleteProduct,
+  deleteProductAPI,
 } from "../services/products.service";
 
 type CategoryFilter = ProductCategory | "ALL";
 
-/* Hook que maneja el estado CRUD de productos */
+/* Hook que maneja el estado CRUD de productos con MongoDB */
 export const useProducts = () => {
-  const [products, setProducts] = useState<Product[]>(() => getProducts());
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("ALL");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(() => {
-    setProducts(getProducts());
+  // Carga productos desde API
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getProducts();
+      setProducts(data);
+    } catch (err) {
+      console.error("Error cargando productos:", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -37,12 +50,19 @@ export const useProducts = () => {
     });
   }, [products, search, categoryFilter]);
 
-  const addProduct = (input: ProductInput) => {
+  const addProduct = async (input: ProductInput) => {
     setError(null);
     try {
-      const created = createProduct(input);
-      setProducts((prev) => [...prev, created].sort((a, b) => a.id - b.id));
-      return created;
+      // Intentar API primero
+      const created = await createProductAPI(input);
+      if (created) {
+        setProducts((prev) => [...prev, created].sort((a, b) => a.id - b.id));
+        return created;
+      }
+      // Fallback local
+      const createdLocal = createProduct(input);
+      setProducts((prev) => [...prev, createdLocal].sort((a, b) => a.id - b.id));
+      return createdLocal;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
       setError(message);
@@ -50,14 +70,23 @@ export const useProducts = () => {
     }
   };
 
-  const updateProductById = (id: number, update: ProductUpdate) => {
+  const updateProductById = async (id: number, update: ProductUpdate) => {
     setError(null);
     try {
-      const updated = updateProduct(id, update);
+      // Intentar API primero
+      const updated = await updateProductAPI(id, update);
+      if (updated) {
+        setProducts((prev) =>
+          prev.map((product) => (product.id === id ? updated : product)),
+        );
+        return updated;
+      }
+      // Fallback local
+      const updatedLocal = updateProduct(id, update);
       setProducts((prev) =>
-        prev.map((product) => (product.id === id ? updated : product)),
+        prev.map((product) => (product.id === id ? updatedLocal : product)),
       );
-      return updated;
+      return updatedLocal;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
       setError(message);
@@ -65,9 +94,23 @@ export const useProducts = () => {
     }
   };
 
-  const removeProduct = (id: number) => {
-    deleteProduct(id);
-    setProducts((prev) => prev.filter((product) => product.id !== id));
+  const removeProduct = async (id: number) => {
+    setError(null);
+    try {
+      // Intentar API primero
+      const deleted = await deleteProductAPI(id);
+      if (deleted) {
+        setProducts((prev) => prev.filter((product) => product.id !== id));
+        return;
+      }
+      // Fallback local
+      deleteProduct(id);
+      setProducts((prev) => prev.filter((product) => product.id !== id));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Error inesperado";
+      setError(message);
+      throw err;
+    }
   };
 
   return {
@@ -78,6 +121,7 @@ export const useProducts = () => {
     categoryFilter,
     setCategoryFilter,
     error,
+    loading,
     refresh,
     addProduct,
     updateProductById,

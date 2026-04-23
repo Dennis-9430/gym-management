@@ -1,20 +1,33 @@
-/* Hook para gestionar empleados */
+/* Hook para gestionar empleados con MongoDB */
 import { useMemo, useState, useCallback } from "react";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
 import {
   getEmployees,
   createEmployee,
+  createEmployeeAPI,
   updateEmployee,
+  updateEmployeeAPI,
   deleteEmployee,
+  deleteEmployeeAPI,
 } from "../services/employees.service";
 
 export const useEmployees = () => {
-  const [employees, setEmployees] = useState<Employee[]>(() => getEmployees());
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [search, setSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(() => {
-    setEmployees(getEmployees());
+  // Carga empleados desde API
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getEmployees();
+      setEmployees(data);
+    } catch (err) {
+      console.error("Error cargando empleados:", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const filteredEmployees = useMemo(() => {
@@ -27,12 +40,19 @@ export const useEmployees = () => {
     );
   }, [employees, search]);
 
-  const addEmployee = (input: EmployeeInput) => {
+  const addEmployee = async (input: EmployeeInput) => {
     setError(null);
     try {
-      const created = createEmployee(input);
-      setEmployees((prev) => [...prev, created].sort((a, b) => a.id - b.id));
-      return created;
+      // Intentar API primero
+      const created = await createEmployeeAPI(input);
+      if (created) {
+        setEmployees((prev) => [...prev, created].sort((a, b) => a.id - b.id));
+        return created;
+      }
+      // Fallback local
+      const createdLocal = createEmployee(input);
+      setEmployees((prev) => [...prev, createdLocal].sort((a, b) => a.id - b.id));
+      return createdLocal;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
       setError(message);
@@ -40,14 +60,23 @@ export const useEmployees = () => {
     }
   };
 
-  const updateEmployeeById = (id: number, update: EmployeeUpdate) => {
+  const updateEmployeeById = async (id: number, update: EmployeeUpdate) => {
     setError(null);
     try {
-      const updated = updateEmployee(id, update);
+      // Intentar API primero
+      const updated = await updateEmployeeAPI(id, update);
+      if (updated) {
+        setEmployees((prev) =>
+          prev.map((emp) => (emp.id === id ? updated : emp)),
+        );
+        return updated;
+      }
+      // Fallback local
+      const updatedLocal = updateEmployee(id, update);
       setEmployees((prev) =>
-        prev.map((emp) => (emp.id === id ? updated : emp)),
+        prev.map((emp) => (emp.id === id ? updatedLocal : emp)),
       );
-      return updated;
+      return updatedLocal;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
       setError(message);
@@ -55,9 +84,23 @@ export const useEmployees = () => {
     }
   };
 
-  const removeEmployee = (id: number) => {
-    deleteEmployee(id);
-    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+  const removeEmployee = async (id: number) => {
+    setError(null);
+    try {
+      // Intentar API primero
+      const deleted = await deleteEmployeeAPI(id);
+      if (deleted) {
+        setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+        return;
+      }
+      // Fallback local
+      deleteEmployee(id);
+      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Error inesperado";
+      setError(message);
+      throw err;
+    }
   };
 
   const getById = (id: number) => employees.find((emp) => emp.id === id) ?? null;
@@ -68,6 +111,7 @@ export const useEmployees = () => {
     search,
     setSearch,
     error,
+    loading,
     refresh,
     addEmployee,
     updateEmployeeById,

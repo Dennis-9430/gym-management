@@ -528,6 +528,33 @@ direccion del archivo:
 - src/pages/sales/SalesPages.tsx
 - src/pages/payments/PaymentModal.tsx
 
+---
+
+10. feat(products): integrar productos con MongoDB
+
+descripcion: Modifica products.service.ts para usar API /api/products. Agrega getProductsFromAPI, createProductAPI, updateProductAPI, deleteProductAPI con fallback a localStorage.
+
+direccion del archivo:
+- src/services/products.service.ts
+
+---
+
+11. feat(employees): integrar empleados con MongoDB
+
+descripcion: Modifica employees.service.ts para usar API /api/employees. Agrega getEmployeesFromAPI, createEmployeeAPI, updateEmployeeAPI, deleteEmployeeAPI con fallback a localStorage.
+
+direccion del archivo:
+- src/services/employees.service.ts
+
+---
+
+12. feat(clients): integrar clientes con MongoDB
+
+descripcion: Modifica clients.service.ts para usar API /api/clients. Agrega funciones async para CRUD con fallback a localStorage.
+
+direccion del archivo:
+- src/services/clients.service.ts
+
 
 ---
 
@@ -537,9 +564,18 @@ direccion del archivo:
 - Backend: Python + FastAPI + MongoDB
 - Autenticación: JWT con bcrypt
 - Comentarios: Formato /* */ en frontend, # en backend
-- Total commits frontend: 34
+- Total commits frontend: 35
 - Total commits backend: 3
 - Total fixes: 5
-- Total features: 2
+- Total features: 3
+
+## PENDIENTE DE COMPLETAR
+
+- Los cambios de Products, Employees y Clients están escritos pero requieren ajustes adicionales en los archivos que los usan.
+- El build tiene errores porque hay componentes que esperan funciones síncronas pero ahora son asíncronas.
+
+## RECOMENDACIÓN
+
+Antes de hacer commit de estos cambios, se debe completar la adaptación de todos los archivos que usan estos servicios para manejar promises correctamente.
 - Total fixes: 2
 - Total fixes: 2

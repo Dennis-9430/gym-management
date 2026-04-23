@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-commits.txt
 desarrolloBackend.txt
 *.md
 backend/
+commits.txt
