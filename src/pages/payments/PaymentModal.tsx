@@ -72,14 +72,16 @@ const PaymentModal = ({ onClose }: Props) => {
 
               {showServices && (
                 <ul className="select-dropdown">
-                  {services.map((service) => (
-                    <li
-                      key={service.id}
-                      onClick={() => handleSelectService(service)}
-                    >
-                      {service.name} - ${service.price}
-                    </li>
-                  ))}
+                  {services
+                    .filter((service) => service.price <= 7)
+                    .map((service) => (
+                      <li
+                        key={service.id}
+                        onClick={() => handleSelectService(service)}
+                      >
+                        {service.name} - ${service.price}
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
