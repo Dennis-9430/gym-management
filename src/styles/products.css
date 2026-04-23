@@ -294,15 +294,18 @@
 
 .input-with-icon svg {
   position: absolute;
-  left: 12px;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--color-text-light);
+  pointer-events: none;
 }
 
 .input-with-icon input,
 .input-with-icon textarea,
 .input-with-icon select {
   width: 100%;
-  padding-left: 36px;
+  padding-left: 38px;
   font-size: var(--font-size-sm);
 }
 
@@ -318,7 +321,7 @@
 
 .textarea-field svg {
   top: 14px;
-  transform: none;
+  transform: translateY(-50%);
 }
 
 @keyframes modalIn {
