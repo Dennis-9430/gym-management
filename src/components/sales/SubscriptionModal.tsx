@@ -8,7 +8,7 @@ import {
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
 import type { PaymentMethod } from "../../types/sales.types";
-import { services } from "../../types/payment.types";
+import { services as defaultServices } from "../../types/payment.types";
 import { parseDecimal } from "../../utils/format/number";
 
 /* Modal para registrar suscripciones de membresia */
@@ -28,6 +28,7 @@ interface SubscriptionModalProps {
   showServices: boolean;
   onToggleServices: () => void;
   onSelectService: (service: Service) => void;
+  services?: Service[]; // Servicios dinámicos desde SalesPages
 
   // Date
   startDate: string;
@@ -68,6 +69,7 @@ const SubscriptionModal = ({
   showServices,
   onToggleServices,
   onSelectService,
+  services,
   startDate,
   onStartDateChange,
   paymentMethod,
@@ -87,6 +89,8 @@ const SubscriptionModal = ({
   onRegister,
   onPending,
 }: SubscriptionModalProps) => {
+  const servicesList = services || defaultServices;
+  
   if (!isOpen) return null;
 
   return (
@@ -198,7 +202,7 @@ const SubscriptionModal = ({
                   </button>
                   {showServices && (
                     <ul className="pos-select-dropdown">
-                      {services
+                      {servicesList
                         .filter((service) => service.price <= 7)
                         .map((service) => (
                           <li

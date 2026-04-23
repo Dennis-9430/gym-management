@@ -178,6 +178,7 @@ const SalesPages = () => {
           setSubscriptionShowServices(!subscriptionShowServices)
         }
         onSelectService={handleSelectService}
+        services={membershipServices}
         startDate={subscriptionStartDate}
         onStartDateChange={setSubscriptionStartDate}
         paymentMethod={subscriptionPaymentMethod}
