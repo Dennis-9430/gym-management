@@ -511,10 +511,22 @@ direccion del archivo:
 
 8. feat(sales): filtrar servicios menores o iguales a $7 en registro diario
 
-descripcion: Filtra los servicios en el dropdown del modal de suscripcion para mostrar solo los que cuestan $7 o menos (servicios diarios). Se muestra dinamicamente segun la configuracion en MembershipModal.
+descripcion: Filtra los servicios en el dropdown del modal de suscripcion para mostrar solo los que cuestan $7 o menos (servicios diarios). Soporta servicios dinamicos desde MembershipModal o usa servicios por defecto.
 
 direccion del archivo:
 - src/components/sales/SubscriptionModal.tsx
+- src/pages/sales/SalesPages.tsx
+
+---
+
+9. feat(services): integrar servicios con MongoDB
+
+descripcion: Crea services.service.ts para obtener servicios desde la API de MongoDB (/api/services). Modifica SalesPages y PaymentModal para cargar servicios dinamicamente desde la base de datos, con fallback a lista por defecto en caso de error.
+
+direccion del archivo:
+- src/services/services.service.ts (nuevo)
+- src/pages/sales/SalesPages.tsx
+- src/pages/payments/PaymentModal.tsx
 
 
 ---
@@ -525,9 +537,9 @@ direccion del archivo:
 - Backend: Python + FastAPI + MongoDB
 - Autenticación: JWT con bcrypt
 - Comentarios: Formato /* */ en frontend, # en backend
-- Total commits frontend: 33
+- Total commits frontend: 34
 - Total commits backend: 3
 - Total fixes: 5
-- Total features: 1
+- Total features: 2
 - Total fixes: 2
 - Total fixes: 2

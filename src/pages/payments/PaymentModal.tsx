@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { PaymentMethod, Service } from "../../types/payment.types";
-import { services } from "../../types/payment.types";
+import { services as defaultServices } from "../../types/payment.types";
+import { getServices } from "../../services/services.service";
 import "../../styles/paymentModal.css";
 
 /* Modal para registrar pagos de servicios */
@@ -10,11 +11,23 @@ interface Props {
 
 const PaymentModal = ({ onClose }: Props) => {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
-    null,
-  );
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [showServices, setShowServices] = useState(false);
   const [showMethods, setShowMethods] = useState(false);
+  const [servicesList, setServicesList] = useState<Service[]>(defaultServices);
+
+  // Carga servicios desde MongoDB al abrir el modal
+  useEffect(() => {
+    getServices()
+      .then((data) => {
+        if (data.length > 0) {
+          setServicesList(data);
+        }
+      })
+      .catch(() => {
+        // Mantiene defaultServices en caso de error
+      });
+  }, []);
 
   /* handles */
 
@@ -72,7 +85,7 @@ const PaymentModal = ({ onClose }: Props) => {
 
               {showServices && (
                 <ul className="select-dropdown">
-                  {services
+                  {servicesList
                     .filter((service) => service.price <= 7)
                     .map((service) => (
                       <li

@@ -1,5 +1,5 @@
 /* Pagina principal de ventas POS */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context/index.ts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePOS } from "../../hooks/features/usePOS";
@@ -9,7 +9,8 @@ import SubscriptionModal from "../../components/sales/SubscriptionModal";
 import MembershipModal from "../../components/sales/MembershipModal";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
-import { services } from "../../types/payment.types";
+import { services as defaultServices } from "../../types/payment.types";
+import { getServices } from "../../services/services.service";
 import "../../styles/pos.css";
 
 const SalesPages = () => {
@@ -24,7 +25,22 @@ const SalesPages = () => {
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
   const [membershipModalOpen, setMembershipModalOpen] = useState(false);
-  const [membershipServices, setMembershipServices] = useState<Service[]>(services);
+  const [membershipServices, setMembershipServices] = useState<Service[]>([]);
+  const [servicesLoaded, setServicesLoaded] = useState(false);
+
+  // Carga servicios desde MongoDB al cargar la pagina
+  useEffect(() => {
+    if (!servicesLoaded) {
+      getServices()
+        .then((data) => {
+          setMembershipServices(data.length > 0 ? data : defaultServices);
+        })
+        .catch(() => {
+          setMembershipServices(defaultServices);
+        })
+        .finally(() => setServicesLoaded(true));
+    }
+  }, [servicesLoaded]);
 
   const handleSaveMembership = (service: Service) => {
     setMembershipServices((prev) => {
