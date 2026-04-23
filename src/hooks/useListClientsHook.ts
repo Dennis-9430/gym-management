@@ -4,7 +4,7 @@ import {
   initialState,
 } from "./reducers/listClients.reducer";
 import type { ClientForm } from "../types/client.types";
-import { getClients, updateClientAPI } from "../services/clients.service";
+import { getClients } from "../services/clients.service";
 
 /* Hook que maneja el estado de la lista de clientes con MongoDB */
 export const useClients = () => {

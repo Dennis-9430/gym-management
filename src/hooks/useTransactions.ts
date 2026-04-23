@@ -1,7 +1,7 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import type { SaleRecord, SaleInput, PaymentMethod } from "../types/sales.types";
 import type { CartItem } from "../types/pos.types";
-import { getSales, updateSale, createSale } from "../services/sales.service";
+import { getSales, updateSaleAPI, createSaleAPI } from "../services/sales.service";
 
 /* Resumen de transacciones por método de pago */
 export interface TransactionSummary {
@@ -48,11 +48,29 @@ const isServiceItem = (item: CartItem): boolean => {
 };
 
 export const useTransactions = () => {
-  const [transactions, setTransactions] = useState<SaleRecord[]>(() => getSales());
+  const [transactions, setTransactions] = useState<SaleRecord[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const reload = useCallback(() => {
-    setTransactions(getSales());
+  const loadTransactions = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getSales();
+      setTransactions(data);
+    } catch (error) {
+      console.error("Error cargando transacciones:", error);
+      setTransactions([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadTransactions();
+  }, [loadTransactions]);
+
+  const reload = useCallback(async () => {
+    await loadTransactions();
+  }, [loadTransactions]);
 
   const getTodayTransactions = useMemo(() => {
     const today = new Date().toISOString().split("T")[0];
@@ -208,15 +226,19 @@ export const useTransactions = () => {
     return Object.values(months);
   }, []);
 
-  const updateTransaction = useCallback((id: number, update: Partial<SaleRecord>) => {
-    updateSale(id, update as SaleRecord);
-    reload();
-  }, [reload]);
+  const updateTransaction = useCallback(async (id: number, update: Partial<SaleRecord>) => {
+    const result = await updateSaleAPI(id, update as SaleRecord);
+    if (result) {
+      await loadTransactions();
+    }
+  }, [loadTransactions]);
 
-  const addTransaction = useCallback((input: SaleInput) => {
-    createSale(input);
-    reload();
-  }, [reload]);
+  const addTransaction = useCallback(async (input: SaleInput) => {
+    const result = await createSaleAPI(input);
+    if (result) {
+      await loadTransactions();
+    }
+  }, [loadTransactions]);
 
   const todaySummary = useMemo(() => calculateSummary(getTodayTransactions), [calculateSummary, getTodayTransactions]);
 
@@ -240,6 +262,7 @@ export const useTransactions = () => {
 
   return {
     transactions,
+    loading,
     getTodayTransactions,
     getTransactionsByDate,
     calculateSummary,
