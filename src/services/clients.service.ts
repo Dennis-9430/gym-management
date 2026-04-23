@@ -384,23 +384,7 @@ const sortByStatus = (a: ClientForm, b: ClientForm): number => {
   return order[a.memberShipStatus] - order[b.memberShipStatus];
 };
 
-export const getClients = (): ClientForm[] => {
-  return loadClients().sort(sortByStatus);
-};
-
-export const findClientByDocument = (documentNumber: string): ClientForm | null => {
-  const normalized = normalizeDocument(documentNumber);
-  if (!normalized) {
-    return null;
-  }
-  return (
-    loadClients().find(
-      (client) => normalizeDocument(client.documentNumber) === normalized,
-    ) ?? null
-  );
-};
-
-export const createClient = (input: ClientForm): ClientForm => {
+export const createClient = (input: Omit<ClientForm, "id" | "createdAt">): ClientForm => {
   const clients = loadClients();
   const nextId = clients.length
     ? Math.max(...clients.map((client) => client.id)) + 1
