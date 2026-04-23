@@ -1,6 +1,100 @@
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
 
+const API_BASE = "/api/employees";
 const STORAGE_KEY = "gym-management.employees";
+
+/* Obtiene empleados desde MongoDB */
+export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
+  try {
+    const response = await fetch(`${API_BASE}?status=ACTIVE`);
+    if (!response.ok) {
+      throw new Error("Error al obtener empleados");
+    }
+    const data = await response.json();
+    return data.employees || [];
+  } catch (error) {
+    console.error("Error cargando empleados desde API:", error);
+    throw error;
+  }
+};
+
+/* Obtiene empleados (intenta API, fallback localStorage) */
+export const getEmployees = async (): Promise<Employee[]> => {
+  try {
+    return await getEmployeesFromAPI();
+  } catch {
+    const employees = loadEmployees();
+    return [...employees].sort((a, b) => a.id - b.id);
+  }
+};
+
+/* Obtiene empleado por ID */
+export const getEmployeeById = async (id: number): Promise<Employee | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/${id}`);
+    if (!response.ok) {
+      throw new Error("Empleado no encontrado");
+    }
+    return await response.json();
+  } catch {
+    const employees = loadEmployees();
+    return employees.find((e) => e.id === id) ?? null;
+  }
+};
+
+/* Crea empleado */
+export const createEmployeeAPI = async (
+  input: EmployeeInput
+): Promise<Employee | null> => {
+  try {
+    const response = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    if (!response.ok) {
+      throw new Error("Error al crear empleado");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error creando empleado:", error);
+    return null;
+  }
+};
+
+/* Actualiza empleado */
+export const updateEmployeeAPI = async (
+  id: number,
+  update: EmployeeUpdate
+): Promise<Employee | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(update),
+    });
+    if (!response.ok) {
+      throw new Error("Error al actualizar empleado");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error actualizando empleado:", error);
+    return null;
+  }
+};
+
+/* Elimina empleado */
+export const deleteEmployeeAPI = async (id: number): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE}/${id}`, {
+      method: "DELETE",
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("Error eliminando empleado:", error);
+    return false;
+  }
+};
 
 /* Empleados de ejemplo para desarrollo */
 const seedEmployees: Employee[] = [
@@ -85,16 +179,6 @@ const loadEmployees = (): Employee[] => {
 
 const saveEmployees = (employees: Employee[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
-};
-
-export const getEmployees = (): Employee[] => {
-  const employees = loadEmployees();
-  return [...employees].sort((a, b) => a.id - b.id);
-};
-
-export const getEmployeeById = (id: number): Employee | null => {
-  const employees = loadEmployees();
-  return employees.find((e) => e.id === id) ?? null;
 };
 
 export const createEmployee = (input: EmployeeInput): Employee => {

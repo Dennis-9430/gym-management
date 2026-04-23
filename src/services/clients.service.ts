@@ -1,6 +1,112 @@
 import type { ClientForm } from "../types/client.types";
 
+const API_BASE = "/api/clients";
 const STORAGE_KEY = "gym-management.clients";
+
+/* Obtiene clientes desde MongoDB */
+export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
+  try {
+    const response = await fetch(`${API_BASE}?active_only=false`);
+    if (!response.ok) {
+      throw new Error("Error al obtener clientes");
+    }
+    const data = await response.json();
+    return data.clients || [];
+  } catch (error) {
+    console.error("Error cargando clientes desde API:", error);
+    throw error;
+  }
+};
+
+/* Obtiene clientes (intenta API, fallback localStorage) */
+export const getClients = async (): Promise<ClientForm[]> => {
+  try {
+    return await getClientsFromAPI();
+  } catch {
+    return loadClients().sort(sortByStatus);
+  }
+};
+
+/*Funciones locales (fallback) */
+export const findClientByDocument = (documentNumber: string): ClientForm | null => {
+  const normalized = normalizeDocument(documentNumber);
+  if (!normalized) {
+    return null;
+  }
+  return (
+    loadClients().find(
+      (client) => normalizeDocument(client.documentNumber) === normalized,
+    ) ?? null
+  );
+};
+
+/* Obtiene cliente por ID */
+export const getClientById = async (id: number): Promise<ClientForm | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/${id}`);
+    if (!response.ok) {
+      throw new Error("Cliente no encontrado");
+    }
+    return await response.json();
+  } catch {
+    const clients = loadClients();
+    return clients.find((c) => c.id === id) ?? null;
+  }
+};
+
+/* Crea cliente */
+export const createClientAPI = async (
+  client: Omit<ClientForm, "id" | "createdAt">
+): Promise<ClientForm | null> => {
+  try {
+    const response = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(client),
+    });
+    if (!response.ok) {
+      throw new Error("Error al crear cliente");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error creando cliente:", error);
+    return null;
+  }
+};
+
+/* Actualiza cliente */
+export const updateClientAPI = async (
+  id: number,
+  client: Partial<ClientForm>
+): Promise<ClientForm | null> => {
+  try {
+    const response = await fetch(`${API_BASE}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(client),
+    });
+    if (!response.ok) {
+      throw new Error("Error al actualizar cliente");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error actualizando cliente:", error);
+    return null;
+  }
+};
+
+/* Elimina cliente */
+export const deleteClientAPI = async (id: number): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE}/${id}`, {
+      method: "DELETE",
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("Error eliminando cliente:", error);
+    return false;
+  }
+};
 
 /* Tipo que representa un cliente almacenado */
 type StoredClient = Omit<
