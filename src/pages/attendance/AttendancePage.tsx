@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { Search, Filter, Users, UserCog } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Filter } from "lucide-react";
 import { getClients } from "../../services/clients.service";
-import { getEmployees } from "../../services/employees.service";
+import { getAttendanceByDate, type AttendanceRecord as ApiAttendanceRecord } from "../../services/attendance.service";
 import "../../styles/attendance.css";
 
-type PersonType = "clients" | "employees";
+type PersonType = "clients";
 type DateFilter = "today" | "week" | "month";
 
-interface AttendanceRecord {
-  id: number;
+interface DisplayRecord {
+  id: string;
   type: PersonType;
   documentNumber: string;
   fullName: string;
@@ -17,79 +17,72 @@ interface AttendanceRecord {
   checkOut: string | null;
 }
 
+const formatDateForApi = (date: Date): string => {
+  return date.toISOString().split("T")[0];
+};
+
+const formatTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+};
+
 const AttendancePage = () => {
-  const [activeTab, setActiveTab] = useState<PersonType>("clients");
   const [dateFilter, setDateFilter] = useState<DateFilter>("today");
   const [searchQuery, setSearchQuery] = useState("");
+  const [clients, setClients] = useState<any[]>([]);
+  const [attendanceRecords, setAttendanceRecords] = useState<DisplayRecord[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const clients = getClients();
-  const employees = getEmployees().filter((e) => e.status === "ACTIVO");
+  useEffect(() => {
+    getClients().then(setClients).catch(console.error);
+  }, []);
 
-  const getDateRange = () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  useEffect(() => {
+    const loadAttendance = async () => {
+      setLoading(true);
+      const now = new Date();
+      let targetDate = formatDateForApi(now);
 
-    switch (dateFilter) {
-      case "today":
-        return { start: today, end: new Date(today.getTime() + 24 * 60 * 60 * 1000) };
-      case "week":
-        const weekStart = new Date(today);
-        weekStart.setDate(today.getDate() - today.getDay());
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekStart.getDate() + 7);
-        return { start: weekStart, end: weekEnd };
-      case "month":
-        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-        const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-        return { start: monthStart, end: monthEnd };
-      default:
-        return { start: today, end: new Date(today.getTime() + 24 * 60 * 60 * 1000) };
-    }
-  };
+      if (dateFilter === "week") {
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay());
+        targetDate = formatDateForApi(weekStart);
+      } else if (dateFilter === "month") {
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        targetDate = formatDateForApi(monthStart);
+      }
 
-  const generateMockAttendance = (): AttendanceRecord[] => {
-    const records: AttendanceRecord[] = [];
-    const { start, end } = getDateRange();
-
-    if (activeTab === "clients") {
-      clients.slice(0, 8).forEach((client, index) => {
-        const randomTime = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-        const hasCheckout = Math.random() > 0.4;
-
-        records.push({
-          id: index + 1,
-          type: "clients",
-          documentNumber: client.documentNumber,
-          fullName: `${client.firstName} ${client.lastName}`,
-          membershipExpiry: client.memberShipEndDate
-            ? new Date(client.memberShipEndDate).toLocaleDateString("es-ES")
-            : null,
-          checkIn: randomTime.toLocaleString("es-ES"),
-          checkOut: hasCheckout
-            ? new Date(randomTime.getTime() + 60 * 60 * 1000).toLocaleString("es-ES")
-            : null,
+      try {
+        const records = await getAttendanceByDate(targetDate);
+        const mappedRecords = records.map((record: ApiAttendanceRecord) => {
+          const client = clients.find(c => 
+            c.firstName + " " + c.lastName === record.clientName
+          );
+          return {
+            id: record._id,
+            type: "clients" as PersonType,
+            documentNumber: client?.documentNumber || "",
+            fullName: record.clientName,
+            membershipExpiry: client?.memberShipEndDate
+              ? new Date(client.memberShipEndDate).toLocaleDateString("es-ES")
+              : null,
+            checkIn: formatTime(record.checkIn),
+            checkOut: record.checkOut ? formatTime(record.checkOut) : null,
+          };
         });
-      });
-    } else {
-      employees.slice(0, 5).forEach((employee, index) => {
-        const randomTime = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        setAttendanceRecords(mappedRecords);
+      } catch (error) {
+        console.error("Error cargando asistencia:", error);
+        setAttendanceRecords([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        records.push({
-          id: index + 1,
-          type: "employees",
-          documentNumber: employee.documentNumber,
-          fullName: `${employee.firstName} ${employee.lastName}`,
-          membershipExpiry: null,
-          checkIn: randomTime.toLocaleString("es-ES"),
-          checkOut: new Date(randomTime.getTime() + 8 * 60 * 60 * 1000).toLocaleString("es-ES"),
-        });
-      });
+    if (clients.length > 0) {
+      loadAttendance();
     }
-
-    return records;
-  };
-
-  const attendanceRecords = generateMockAttendance();
+  }, [dateFilter, clients]);
 
   const filteredRecords = attendanceRecords.filter((record) => {
     if (!searchQuery.trim()) return true;
@@ -154,37 +147,26 @@ const AttendancePage = () => {
         </div>
       </div>
 
-      <div className="attendance-tabs">
-        <button
-          className={`attendance-tab ${activeTab === "clients" ? "attendance-tab--active" : ""}`}
-          onClick={() => setActiveTab("clients")}
-        >
-          <Users size={18} />
-          Clientes
-        </button>
-        <button
-          className={`attendance-tab ${activeTab === "employees" ? "attendance-tab--active" : ""}`}
-          onClick={() => setActiveTab("employees")}
-        >
-          <UserCog size={18} />
-          Empleados
-        </button>
-      </div>
-
       <div className="attendance-table-wrapper">
         <table className="attendance-table">
           <thead>
             <tr>
               <th>Cédula</th>
               <th>Nombre Completo</th>
-              {activeTab === "clients" && <th>Expira Membresía</th>}
+              <th>Expira Membresía</th>
               <th className="attendance-th--hide-mobile">Hora Entrada</th>
             </tr>
           </thead>
           <tbody>
-            {filteredRecords.length === 0 ? (
+            {loading ? (
               <tr>
-                <td colSpan={activeTab === "clients" ? 4 : 3} className="attendance-empty">
+                <td colSpan={4} className="attendance-empty">
+                  Cargando...
+                </td>
+              </tr>
+            ) : filteredRecords.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="attendance-empty">
                   No hay registros de asistencia
                 </td>
               </tr>
@@ -193,11 +175,9 @@ const AttendancePage = () => {
                 <tr key={record.id}>
                   <td className="attendance-document">{record.documentNumber}</td>
                   <td className="attendance-name">{record.fullName}</td>
-                  {activeTab === "clients" && (
-                    <td className="attendance-expiry">
-                      {record.membershipExpiry || "-"}
-                    </td>
-                  )}
+                  <td className="attendance-expiry">
+                    {record.membershipExpiry || "-"}
+                  </td>
                   <td className="attendance-time attendance-td--hide-mobile">{record.checkIn}</td>
                 </tr>
               ))

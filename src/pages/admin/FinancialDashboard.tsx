@@ -5,8 +5,7 @@ import FinancialBarChart from "../../components/financial/FinancialBarChart";
 import FinancialSummaryTable from "../../components/financial/FinancialSummaryTable";
 import { ArrowLeft, TrendingUp } from "lucide-react";
 import {
-  saveFinancialReport,
-  getFinancialReports,
+  getFinancialSummary,
 } from "../../services/financialReports.service";
 import Modal from "../../components/common/Modal";
 import "../../styles/financial.css";
@@ -110,29 +109,8 @@ const FinancialDashboard = () => {
   }, [summaryByEmployee]);
 
   useEffect(() => {
-    const existingReport = getFinancialReports().find(
-      (r) => r.date === selectedDate,
-    );
-    if (!existingReport && transfersWithVouchers.length > 0) {
-      saveFinancialReport({
-        date: selectedDate,
-        totalIncome: totalSummary.total,
-        servicesIncome: totalSummary.services,
-        barIncome: totalSummary.bar,
-        employeeIncomes: Object.fromEntries(
-          Object.entries(summaryByEmployee).map(([emp, data]) => [
-            emp,
-            data.total,
-          ]),
-        ),
-        transfersByEmployee: transfersWithVouchers.map((t) => ({
-          name: t.employee,
-          count: 1,
-          voucherCode: t.voucherCode,
-        })),
-      });
-    }
-  }, [selectedDate, transfersWithVouchers, totalSummary, summaryByEmployee]);
+    getFinancialSummary(selectedDate, selectedDate).then(console.log).catch(console.error);
+  }, [selectedDate]);
 
   const handleVoucherClick = (voucherCode: string) => {
     setSelectedVoucher(voucherCode);
