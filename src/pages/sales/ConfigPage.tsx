@@ -1,27 +1,23 @@
 /* Pagina de configuracion del negocio */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Building2, Percent, Clock } from "lucide-react";
+import { ArrowLeft, Save, Building2 } from "lucide-react";
 import "../../styles/config.css";
 
 interface ConfigData {
   businessName: string;
   businessRuc: string;
   businessAddress: string;
-  taxRate: number;
-  currency: string;
-  openingHour: string;
-  closingHour: string;
+  businessPhone: string;
+  businessEmail: string;
 }
 
 const defaultConfig: ConfigData = {
   businessName: "Gimnasio Fitness Pro",
   businessRuc: "1234567890001",
   businessAddress: "Av. Principal 123, Ciudad",
-  taxRate: 12,
-  currency: "USD",
-  openingHour: "06:00",
-  closingHour: "22:00",
+  businessPhone: "",
+  businessEmail: "",
 };
 
 const STORAGE_KEY = "gym-management.config";
@@ -98,65 +94,23 @@ const ConfigPage = () => {
                 placeholder="Dirección del negocio"
               />
             </div>
-          </div>
-        </div>
-
-        <div className="config-section">
-          <div className="config-section__header">
-            <Percent size={20} />
-            <h3>Impuestos y Moneda</h3>
-          </div>
-          <div className="config-section__body">
-            <div className="config-row">
-              <div className="config-field">
-                <label>IVA (%)</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.5"
-                  value={config.taxRate}
-                  onChange={(e) => handleChange("taxRate", Number(e.target.value))}
-                />
-              </div>
-              <div className="config-field">
-                <label>Moneda</label>
-                <select
-                  value={config.currency}
-                  onChange={(e) => handleChange("currency", e.target.value)}
-                >
-                  <option value="USD">USD - Dólar estadounidense</option>
-                  <option value="EUR">EUR - Euro</option>
-                  <option value="COP">COP - Peso colombiano</option>
-                </select>
-              </div>
+            <div className="config-field">
+              <label>Teléfono</label>
+              <input
+                type="tel"
+                value={config.businessPhone}
+                onChange={(e) => handleChange("businessPhone", e.target.value)}
+                placeholder="Número de teléfono"
+              />
             </div>
-          </div>
-        </div>
-
-        <div className="config-section">
-          <div className="config-section__header">
-            <Clock size={20} />
-            <h3>Horarios</h3>
-          </div>
-          <div className="config-section__body">
-            <div className="config-row">
-              <div className="config-field">
-                <label>Hora de Apertura</label>
-                <input
-                  type="time"
-                  value={config.openingHour}
-                  onChange={(e) => handleChange("openingHour", e.target.value)}
-                />
-              </div>
-              <div className="config-field">
-                <label>Hora de Cierre</label>
-                <input
-                  type="time"
-                  value={config.closingHour}
-                  onChange={(e) => handleChange("closingHour", e.target.value)}
-                />
-              </div>
+            <div className="config-field">
+              <label>Email</label>
+              <input
+                type="email"
+                value={config.businessEmail}
+                onChange={(e) => handleChange("businessEmail", e.target.value)}
+                placeholder="correo@ejemplo.com"
+              />
             </div>
           </div>
         </div>
