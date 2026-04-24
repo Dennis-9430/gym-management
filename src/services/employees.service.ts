@@ -26,10 +26,25 @@ export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
 };
 
 /* Obtiene empleados (intenta API, fallback localStorage) */
+// Relacionado con: useEmployees.ts, EmployeesPage.tsx
 export const getEmployees = async (): Promise<Employee[]> => {
   try {
-    return await getEmployeesFromAPI();
+    const response = await fetch(`${API_BASE}?status=ACTIVE`);
+    if (!response.ok) {
+      throw new Error("Error al obtener empleados");
+    }
+    const data = await response.json();
+    const employees = data.employees || [];
+    
+    // Si la API retorna empleados, usarlos; si no, fallback
+    if (employees.length > 0) {
+      return employees;
+    }
+    
+    // API vacía, usar seed como ejemplo
+    return seedEmployees;
   } catch {
+    // Error de red o API, usar fallback
     const employees = loadEmployees();
     return [...employees].sort((a, b) => a.id - b.id);
   }
