@@ -75,7 +75,7 @@ DEBUG=True
 6. feat(productos): agregar modelo y router para productos
 7. feat(ventas): agregar modelo y router para ventas
 8. feat(servicios): agregar modelo y router para servicios
-9. fix(auth): ajustar verify_password para usar bcrypt
+9. feat(auth): ajustar verify_password para usar bcrypt
 10. feat(asistencia): agregar registro de asistencia de clientes
 11. refactor(db): separar conexion a base de datos
 12. feat(empleados): agregar modelo y router para empleados
@@ -112,10 +112,15 @@ DEBUG=True
 43. refactor(layout): ajustar layout para mejor UX
 44. refactor(config): mover card de configuración al dashboard principal
 45. refactor(sales): remove Config card from SalesDashboard
-
 46. refactor(config): Actualizar campos config para factura Ecuador
-    - Eliminar: secciones Impuestos/Moneda y Horarios
-    - Agregar: Teléfono y Email para datos de factura SRI
+47. refactor(dashboard): Mover configuración y agregar filtro por plan PREMIUM
+    - SalesDashboard.tsx: Remove Config card
+    - Dashboard.tsx: Agregar filtro de plan
+    - dashboard.section.ts: Agregar card Config y ocultar Attendance
+    - SalesPages.tsx: Remover onOpenConfigModal
+48. feat(api): Agregar servicios de verificación de plan para protección
+    - usePlanAccess.ts: Hook para verificar features por plan
+    - api.ts: Funciones getTenantPlan, hasPlanFeature, isPremium
 
 
 
