@@ -15,567 +15,68 @@ descripcion: Explica qué hace el cambio y por qué es necesario.
 Opcionalmente agrega detalles técnicos.
 
 direccion del archivo:
+## COMANDOS PARA CORRER EL SISTEMA
+
+### Prerrequisitos:
+- Python 3.10+
+- Node.js 18+
+- MongoDB (Docker o local)
+
+### MongoDB (Docker):
+docker run -d -p 27017:27017 --name mongodb mongo:latest
+
+### Backend:
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+abrir el servidor
+
+cd backend
+uvicorn app.main:app --reload
+
+### Frontend:
+npm install
+npm run dev
+
+### .env (backend/):
+MONGODB_URL=mongodb://localhost:27017
+MONGODB_DB_NAME=gym_db
+JWT_SECRET_KEY=short-key
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+API_HOST=0.0.0.0
+API_PORT=8000
+DEBUG=True
 
 ---
 
-## COMMITS REALIZADOS - FRONTEND
+## URLs:
+- Frontend: http://localhost:5173
+- API: http://localhost:8000
+- Docs: http://localhost:8000/docs
 
 ---
 
-1. refactor(css): simplificar sistema de variables CSS global
-
-descripcion: Reemplaza todas las variables CSS problemáticas por valores directos en 22 archivos del proyecto: --spacing-*, --radius-*, --max-width-*, --transition-*, --z-*, --shadow-* y --breakpoint-*. Mantiene solo colores y tipografía en variables.css para evitar problemas de compatibilidad en media queries.
-
-direccion del archivo:
-- src/styles/variables.css
-- src/styles/attendance.css
-- src/styles/clientsRegister.css
-- src/styles/common.css
-- src/styles/components/buttons.css
-- src/styles/components/cards.css
-- src/styles/components/inputs.css
-- src/styles/components/modals.css
-- src/styles/components/tables.css
-- src/styles/config.css
-- src/styles/dashboardCard.css
-- src/styles/employees.css
-- src/styles/financial.css
-- src/styles/listClients.css
-- src/styles/login.css
-- src/styles/paymentModal.css
-- src/styles/pos.css
-- src/styles/products.css
-- src/styles/salesCSS/SubscriptionModal.css
-- src/styles/salesCSS/card.css
-- src/styles/salesCSS/pendingSubscriptions.css
-- src/styles/salesCSS/salesProductsModal.css
+## Demo:
+- Email: pinzonfabricio9430@gmail.com
+- Password: adminKa123
 
 ---
 
-2. style(products): mejorar layout responsive del módulo productos
-
-descripcion: Implementa diseño responsive completo del módulo productos: reordena elementos (botón agregar, select categorías, buscador), usa breakpoints fijos (1024px, 640px), ajusta flexbox para igualar anchos, corrige padding de botones de tabla y reorganiza componentes para mejor control responsive.
-
-direccion del archivo:
-- src/pages/products/Products.tsx
-- src/components/products/ProductSearch.tsx
-- src/styles/products.css
-
 ---
 
-3. style(clients/list): mejorar layout responsive del módulo clientes
+## COMMITS REALIZADOS
 
-descripcion: Mejora el diseño responsive del listado de clientes: reordena buscador y botones (título a la izquierda, controles a la derecha), agrega subtítulo descriptivo debajo del título, implementa columna vertical en móvil con orden buscador > Todos > Activos > Agregar, oculta icono de agregar en responsive y centra texto de botones.
+46. refactor(config): Actualizar campos config para factura Ecuador
+    - Eliminar: secciones Impuestos/Moneda y Horarios
+    - Agregar: Teléfono y Email para datos de factura SRI
 
-direccion del archivo:
-- src/components/clientsTable/ClientSearch.tsx
-- src/styles/listClients.css
 
----
 
-4. style(clientProfile): reorganizar layout del perfil de cliente
 
-descripcion: Reorganiza el perfil de cliente: integra información de membresía dentro del card de Información Personal separadas por hr, elimina componentes ClientMembership y ClientPayments independientes, stats se mueven al lado derecho, implementa grid de dos columnas con auto-fit y minmax para stats responsives, elimina clases card-history y card-full.
+## PLANES DE SUSCRIPCION
 
-direccion del archivo:
-- src/pages/clients/ClientProfile.tsx
-- src/components/clientProfile/ClientInfo.tsx
-- src/styles/clientProfileCss/ClientProfile.css
-
----
-
-5. docs(pages): comentarios profesionales a páginas principales
-
-descripcion: Agrega comentarios descriptivos usando formato /* */ a funciones de páginas principales: Dashboard, Login, Products y ListClients.
-
-direccion del archivo:
-- src/pages/Dashboard.tsx
-- src/pages/Login.tsx
-- src/pages/products/Products.tsx
-- src/pages/clients/ListClients.tsx
-
----
-
-6. docs(pages): comentarios profesionales a ClientProfile, EmployeesPage, AttendancePage
-
-descripcion: Agrega comentarios a ClientProfile (manejo de edición), EmployeesPage (CRUD empleados) y AttendancePage (registro de asistencia).
-
-direccion del archivo:
-- src/pages/clients/ClientProfile.tsx
-- src/pages/employees/EmployeesPage.tsx
-- src/pages/attendance/AttendancePage.tsx
-
----
-
-7. docs(pages): comentarios profesionales a SalesPages, ConfigPage, EmployeeProfilePage, RegistetClient
-
-descripcion: Agrega comentarios a POS (ventas y membresías), configuración del sistema, perfil de empleado y registro de clientes.
-
-direccion del archivo:
-- src/pages/sales/SalesPages.tsx
-- src/pages/sales/ConfigPage.tsx
-- src/pages/employees/EmployeeProfilePage.tsx
-- src/pages/clients/RegistetClient.tsx
-
----
-
-8. docs(pages): comentarios profesionales a FormClients, FinancialReport
-
-descripcion: Agrega comentarios a formulario de clientes (datos personales, contacto, emergencia) y reporte financiero.
-
-direccion del archivo:
-- src/pages/clients/FormClients.tsx
-- src/pages/admin/FinancialReport.tsx
-
----
-
-9. docs(hooks): comentarios profesionales a hooks principales
-
-descripcion: Agrega comentarios usando formato /* */ a hooks: useProducts (CRUD productos), useListClientsHook (clientes), useCart (carrito), useTransactions (transacciones).
-
-direccion del archivo:
-- src/hooks/useProducts.ts
-- src/hooks/useListClientsHook.ts
-- src/hooks/useCart.ts
-- src/hooks/useTransactions.ts
-
----
-
-10. docs(context): comentarios profesionales a AuthProvider
-
-descripcion: Agrega comentarios al provider de autenticación: login, logout, manejo de usuario y estado.
-
-direccion del archivo:
-- src/context/AuthProvider.tsx
-
----
-
-11. docs(services): comentarios profesionales a servicios
-
-descripcion: Agrega comentarios a servicios: clients.service, auth.services, products.service, employees.service.
-
-direccion del archivo:
-- src/services/clients.service.ts
-- src/services/auth.services.ts
-- src/services/products.service.ts
-- src/services/employees.service.ts
-
----
-
-12. docs(types): comentarios profesionales a tipos
-
-descripcion: Agrega comentarios a tipos: client.types, user.types.
-
-direccion del archivo:
-- src/types/client.types.ts
-- src/types/user.types.ts
-
----
-
-13. docs(components): comentarios profesionales a componentes de ventas y financieros
-
-descripcion: Agrega comentarios a SalesDashboard, PendingSubscriptions, MembershipModal, FinancialTransactionsList, FinancialSummary, CartTable.
-
-direccion del archivo:
-- src/components/sales/SalesDashboard.tsx
-- src/components/sales/PendingSubscriptions.tsx
-- src/components/sales/MembershipModal.tsx
-- src/components/financial/FinancialTransactionsList.tsx
-- src/components/financial/FinancialSummary.tsx
-- src/components/pos/CartTable.tsx
-
----
-
-14. docs(components): comentarios profesionales a componentes de formularios y perfil
-
-descripcion: Agrega comentarios a PersonalDataFields, ContactFields, EmergencyFields, ClientStats, ClientModal.
-
-direccion del archivo:
-- src/components/formClients/PersonalDataFields.tsx
-- src/components/formClients/ContactFields.tsx
-- src/components/formClients/EmergencyFields.tsx
-- src/components/clientProfile/ClientStats.tsx
-- src/components/clientsModal/ClientModal.tsx
-
----
-
-15. docs(utils): comentarios profesionales a utilerias de formato
-
-descripcion: Agrega comentarios a utilerias de formato: currency.ts, number.ts.
-
-direccion del archivo:
-- src/utils/format/currency.ts
-- src/utils/format/number.ts
-
----
-
-16. docs(utils): comentarios profesionales a utilerias
-
-descripcion: Agrega comentarios a utilerias de fecha, texto, membresía y array.
-
-direccion del archivo:
-- src/utils/date/date.ts
-- src/utils/string/normalize.ts
-- src/utils/membership.ts
-- src/utils/membership/days.ts
-- src/utils/array/array.utils.ts
-
----
-
-17. docs(components): comentarios profesionales a componentes de productos y empleados
-
-descripcion: Agrega comentarios a componentes de productos y empleados.
-
-direccion del archivo:
-- src/components/products/ProductTable.tsx
-- src/components/products/ProductSearch.tsx
-- src/components/products/ProductForm.tsx
-- src/components/employees/EmployeeTable.tsx
-- src/components/employees/EmployeeSearch.tsx
-- src/components/employees/EmployeeForm.tsx
-- src/components/employees/EmployeePermissions.tsx
-
----
-
-18. docs(components): comentarios profesionales a componentes comunes
-
-descripcion: Agrega comentarios a componentes comunes: Button, Modal, SearchInput, ProtectedRoute.
-
-direccion del archivo:
-- src/components/common/Button.tsx
-- src/components/common/Modal.tsx
-- src/components/common/SearchInput.tsx
-- src/components/common/ProtectedRoute.tsx
-
----
-
-19. docs(components): comentarios profesionales a componentes de clientes
-
-descripcion: Agrega comentarios a componentes de tabla y búsqueda de clientes: ClientTable, ClientSearch, ClientRow.
-
-direccion del archivo:
-- src/components/clientsTable/ClientTable.tsx
-- src/components/clientsTable/ClientSearch.tsx
-- src/components/clientsTable/ClientRow.tsx
-
----
-
-20. docs(components): comentarios profesionales a componentes de perfil de cliente
-
-descripcion: Agrega comentarios a componentes de perfil de cliente: ClientInfo, ClientPayments, ClientMembership, ClientAttendance.
-
-direccion del archivo:
-- src/components/clientProfile/ClientInfo.tsx
-- src/components/clientProfile/ClientPayments.tsx
-- src/components/clientProfile/ClientMembership.tsx
-- src/components/clientProfile/ClientAttendance.tsx
-
----
-
-21. docs(components): comentarios profesionales a componentes financieros
-
-descripcion: Agrega comentarios a componentes financieros: FinancialBarChart, FinancialLineChart, TransactionEditModal, FinancialSummaryTable, FinancialDashboardButton.
-
-direccion del archivo:
-- src/components/financial/FinancialBarChart.tsx
-- src/components/financial/FinancialLineChart.tsx
-- src/components/financial/TransactionEditModal.tsx
-- src/components/financial/FinancialSummaryTable.tsx
-- src/components/financial/FinancialDashboardButton.tsx
-
----
-
-22. docs(components): comentarios profesionales a componentes POS y navbar
-
-descripcion: Agrega comentarios a componentes POS y navbar: CatalogList, SaleModal, SubscriptionModal, ClientProfileModal, DashboardCard, Navbar.
-
-direccion del archivo:
-- src/components/pos/CatalogList.tsx
-- src/components/sales/SaleModal.tsx
-- src/components/sales/SubscriptionModal.tsx
-- src/components/clientsModal/ClientProfileModal.tsx
-- src/components/dashboard/DashboardCard.tsx
-- src/components/Navbar.tsx
-
----
-
-23. docs(pages): comentarios profesionales a páginas de productos y financieras
-
-descripcion: Agrega comentarios a páginas: Products, FinancialDashboard, FinancialMonthlyReport, PendingSubscriptionsPage, PaymentModal.
-
-direccion del archivo:
-- src/pages/products/Products.tsx
-- src/pages/admin/FinancialDashboard.tsx
-- src/pages/admin/FinancialMonthlyReport.tsx
-- src/pages/sales/PendingSubscriptionsPage.tsx
-- src/pages/payments/PaymentModal.tsx
-
----
-
-24. docs(hooks): comentarios profesionales a hooks adicionales
-
-descripcion: Agrega comentarios a hooks adicionales: useEmployees, useClientForm, useForm, authHook y hooks de features (usePOS, usePOSSales, usePOSSubscription, usePOSClients).
-
-direccion del archivo:
-- src/hooks/useEmployees.ts
-- src/hooks/useClientForm.ts
-- src/hooks/useForm.ts
-- src/hooks/authHook.ts
-- src/hooks/features/usePOS.ts
-- src/hooks/features/usePOSSales.ts
-- src/hooks/features/usePOSSubscription.ts
-- src/hooks/features/usePOSClients.ts
-
----
-
-25. docs(types): comentarios profesionales a tipos adicionales
-
-descripcion: Agrega comentarios a tipos adicionales: sales.types, product.types, pos.types, employee.types, payment.types, person.types, api.types.
-
-direccion del archivo:
-- src/types/sales.types.ts
-- src/types/product.types.ts
-- src/types/pos.types.ts
-- src/types/employee.types.ts
-- src/types/payment.types.ts
-- src/types/person.types.ts
-- src/types/common/api.types.ts
-
----
-
-26. docs(services): comentarios profesionales a servicios adicionales
-
-descripcion: Agrega comentarios a servicios adicionales: sales.service, financialReports.service, employeePermissions.service.
-
-direccion del archivo:
-- src/services/sales.service.ts
-- src/services/financialReports.service.ts
-- src/services/employeePermissions.service.ts
-
----
-
-27. docs(styles): comentarios profesionales a archivos CSS
-
-descripcion: Agrega comentarios descriptivos a archivos CSS del proyecto: attendance, listClients, config, products, paymentModal, salesCSS (SubscriptionModal, salesProductsModal, pendingSubscriptions, card), ClientProfile.
-
-direccion del archivo:
-- src/styles/attendance.css
-- src/styles/listClients.css
-- src/styles/config.css
-- src/styles/products.css
-- src/styles/paymentModal.css
-- src/styles/salesCSS/SubscriptionModal.css
-- src/styles/salesCSS/salesProductsModal.css
-- src/styles/salesCSS/pendingSubscriptions.css
-- src/styles/salesCSS/card.css
-- src/styles/clientProfileCss/ClientProfile.css
-
----
-
-28. docs(hooks/reducers): comentarios profesionales a reducers
-
-descripcion: Agrega comentarios a reducers de clientes y listado.
-
-direccion del archivo:
-- src/hooks/reducers/client.reducer.ts
-- src/hooks/reducers/listClients.reducer.ts
-
----
-
-## COMMITS REALIZADOS - BACKEND
-
----
-
-1. docs(backend): comentarios profesionales al backend FastAPI
-
-descripcion: Agrega comentarios usando formato # Que hace | Relacionado con: a archivos del backend Python.
-
-direccion del archivo:
-- backend/app/main.py
-- backend/app/config.py
-- backend/app/database.py
-- backend/app/auth/router.py
-- backend/app/auth/schemas.py
-- backend/app/auth/service.py
-- backend/app/auth/utils.py
-- backend/app/models/client.py
-- backend/app/models/employee.py
-- backend/app/models/product.py
-- backend/app/models/sale.py
-- backend/app/models/service.py
-- backend/app/models/attendance.py
-- backend/app/routers/clients.py
-- backend/app/routers/employees.py
-- backend/app/routers/products.py
-- backend/app/routers/sales.py
-- backend/app/routers/services.py
-- backend/app/routers/attendance.py
-- backend/app/routers/reports.py
-
----
-
-2. docs(backend): comentarios al backend FastAPI
-
-descripcion: Agrega comentarios adicionales al backend.
-
-direccion del archivo:
-- Archivos Python del backend
-
----
-
-3. docs(backend): comentarios adicionales al backend FastAPI
-
-descripcion: Completa la documentación del backend.
-
-direccion del archivo:
-- Archivos Python del backend
-
----
-
-4. test(vitest): configurar testing con Vitest
-
-descripcion: Instala Vitest y dependencias de testing (jsdom, @testing-library/react). Configura scripts de prueba en package.json y crea archivos de setup.
-
-direccion del archivo:
-- package.json
-- src/tests/setup.ts
-- src/tests/utils.test.ts
-- src/tests/services.test.ts
-
-
----
-
-5. docs(readme): agregar descripción del sistema
-
-descripcion: Actualiza README.md con descripción completa del sistema, tecnologías, estructura, funcionalidades e instrucciones de instalación.
-
-direccion del archivo:
-- README.md
-
-
----
-
-## FIXES
-
----
-
-1. fix(hooks): corregir typo en action type SET_CLIENTS
-
-descripcion: Corrige typo en listClients.reducer.ts cambiando SET_ClIENTS por SET_CLIENTS para que coincida con el tipo definido.
-
-direccion del archivo:
-- src/hooks/reducers/listClients.reducer.ts
-- src/hooks/useListClientsHook.ts
-
----
-
-2. perf(router): implementar lazy loading y code splitting
-
-descripcion: Implementa lazy loading con React.lazy y Suspense en AppRouter, y manualChunks en vite.config.ts para separar el bundle en chunks: react-vendor, icons, charts, ui, bootstrap. Reduce el chunk principal de 775KB a ~189KB.
-
-direccion del archivo:
-- src/router/AppRouter.tsx
-- vite.config.ts
-
----
-
-5. test(vitest): agregar tests para format, date y productos
-
-descripcion: Agrega archivos de test para format utils (parseDecimal, round2, clampPercent, formatCurrency), date utils (parseDateInput, addDays) y tipos de productos (PRODUCT_CATEGORIES, PRODUCT_CATEGORY_LABELS).
-
-direccion del archivo:
-- src/tests/format.test.ts
-- src/tests/date.test.ts
-- src/tests/products.test.ts
-
----
-
-6. test(vitest): agregar tests para utils
-
-descripcion: Agrega tests para array utils (filterBySearch, groupBy), string utils (normalizeText, normalizeDocument, matchesQuery) y membership utils (getDaysRemaining, getMembershipStatus).
-
-direccion del archivo:
-- src/tests/array.test.ts
-- src/tests/string.test.ts
-- src/tests/membership.test.ts
-
-
-7. fix(products): corregir posicion de iconos en inputs del modal
-
-descripcion: Ajusta left y padding-left de inputs para separar iconos del placeholder, agrega centrado vertical con top:50% y transform:translateY(-50%) para mejor alineacion.
-
-direccion del archivo:
-- src/styles/products.css
-
----
-
-8. feat(sales): filtrar servicios menores o iguales a $7 en registro diario
-
-descripcion: Filtra los servicios en el dropdown del modal de suscripcion para mostrar solo los que cuestan $7 o menos (servicios diarios). Soporta servicios dinamicos desde MembershipModal o usa servicios por defecto.
-
-direccion del archivo:
-- src/components/sales/SubscriptionModal.tsx
-- src/pages/sales/SalesPages.tsx
-
----
-
-9. feat(services): integrar servicios con MongoDB
-
-descripcion: Crea services.service.ts para obtener servicios desde la API de MongoDB (/api/services). Modifica SalesPages y PaymentModal para cargar servicios dinamicamente desde la base de datos, con fallback a lista por defecto en caso de error.
-
-direccion del archivo:
-- src/services/services.service.ts (nuevo)
-- src/pages/sales/SalesPages.tsx
-- src/pages/payments/PaymentModal.tsx
-
----
-
-10. feat(products): integrar productos con MongoDB
-
-descripcion: Modifica products.service.ts para usar API /api/products. Agrega getProductsFromAPI, createProductAPI, updateProductAPI, deleteProductAPI con fallback a localStorage.
-
-direccion del archivo:
-- src/services/products.service.ts
-
----
-
-11. feat(employees): integrar empleados con MongoDB
-
-descripcion: Modifica employees.service.ts para usar API /api/employees. Agrega getEmployeesFromAPI, createEmployeeAPI, updateEmployeeAPI, deleteEmployeeAPI con fallback a localStorage.
-
-direccion del archivo:
-- src/services/employees.service.ts
-
----
-
-12. feat(clients): integrar clientes con MongoDB
-
-descripcion: Modifica clients.service.ts para usar API /api/clients. Agrega funciones async para CRUD con fallback a localStorage.
-
-direccion del archivo:
-- src/services/clients.service.ts
-
-
----
-
-## NOTAS
-
-- Frontend: React + TypeScript + Vite
-- Backend: Python + FastAPI + MongoDB
-- Autenticación: JWT con bcrypt
-- Comentarios: Formato /* */ en frontend, # en backend
-- Total commits frontend: 35
-- Total commits backend: 3
-- Total fixes: 5
-- Total features: 3
-
-## PENDIENTE DE COMPLETAR
-
-- Los cambios de Products, Employees y Clients están escritos pero requieren ajustes adicionales en los archivos que los usan.
-- El build tiene errores porque hay componentes que esperan funciones síncronas pero ahora son asíncronas.
-
-## RECOMENDACIÓN
-
-Antes de hacer commit de estos cambios, se debe completar la adaptación de todos los archivos que usan estos servicios para manejar promises correctamente.
-- Total fixes: 2
-- Total fixes: 2
+| Plan | Precio | Funcionalidades |
+|------|--------|--------------|
+| Basic | $20/mes | Clientes, Membresías, Productos, POS, Asistencia |
+| Premium | $30/mes | Basic + Empleados (CRUD), Reportes, Configuración |
