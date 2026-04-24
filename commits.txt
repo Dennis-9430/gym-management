@@ -67,16 +67,61 @@ DEBUG=True
 
 ## COMMITS REALIZADOS
 
+1. feat(db): inicializar proyecto gym-management
+2. feat(auth): implementación inicial de authenticate con JWT
+3. feat(clientes): agregar pagina de clientes
+4. fix(api): corregir CORS para permitir frontend
+5. fix(router): corrección endpoint obtener cliente por ID
+6. feat(productos): agregar modelo y router para productos
+7. feat(ventas): agregar modelo y router para ventas
+8. feat(servicios): agregar modelo y router para servicios
+9. fix(auth): ajustar verify_password para usar bcrypt
+10. feat(asistencia): agregar registro de asistencia de clientes
+11. refactor(db): separar conexion a base de datos
+12. feat(empleados): agregar modelo y router para empleados
+13. feat(pagos): integrar pasarela de pagos con Stripe
+14. refactor(api): reorganizar estructura de routers
+15. feat(suscripciones): agregar gestión de membresías
+16. feat(frontend): inicializar proyecto React con Vite
+17. feat(frontend): agregar página de login
+18. feat(frontend): agregar layout y routing principal
+19. feat(frontend): agregar dashboard con cards
+20. feat(frontend): agregar listado de clientes con búsqueda
+21. feat(frontend): agregar modal para crear/editar cliente
+22. feat(frontend): agregar página de empleados
+23. fix(frontend): corregir tipos en API service
+24. feat(frontend): agregar página de productos
+25. feat(frontend): agregar página de ventas POS
+26. feat(frontend): agregar página de servicios
+27. feat(frontend): agregar reporte financiero
+28. fix(backend): corrección de imports y types
+29. feat(tenants): agregar modelo de tenants para SaaS
+30. feat(tenants): agregar router para gestión de tenants
+31. feat(auth): modificar login para usar email en lugar de username
+32. feat(frontend): agregar landing page con selección de planes
+33. feat(frontend): agregar páginas legales (términos, privacidad)
+34. feat(frontend): modificar login para tenants
+35. feat(frontend): agregar página de renovación
+36. fix(backend): correcciones críticas (passlib, DB, JWT)
+37. feat(plan-protection): agregar middleware de protección por plan
+38. refactor(plan): mover verificación de plan a utilidad
+39. feat(frontend): agregar filtro de planes en dashboard
+40. refactor(sales): mover configuración a sales dashboard
+41. refactor(dashboard): mover configuración a dashboard principal
+42. refactor(config): eliminar historial de asistencia del dashboard
+43. refactor(layout): ajustar layout para mejor UX
+44. refactor(config): mover card de configuración al dashboard principal
+45. refactor(sales): remove Config card from SalesDashboard
+
 46. refactor(config): Actualizar campos config para factura Ecuador
     - Eliminar: secciones Impuestos/Moneda y Horarios
     - Agregar: Teléfono y Email para datos de factura SRI
 
 
 
-
 ## PLANES DE SUSCRIPCION
 
 | Plan | Precio | Funcionalidades |
-|------|--------|--------------|
+|------|--------|---------------|
 | Basic | $20/mes | Clientes, Membresías, Productos, POS, Asistencia |
 | Premium | $30/mes | Basic + Empleados (CRUD), Reportes, Configuración |
