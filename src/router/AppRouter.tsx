@@ -8,6 +8,10 @@ import { ProtectedRoute } from "../components/common/ProtectedRoute";
 // Páginas con lazy loading para code splitting
 // Relacionado con: vite.config.ts (manualChunks)
 const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
+const Renew = lazy(() => import("../pages/Renew"));
+const Terms = lazy(() => import("../pages/Terms"));
+const Privacy = lazy(() => import("../pages/Privacy"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const FormClients = lazy(() => import("../pages/clients/FormClients"));
 const RegisterClient = lazy(() => import("../pages/clients/RegistetClient"));
@@ -43,6 +47,10 @@ function AppRouter() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/renew" element={<Renew />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
