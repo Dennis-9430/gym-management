@@ -6,7 +6,7 @@ import {
   Package,
   ShoppingCart,
   UserCog,
-  ClipboardCheck,
+  Settings,
 } from "lucide-react";
 
 export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
@@ -19,6 +19,7 @@ export interface DashboardSection {
   roles: Role[];
   buttonLabel?: string;
   description?: string;
+  plan?: "BASIC" | "PREMIUM";
 }
 export const sections: DashboardSection[] = [
   {
@@ -40,6 +41,7 @@ export const sections: DashboardSection[] = [
     buttonLabel: "Ver lista",
     description: "Gestiona clientes del gimnasio",
   },
+
   {
     title: "Productos",
     path: "/products",
@@ -49,6 +51,7 @@ export const sections: DashboardSection[] = [
     buttonLabel: "Ver productos",
     description: "Administra inventario",
   },
+
   {
     title: "Ventas",
     path: "/sales",
@@ -58,6 +61,17 @@ export const sections: DashboardSection[] = [
     buttonLabel: "Ir a ventas",
     description: "Registro de ventas y suscripciones",
   },
+
+  {
+    title: "Configuración",
+    path: "/sales/config",
+    icon: Settings,
+    action: "NAVIGATE",
+    roles: ["ADMIN"],
+    buttonLabel: "Configurar",
+    description: "Datos del negocio, impuestos y horarios",
+  },
+
   {
     title: "Registrar Personal",
     path: "/employees",
@@ -67,6 +81,7 @@ export const sections: DashboardSection[] = [
     buttonLabel: "Ver personal",
     description: "Gestiona empleados",
   },
+
   {
     title: "Reporte Financiero",
     path: "/financial",
@@ -76,13 +91,6 @@ export const sections: DashboardSection[] = [
     buttonLabel: "Ver reportes",
     description: "Análisis financiero del negocio",
   },
-  {
-    title: "Historial de Asistencia",
-    path: "/attendance",
-    icon: ClipboardCheck,
-    action: "NAVIGATE",
-    roles: ["ADMIN", "RECEPCIONISTA", "ENTRENADOR"],
-    buttonLabel: "Ver asistencia",
-    description: "Control de entrada y salida",
-  },
+
+  // Historial de Asistencia - OCULTO completamente
 ];

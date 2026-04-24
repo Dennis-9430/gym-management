@@ -1,7 +1,7 @@
 /* Pagina principal de ventas POS */
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/index.ts";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { usePOS } from "../../hooks/features/usePOS";
 import SalesDashboard from "../../components/sales/SalesDashboard";
 import SaleModal from "../../components/sales/SaleModal";
@@ -15,7 +15,6 @@ import "../../styles/pos.css";
 
 const SalesPages = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const state = location.state as {
     openSubscriptionModal?: boolean;
     client?: ClientForm;
@@ -141,7 +140,6 @@ const SalesPages = () => {
         onOpenSubscriptionModal={() => handleOpenSubscriptionModal()}
         onOpenSaleModal={() => setSaleModalOpen(true)}
         onOpenMembershipModal={isAdmin ? () => setMembershipModalOpen(true) : undefined}
-        onOpenConfigModal={isAdmin ? () => navigate("/sales/config") : undefined}
       />
 
       <SaleModal

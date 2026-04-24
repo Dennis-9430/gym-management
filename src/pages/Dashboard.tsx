@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/index.ts";
 import { useNavigate } from "react-router-dom";
 import { sections, type DashboardSection } from "../types/dashboard.section";
+import { getTenantPlan } from "../services/api";
 import PaymentModal from "../pages/payments/PaymentModal";
 import DashboardCard from "../components/dashboard/DashboardCard";
 import "../styles/dashboard.css";
@@ -14,10 +15,24 @@ const Dashboard = () => {
 
   if (!user) return null;
 
-  /* Filtra las secciones según el rol del usuario */
-  const filteredSections = sections.filter((section) =>
-    section.roles.includes(user.role),
-  );
+  /* Obtener el plan del tenant */
+  const tenantPlan = getTenantPlan();
+  const isPremium = tenantPlan === "PREMIUM";
+
+  /* Filtra las secciones según el rol y el plan */
+  const filteredSections = sections.filter((section) => {
+    // Filtrar por rol
+    if (!section.roles.includes(user.role)) {
+      return false;
+    }
+    
+    // Filtrar por plan (si requiere PREMIUM y no es PREMIUM, ocultar)
+    if (section.plan === "PREMIUM" && !isPremium) {
+      return false;
+    }
+    
+    return true;
+  });
 
   /* Maneja la acción de cada tarjeta según su tipo */
   const handleAction = (section: DashboardSection) => {
