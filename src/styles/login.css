@@ -309,6 +309,26 @@
   color: var(--color-text-light);
 }
 
+.login__register {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.login__register p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.login__register a {
+  color: var(--color-action);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.login__register a:hover {
+  text-decoration: underline;
+}
+
 /* ==========================================================================
    RESPONSIVE - Mobile/Tablet Only
    ========================================================================== */

@@ -1,30 +1,41 @@
+/* Página de inicio de sesión (Tenant Login) */
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
-import { LoginService } from "../services/auth.services";
 import type { AuthUser } from "../types/user.types";
-import { User, Lock, Eye, EyeOff, Dumbbell, Loader2 } from "lucide-react";
+import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail } from "lucide-react";
 import "../styles/login.css";
+
+interface TenantLoginResponse {
+  accessToken: string;
+  tenant: {
+    tenantId: string;
+    email: string;
+    businessName: string;
+    plan: string;
+    subscriptionStatus: string;
+  };
+}
 
 /* Página de inicio de sesión */
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({ username: "", password: "" });
+  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
   
   const { login } = useAuth();
   const navigate = useNavigate();
 
   /* Valida que los campos no estén vacíos */
   const validateForm = (): boolean => {
-    const errors = { username: "", password: "" };
+    const errors = { email: "", password: "" };
     let isValid = true;
 
-    if (!username.trim()) {
-      errors.username = "El usuario es requerido";
+    if (!email.trim()) {
+      errors.email = "El correo electrónico es requerido";
       isValid = false;
     }
 
@@ -37,7 +48,7 @@ const Login = () => {
     return isValid;
   };
 
-  /* Envía credenciales al servicio de auth */
+  /* Envía credenciales al API de tenants */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
@@ -46,25 +57,46 @@ const Login = () => {
 
     setIsLoading(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const response = await fetch("http://localhost:8000/api/tenants/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
 
-    const user: AuthUser | null = LoginService(username, password);
+      const data: TenantLoginResponse = await response.json();
 
-    setIsLoading(false);
+      if (!response.ok) {
+        const errorData = data as unknown as { detail?: string };
+        throw new Error(errorData.detail || "Credenciales incorrectas");
+      }
 
-    if (!user) {
-      setError("Credenciales incorrectas. Verifica tu usuario y contraseña.");
-      return;
+      // Guardar token y datos del tenant
+      localStorage.setItem("tenantToken", data.accessToken);
+      localStorage.setItem("tenant", JSON.stringify(data.tenant));
+
+      // Login con datos del tenant
+      const user: AuthUser = {
+        username: data.tenant.businessName,
+        role: "ADMIN",
+        tenantId: data.tenant.tenantId,
+        plan: data.tenant.plan as AuthUser["plan"],
+        subscriptionStatus: data.tenant.subscriptionStatus as AuthUser["subscriptionStatus"]
+      };
+
+      login(user);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error de conexión");
+    } finally {
+      setIsLoading(false);
     }
-
-    login(user);
-    navigate("/dashboard");
   };
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-    if (fieldErrors.username) {
-      setFieldErrors((prev) => ({ ...prev, username: "" }));
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (fieldErrors.email) {
+      setFieldErrors((prev) => ({ ...prev, email: "" }));
     }
     if (error) setError("");
   };
@@ -110,24 +142,24 @@ const Login = () => {
             )}
 
             <div className="login__field">
-              <label htmlFor="username" className="login__label">
-                Usuario
+              <label htmlFor="email" className="login__label">
+                Correo Electrónico
               </label>
-              <div className={`login__input-wrapper ${fieldErrors.username ? "login__input-wrapper--error" : ""}`}>
-                <User size={18} className="login__input-icon" />
+              <div className={`login__input-wrapper ${fieldErrors.email ? "login__input-wrapper--error" : ""}`}>
+                <Mail size={18} className="login__input-icon" />
                 <input
-                  id="username"
+                  id="email"
                   className="login__input"
-                  type="text"
-                  placeholder="Ingresa tu usuario"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  autoComplete="username"
+                  type="email"
+                  placeholder="correo@ejemplo.com"
+                  value={email}
+                  onChange={handleEmailChange}
+                  autoComplete="email"
                   disabled={isLoading}
                 />
               </div>
-              {fieldErrors.username && (
-                <span className="login__field-error">{fieldErrors.username}</span>
+              {fieldErrors.email && (
+                <span className="login__field-error">{fieldErrors.email}</span>
               )}
             </div>
 
@@ -178,6 +210,12 @@ const Login = () => {
             </button>
           </form>
 
+          <div className="login__register">
+            <p>
+              ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
+            </p>
+          </div>
+          
           <div className="login__footer">
             <p>© 2024 Gym Management</p>
           </div>
