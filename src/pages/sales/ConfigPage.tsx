@@ -1,8 +1,10 @@
 /* Pagina de configuracion del negocio */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Building2 } from "lucide-react";
+import { ArrowLeft, Save, Building2, MessageSquare, Lock } from "lucide-react";
 import "../../styles/config.css";
+import { hasPlanFeature } from "../../services/api";
+import WhatsAppMessageModal from "../../components/whatsapp/WhatsAppMessageModal";
 
 interface ConfigData {
   businessName: string;
@@ -38,6 +40,8 @@ const ConfigPage = () => {
   const navigate = useNavigate();
   const [config, setConfig] = useState<ConfigData>(() => loadConfig());
   const [saved, setSaved] = useState(false);
+  const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false);
+  const isPro = hasPlanFeature("whatsapp:write");
 
   const handleSave = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
@@ -115,6 +119,30 @@ const ConfigPage = () => {
           </div>
         </div>
 
+        <div className="config-section">
+          <div className="config-section__header">
+            <MessageSquare size={20} />
+            <h3>Notificaciones WhatsApp</h3>
+          </div>
+          <div className="config-section__body">
+            {isPro ? (
+              <button
+                className="whatsapp-config-btn"
+                onClick={() => setWhatsAppModalOpen(true)}
+              >
+                <MessageSquare size={18} />
+                Configurar mensajes automáticos
+              </button>
+            ) : (
+              <div className="pro-feature-locked">
+                <Lock size={16} />
+                <p>Configurar mensajes automáticos</p>
+                <span className="pro-badge">PRO</span>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="config-actions">
           <button className="config-save-btn" onClick={handleSave}>
             <Save size={18} />
@@ -122,6 +150,11 @@ const ConfigPage = () => {
           </button>
         </div>
       </div>
+      
+      <WhatsAppMessageModal
+        isOpen={whatsAppModalOpen}
+        onClose={() => setWhatsAppModalOpen(false)}
+      />
     </main>
   );
 };

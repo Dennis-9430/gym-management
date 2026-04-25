@@ -41,7 +41,7 @@ const ClientSearch = ({
           <div className="search-filters">
             <button
               onClick={showAll}
-              className={filterMode === "INACTIVE" ? "active-filter" : ""}
+              className={filterMode === "ALL" ? "active-filter" : ""}
             >
               Todos
             </button>

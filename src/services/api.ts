@@ -124,6 +124,8 @@ export const hasPlanFeature = (feature: string): boolean => {
       "reports:write",
       "config:read",
       "config:write",
+      "whatsapp:read",
+      "whatsapp:write",
     ],
   };
   

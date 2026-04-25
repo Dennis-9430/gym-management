@@ -183,8 +183,8 @@ export const listClientsReducer = (state: State, action: Action): State => {
           ? "desc"
           : "asc";
       const sorted = [...state.filteredClients].sort((a, b) => {
-        const valueA = String(a[field]).toLowerCase();
-        const valueB = String(b[field]).toLocaleLowerCase();
+const valueA = String(a[field]).toLowerCase();
+      const valueB = String(b[field]).toLowerCase();
         if (valueA < valueB) return direction === "asc" ? -1 : 1;
         if (valueA > valueB) return direction === "desc" ? 1 : -1;
         return 0;

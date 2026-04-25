@@ -53,7 +53,6 @@ const ClientTable = ({
             {renderHeader("Apellidos", "lastName")}
             {renderHeader("Nombres", "firstName")}
             <th>Expiracion</th>
-            <th>Huella</th>
             {showActions && <th>Acciones</th>}
           </tr>
         </thead>

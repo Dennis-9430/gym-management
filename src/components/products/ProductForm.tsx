@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { Package, FileText, Tag, DollarSign, Layers, AlertTriangle } from "lucide-react";
 import type { ProductInput } from "../../types/product.types";
 import {
   PRODUCT_CATEGORIES,
@@ -53,7 +52,7 @@ const ProductForm = ({
     setError(null);
 
     if (!form.code.trim()) {
-      setError("El código del producto es obligatorio");
+      setError("El codigo del producto es obligatorio");
       return;
     }
 
@@ -63,7 +62,7 @@ const ProductForm = ({
     }
 
     if (!form.description.trim()) {
-      setError("La descripción es obligatoria");
+      setError("La descripcion es obligatoria");
       return;
     }
 
@@ -88,103 +87,82 @@ const ProductForm = ({
   return (
     <form className="register-form product-form" onSubmit={handleSubmit}>
       <div className="form-group">
-        <label>Código del producto</label>
-        <div className="input-with-icon">
-          <Tag size={16} />
-          <input
-            value={form.code}
-            onChange={(e) => updateField("code", e.target.value)}
-            placeholder="Código SKU o barras"
-          />
-        </div>
+        <label>Codigo del producto</label>
+        <input
+          value={form.code}
+          onChange={(e) => updateField("code", e.target.value)}
+          placeholder="Codigo SKU o barras"
+        />
       </div>
 
       <div className="form-group">
         <label>Nombre</label>
-        <div className="input-with-icon">
-          <Package size={16} />
-          <input
-            value={form.name}
-            onChange={(e) => updateField("name", e.target.value)}
-            placeholder="Nombre"
-          />
-        </div>
+        <input
+          value={form.name}
+          onChange={(e) => updateField("name", e.target.value)}
+          placeholder="Nombre"
+        />
       </div>
 
       <div className="form-group full-width">
-        <label>Descripción</label>
-        <div className="input-with-icon textarea-field">
-          <FileText size={16} />
-          <textarea
-            value={form.description}
-            onChange={(e) => updateField("description", e.target.value)}
-            placeholder="Descripción"
-          />
-        </div>
+        <label>Descripcion</label>
+        <textarea
+          value={form.description}
+          onChange={(e) => updateField("description", e.target.value)}
+          placeholder="Descripcion"
+        />
       </div>
 
       <div className="form-group">
-        <label>Categoría</label>
-        <div className="input-with-icon">
-          <Tag size={16} />
-          <select
-            value={form.category}
-            onChange={(e) =>
-              updateField(
-                "category",
-                e.target.value as ProductInput["category"],
-              )
-            }
-          >
-            {PRODUCT_CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {PRODUCT_CATEGORY_LABELS[category]}
-              </option>
-            ))}
-          </select>
-        </div>
+        <label>Categoria</label>
+        <select
+          value={form.category}
+          onChange={(e) =>
+            updateField(
+              "category",
+              e.target.value as ProductInput["category"],
+            )
+          }
+        >
+          {PRODUCT_CATEGORIES.map((category) => (
+            <option key={category} value={category}>
+              {PRODUCT_CATEGORY_LABELS[category]}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="form-group">
         <label>Precio unitario</label>
-        <div className="input-with-icon">
-          <DollarSign size={16} />
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={form.unitPrice}
-            onChange={(e) => updateField("unitPrice", Number(e.target.value))}
-          />
-        </div>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          value={form.unitPrice}
+          onChange={(e) => updateField("unitPrice", Number(e.target.value))}
+        />
       </div>
 
       <div className="form-group">
         <label>Cantidad</label>
-        <div className="input-with-icon">
-          <Layers size={16} />
-          <input
-            type="number"
-            min="0"
-            step="1"
-            value={form.quantity}
-            onChange={(e) => updateField("quantity", Number(e.target.value))}
-          />
-        </div>
+        <input
+          type="number"
+          min="0"
+          step="1"
+          value={form.quantity}
+          onChange={(e) => updateField("quantity", Number(e.target.value))}
+        />
       </div>
 
       <div className="form-group">
-        <label>Stock mínimo</label>
-        <div className="input-with-icon">
-          <AlertTriangle size={16} />
-          <input
-            type="number"
-            min="0"
-            step="1"
-            value={form.minStock}
-            onChange={(e) => updateField("minStock", Number(e.target.value))}
-          />
-        </div>
+        <label>Stock minimo</label>
+        <input
+          type="number"
+          min="0"
+          step="1"
+          value={form.minStock}
+          onChange={(e) => updateField("minStock", Number(e.target.value))}
+        />
       </div>
 
       {error && <p className="form-error">{error}</p>}

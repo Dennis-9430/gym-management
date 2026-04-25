@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { User, IdCard, Mail, Phone, MapPin, Lock, Shield } from "lucide-react";
 import type {
   EmployeeInput,
   EmployeeRole,
@@ -16,7 +15,7 @@ interface Props {
   requirePassword?: boolean;
 }
 
-const roleOptions: EmployeeRole[] = ["ADMIN", "RECEPCIONISTA", "ENTRENADOR"];
+const roleOptions: EmployeeRole[] = ["ADMIN", "RECEPCIONISTA"];
 const statusOptions: EmployeeStatus[] = ["ACTIVO", "INACTIVO"];
 
 const defaultValues: EmployeeInput = {
@@ -92,134 +91,104 @@ const EmployeeForm = ({
     <form className="register-form employee-form" onSubmit={handleSubmit}>
       <div className="form-group ">
         <label>Cedula</label>
-        <div className="input-with-icon">
-          <IdCard size={16} />
-          <input
-            value={form.documentNumber}
-            onChange={(e) => updateField("documentNumber", e.target.value)}
-            placeholder="Numero de cedula"
-          />
-        </div>
+        <input
+          value={form.documentNumber}
+          onChange={(e) => updateField("documentNumber", e.target.value)}
+          placeholder="Numero de cedula"
+        />
       </div>
       <div className="form-group">
         <label>Estado</label>
-        <div className="input-with-icon">
-          <Shield size={16} />
-          <select
-            value={form.status}
-            onChange={(e) =>
-              updateField("status", e.target.value as EmployeeStatus)
-            }
-          >
-            {statusOptions.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={form.status}
+          onChange={(e) =>
+            updateField("status", e.target.value as EmployeeStatus)
+          }
+        >
+          {statusOptions.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="form-group">
         <label>Nombre</label>
-        <div className="input-with-icon">
-          <User size={16} />
-          <input
-            value={form.firstName}
-            onChange={(e) => updateField("firstName", e.target.value)}
-            placeholder="Nombre"
-          />
-        </div>
+        <input
+          value={form.firstName}
+          onChange={(e) => updateField("firstName", e.target.value)}
+          placeholder="Nombre"
+        />
       </div>
 
       <div className="form-group">
         <label>Apellido</label>
-        <div className="input-with-icon">
-          <User size={16} />
-          <input
-            value={form.lastName}
-            onChange={(e) => updateField("lastName", e.target.value)}
-            placeholder="Apellido"
-          />
-        </div>
+        <input
+          value={form.lastName}
+          onChange={(e) => updateField("lastName", e.target.value)}
+          placeholder="Apellido"
+        />
       </div>
 
       <div className="form-group">
         <label>Telefono</label>
-        <div className="input-with-icon">
-          <Phone size={16} />
-          <input
-            value={form.phone}
-            onChange={(e) => updateField("phone", e.target.value)}
-            placeholder="Telefono"
-          />
-        </div>
+        <input
+          value={form.phone}
+          onChange={(e) => updateField("phone", e.target.value)}
+          placeholder="Telefono"
+        />
       </div>
 
       <div className="form-group ">
         <label>Direccion</label>
-        <div className="input-with-icon">
-          <MapPin size={16} />
-          <input
-            value={form.address}
-            onChange={(e) => updateField("address", e.target.value)}
-            placeholder="Direccion"
-          />
-        </div>
+        <input
+          value={form.address}
+          onChange={(e) => updateField("address", e.target.value)}
+          placeholder="Direccion"
+        />
       </div>
       <div className="form-group">
         <label>Email</label>
-        <div className="input-with-icon">
-          <Mail size={16} />
-          <input
-            type="email"
-            value={form.email}
-            onChange={(e) => updateField("email", e.target.value)}
-            placeholder="correo@email.com"
-          />
-        </div>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => updateField("email", e.target.value)}
+          placeholder="correo@email.com"
+        />
       </div>
 
       <div className="form-group ">
         <label>Usuario</label>
-        <div className="input-with-icon">
-          <User size={16} />
-          <input
-            value={form.username}
-            onChange={(e) => updateField("username", e.target.value)}
-            placeholder="Usuario"
-          />
-        </div>
+        <input
+          value={form.username}
+          onChange={(e) => updateField("username", e.target.value)}
+          placeholder="Usuario"
+        />
       </div>
       <div className="form-group">
         <label>Contrasena</label>
-        <div className="input-with-icon">
-          <Lock size={16} />
-          <input
-            type="password"
-            value={form.password}
-            onChange={(e) => updateField("password", e.target.value)}
-            placeholder="Contrasena"
-          />
-        </div>
+        <input
+          type="password"
+          value={form.password}
+          onChange={(e) => updateField("password", e.target.value)}
+          placeholder="Contrasena"
+        />
       </div>
 
       <div className="form-group ">
         <label>Rol</label>
-        <div className="input-with-icon">
-          <Shield size={16} />
-          <select
-            value={form.role}
-            onChange={(e) =>
-              updateField("role", e.target.value as EmployeeRole)
-            }
-          >
-            {roleOptions.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={form.role}
+          onChange={(e) =>
+            updateField("role", e.target.value as EmployeeRole)
+          }
+        >
+          {roleOptions.map((role) => (
+            <option key={role} value={role}>
+              {role}
+            </option>
+          ))}
+        </select>
       </div>
 
       {error && <p className="form-error">{error}</p>}
