@@ -26,7 +26,7 @@ const PLANS: Plan[] = [
       "Punto de Venta (POS)",
       "Registro de Asistencia"
     ],
-    demoEmail: "demo@gym.com",
+    demoEmail: "demo-basic@gmail.com",
     demoPassword: "demoBasic123"
   },
   {
@@ -40,7 +40,7 @@ const PLANS: Plan[] = [
       "Configuración Completa",
       "Soporte Prioritario"
     ],
-    demoEmail: "demo-pro@gym.com",
+    demoEmail: "demo-pro@gmail.com",
     demoPassword: "demoPro123"
   }
 ];
