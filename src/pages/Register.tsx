@@ -1,7 +1,7 @@
 /* Página de registro de nuevo gimnasio (Landing) */
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Dumbbell, User, Mail, Phone, Building2, Check, Loader2 } from "lucide-react";
+import { Dumbbell, User, Mail, Phone, Building2, Check, Loader2, Play } from "lucide-react";
 import "../styles/login.css";
 import "../styles/register.css";
 
@@ -10,6 +10,8 @@ interface Plan {
   name: string;
   price: number;
   features: string[];
+  demoEmail: string;
+  demoPassword: string;
 }
 
 const PLANS: Plan[] = [
@@ -23,7 +25,9 @@ const PLANS: Plan[] = [
       "Inventario de Productos",
       "Punto de Venta (POS)",
       "Registro de Asistencia"
-    ]
+    ],
+    demoEmail: "demo@gym.com",
+    demoPassword: "demoBasic123"
   },
   {
     id: "PREMIUM",
@@ -35,7 +39,9 @@ const PLANS: Plan[] = [
       "Reportes Financieros",
       "Configuración Completa",
       "Soporte Prioritario"
-    ]
+    ],
+    demoEmail: "demo-pro@gym.com",
+    demoPassword: "demoPro123"
   }
 ];
 
@@ -98,6 +104,48 @@ const Register = () => {
   const handleSelectPlan = (planId: string) => {
     setSelectedPlan(planId);
     setStep("form");
+  };
+
+  const handleDemoLogin = async (planId: string) => {
+    setIsLoading(true);
+    setError("");
+
+    const plan = PLANS.find(p => p.id === planId);
+    if (!plan) {
+      setError("Plan no encontrado");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/api/tenants/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: plan.demoEmail,
+          password: plan.demoPassword
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Error al iniciar demo");
+      }
+
+      localStorage.setItem("tenantToken", data.accessToken);
+      localStorage.setItem("tenant", JSON.stringify({
+        ...data.tenant,
+        isDemo: true,
+        demoPlan: planId
+      }));
+      
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error de conexión");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -184,13 +232,24 @@ const Register = () => {
                     </li>
                   ))}
                 </ul>
-                <button
-                  type="button"
-                  className="register-landing__select"
-                  onClick={() => handleSelectPlan(plan.id)}
-                >
-                  Seleccionar {plan.name}
-                </button>
+                <div className="register-landing__actions">
+                  <button
+                    type="button"
+                    className="register-landing__demo"
+                    onClick={() => handleDemoLogin(plan.id)}
+                    disabled={isLoading}
+                  >
+                    <Play size={16} />
+                    Probar Gratis
+                  </button>
+                  <button
+                    type="button"
+                    className="register-landing__select"
+                    onClick={() => handleSelectPlan(plan.id)}
+                  >
+                    Seleccionar {plan.name}
+                  </button>
+                </div>
               </div>
             ))}
           </div>

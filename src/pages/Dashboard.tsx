@@ -19,6 +19,18 @@ const Dashboard = () => {
   const tenantPlan = getTenantPlan();
   const isPremium = tenantPlan === "PREMIUM";
 
+  /* Verificar si es modo demo */
+  const tenantData = localStorage.getItem("tenant");
+  let isDemo = false;
+  let demoPlan = "";
+  if (tenantData) {
+    try {
+      const data = JSON.parse(tenantData);
+      isDemo = data.isDemo || false;
+      demoPlan = data.demoPlan || "";
+    } catch {}
+  }
+
   /* Filtra las secciones según el rol y el plan */
   const filteredSections = sections.filter((section) => {
     // Filtrar por rol
@@ -26,9 +38,21 @@ const Dashboard = () => {
       return false;
     }
     
-    // Filtrar por plan (si requiere PREMIUM y no es PREMIUM, ocultar)
-    if (section.plan === "PREMIUM" && !isPremium) {
-      return false;
+    // En modo demo, aplicar restricciones según el plan
+    if (isDemo) {
+      if (demoPlan === "BASIC") {
+        // BASIC: solo módulos permitidos
+        const basicAllowed = ["clients", "sales", "products", "attendance", "memberships"];
+        if (!basicAllowed.includes(section.id)) {
+          return false;
+        }
+      }
+      // PREMIUM: permitir todo
+    } else {
+      // Modo normal: filtrar por plan
+      if (section.plan === "PREMIUM" && !isPremium) {
+        return false;
+      }
     }
     
     return true;

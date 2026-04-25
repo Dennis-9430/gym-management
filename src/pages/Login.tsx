@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import type { AuthUser } from "../types/user.types";
-import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail } from "lucide-react";
+import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail, AlertTriangle } from "lucide-react";
 import "../styles/login.css";
 
 interface TenantLoginResponse {
@@ -28,6 +28,19 @@ const Login = () => {
   
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  /* Verificar si es una sesión demo */
+  useState(() => {
+    const tenant = localStorage.getItem("tenant");
+    if (tenant) {
+      try {
+        const data = JSON.parse(tenant);
+        if (data.isDemo) {
+          console.log("Modo demoactivo - plan:", data.demoPlan);
+        }
+      } catch {}
+    }
+  });
 
   /* Valida que los campos no estén vacíos */
   const validateForm = (): boolean => {

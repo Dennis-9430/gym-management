@@ -17,26 +17,35 @@ import { authReducer } from "../hooks/authHook";
 import { AuthContext } from "./AuthContext";
 
 /**
- * Propiedades requeridas por el componente AuthProvider.
- * 
- * @interface AuthProviderProps
- * @property {React.ReactNode} children - Componentes hijos que serán envueltos por el proveedor
- */
-interface AuthProviderProps {
-  /** Componentes hijos que recibirán el contexto de autenticación */
-  children: React.ReactNode;
-}
-
-/**
- * Estado inicial del reducer de autenticación.
- * Representa el estado antes de que el usuario inicie sesión.
- * 
- * @constant initialState
- * @type {{ user: AuthUser | null }}
- */
-const initialState = {
-  user: null as AuthUser | null,
-};
+    * Limpia el usuario de localStorage y reinicia el estado global.
+    * 
+    * @function logout
+    * @returns {void}
+    */
+  const logout = () => {
+    // Guardar datos del tenant para verificar si era demo
+    const tenantData = localStorage.getItem("tenant");
+    let wasDemo = false;
+    if (tenantData) {
+      try {
+        const data = JSON.parse(tenantData);
+        wasDemo = data.isDemo || false;
+      } catch {}
+    }
+    
+    // Eliminar el usuario de localStorage
+    localStorage.removeItem("user");
+    localStorage.removeItem("tenantToken");
+    localStorage.removeItem("tenant");
+    
+    // Reiniciar el estado global
+    dispatch({ type: "LOGOUT" });
+    
+    // Si era demo, mostrar mensaje
+    if (wasDemo) {
+      console.log("Demo finalizada");
+    }
+  };
 
 /**
  * Proveedor de autenticación que envuelve la aplicación.
