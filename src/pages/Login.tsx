@@ -31,6 +31,8 @@ const Login = () => {
   const [searchParams] = useSearchParams();
 
   // Detectar si viene de demo y prellenar credenciales
+  const [isDemoSession, setIsDemoSession] = useState(false);
+  
   useEffect(() => {
     const isDemo = searchParams.get("demo") === "true";
     
@@ -41,6 +43,7 @@ const Login = () => {
           const data = JSON.parse(creds);
           setEmail(data.email || "");
           setPassword(data.password || "");
+          setIsDemoSession(true);
         } catch (e) {
           console.error("Error parsing demo credentials:", e);
         }
@@ -160,7 +163,7 @@ const Login = () => {
               </div>
             )}
 
-            <div className="login__field">
+<div className="login__field">
               <label htmlFor="email" className="login__label">
                 Correo Electrónico
               </label>
@@ -174,7 +177,7 @@ const Login = () => {
                   value={email}
                   onChange={handleEmailChange}
                   autoComplete="email"
-                  disabled={isLoading}
+                  disabled={isLoading || isDemoSession}
                 />
               </div>
               {fieldErrors.email && (
@@ -186,27 +189,28 @@ const Login = () => {
               <label htmlFor="password" className="login__label">
                 Contraseña
               </label>
-              <div className={`login__input-wrapper ${fieldErrors.password ? "login__input-wrapper--error" : ""}`}>
-                <Lock size={18} className="login__input-icon" />
+              <div className={`login__field-wrapper ${fieldErrors.password ? "login__field-wrapper--error" : ""}`}>
+                <Lock size={18} className="login__field-icon" />
                 <input
                   id="password"
-                  className="login__input"
+                  className="login__field-input"
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingresa tu contraseña"
                   value={password}
                   onChange={handlePasswordChange}
                   autoComplete="current-password"
-                  disabled={isLoading}
+                  disabled={isLoading || isDemoSession}
                 />
-                <button
-                  type="button"
-                  className="login__toggle-password"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                  tabIndex={0}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                {!isDemoSession && (
+                  <button
+                    type="button"
+                    className="login__field-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                )}
               </div>
               {fieldErrors.password && (
                 <span className="login__field-error">{fieldErrors.password}</span>
