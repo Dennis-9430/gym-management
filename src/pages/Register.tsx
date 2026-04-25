@@ -106,46 +106,22 @@ const Register = () => {
     setStep("form");
   };
 
-  const handleDemoLogin = async (planId: string) => {
-    setIsLoading(true);
-    setError("");
-
+  const handleDemoLogin = (planId: string) => {
     const plan = PLANS.find(p => p.id === planId);
     if (!plan) {
       setError("Plan no encontrado");
-      setIsLoading(false);
       return;
     }
-
-    try {
-      const response = await fetch("http://localhost:8000/api/tenants/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: plan.demoEmail,
-          password: plan.demoPassword
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.detail || "Error al iniciar demo");
-      }
-
-      localStorage.setItem("tenantToken", data.accessToken);
-      localStorage.setItem("tenant", JSON.stringify({
-        ...data.tenant,
-        isDemo: true,
-        demoPlan: planId
-      }));
-      
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error de conexión");
-    } finally {
-      setIsLoading(false);
-    }
+    
+    // Guardar credenciales en localStorage para login
+    localStorage.setItem("demoCredentials", JSON.stringify({
+      email: plan.demoEmail,
+      password: plan.demoPassword,
+      demoPlan: planId
+    }));
+    
+    // Redireccionar a login con parámetro
+    navigate(`/?demo=true&plan=${planId}`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

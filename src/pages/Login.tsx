@@ -1,6 +1,6 @@
 /* Página de inicio de sesión (Tenant Login) */
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import type { AuthUser } from "../types/user.types";
 import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail, AlertTriangle } from "lucide-react";
@@ -28,19 +28,28 @@ const Login = () => {
   
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  /* Verificar si es una sesión demo */
-  useState(() => {
-    const tenant = localStorage.getItem("tenant");
-    if (tenant) {
-      try {
-        const data = JSON.parse(tenant);
-        if (data.isDemo) {
-          console.log("Modo demoactivo - plan:", data.demoPlan);
-        }
-      } catch {}
+  // Detectar si viene de demo y prellenar credenciales
+  useEffect(() => {
+    const isDemo = searchParams.get("demo") === "true";
+    const demoPlan = searchParams.get("plan");
+    
+    if (isDemo) {
+      // Buscar credenciales en localStorage o URL
+      const creds = localStorage.getItem("demoCredentials");
+      if (creds) {
+        try {
+          const data = JSON.parse(creds);
+          setEmail(data.email || "");
+          setPassword(data.password || "");
+          
+          // Limpiar URL después de usar
+          navigate("/login", { replace: true });
+        } catch {}
+      }
     }
-  });
+  }, [searchParams, navigate]);
 
   /* Valida que los campos no estén vacíos */
   const validateForm = (): boolean => {
