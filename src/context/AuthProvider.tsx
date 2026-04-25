@@ -16,6 +16,8 @@ import type { AuthUser } from "../types/user.types";
 import { authReducer } from "../hooks/authHook";
 import { AuthContext } from "./AuthContext";
 
+const initialState = { user: null };
+
 /**
     * Limpia el usuario de localStorage y reinicia el estado global.
     * 
