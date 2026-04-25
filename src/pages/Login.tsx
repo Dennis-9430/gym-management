@@ -33,23 +33,20 @@ const Login = () => {
   // Detectar si viene de demo y prellenar credenciales
   useEffect(() => {
     const isDemo = searchParams.get("demo") === "true";
-    const demoPlan = searchParams.get("plan");
     
     if (isDemo) {
-      // Buscar credenciales en localStorage o URL
       const creds = localStorage.getItem("demoCredentials");
       if (creds) {
         try {
           const data = JSON.parse(creds);
           setEmail(data.email || "");
           setPassword(data.password || "");
-          
-          // Limpiar URL después de usar
-          navigate("/login", { replace: true });
-        } catch {}
+        } catch (e) {
+          console.error("Error parsing demo credentials:", e);
+        }
       }
     }
-  }, [searchParams, navigate]);
+  }, [searchParams]);
 
   /* Valida que los campos no estén vacíos */
   const validateForm = (): boolean => {
