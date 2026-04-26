@@ -96,6 +96,10 @@
 
 .employees-list {
   padding: 8px 0 0;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
 }
 
 .employees-table-wrapper {
@@ -104,12 +108,14 @@
   border: 1px solid var(--color-border);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
+  width: 100%;
+  max-width: 800px;
 }
 
 .employee-table {
   width: 100%;
-  min-width: 760px;
   border-collapse: collapse;
+  margin: 0 auto;
 }
 
 .employee-table thead {
@@ -186,90 +192,6 @@
   background: var(--color-danger-hover);
 }
 
-/* Employee Modal */
-.employee-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  z-index: 500;
-}
-
-.employee-modal {
-  width: min(760px, 100%);
-  background: var(--color-bg-primary);
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid var(--color-border);
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
-  max-height: 90vh;
-  overflow-y: auto;
-  animation: modalIn 250ms ease ease;
-}
-
-.employee-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.employee-modal-header h3 {
-  margin: 0;
-  font-size: var(--font-size-xl);
-  color: var(--color-primary);
-}
-
-.employee-modal-close {
-  border: none;
-  background: var(--color-bg-tertiary);
-  border-radius: 10px;
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: background 150ms ease;
-}
-
-.employee-modal-close:hover {
-  background: var(--color-border);
-}
-
-.employee-form {
-  gap: 8px;
-  padding: 12px;
-}
-
-.employee-form .form-group {
-  margin-bottom: 4px;
-}
-
-.employee-form .form-group label {
-  font-size: var(--font-size-xs);
-  margin-bottom: 4px;
-}
-
-.employee-form .input-with-icon input,
-.employee-form .input-with-icon select {
-  padding: 8px 8px 8px 40px;
-  font-size: var(--font-size-sm);
-}
-
-.employee-form .form-buttons {
-  margin-top: 8px;
-  gap: 8px;
-}
-
-.employee-form .btn-register {
-  padding: 8px 16px;
-  font-size: var(--font-size-sm);
-}
-
 .input-with-icon {
   position: relative;
   display: flex;
@@ -322,16 +244,5 @@
 
   .form-buttons {
     flex-direction: column;
-  }
-
-  .employee-modal {
-    padding: 20px;
-  }
-}
-
-@media (max-width: 640px) {
-  .employees-header {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }

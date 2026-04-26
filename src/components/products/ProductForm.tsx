@@ -85,7 +85,7 @@ const ProductForm = ({
   };
 
   return (
-    <form className="register-form product-form" onSubmit={handleSubmit}>
+    <form className="product-modal-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label>Codigo del producto</label>
         <input
@@ -172,7 +172,7 @@ const ProductForm = ({
           {submitLabel}
         </button>
         {onCancel && (
-          <button type="button" onClick={onCancel} className="btn-register">
+          <button type="button" onClick={onCancel} className="btn-register cancel">
             Cancelar
           </button>
         )}

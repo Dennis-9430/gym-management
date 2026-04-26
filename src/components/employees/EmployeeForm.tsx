@@ -88,7 +88,7 @@ const EmployeeForm = ({
   };
 
   return (
-    <form className="register-form employee-form" onSubmit={handleSubmit}>
+    <form className="employee-modal-form" onSubmit={handleSubmit}>
       <div className="form-group ">
         <label>Cedula</label>
         <input
@@ -198,7 +198,7 @@ const EmployeeForm = ({
           {submitLabel}
         </button>
         {onCancel && (
-          <button type="button" onClick={onCancel} className="btn-register">
+          <button type="button" onClick={onCancel} className="btn-register cancel">
             Cancelar
           </button>
         )}

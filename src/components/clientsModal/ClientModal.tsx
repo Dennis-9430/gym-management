@@ -6,9 +6,7 @@ import ContactFields from "../formClients/ContactFields";
 import EmergencyFields from "../formClients/EmergencyFields";
 import { createClient, updateClient } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";
-import "../../styles/clientsRegister.css";
 
-/* Modal de creación/edición de clientes */
 interface Props {
   onClose: () => void;
   onSaved?: (client: ClientForm) => void;
@@ -103,9 +101,8 @@ const ClientModal = ({
         <div className="client-modal-header">
           <div>
             <h3>{isEdit ? "Editar cliente" : "Registrar cliente"}</h3>
-            <p className="clients-modal-subtitle">
-              Completa los datos para {isEdit ? "actualizar" : "registrar"} el
-              cliente.
+            <p className="modal-subtitle">
+              Completa los datos para {isEdit ? "actualizar" : "registrar"} el cliente.
             </p>
           </div>
           <button className="client-modal-close" onClick={onClose}>
@@ -113,7 +110,7 @@ const ClientModal = ({
           </button>
         </div>
 
-        <form className="register-form" onSubmit={handleSubmit}>
+        <form className="client-modal-form" onSubmit={handleSubmit}>
           <PersonalDataFields form={form} updateField={updateField} />
           <ContactFields form={form} updateField={updateField} />
           <EmergencyFields form={form} updateField={updateField} />
@@ -122,7 +119,7 @@ const ClientModal = ({
             <button className="btn-register" type="submit">
               {isEdit ? "Actualizar cliente" : "Registrar cliente"}
             </button>
-            <button type="button" onClick={onClose} className="btn-register">
+            <button type="button" onClick={onClose} className="btn-register cancel">
               Cancelar
             </button>
           </div>

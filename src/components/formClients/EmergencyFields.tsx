@@ -1,6 +1,5 @@
 import type { ClientForm } from "../../types/client.types";
 
-/* Campos de contacto de emergencia */
 type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
 
 type Props = {

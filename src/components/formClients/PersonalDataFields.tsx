@@ -1,7 +1,5 @@
-import { IdCard, User, UserRound } from "lucide-react";
 import type { Person } from "../../types/person.types";
 
-/* Campos de datos personales en formulario */
 type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
 
 type Props<T extends Person> = {
@@ -9,10 +7,7 @@ type Props<T extends Person> = {
   updateField: UpdateField<T>;
 };
 
-function PersonalDataFields<T extends Person>({
-  form,
-  updateField,
-}: Props<T>) {
+function PersonalDataFields<T extends Person>({ form, updateField }: Props<T>) {
   return (
     <>
       <div className="form-group full-width">

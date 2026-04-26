@@ -1,6 +1,5 @@
 import type { Person } from "../../types/person.types";
 
-/* Campos de contacto en formulario */
 type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
 
 type Props<T extends Person> = {

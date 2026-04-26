@@ -6,7 +6,6 @@ import ProductTable from "../../components/products/ProductTable";
 import { useAuth } from "../../context/index.ts";
 import { useProducts } from "../../hooks/useProducts";
 import type { Product, ProductInput } from "../../types/product.types";
-import "../../styles/clientsRegister.css";
 import "../../styles/products.css";
 
 /* Pagina de gestion de productos e inventario */
