@@ -4,9 +4,12 @@
 
 import type { SaleInput, SaleRecord } from "../types/sales.types";
 
+// Configuración de API - usa variable de entorno o fallback
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 // Constantes de configuracion
 // Relacionado con: backend/app/routers/sales.py
-const API_BASE = "/api/sales";
+const API_BASE = `${getApiBaseUrl()}/api/sales`;
 const STORAGE_KEY = "gym-management.sales";
 
 // Funciones helper de fechas

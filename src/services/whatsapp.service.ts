@@ -1,5 +1,7 @@
 /* API de WhatsApp Notifications */
-const API_BASE = "/api/notifications";
+// Configuración de API - usa variable de entorno o fallback
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = `${getApiBaseUrl()}/api/notifications`;
 
 export interface WhatsAppConfig {
   type: "expiry" | "scheduled";

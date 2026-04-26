@@ -4,9 +4,12 @@
 
 import type { ClientForm } from "../types/client.types";
 
+// Configuración de API - usa variable de entorno o fallback
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 // Constantes de configuracion
 // Relacionado con: backend/app/routers/clients.py
-const API_BASE = "/api/clients";
+const API_BASE = `${getApiBaseUrl()}/api/clients`;
 const STORAGE_KEY = "gym-management.clients";
 
 // Obtiene clientes desde MongoDB

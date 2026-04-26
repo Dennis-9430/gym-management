@@ -1,4 +1,7 @@
 /* Servicio para reportes financieros diarios */
+// Configuración de API - usa variable de entorno o fallback
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export interface FinancialReport {
   id?: number;
   date: string;
@@ -32,7 +35,7 @@ export interface AttendanceSummary {
   daily: { date: string; count: number }[];
 }
 
-const API_BASE = "/api/reports";
+const API_BASE = `${getApiBaseUrl()}/api/reports`;
 const STORAGE_KEY = "gym-management.financial-reports";
 
 const loadReports = (): FinancialReport[] => {

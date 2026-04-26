@@ -54,9 +54,11 @@ const Renew = () => {
       return;
     }
 
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
     const fetchTenant = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/tenants/me?tenantId=${tenantId}`);
+        const response = await fetch(`${apiUrl}/api/tenants/me?tenantId=${tenantId}`);
         
         if (!response.ok) {
           throw new Error("Gimnasio no encontrado");
@@ -81,8 +83,10 @@ const Renew = () => {
     setIsRenewing(true);
     setError("");
 
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
     try {
-      const response = await fetch(`http://localhost:8000/api/tenants/renew`, {
+      const response = await fetch(`${apiUrl}/api/tenants/renew`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tenantId, plan: selectedPlan })

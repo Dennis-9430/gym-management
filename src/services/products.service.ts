@@ -5,9 +5,12 @@
 import type { Product, ProductInput, ProductUpdate } from "../types/product.types";
 import { services } from "../types/payment.types";
 
+// Configuración de API - usa variable de entorno o fallback
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 // Constantes de configuracion
 // Relacionado con: backend/app/routers/products.py
-const API_BASE = "/api/products";
+const API_BASE = `${getApiBaseUrl()}/api/products`;
 const STORAGE_KEY = "gym-management.products";
 
 // Datos de ejemplo para desarrollo

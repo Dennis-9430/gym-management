@@ -2,7 +2,9 @@
 import type { Service } from "../types/payment.types";
 import { services as defaultServices } from "../types/payment.types";
 
-const API_BASE = "/api/services";
+// Configuración de API - usa variable de entorno o fallback
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = `${getApiBaseUrl()}/api/services`;
 
 interface ServiceResponse {
   services: Service[];

@@ -1,87 +1,123 @@
 /* Servicio de API con manejo de errores y protección por plan */
-const API_BASE_URL = "http://localhost:8000";
+
+// URL del backend (usa .env o fallback)
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+/* Construir URL correctamente */
+const buildUrl = (endpoint: string) => {
+  return `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+};
 
 /* Headers por defecto */
 const getHeaders = () => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  
+
   const token = localStorage.getItem("tenantToken");
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
-  
+
   return headers;
 };
 
 /* Manejo de errores de respuesta */
 const handleResponse = async (response: Response) => {
-  const data = await response.json();
-  
+  let data;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
   if (!response.ok) {
     if (response.status === 403) {
-      // Error de plan - mostrar mensaje al usuario
       throw new Error(data.detail || "No tienes acceso a esta funcionalidad");
     }
-    
+
     if (response.status === 401) {
-      // No autorizado - limpiar sesión
       localStorage.removeItem("tenantToken");
       localStorage.removeItem("tenant");
       window.location.href = "/";
       throw new Error("Sesión expirada");
     }
-    
+
     throw new Error(data.detail || "Error en la solicitud");
   }
-  
+
   return data;
 };
 
 /* GET request */
 export const apiGet = async (endpoint: string) => {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: "GET",
-    headers: getHeaders(),
-  });
-  return handleResponse(response);
+  try {
+    const response = await fetch(buildUrl(endpoint), {
+      method: "GET",
+      headers: getHeaders(),
+    });
+
+    return handleResponse(response);
+  } catch (error) {
+    console.error("[API GET ERROR]", error);
+    throw new Error("No se pudo conectar con el servidor");
+  }
 };
 
 /* POST request */
 export const apiPost = async (endpoint: string, body: unknown) => {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify(body),
-  });
-  return handleResponse(response);
+  try {
+    const response = await fetch(buildUrl(endpoint), {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(body),
+    });
+
+    return handleResponse(response);
+  } catch (error) {
+    console.error("[API POST ERROR]", error);
+    throw new Error("No se pudo conectar con el servidor");
+  }
 };
 
 /* PUT request */
 export const apiPut = async (endpoint: string, body: unknown) => {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: "PUT",
-    headers: getHeaders(),
-    body: JSON.stringify(body),
-  });
-  return handleResponse(response);
+  try {
+    const response = await fetch(buildUrl(endpoint), {
+      method: "PUT",
+      headers: getHeaders(),
+      body: JSON.stringify(body),
+    });
+
+    return handleResponse(response);
+  } catch (error) {
+    console.error("[API PUT ERROR]", error);
+    throw new Error("No se pudo conectar con el servidor");
+  }
 };
 
 /* DELETE request */
 export const apiDelete = async (endpoint: string) => {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
-  return handleResponse(response);
+  try {
+    const response = await fetch(buildUrl(endpoint), {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
+
+    return handleResponse(response);
+  } catch (error) {
+    console.error("[API DELETE ERROR]", error);
+    throw new Error("No se pudo conectar con el servidor");
+  }
 };
 
 /* Verificar plan del tenant */
 export const getTenantPlan = (): string | null => {
   const tenant = localStorage.getItem("tenant");
   if (!tenant) return null;
-  
+
   try {
     return JSON.parse(tenant).plan;
   } catch {
@@ -93,7 +129,7 @@ export const getTenantPlan = (): string | null => {
 export const hasPlanFeature = (feature: string): boolean => {
   const plan = getTenantPlan();
   if (!plan) return false;
-  
+
   const features: Record<string, string[]> = {
     BASIC: [
       "clients:read",
@@ -128,7 +164,7 @@ export const hasPlanFeature = (feature: string): boolean => {
       "whatsapp:write",
     ],
   };
-  
+
   return features[plan]?.includes(feature) ?? false;
 };
 
