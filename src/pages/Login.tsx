@@ -79,8 +79,10 @@ const Login = () => {
 
     setIsLoading(true);
 
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
     try {
-      const response = await fetch("http://localhost:8000/api/tenants/login", {
+      const response = await fetch(`${apiUrl}/api/tenants/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -189,11 +191,11 @@ const Login = () => {
               <label htmlFor="password" className="login__label">
                 Contraseña
               </label>
-              <div className={`login__field-wrapper ${fieldErrors.password ? "login__field-wrapper--error" : ""}`}>
-                <Lock size={18} className="login__field-icon" />
+              <div className={`login__input-wrapper ${fieldErrors.password ? "login__input-wrapper--error" : ""}`}>
+                <Lock size={18} className="login__input-icon" />
                 <input
                   id="password"
-                  className="login__field-input"
+                  className="login__input"
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingresa tu contraseña"
                   value={password}
@@ -204,9 +206,10 @@ const Login = () => {
                 {!isDemoSession && (
                   <button
                     type="button"
-                    className="login__field-toggle"
+                    className="login__toggle-password"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    tabIndex={0}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -231,6 +234,26 @@ const Login = () => {
                 "Iniciar Sesión"
               )}
             </button>
+
+            {isDemoSession && (
+              <div className="login__demo-exit">
+                <a 
+                  href="/" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    localStorage.removeItem("demoCredentials");
+                    setEmail("");
+                    setPassword("");
+                    setIsDemoSession(false);
+                    navigate("/", { replace: true });
+                  }}
+                >
+                  Salir del modo demo
+                </a>
+                {" o "}
+                <Link to="/register">Crear cuenta propia</Link>
+              </div>
+            )}
           </form>
 
           <div className="login__register">

@@ -287,6 +287,27 @@
   transform: translateY(0);
 }
 
+.login__demo-exit {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--color-background-alt);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.login__demo-exit a {
+  color: var(--color-action);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+.login__demo-exit a:hover {
+  text-decoration: underline;
+}
+
 .login__button:disabled {
   opacity: 0.8;
   cursor: not-allowed;
