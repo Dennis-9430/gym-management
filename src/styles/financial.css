@@ -255,6 +255,33 @@
   background: #7c3aed;
 }
 
+.financial-dashboard-btn--locked {
+  background: var(--color-background-alt);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  filter: blur(0.3px);
+  opacity: 0.85;
+}
+
+.financial-dashboard-locked {
+  position: relative;
+  display: inline-block;
+}
+
+.financial-dashboard-locked .pro-badge {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  background: #fef08a;
+  color: #854d0e;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
 .financial-dashboard {
   padding: 20px;
   max-width: 1400px;

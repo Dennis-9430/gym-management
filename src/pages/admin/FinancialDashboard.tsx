@@ -7,14 +7,24 @@ import { ArrowLeft, TrendingUp } from "lucide-react";
 import {
   getFinancialSummary,
 } from "../../services/financialReports.service";
+import { usePlanAccess } from "../../hooks/usePlanAccess";
 import Modal from "../../components/common/Modal";
 import "../../styles/financial.css";
 
 /* Dashboard financiero con resumen diario y graficos */
 const FinancialDashboard = () => {
   const navigate = useNavigate();
+  const { isPremium } = usePlanAccess();
   const { transactions, groupByMonth, getTransactionsByDate } =
     useTransactions();
+
+  useEffect(() => {
+    if (!isPremium()) {
+      alert("Las estadísticas están disponibles en el plan PRO. ¡Upgrade tu plan para acceder!");
+      navigate("/financial");
+      return;
+    }
+  }, [isPremium, navigate]);
 
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0],

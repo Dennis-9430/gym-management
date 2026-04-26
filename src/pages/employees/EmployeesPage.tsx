@@ -1,17 +1,18 @@
 /* Pagina de gestion de empleados */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Lock } from "lucide-react";
 import EmployeeForm from "../../components/employees/EmployeeForm";
 import EmployeeSearch from "../../components/employees/EmployeeSearch";
 import EmployeeTable from "../../components/employees/EmployeeTable";
 import { useEmployees } from "../../hooks/useEmployees";
+import { usePlanAccess } from "../../hooks/usePlanAccess";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../../types/employee.types";
-import "../../styles/clientsRegister.css";
 import "../../styles/employees.css";
 
 const EmployeesPage = () => {
   const navigate = useNavigate();
+  const { isPremium } = usePlanAccess();
   const {
     employees,
     totalEmployees,
@@ -25,7 +26,20 @@ const EmployeesPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
+  const canAddEmployee = () => {
+    if (!isPremium() && totalEmployees >= 1) {
+      alert("En el plan BASIC solo puedes tener 1 empleado. ¡Upgrade a PRO para hasta 3!");
+      return false;
+    }
+    if (isPremium() && totalEmployees >= 3) {
+      alert("Has alcanzado el límite máximo de 3 empleados en el plan PRO.");
+      return false;
+    }
+    return true;
+  };
+
   const openNewForm = () => {
+    if (!canAddEmployee()) return;
     setEditingEmployee(null);
     setShowForm(true);
   };
@@ -45,6 +59,18 @@ const EmployeesPage = () => {
     if (!confirm(`Deseas ${actionLabel} este empleado?`)) {
       return;
     }
+
+    if (!editingEmployee) {
+      if (!isPremium() && totalEmployees >= 1) {
+        alert("En el plan BASIC solo puedes tener 1 empleado. ¡Upgrade a PRO para hasta 3!");
+        return;
+      }
+      if (isPremium() && totalEmployees >= 3) {
+        alert("Has alcanzado el límite máximo de 3 empleados en el plan PRO.");
+        return;
+      }
+    }
+
     try {
       if (editingEmployee) {
         const payload: Record<string, unknown> = { ...values };
@@ -78,10 +104,24 @@ const EmployeesPage = () => {
         </div>
         <div className="employees-actions">
           <EmployeeSearch value={search} onChange={setSearch} />
-          <button className="employee-add-btn" onClick={openNewForm}>
-            <Plus size={18} />
-            Agregar empleado
-          </button>
+          {totalEmployees >= 1 && !isPremium() ? (
+            <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
+              <Lock size={16} />
+              <p>Agregar empleado</p>
+              <span className="pro-badge">BASIC</span>
+            </div>
+          ) : totalEmployees >= 3 && isPremium() ? (
+            <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
+              <Lock size={16} />
+              <p>Límite alcanzado</p>
+              <span className="pro-badge">PRO</span>
+            </div>
+          ) : (
+            <button className="employee-add-btn" onClick={openNewForm}>
+              <Plus size={18} />
+              Agregar empleado
+            </button>
+          )}
         </div>
       </section>
 

@@ -80,6 +80,7 @@ export const sections: DashboardSection[] = [
     roles: ["ADMIN"],
     buttonLabel: "Ver personal",
     description: "Gestiona empleados",
+    plan: "PREMIUM",
   },
 
   {
@@ -90,6 +91,7 @@ export const sections: DashboardSection[] = [
     roles: ["ADMIN"],
     buttonLabel: "Ver reportes",
     description: "Análisis financiero del negocio",
+    plan: "PREMIUM",
   },
 
   // Historial de Asistencia - OCULTO completamente

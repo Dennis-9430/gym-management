@@ -38,23 +38,8 @@ const Dashboard = () => {
       return false;
     }
     
-    // En modo demo, aplicar restricciones según el plan
-    if (isDemo) {
-      if (demoPlan === "BASIC") {
-        // BASIC: solo módulos permitidos
-        const basicAllowed = ["clients", "sales", "products", "attendance", "memberships"];
-        if (!basicAllowed.includes(section.id)) {
-          return false;
-        }
-      }
-      // PREMIUM: permitir todo
-    } else {
-      // Modo normal: filtrar por plan
-      if (section.plan === "PREMIUM" && !isPremium) {
-        return false;
-      }
-    }
-    
+    // NUNCA ocultar módulos - siempre mostrar
+    // Si es PREMIUM y no tiene plan, mostrar con estado bloqueado
     return true;
   });
 
@@ -92,6 +77,7 @@ const Dashboard = () => {
                 icon={<Icon size={32} strokeWidth={1.8} />}
                 description={section.description}
                 buttonLabel={section.buttonLabel || "Abrir"}
+                plan={section.plan}
                 onClick={() => handleAction(section)}
               />
             );

@@ -73,6 +73,45 @@
   transform: scale(0.97);
 }
 
+/* Locked card state */
+.dashboard-card--locked {
+  background: var(--color-background-alt);
+  border-color: var(--color-border);
+  opacity: 0.85;
+  filter: blur(0.3px);
+  position: relative;
+}
+
+.dashboard-card--locked .pro-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #fef08a;
+  color: #854d0e;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.dashboard-card__icon--locked {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: var(--color-warning);
+}
+
+.dashboard-card__button--locked {
+  background: var(--color-background-alt);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  justify-content: center;
+}
+
+.dashboard-card__button--locked:hover {
+  background: var(--color-background-alt);
+}
+
 @media (max-width: 1023px) {
   .dashboard-card {
     padding: 20px 16px;
