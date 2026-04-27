@@ -17,6 +17,8 @@
   justify-content: center;
   z-index: 500;
   padding: 16px;
+  /* Permite centrar el modal y seguir desplazando si el contenido crece */
+  overflow-y: auto;
 }
 
 /* Modal Container */
@@ -29,6 +31,8 @@
   max-height: 90vh;
   overflow-y: auto;
   width: min(600px, 95vw);
+  /* Refuerza el centrado visual dentro del overlay */
+  margin: auto;
 }
 
 /* Modal Header */
@@ -95,6 +99,11 @@
 
 .employee-modal-form .form-group.full-width {
   grid-column: 1 / -1;
+}
+
+.employee-modal-form .form-error {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
 .employee-modal-form label {
@@ -167,7 +176,7 @@
     border-radius: 12px;
   }
 
-  .employee-modal-form .register-form {
+  .employee-modal-form {
     grid-template-columns: 1fr;
   }
 

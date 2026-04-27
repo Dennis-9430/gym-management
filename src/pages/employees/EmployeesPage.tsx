@@ -149,7 +149,8 @@ const EmployeesPage = () => {
             <div className="employee-modal-header">
               <div>
                 <h3>{editingEmployee ? "Editar empleado" : "Agregar empleado"}</h3>
-                <p className="employees-subtitle">
+                {/* Subtítulo del modal con clase específica para no depender del layout de la página */}
+                <p className="modal-subtitle">
                   Completa los datos para registrar el empleado.
                 </p>
               </div>
