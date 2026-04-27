@@ -91,16 +91,17 @@ const Products = () => {
           </p>
         </div>
         <div className="products-actions">
-          <button className="product-add-btn" onClick={openNewForm}>
-            <Plus size={18} />
-            Agregar producto
-          </button>
+          {/* Orden real recomendado: búsqueda/filtro primero, CTA al final */}
           <ProductSearch
             value={search}
             onChange={setSearch}
             category={categoryFilter}
             onCategoryChange={setCategoryFilter}
           />
+          <button className="product-add-btn" onClick={openNewForm}>
+            <Plus size={18} />
+            Agregar producto
+          </button>
         </div>
       </section>
 

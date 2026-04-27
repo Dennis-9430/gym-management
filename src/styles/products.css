@@ -1,6 +1,6 @@
 .products-container {
+  width: 100%;
   padding: 32px clamp(16px, 3vw, 40px);
-  background: var(--slate-100);
   min-height: calc(100vh - 70px);
   display: flex;
   flex-direction: column;
@@ -15,6 +15,8 @@
   gap: 24px;
   flex-wrap: wrap;
   flex-shrink: 0;
+  /* Empuja ambos extremos hacia adentro sin tocar cada bloque con márgenes manuales */
+  padding-inline: 100px;
 }
 
 .products-header h2 {
@@ -32,13 +34,20 @@
 .products-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 12px;
+  /* Mantiene buscador/filtro y CTA en una sola fila en desktop */
+  flex-wrap: nowrap;
+  flex: 1;
+  min-width: 0;
+  margin-left: auto;
 }
 
 .product-add-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   gap: 8px;
   padding: 8px 16px;
   border-radius: 10px;
@@ -48,7 +57,9 @@
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: background 150ms ease, transform 150ms ease;
+  transition:
+    background 150ms ease,
+    transform 150ms ease;
   white-space: nowrap;
 }
 
@@ -60,9 +71,11 @@
 .products-search {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex: 1;
+  gap: 8px;
   min-width: 0;
+  /* Limita el ancho para que el botón no caiga debajo */
+  max-width: 560px;
 }
 
 .search-input-wrapper {
@@ -86,7 +99,9 @@
   border: 1px solid var(--color-border-dark);
   background: var(--color-bg-primary);
   font-size: var(--font-size-base);
-  transition: border 150ms ease, box-shadow 150ms ease;
+  transition:
+    border 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .product-search:focus {
@@ -101,12 +116,12 @@
   border: 1px solid var(--color-border-dark);
   background: var(--color-bg-primary);
   font-size: var(--font-size-base);
-  flex: 1;
-  min-width: 0;
+  flex: 0 0 190px;
+  min-width: 190px;
 }
 
 .products-stats {
-  margin: 16px 0 12px;
+  margin: 16px 0 12px 100px;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
@@ -114,18 +129,21 @@
 .products-list {
   flex: 1;
   overflow-y: auto;
-  background: var(--color-bg-primary);
-  border-radius: 10px;
   margin-top: 16px;
   padding: 8px 0 0;
+  /* Solo la tabla se centra; el header conserva distribución completa */
+  display: flex;
+  justify-content: center;
 }
 
 .products-table-wrapper {
   background: var(--color-bg-primary);
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   overflow-x: auto;
+  width: 100%;
+  /* Tabla un poco más ancha que el layout general para mejorar lectura */
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .product-table {
@@ -135,16 +153,15 @@
 }
 
 .product-table thead {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-tertiary);
 }
 
 .product-table th {
   text-align: left;
   padding: 12px;
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .product-table td {
@@ -172,7 +189,9 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: transform 150ms ease, background 150ms ease;
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
 }
 
 .product-table .actions {
@@ -264,12 +283,14 @@
     width: 100%;
     align-items: stretch;
     gap: 8px;
+    margin-left: 0;
   }
 
   .products-search {
     flex-direction: column;
     width: 100%;
     gap: 8px;
+    min-width: 100%;
   }
 
   .product-search,
@@ -284,12 +305,12 @@
   }
 
   .products-stats {
-    text-align: center;
+    text-align: left;
   }
 }
 
 @media (max-width: 640px) {
-/* Estilos para página de productos */
+  /* Estilos para página de productos */
   .products-container {
     padding: 12px;
     height: auto;
