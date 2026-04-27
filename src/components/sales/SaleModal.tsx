@@ -5,6 +5,7 @@ import {
   Trash2,
   UserRound,
   X,
+  FileText,
 } from "lucide-react";
 import CartTable from "../pos/CartTable";
 import type { ClientForm } from "../../types/client.types";
@@ -55,6 +56,8 @@ interface SaleModalProps {
   onDiscountRateChange: (value: number) => void;
   onTaxRateChange: (value: number) => void;
   onCheckout: () => void;
+  generateInvoice: boolean;
+  onGenerateInvoiceChange: (value: boolean) => void;
 }
 
 const SaleModal = ({
@@ -91,6 +94,8 @@ const SaleModal = ({
   onDiscountRateChange,
   onTaxRateChange,
   onCheckout,
+  generateInvoice,
+  onGenerateInvoiceChange,
 }: SaleModalProps) => {
   if (!isOpen) return null;
 
@@ -242,6 +247,19 @@ const SaleModal = ({
                 onChange={(e) => onVoucherChange(e.target.value)}
                 placeholder="Codigo de voucher"
               />
+            </div>
+
+            <div className="pos-field-checkbox" style={{ marginTop: '12px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={generateInvoice}
+                  onChange={(e) => onGenerateInvoiceChange(e.target.checked)}
+                  style={{ width: '18px', height: '18px' }}
+                />
+                <FileText size={18} />
+                <span>Generar factura</span>
+              </label>
             </div>
           </div>
 

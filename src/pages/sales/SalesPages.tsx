@@ -55,7 +55,7 @@ const SalesPages = () => {
     setMembershipServices((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const {
+const {
     // State
     saleModalOpen,
     subscriptionModalOpen,
@@ -68,6 +68,7 @@ const SalesPages = () => {
     voucherCode,
     saleClientResults,
     matchedSaleClient,
+    generateInvoice,
     search,
     filteredCatalog,
 
@@ -98,6 +99,7 @@ const SalesPages = () => {
     setPaymentMethod,
     setVoucherCode,
     setSaleModalOpen,
+    setGenerateInvoice,
     setSearch,
     setSubscriptionSearch,
     setSubscriptionShowServices,
@@ -176,6 +178,8 @@ const SalesPages = () => {
         onDiscountRateChange={handleDiscountChange}
         onTaxRateChange={handleTaxChange}
         onCheckout={handleCheckout}
+        generateInvoice={generateInvoice ?? false}
+        onGenerateInvoiceChange={setGenerateInvoice}
       />
 
       <SubscriptionModal

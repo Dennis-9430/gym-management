@@ -2,7 +2,7 @@
  * usePOSSales.ts - Hook para Registro de Ventas
  * 
  * Gestiona el proceso de venta: cliente, pago, checkout.
- * @author Sistema de Gestión Gimnasio
+ * @author Sistema de Gestiï¿½n Gimnasio
  * @version 1.0.0
  */
 
@@ -37,6 +37,8 @@ export interface UsePOSSalesReturn {
   handleSelectSaleClient: (client: ClientForm | null) => void;
   handleConsumerFinal: () => void;
   handleCloseModal: () => void;
+  generateInvoice: boolean;
+  setGenerateInvoice: (value: boolean) => void;
 }
 
 // Hook de ventas del POS
@@ -54,6 +56,7 @@ export const usePOSSales = (
   const [transferAmount, setTransferAmount] = useState(0);
   const [voucherCode, setVoucherCode] = useState("");
   const [saleModalOpen, setSaleModalOpen] = useState(false);
+  const [generateInvoice, setGenerateInvoice] = useState(true);
 
   const handlePaymentMethodChange = useCallback((value: PaymentMethod) => {
     const total = totals.total;
@@ -112,6 +115,7 @@ const handleCheckout = useCallback(() => {
         },
         voucherCode: voucherCode.trim() || undefined,
         createdBy: user?.username,
+        generateInvoice,
       })
         .then(() => {
           clearCart();
@@ -191,5 +195,7 @@ const handleCheckout = useCallback(() => {
     handleSelectSaleClient,
     handleConsumerFinal,
     handleCloseModal,
+    generateInvoice,
+    setGenerateInvoice,
   };
 };

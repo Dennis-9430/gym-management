@@ -388,10 +388,39 @@ export const getSales = async (): Promise<SaleRecord[]> => {
 // Relacionado con: backend/app/routers/sales.py (create_sale)
 export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null> => {
   try {
+    // Transformar datos al formato esperado por el backend
+    const saleData = {
+      items: input.items.map(item => ({
+        productId: item.productId || null,
+        serviceId: item.serviceId || null,
+        productName: item.name,
+        description: item.description || null,
+        category: item.category || null,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        unitDiscount: item.unitDiscount || 0,
+        subtotal: item.subtotal,
+        source: item.source || null,
+      })),
+      subtotal: input.totals?.subtotal || 0,
+      tax: input.totals?.taxAmount || 0,
+      total: input.totals?.total || 0,
+      paymentMethod: input.payment?.method || "CASH",
+      clientDocument: input.client?.documentNumber || null,
+      clientFirstName: input.client?.firstName || null,
+      clientLastName: input.client?.lastName || null,
+      clientEmail: input.client?.email || null,
+      clientPhone: input.client?.phone || null,
+      clientAddress: input.client?.address || null,
+      voucherCode: input.voucherCode || null,
+      createdBy: input.createdBy || "Sistema",
+      generateInvoice: input.generateInvoice || false,
+    };
+    
     const response = await fetch(API_BASE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
+      body: JSON.stringify(saleData),
     });
     if (!response.ok) {
       throw new Error("Error al crear venta");

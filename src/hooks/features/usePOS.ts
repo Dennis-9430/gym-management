@@ -3,7 +3,7 @@
  * 
  * Hook central que integra: useCart, usePOSClients, usePOSSales, usePOSSubscription
  * Gestiona el carrito, clientes, ventas y suscripciones del POS.
- * @author Sistema de Gestión Gimnasio
+ * @author Sistema de Gestiï¿½n Gimnasio
  * @version 1.0.0
  */
 
@@ -22,7 +22,7 @@ import { usePOSSales } from "./usePOSSales";
 import { usePOSSubscription } from "./usePOSSubscription";
 import { matchesQuery } from "../../utils/string/normalize";
 
-// Construye el catálogo unificado de productos y membresías
+// Construye el catï¿½logo unificado de productos y membresï¿½as
 const buildCatalog = (products: Product[]): CatalogItem[] => {
   const productItems: CatalogItem[] = products
     .filter((product) => product.category !== "SERVICIOS_GYM")
@@ -100,6 +100,7 @@ export interface UsePOSReturn {
   setTransferAmount: (value: number) => void;
   setVoucherCode: (value: string) => void;
   setSaleModalOpen: (value: boolean) => void;
+  setGenerateInvoice: (value: boolean) => void;
   
   setSubscriptionModalOpen: (value: boolean) => void;
   setSubscriptionSearch: (value: string) => void;
@@ -230,6 +231,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     saleModalOpen: sales.saleModalOpen,
     saleClientResults: clients.saleClientResults,
     matchedSaleClient: clients.matchedSaleClient,
+    generateInvoice: sales.generateInvoice,
     
     subscriptionModalOpen: subscription.subscriptionModalOpen,
     subscriptionSearch: subscription.subscriptionSearch,
@@ -263,6 +265,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     setTransferAmount: sales.setTransferAmount,
     setVoucherCode: sales.setVoucherCode,
     setSaleModalOpen: sales.setSaleModalOpen,
+    setGenerateInvoice: sales.setGenerateInvoice,
     
     setSubscriptionModalOpen: subscription.setSubscriptionModalOpen,
     setSubscriptionSearch: subscription.setSubscriptionSearch,

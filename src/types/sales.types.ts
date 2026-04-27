@@ -29,6 +29,7 @@ export interface SaleRecord {
   payment: SalePayment;
   voucherCode?: string;
   createdBy?: string;
+  generateInvoice?: boolean;
 }
 
 export type SaleInput = Omit<SaleRecord, "id" | "createdAt">;
