@@ -301,10 +301,24 @@
   text-align: center;
 }
 
+.register-form__fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
 .register-form__field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.register-form__button--full {
+  grid-column: 1 / -1;
+}
+
+.register-form__field--full {
+  grid-column: 1 / -1;
 }
 
 .register-form__field label {

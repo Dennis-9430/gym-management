@@ -55,14 +55,18 @@ const Register = () => {
     email: "",
     phone: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    ownerFirstName: "",
+    ownerLastName: ""
   });
   const [fieldErrors, setFieldErrors] = useState({
     businessName: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    ownerFirstName: "",
+    ownerLastName: ""
   });
 
   const navigate = useNavigate();
@@ -73,6 +77,16 @@ const Register = () => {
 
     if (!formData.businessName.trim()) {
       errors.businessName = "El nombre del negocio es requerido";
+      isValid = false;
+    }
+
+    if (!formData.ownerFirstName.trim()) {
+      errors.ownerFirstName = "Tu nombre es requerido";
+      isValid = false;
+    }
+
+    if (!formData.ownerLastName.trim()) {
+      errors.ownerLastName = "Tu apellido es requerido";
       isValid = false;
     }
 
@@ -143,7 +157,9 @@ const Register = () => {
           password: formData.password,
           businessName: formData.businessName,
           businessPhone: formData.phone,
-          plan: selectedPlan
+          plan: selectedPlan,
+          ownerFirstName: formData.ownerFirstName,
+          ownerLastName: formData.ownerLastName
         })
       });
 
@@ -299,9 +315,10 @@ const Register = () => {
           </div>
         )}
 
-        <div className="register-form__field">
-          <label>Nombre del Negocio</label>
-          <div className={`register-form__input-wrap ${fieldErrors.businessName ? "register-form__input-wrap--error" : ""}`}>
+        <div className="register-form__fields-grid">
+          <div className="register-form__field register-form__field--full">
+            <label>Nombre del Negocio</label>
+            <div className={`register-form__input-wrap ${fieldErrors.businessName ? "register-form__input-wrap--error" : ""}`}>
             <Building2 size={18} />
             <input
               type="text"
@@ -345,6 +362,38 @@ const Register = () => {
         </div>
 
         <div className="register-form__field">
+          <label>Tu Nombre</label>
+          <div className={`register-form__input-wrap ${fieldErrors.ownerFirstName ? "register-form__input-wrap--error" : ""}`}>
+            <User size={18} />
+            <input
+              type="text"
+              placeholder="Nombre"
+              value={formData.ownerFirstName}
+              onChange={(e) => handleChange("ownerFirstName", e.target.value)}
+            />
+          </div>
+          {fieldErrors.ownerFirstName && (
+            <span className="register-form__field-error">{fieldErrors.ownerFirstName}</span>
+          )}
+        </div>
+
+        <div className="register-form__field">
+          <label>Tu Apellido</label>
+          <div className={`register-form__input-wrap ${fieldErrors.ownerLastName ? "register-form__input-wrap--error" : ""}`}>
+            <User size={18} />
+            <input
+              type="text"
+              placeholder="Apellido"
+              value={formData.ownerLastName}
+              onChange={(e) => handleChange("ownerLastName", e.target.value)}
+            />
+          </div>
+          {fieldErrors.ownerLastName && (
+            <span className="register-form__field-error">{fieldErrors.ownerLastName}</span>
+          )}
+        </div>
+
+        <div className="register-form__field">
           <label>Contraseña</label>
           <div className={`register-form__input-wrap ${fieldErrors.password ? "register-form__input-wrap--error" : ""}`}>
             <User size={18} />
@@ -376,9 +425,11 @@ const Register = () => {
           )}
         </div>
 
+        </div>
+
         <button
           type="submit"
-          className="register-form__button"
+          className="register-form__button register-form__button--full"
           disabled={isLoading}
         >
           {isLoading ? (
