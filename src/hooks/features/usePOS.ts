@@ -67,6 +67,8 @@ export interface UsePOSReturn {
   saleModalOpen: boolean;
   saleClientResults: ReturnType<typeof usePOSClients>["saleClientResults"];
   matchedSaleClient: ReturnType<typeof usePOSClients>["matchedSaleClient"];
+  generateInvoice: boolean;
+  invoiceEmail: string;
   
   subscriptionModalOpen: boolean;
   subscriptionSearch: string;
@@ -101,6 +103,7 @@ export interface UsePOSReturn {
   setVoucherCode: (value: string) => void;
   setSaleModalOpen: (value: boolean) => void;
   setGenerateInvoice: (value: boolean) => void;
+  setInvoiceEmail: (value: string) => void;
   
   setSubscriptionModalOpen: (value: boolean) => void;
   setSubscriptionSearch: (value: string) => void;
@@ -232,6 +235,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     saleClientResults: clients.saleClientResults,
     matchedSaleClient: clients.matchedSaleClient,
     generateInvoice: sales.generateInvoice,
+    invoiceEmail: sales.invoiceEmail,
     
     subscriptionModalOpen: subscription.subscriptionModalOpen,
     subscriptionSearch: subscription.subscriptionSearch,
@@ -266,6 +270,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     setVoucherCode: sales.setVoucherCode,
     setSaleModalOpen: sales.setSaleModalOpen,
     setGenerateInvoice: sales.setGenerateInvoice,
+    setInvoiceEmail: sales.setInvoiceEmail,
     
     setSubscriptionModalOpen: subscription.setSubscriptionModalOpen,
     setSubscriptionSearch: subscription.setSubscriptionSearch,

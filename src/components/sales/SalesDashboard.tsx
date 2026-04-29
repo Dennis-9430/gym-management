@@ -4,6 +4,8 @@ import {
   ClipboardList,
   ShoppingCart,
   CreditCard,
+  FileText,
+  Receipt,
 } from "lucide-react";
 
 /* Dashboard de ventas con opciones principales */
@@ -22,6 +24,14 @@ const SalesDashboard = ({
 
   const goToPendingList = () => {
     navigate("/sales/pending");
+  };
+
+  const goToInvoices = () => {
+    navigate("/sales/invoices");
+  };
+
+  const goToSalesList = () => {
+    navigate("/sales/list");
   };
 
   return (
@@ -73,6 +83,34 @@ const SalesDashboard = ({
             onClick={onOpenSaleModal}
           >
             Agregar venta
+          </button>
+        </div>
+        <div className="pos-dashboard-card">
+          <div className="pos-card-icon">
+            <Receipt size={22} />
+          </div>
+          <h3>Historial de Ventas</h3>
+          <p>Ver todas las ventas con estado de pago.</p>
+          <button
+            type="button"
+            className="pos-card-btn primary"
+            onClick={goToSalesList}
+          >
+            Ver ventas
+          </button>
+        </div>
+        <div className="pos-dashboard-card">
+          <div className="pos-card-icon">
+            <FileText size={22} />
+          </div>
+          <h3>Facturas</h3>
+          <p>Historial y generación de facturas.</p>
+          <button
+            type="button"
+            className="pos-card-btn primary"
+            onClick={goToInvoices}
+          >
+            Ver facturas
           </button>
         </div>
         {onOpenMembershipModal && (

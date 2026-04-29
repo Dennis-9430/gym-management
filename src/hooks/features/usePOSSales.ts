@@ -39,6 +39,8 @@ export interface UsePOSSalesReturn {
   handleCloseModal: () => void;
   generateInvoice: boolean;
   setGenerateInvoice: (value: boolean) => void;
+  invoiceEmail: string;
+  setInvoiceEmail: (value: string) => void;
 }
 
 // Hook de ventas del POS
@@ -56,7 +58,8 @@ export const usePOSSales = (
   const [transferAmount, setTransferAmount] = useState(0);
   const [voucherCode, setVoucherCode] = useState("");
   const [saleModalOpen, setSaleModalOpen] = useState(false);
-  const [generateInvoice, setGenerateInvoice] = useState(true);
+  const [generateInvoice, setGenerateInvoice] = useState(false);
+  const [invoiceEmail, setInvoiceEmail] = useState("");
 
   const handlePaymentMethodChange = useCallback((value: PaymentMethod) => {
     const total = totals.total;
@@ -80,7 +83,7 @@ const handleCheckout = useCallback(() => {
       return;
     }
 
-    if (paymentMethod === "MIXED") {
+    if (paymentMethod === "DEPOSIT") {
       const sum = round2(cashAmount + transferAmount);
       if (Math.abs(sum - totals.total) > 0.01) {
         alert("El total de efectivo y transferencia debe igualar el total.");
@@ -116,12 +119,15 @@ const handleCheckout = useCallback(() => {
         voucherCode: voucherCode.trim() || undefined,
         createdBy: user?.username,
         generateInvoice,
+        invoiceEmail: invoiceEmail.trim() || null,
       })
         .then(() => {
           clearCart();
           setSaleClientInput("");
           setVoucherCode("");
           setPaymentMethod("CASH");
+          setGenerateInvoice(false);
+          setInvoiceEmail("");
         })
         .catch(console.error);
     }
@@ -136,6 +142,7 @@ const handleCheckout = useCallback(() => {
     voucherCode,
     user,
     clearCart,
+    invoiceEmail,
   ]);
 
   const handleCashChange = useCallback((value: number) => {
@@ -197,5 +204,7 @@ const handleCheckout = useCallback(() => {
     handleCloseModal,
     generateInvoice,
     setGenerateInvoice,
+    invoiceEmail,
+    setInvoiceEmail,
   };
 };

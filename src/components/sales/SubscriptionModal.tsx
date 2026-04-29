@@ -244,11 +244,11 @@ const SubscriptionModal = ({
               >
                 <option value="CASH">Efectivo</option>
                 <option value="TRANSFER">Transferencia</option>
-                <option value="MIXED">Mixto</option>
+                <option value="DEPOSIT">Deposito/Tarjeta</option>
               </select>
             </div>
 
-            {paymentMethod === "MIXED" && (
+            {paymentMethod === "DEPOSIT" && (
               <div className="pos-payment-grid">
                 <div className="pos-field">
                   <label>Efectivo</label>
@@ -314,7 +314,7 @@ const SubscriptionModal = ({
                   inputMode="decimal"
                   value={paidValue}
                   onChange={(e) => onPaidChange(parseDecimal(e.target.value))}
-                  readOnly={paymentMethod === "MIXED"}
+                  readOnly={paymentMethod === "DEPOSIT"}
                 />
               </div>
             </div>

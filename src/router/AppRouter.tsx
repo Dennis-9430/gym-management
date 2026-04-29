@@ -21,6 +21,8 @@ const Productos = lazy(() => import("../pages/products/Products"));
 const SalesPages = lazy(() => import("../pages/sales/SalesPages"));
 const PendingSubscriptionsPage = lazy(() => import("../pages/sales/PendingSubscriptionsPage"));
 const ConfigPage = lazy(() => import("../pages/sales/ConfigPage"));
+const InvoiceListPage = lazy(() => import("../pages/sales/InvoiceListPage"));
+const SalesListPage = lazy(() => import("../pages/sales/SalesListPage"));
 const EmployeesPage = lazy(() => import("../pages/employees/EmployeesPage"));
 const EmployeeProfilePage = lazy(() => import("../pages/employees/EmployeeProfilePage"));
 const FinancialReport = lazy(() => import("../pages/admin/FinancialReport"));
@@ -61,6 +63,8 @@ function AppRouter() {
               <Route path="/sales" element={<SalesPages />} />
               <Route path="/sales/pending" element={<PendingSubscriptionsPage />} />
               <Route path="/sales/config" element={<ConfigPage />} />
+              <Route path="/sales/list" element={<SalesListPage />} />
+              <Route path="/sales/invoices" element={<InvoiceListPage />} />
               <Route path="/employees" element={<EmployeesPage />} />
               <Route path="/employees/:id" element={<EmployeeProfilePage />} />
               <Route path="/financial" element={<FinancialReport />} />

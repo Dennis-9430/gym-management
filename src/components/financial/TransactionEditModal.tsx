@@ -13,7 +13,7 @@ interface Props {
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
   { value: "CASH", label: "Efectivo" },
   { value: "TRANSFER", label: "Transferencia" },
-  { value: "MIXED", label: "Mixto" },
+  { value: "DEPOSIT", label: "Deposito/Tarjeta" },
 ];
 
 const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) => {
@@ -77,7 +77,7 @@ const TransactionEditModal = ({ isOpen, onClose, transaction, onSave }: Props) =
           </select>
         </div>
 
-        {method === "MIXED" && (
+        {method === "DEPOSIT" && (
           <>
             <div className="edit-payment-field">
               <label>Efectivo</label>

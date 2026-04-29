@@ -27,8 +27,8 @@ const FinancialTransactionsList = ({
         return <Wallet size={16} className="method-icon cash" />;
       case "TRANSFER":
         return <CreditCard size={16} className="method-icon transfer" />;
-      case "MIXED":
-        return <CreditCard size={16} className="method-icon mixed" />;
+      case "DEPOSIT":
+        return <CreditCard size={16} className="method-icon deposit" />;
       default:
         return null;
     }
@@ -40,8 +40,8 @@ const FinancialTransactionsList = ({
         return "method-cash";
       case "TRANSFER":
         return "method-transfer";
-      case "MIXED":
-        return "method-mixed";
+      case "DEPOSIT":
+        return "method-deposit";
       default:
         return "";
     }

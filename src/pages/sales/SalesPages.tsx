@@ -69,6 +69,7 @@ const {
     saleClientResults,
     matchedSaleClient,
     generateInvoice,
+    invoiceEmail,
     search,
     filteredCatalog,
 
@@ -100,6 +101,7 @@ const {
     setVoucherCode,
     setSaleModalOpen,
     setGenerateInvoice,
+    setInvoiceEmail,
     setSearch,
     setSubscriptionSearch,
     setSubscriptionShowServices,
@@ -180,6 +182,8 @@ const {
         onCheckout={handleCheckout}
         generateInvoice={generateInvoice ?? false}
         onGenerateInvoiceChange={setGenerateInvoice}
+        invoiceEmail={invoiceEmail ?? ""}
+        onInvoiceEmailChange={setInvoiceEmail}
       />
 
       <SubscriptionModal

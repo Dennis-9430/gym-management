@@ -2,7 +2,7 @@
 import type { Invoice, InvoiceCreateRequest, InvoiceListResponse, InvoiceEmailRequest } from "../types/invoice.types";
 import { apiGet, apiPost, apiDelete } from "./api";
 
-const getTenantId = () => {
+export const getTenantId = () => {
   const tenant = localStorage.getItem("tenant");
   if (!tenant) return null;
   try {
@@ -12,7 +12,7 @@ const getTenantId = () => {
   }
 };
 
-export const invoiceService = {
+const invoiceService = {
   /* Lista de facturas */
   async getInvoices(page = 0, limit = 50): Promise<InvoiceListResponse> {
     const tenantId = getTenantId();

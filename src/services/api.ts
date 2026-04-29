@@ -34,11 +34,23 @@ const handleResponse = async (response: Response) => {
   }
 
   if (!response.ok) {
+    const isAuthError = response.status === 401 || response.status === 403;
+    
+    if (isAuthError) {
+      // Emitir evento personalizado para que los componentes puedan manejarlo
+      window.dispatchEvent(new CustomEvent("auth:error", { 
+        detail: { status: response.status, message: data.detail || "Sesión expirada" }
+      }));
+      // No redirigir automáticamente - deixar que el componente maneje
+      console.warn("Auth error:", response.status);
+    }
+
     if (response.status === 403) {
       throw new Error(data.detail || "No tienes acceso a esta funcionalidad");
     }
 
-    if (response.status === 401) {
+    if (response.status === 401 && !window.location.pathname.includes("/sales/invoices")) {
+      // Solo redirigir si NO estamos en la página de facturas (donde tenemos datos demo)
       localStorage.removeItem("tenantToken");
       localStorage.removeItem("tenant");
       window.location.href = "/";

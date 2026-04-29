@@ -58,6 +58,8 @@ interface SaleModalProps {
   onCheckout: () => void;
   generateInvoice: boolean;
   onGenerateInvoiceChange: (value: boolean) => void;
+  invoiceEmail: string;
+  onInvoiceEmailChange: (value: string) => void;
 }
 
 const SaleModal = ({
@@ -96,6 +98,8 @@ const SaleModal = ({
   onCheckout,
   generateInvoice,
   onGenerateInvoiceChange,
+  invoiceEmail,
+  onInvoiceEmailChange,
 }: SaleModalProps) => {
   if (!isOpen) return null;
 
@@ -208,11 +212,11 @@ const SaleModal = ({
               >
                 <option value="CASH">Efectivo</option>
                 <option value="TRANSFER">Transferencia</option>
-                <option value="MIXED">Mixto</option>
+                <option value="DEPOSIT">Deposito/Tarjeta</option>
               </select>
             </div>
 
-            {paymentMethod === "MIXED" ? (
+            {paymentMethod === "DEPOSIT" ? (
               <div className="pos-payment-grid">
                 <div className="pos-field">
                   <label>Efectivo</label>
@@ -249,17 +253,34 @@ const SaleModal = ({
               />
             </div>
 
-            <div className="pos-field-checkbox" style={{ marginTop: '12px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+            <div className="pos-field-checkbox">
+              <label>
                 <input
                   type="checkbox"
                   checked={generateInvoice}
                   onChange={(e) => onGenerateInvoiceChange(e.target.checked)}
-                  style={{ width: '18px', height: '18px' }}
                 />
                 <FileText size={18} />
-                <span>Generar factura</span>
+                <span>Generar Factura</span>
               </label>
+              {generateInvoice && (
+                <span>
+                  {selectedClient && selectedClient.email ? (
+                    <input
+                      type="email"
+                      value={selectedClient.email}
+                      readOnly
+                    />
+                  ) : (
+                    <input
+                      type="email"
+                      value={invoiceEmail}
+                      onChange={(e) => onInvoiceEmailChange(e.target.value)}
+                      placeholder="correo@ejemplo.com"
+                    />
+                  )}
+                </span>
+              )}
             </div>
           </div>
 
