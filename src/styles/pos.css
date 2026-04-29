@@ -1472,3 +1472,533 @@
     text-align: left;
   }
 }
+
+/* Checkbox para factura */
+.pos-field-checkbox {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pos-field-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.pos-field-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.pos-field-checkbox input[type="email"] {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-dark);
+  border-radius: 8px;
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: all 150ms ease;
+  width: 250px;
+  max-width: 100%;
+}
+
+.pos-field-checkbox input[type="email"]:focus {
+  outline: none;
+  border-color: var(--color-action);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.pos-field-checkbox input[type="email"]:read-only {
+  background: var(--color-bg-muted);
+  cursor: not-allowed;
+}
+
+/* Sales List Page */
+.pos-list-header {
+  margin-bottom: 24px;
+}
+
+.pos-list-header h2 {
+  font-size: var(--font-size-xl);
+  margin-bottom: 4px;
+}
+
+.pos-list-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.pos-list-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.pos-search-box,
+.pos-filter-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-dark);
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 250px;
+}
+
+.pos-search-box input,
+.pos-filter-box select {
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  outline: none;
+  width: 100%;
+}
+
+.pos-filter-box select {
+  cursor: pointer;
+}
+
+.pos-table-wrapper {
+  overflow-x: auto;
+  background: var(--color-bg-primary);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.pos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pos-table th,
+.pos-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pos-table th {
+  background: #f1f5f9;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pos-table tr:hover {
+  background: var(--color-bg-muted);
+}
+
+.pos-empty {
+  text-align: center;
+  padding: 48px;
+  color: var(--color-text-secondary);
+}
+
+.sale-client {
+  display: flex;
+  flex-direction: column;
+}
+
+.sale-client strong {
+  font-size: var(--font-size-sm);
+}
+
+.sale-client span {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.sale-total {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.sale-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.sale-status-badge.verified {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.sale-status-badge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.sale-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pos-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: var(--color-bg-muted);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: all 150ms ease;
+}
+
+.pos-btn-icon:hover {
+  background: var(--color-action);
+  color: white;
+}
+
+.pos-list-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--color-bg-primary);
+  border-radius: 8px;
+  margin-top: 16px;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Tabla con scroll vertical */
+.pos-table-scroll {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: var(--color-bg-primary);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.pos-table-scroll .pos-table {
+  min-width: 800px;
+}
+
+.pos-table-scroll .pos-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Filtro de fecha */
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.date-filter input[type="date"] {
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  outline: none;
+  width: 110px;
+  color: var(--color-text-primary);
+}
+
+.date-filter .date-label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.date-filter span:not(.date-label) {
+  color: var(--color-text-secondary);
+}
+
+/* Edición de voucher */
+.voucher-edit {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.voucher-edit input {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: var(--font-size-sm);
+  width: 120px;
+}
+
+.pos-btn-small {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.pos-btn-small.save {
+  background: var(--color-success);
+  color: white;
+}
+
+.pos-btn-small.cancel {
+  background: var(--color-bg-muted);
+  color: var(--color-text-secondary);
+}
+
+.pos-btn-small:hover {
+  opacity: 0.9;
+}
+
+.pos-btn-small:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading spinner */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Edit Voucher Modal - Override .pos-modal */
+.edit-voucher-modal {
+  width: 340px !important;
+  max-width: 340px !important;
+  min-width: 340px !important;
+  height: auto !important;
+  overflow: visible !important;
+  flex: none !important;
+  align-self: center !important;
+  margin: auto !important;
+}
+
+@media (min-width: 768px) {
+  .edit-voucher-modal {
+    width: 530px !important;
+    max-width: 530px !important;
+    min-width: 530px !important;
+  }
+}
+
+/* Header row with back button */
+.pos-list-header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pos-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.pos-btn-back:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Pagination */
+.pos-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.pos-pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.pos-pagination-btn:hover:not(:disabled) {
+  background: var(--color-bg-muted);
+}
+
+.pos-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pos-pagination-info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.edit-voucher-modal .pos-modal-header {
+  padding: 10px 14px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-voucher-modal .pos-modal-header h3 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.edit-voucher-modal .pos-modal-body {
+  padding: 12px 14px;
+  overflow: visible;
+  flex: none;
+}
+
+.edit-voucher-modal .pos-modal-footer {
+  padding: 8px 14px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.edit-voucher-modal .pos-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  min-width: auto;
+}
+
+.edit-voucher-modal .pos-btn.primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.edit-voucher-modal .pos-btn.primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.edit-voucher-modal .pos-btn.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edit-voucher-modal .pos-btn.secondary {
+  background: var(--color-bg-muted);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.edit-voucher-modal .pos-btn.secondary:hover {
+  background: var(--color-border);
+}
+
+.edit-voucher-modal .voucher-field {
+  margin-bottom: 10px;
+}
+
+.edit-voucher-modal .voucher-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.edit-voucher-modal .voucher-field input[type="text"] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 13px;
+  background: var(--color-bg-primary);
+}
+
+.edit-voucher-modal .voucher-field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.edit-voucher-modal .voucher-image-upload {
+  width: 100%;
+  height: 100px;
+  border: 2px dashed var(--color-border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  background: #f8fafc;
+  transition: border-color 0.2s;
+}
+
+.edit-voucher-modal .voucher-image-upload:hover {
+  border-color: var(--color-primary);
+}
+
+.edit-voucher-modal .voucher-image-upload img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.edit-voucher-modal .upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text-muted);
+}
+
+.edit-voucher-modal .upload-placeholder span {
+  font-size: 11px;
+}
+
+.edit-voucher-modal .remove-image {
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.edit-voucher-modal .remove-image:hover {
+  background: var(--color-error);
+  color: white;
+}
