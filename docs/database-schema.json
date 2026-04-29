@@ -1,0 +1,474 @@
+{
+  "title": "Sistema de Gestión de Gimnasio - Arquitectura de Base de Datos",
+  "version": "1.0",
+  "fecha": "2025-04-28",
+
+  "colecciones": {
+    "tenants": {
+      "descripcion": "Gimnasios/Empresas que usan el sistema",
+      "existente": true,
+      "ruta": "/api/tenants",
+      "campos": {
+        "_id": "ObjectId",
+        "tenantId": "UUID único del tenant",
+        "email": "Email del administrador (único)",
+        "password": "Hash bcrypt",
+        "businessName": "Nombre del gimnasio",
+        "businessPhone": "Teléfono de contacto",
+        "businessAddress": "Dirección física",
+        "businessRuc": "RUC/CI",
+        "plan": {
+          "tipo": "enum",
+          "valores": ["BASIC", "PREMIUM"]
+        },
+        "subscriptionStatus": {
+          "tipo": "enum",
+          "valores": ["PENDING", "ACTIVE", "EXPIRED", "CANCELLED"],
+          "default": "PENDING"
+        },
+        "subscriptionEndDate": "Fecha fin de suscripción (nullable)",
+        "taxRate": "Tasa de impuesto (default: 12.0)",
+        "currency": "Moneda (default: USD)",
+        "openingHour": "Hora de apertura (default: 06:00)",
+        "closingHour": "Hora de cierre (default: 22:00)",
+        "wsspReminderDays": "Días para recordatorio WhatsApp (default: 3)",
+        "wsspEnabled": "WhatsApp activo (default: false)",
+        "createdAt": "Fecha de creación",
+        "updatedAt": "Última actualización"
+      },
+      "relaciones": {
+        "employees": "tenantId -> employees.tenantId",
+        "clients": "tenantId -> clients.tenantId",
+        "services": "tenantId -> services.tenantId",
+        "products": "tenantId -> products.tenantId",
+        "sales": "tenantId -> sales.tenantId",
+        "invoices": "tenantId -> invoices.tenantId",
+        "attendance": "tenantId -> attendance.tenantId"
+      },
+      "instancias_actuales": [
+        { "tenantId": "demo-basic-001", "plan": "BASIC", "demo": true, "subscriptionStatus": "ACTIVE" },
+        { "tenantId": "demo-pro-001", "plan": "PREMIUM", "demo": true, "subscriptionStatus": "ACTIVE" },
+        { "tenantId": "<uuid-1>", "plan": "BASIC", "demo": false, "subscriptionStatus": "PENDING" },
+        { "tenantId": "<uuid-2>", "plan": "PREMIUM", "demo": false, "subscriptionStatus": "ACTIVE" },
+        { "tenantId": "<uuid-3>", "plan": "BASIC", "demo": false, "subscriptionStatus": "PENDING" }
+      ]
+    },
+
+    "employees": {
+      "descripcion": "Empleados del gimnasio",
+      "existente": true,
+      "ruta": "/api/employees",
+      "campos": {
+        "_id": "ObjectId",
+        "tenantId": "FK -> tenants.tenantId",
+        "username": "Usuario único por tenant",
+        "password": "Hash bcrypt",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "role": {
+          "tipo": "enum",
+          "valores": ["ADMIN", "EMPLOYEE"]
+        },
+        "isActive": "Boolean",
+        "createdAt": "Fecha de creación"
+      },
+      "indice": ["tenantId", "username"],
+      "restricciones_plan": {
+        "BASIC": "Sin acceso (no puede gestionar empleados)",
+        "PREMIUM": "Acceso completo"
+      }
+    },
+
+    "clients": {
+      "descripcion": "Clientes del gimnasio",
+      "existente": true,
+      "ruta": "/api/clients",
+      "campos": {
+        "_id": "ObjectId",
+        "tenantId": "FK -> tenants.tenantId",
+        "documentType": {
+          "tipo": "enum",
+          "valores": ["CEDULA", "RUC", "PASAPORTE"]
+        },
+        "documentNumber": "Número de documento",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "phone": "Teléfono",
+        "email": "Email (nullable)",
+        "address": "Dirección",
+        "emergencyContact": "Contacto de emergencia",
+        "emergencyPhone": "Teléfono de emergencia",
+        "notes": "Notas adicionales",
+        "membership": "Nombre membresía actual",
+        "membershipStatus": {
+          "tipo": "enum",
+          "valores": ["NONE", "ACTIVE", "EXPIRED", "PENDING"],
+          "default": "NONE"
+        },
+        "membershipStartDate": "Fecha inicio membresía",
+        "membershipEndDate": "Fecha fin membresía",
+        "fingerPrint": "Huella digital registrada",
+        "createdAt": "Fecha de creación"
+      },
+      "indice": ["tenantId", "documentNumber"],
+      "relaciones": {
+        "services": "client.membership -> services.name"
+      }
+    },
+
+    "services": {
+      "descripcion": "Servicios/Membresías que ofrece el gimnasio",
+      "existente": true,
+      "ruta": "/api/services",
+      "campos": {
+        "_id": "ObjectId",
+        "tenantId": "FK -> tenants.tenantId",
+        "name": "Nombre del servicio (ej: Mensual, Semanal)",
+        "description": "Descripción",
+        "price": "Precio",
+        "duration": "Duración numérica",
+        "durationUnit": {
+          "tipo": "enum",
+          "valores": ["days", "weeks", "months"],
+          "default": "days"
+        },
+        "isActive": "Boolean",
+        "createdAt": "Fecha de creación"
+      }
+    },
+
+    "products": {
+      "descripcion": "Productos para venta (suplementos, bebidas, accesorios)",
+      "existente": true,
+      "ruta": "/api/products",
+      "campos": {
+        "_id": "ObjectId",
+        "tenantId": "FK -> tenants.tenantId",
+        "code": "Código único del producto",
+        "name": "Nombre",
+        "description": "Descripción",
+        "category": "Categoría",
+        "unitPrice": "Precio unitario",
+        "stock": "Cantidad en stock",
+        "minStock": "Stock mínimo para alert",
+        "createdAt": "Fecha de creación"
+      },
+      "indice": ["tenantId", "code"],
+      "categorias": ["SUPLEMENTOS", "BEBIDAS", "ACCESORIOS", "ROPA", "SERVICIOS_GYM"]
+    },
+
+    "sales": {
+      "descripcion": "Ventas del Punto de Venta (POS)",
+      "existente": true,
+      "ruta": "/api/sales",
+      "estructura": {
+        "_id": "ObjectId",
+        "tenantId": "FK -> tenants.tenantId",
+        "clientId": "ID del cliente (nullable)",
+        "employeeId": "ID del empleado que registró",
+        "items": [
+          {
+            "productId": "ID del producto (nullable)",
+            "serviceId": "ID del servicio (nullable)",
+            "name": "Nombre del item",
+            "description": "Descripción",
+            "category": "Categoría",
+            "quantity": "Cantidad",
+            "unitPrice": "Precio unitario",
+            "unitDiscount": "Descuento unitario",
+            "subtotal": "Subtotal"
+          }
+        ],
+        "subtotal": "Subtotal total",
+        "tax": "Impuesto",
+        "total": "Total final",
+        "payment": {
+          "method": {
+            "tipo": "enum",
+            "valores": ["CASH", "TRANSFER", "DEPOSIT", "MIXED"]
+          },
+          "cashAmount": "Monto en efectivo",
+          "transferAmount": "Monto en transferencia",
+          "depositAmount": "Monto en depósito",
+          "voucherCode": "Código del comprobante",
+          "voucherImage": "Imagen del comprobante (base64)"
+        },
+        "status": {
+          "tipo": "enum",
+          "valores": ["COMPLETED", "CANCELLED", "REFUNDED"],
+          "default": "COMPLETED"
+        },
+        "createdAt": "Fecha de creación"
+      },
+      "indice": ["tenantId", "createdAt"],
+      "endpoints": {
+        "list": "GET /api/sales",
+        "get": "GET /api/sales/{sale_id}",
+        "create": "POST /api/sales",
+        "delete": "DELETE /api/sales/{sale_id}",
+        "update_voucher": "PUT /api/sales/{sale_id}/voucher",
+        "verify": "PUT /api/sales/{sale_id}/verify"
+      }
+    },
+
+    "invoices": {
+      "descripcion": "Facturas generadas por ventas",
+      "existente": true,
+      "ruta": "/api/invoices",
+      "campos": {
+        "_id": "ObjectId",
+        "tenantId": "FK -> tenants.tenantId",
+        "saleId": "FK -> sales._id",
+        "invoiceNumber": "Número de factura (FAC-YYYY-NNNNNN)",
+        "clientDocument": "Documento del cliente",
+        "clientName": "Nombre del cliente",
+        "clientAddress": "Dirección del cliente",
+        "items": "Array de items",
+        "subtotal": "Subtotal",
+        "taxRate": "Tasa de impuesto",
+        "tax": "Impuesto total",
+        "total": "Total final",
+        "status": {
+          "tipo": "enum",
+          "valores": ["PAID", "PENDING", "CANCELLED"]
+        },
+        "createdAt": "Fecha de creación"
+      },
+      "endpoints": {
+        "list": "GET /api/invoices",
+        "get": "GET /api/invoices/{invoice_id}",
+        "create": "POST /api/invoices",
+        "delete": "DELETE /api/invoices/{invoice_id}",
+        "send_email": "POST /api/invoices/send-email",
+        "next_number": "GET /api/invoices/next-number"
+      }
+    },
+
+    "attendance": {
+      "descripcion": "Registro de asistencia de clientes",
+      "existente": true,
+      "ruta": "/api/attendance",
+      "campos": {
+        "_id": "ObjectId",
+        "tenantId": "FK -> tenants.tenantId",
+        "clientId": "FK -> clients._id",
+        "checkIn": "Fecha y hora de entrada",
+        "checkOut": "Fecha y hora de salida (nullable)"
+      },
+      "indice": ["tenantId", "clientId", "checkIn"],
+      "endpoints": {
+        "list": "GET /api/attendance",
+        "checkin": "POST /api/attendance/checkin",
+        "checkout": "PUT /api/attendance/{attendance_id}/checkout",
+        "today": "GET /api/attendance/today"
+      }
+    }
+  },
+
+  "colecciones_pendientes": {
+    "payments": {
+      "descripcion": "Pagos de Planes del Sistema (BASIC/PREMIUM)",
+      "existente": false,
+      "propuesta": {
+        "ruta": "/api/payments",
+        "campos": {
+          "_id": "ObjectId",
+          "tenantId": "FK -> tenants.tenantId",
+          "plan": {
+            "tipo": "enum",
+            "valores": ["BASIC", "PREMIUM"]
+          },
+          "amount": "Monto pagado",
+          "paymentMethod": {
+            "tipo": "enum",
+            "valores": ["TRANSFER", "DEPOSIT"]
+          },
+          "voucherImage": "Imagen del comprobante (base64)",
+          "status": {
+            "tipo": "enum",
+            "valores": ["PENDING", "CONFIRMED", "REJECTED"],
+            "default": "PENDING"
+          },
+          "createdAt": "Fecha de creación",
+          "confirmedAt": "Fecha de confirmación (nullable)",
+          "confirmedBy": "Admin que confirmó (nullable)"
+        },
+        "endpoints_propuestos": {
+          "create": "POST /api/payments - Subir comprobante",
+          "list": "GET /api/payments - Listar pagos pendientes",
+          "confirm": "PUT /api/payments/{payment_id}/confirm - Admin confirma",
+          "reject": "PUT /api/payments/{payment_id}/reject - Admin rechaza"
+        }
+      }
+    },
+
+    "subscriptions": {
+      "descripcion": "Historial de membresías de clientes",
+      "existente": false,
+      "nota": "Actualmente embebido en clients.membership",
+      "propuesta": {
+        "ruta": "/api/subscriptions",
+        "campos": {
+          "_id": "ObjectId",
+          "tenantId": "FK -> tenants.tenantId",
+          "clientId": "FK -> clients._id",
+          "serviceId": "FK -> services._id",
+          "startDate": "Fecha de inicio",
+          "endDate": "Fecha de fin",
+          "status": {
+            "tipo": "enum",
+            "valores": ["ACTIVE", "CANCELLED", "COMPLETED"]
+          },
+          "autoRenew": "Renovación automática",
+          "createdAt": "Fecha de creación"
+        }
+      }
+    }
+  },
+
+  "flujo_registro": {
+    "descripcion": "Flujo para crear un nuevo tenant (gimnasio)",
+    "pasos": [
+      {
+        "step": 1,
+        "accion": "Usuario visita /register",
+        "frontend": "Selecciona plan (BASIC o PREMIUM)"
+      },
+      {
+        "step": 2,
+        "accion": "Completa formulario",
+        "campos": ["email", "password", "businessName", "businessPhone"]
+      },
+      {
+        "step": 3,
+        "accion": "POST /api/tenants/register",
+        "backend": {
+          "action": "Crea tenant con subscriptionStatus: PENDING",
+          "tenantId": "Genera UUID único",
+          "plan": "BASIC o PREMIUM según selección"
+        }
+      },
+      {
+        "step": 4,
+        "accion": "Redirecciona a /login",
+        "mensaje": "Cuenta creada,falta confirmar pago"
+      },
+      {
+        "step": 5,
+        "accion": "Usuario inicia sesión",
+        "nota": "Ve panel pero con limitaciones",
+        "propuesta": "Muestra banner 'Esperando confirmación de pago'"
+      },
+      {
+        "step": 6,
+        "accion": "Usuario sube comprobante",
+        "propuesta": "POST /api/payments (nuevo endpoint)",
+        "resultado": "Crea registro en payments con status: PENDING"
+      },
+      {
+        "step": 7,
+        "accion": "Admin revisa pago",
+        "propuesta": "PUT /api/payments/{id}/confirm",
+        "resultado": "payments.status: CONFIRMED, tenant.subscriptionStatus: ACTIVE"
+      }
+    ]
+  },
+
+  "demos": {
+    "descripcion": "Tenants de demostración",
+    "demo_basic": {
+      "tenantId": "demo-basic-001",
+      "email": "demo-basic@gmail.com",
+      "password": "demoBasic123",
+      "plan": "BASIC",
+      "demo": true,
+      "subscriptionStatus": "ACTIVE",
+      "caracteristicas": [
+        "Gestión de clientes",
+        "Membres��as",
+        "Inventario de productos",
+        "Punto de venta (POS)",
+        "Registro de asistencia"
+      ],
+      "limitaciones": [
+        "Sin gestión de empleados",
+        "Sin reportes financieros",
+        "Sin configuración completa"
+      ],
+      "datos_ejemplo": [
+        "10 clientes demo",
+        "5 servicios demo",
+        "10 productos demo"
+      ]
+    },
+    "demo_premium": {
+      "tenantId": "demo-pro-001",
+      "email": "demo-pro@gmail.com",
+      "password": "demoPro123",
+      "plan": "PREMIUM",
+      "demo": true,
+      "subscriptionStatus": "ACTIVE",
+      "caracteristicas": [
+        "Todo en BASIC",
+        "Gestión de empleados (CRUD)",
+        "Reportes financieros",
+        "Configuración completa",
+        "Soporte prioritario"
+      ],
+      "limitaciones": [],
+      "datos_ejemplo": [
+        "Todo habilitado",
+        "Empleados demo",
+        "Reportes demo"
+      ]
+    }
+  },
+
+  "restricciones_por_plan": {
+    "BASIC": {
+      "employees": {
+        "list": true,
+        "create": false,
+        "update": false,
+        "delete": false
+      },
+      "reports": {
+        "financial": false,
+        "daily": false
+      },
+      "configuration": {
+        "business": false,
+        "notifications": false
+      }
+    },
+    "PREMIUM": {
+      "employees": {
+        "list": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "reports": {
+        "financial": true,
+        "daily": true
+      },
+      "configuration": {
+        "business": true,
+        "notifications": true
+      }
+    }
+  },
+
+  "endpoints_totales": [
+    { "ruta": "/api/tenants", "metodos": ["register", "login", "me", "renew", "plans"] },
+    { "ruta": "/api/employees", "metodos": ["list", "get", "create", "update", "delete"] },
+    { "ruta": "/api/clients", "metodos": ["list", "get", "create", "update", "delete", "membership"] },
+    { "ruta": "/api/services", "metodos": ["list", "get", "create", "update", "delete"] },
+    { "ruta": "/api/products", "metodos": ["list", "get", "create", "update", "delete", "stock"] },
+    { "ruta": "/api/sales", "metodos": ["list", "get", "create", "delete", "voucher", "verify"] },
+    { "ruta": "/api/invoices", "metodos": ["list", "get", "create", "delete", "send-email", "next-number"] },
+    { "ruta": "/api/attendance", "metodos": ["list", "checkin", "checkout", "today"] },
+    { "ruta": "/api/reports", "metodos": ["financial/summary", "financial/daily", "clients/summary", "attendance/summary"] },
+    { "ruta": "/api/notifications", "metodos": ["configs", "logs", "send", "scheduler"] }
+  ]
+}

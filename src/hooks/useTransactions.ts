@@ -407,6 +407,7 @@ export const useTransactions = () => {
     const labels: Record<PaymentMethod, string> = {
       CASH: "Efectivo",
       TRANSFER: "Transferencia",
+      DEPOSIT: "Depósito",
       MIXED: "Mixto",
     };
     return labels[method];

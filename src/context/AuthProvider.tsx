@@ -12,42 +12,16 @@
  */
 
 import { useReducer, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import type { AuthUser } from "../types/user.types";
 import { authReducer } from "../hooks/authHook";
 import { AuthContext } from "./AuthContext";
 
-const initialState = { user: null };
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
-/**
-    * Limpia el usuario de localStorage y reinicia el estado global.
-    * 
-    * @function logout
-    * @returns {void}
-    */
-  const logout = () => {
-    // Guardar datos del tenant para verificar si era demo
-    const tenantData = localStorage.getItem("tenant");
-    let wasDemo = false;
-    if (tenantData) {
-      try {
-        const data = JSON.parse(tenantData);
-        wasDemo = data.isDemo || false;
-      } catch {}
-    }
-    
-    // Eliminar el usuario de localStorage
-    localStorage.removeItem("user");
-    localStorage.removeItem("tenantToken");
-    localStorage.removeItem("tenant");
-    
-    // Reiniciar el estado global
-    dispatch({ type: "LOGOUT" });
-    
-    // Si era demo, mostrar mensaje
-    if (wasDemo) {
-      console.log("Demo finalizada");
-    }
-  };
+const initialState = { user: null };
 
 /**
  * Proveedor de autenticación que envuelve la aplicación.

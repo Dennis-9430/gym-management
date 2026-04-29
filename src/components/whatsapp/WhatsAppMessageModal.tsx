@@ -96,9 +96,9 @@ const WhatsAppMessageModal = ({
       const config = {
         type: messageType,
         message,
-        scheduledDate: messageType === "scheduled" ? date : null,
-        scheduledTime: messageType === "scheduled" ? time : null,
-        expiryHour: messageType === "expiry" ? expiryHour : null,
+        scheduledDate: messageType === "scheduled" ? date : undefined,
+        scheduledTime: messageType === "scheduled" ? time : undefined,
+        expiryHour: messageType === "expiry" ? expiryHour : undefined,
         enabled: true,
       };
 

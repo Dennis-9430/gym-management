@@ -13,9 +13,8 @@ const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:80
 const API_BASE = `${getApiBaseUrl()}/api/products`;
 const STORAGE_KEY = "gym-management.products";
 
-// Datos de ejemplo para desarrollo
-// Relacionado con: getProducts (fallback)
-const seedProducts: Product[] = [
+// Productos de ejemplo -保留 para referencia
+export const seedProducts: Product[] = [
   { id: 1, code: "SUP-001", name: "Whey Protein", description: "Proteina de suero 1kg", category: "SUPLEMENTOS", unitPrice: 35, quantity: 10, minStock: 5, createdAt: new Date().toISOString() },
   { id: 2, code: "BEB-001", name: "Agua", description: "Botella 600ml", category: "BEBIDAS", unitPrice: 1, quantity: 60, minStock: 20, createdAt: new Date().toISOString() },
   { id: 3, code: "ACC-001", name: "Guantes", description: "Guantes de entrenamiento", category: "ACCESORIOS", unitPrice: 12, quantity: 15, minStock: 5, createdAt: new Date().toISOString() },
@@ -28,16 +27,16 @@ const seedProducts: Product[] = [
 
 /**
  * Carga productos desde localStorage
- * @returns Array de productos
+ * @returns Array de productos (solo datos locales, no crea seed)
  */
 const loadProducts = (): Product[] => {
   const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) { localStorage.setItem(STORAGE_KEY, JSON.stringify(seedProducts)); return seedProducts; }
+  if (!raw) { return []; }  // No usar datos seed - usar solo DB
   try {
     const parsed = JSON.parse(raw) as Product[];
-    if (!Array.isArray(parsed)) return seedProducts;
+    if (!Array.isArray(parsed)) return [];
     return parsed;
-  } catch { return seedProducts; }
+  } catch { return []; }
 };
 
 /**

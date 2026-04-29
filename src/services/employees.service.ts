@@ -193,24 +193,23 @@ const withDefaults = (employee: Employee): Employee => {
 // Funciones de manejo de datos locales (Fallback)
 
 /**
- * Carga empleados desde localStorage
- * @returns Array de empleados
+ * carga empleados desde localStorage
+ * @returns Array de empleados (solo datos locales, no crea seed)
  */
 const loadEmployees = (): Employee[] => {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(seedEmployees));
-    return seedEmployees;
+    return [];  // No usar datos seed - usar solo DB
   }
 
   try {
     const parsed = JSON.parse(raw) as Employee[];
     if (!Array.isArray(parsed)) {
-      return seedEmployees;
+      return [];
     }
     return parsed.map((employee) => withDefaults(employee));
   } catch {
-    return seedEmployees;
+    return [];
   }
 };
 

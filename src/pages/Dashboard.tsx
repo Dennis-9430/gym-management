@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useAuth } from "../context/index.ts";
 import { useNavigate } from "react-router-dom";
 import { sections, type DashboardSection } from "../types/dashboard.section";
-import { getTenantPlan } from "../services/api";
 import PaymentModal from "../pages/payments/PaymentModal";
 import DashboardCard from "../components/dashboard/DashboardCard";
 import "../styles/dashboard.css";
@@ -14,22 +13,6 @@ const Dashboard = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   if (!user) return null;
-
-  /* Obtener el plan del tenant */
-  const tenantPlan = getTenantPlan();
-  const isPremium = tenantPlan === "PREMIUM";
-
-  /* Verificar si es modo demo */
-  const tenantData = localStorage.getItem("tenant");
-  let isDemo = false;
-  let demoPlan = "";
-  if (tenantData) {
-    try {
-      const data = JSON.parse(tenantData);
-      isDemo = data.isDemo || false;
-      demoPlan = data.demoPlan || "";
-    } catch {}
-  }
 
   /* Filtra las secciones según el rol y el plan */
   const filteredSections = sections.filter((section) => {

@@ -2,7 +2,9 @@
 import type { DocumentType } from "./client.types";
 import type { CartItem, CartTotals } from "./pos.types";
 
-export type PaymentMethod = "CASH" | "TRANSFER" | "MIXED";
+export type PaymentMethod = "CASH" | "TRANSFER" | "DEPOSIT" | "MIXED";
+
+export type PaymentStatus = "pending" | "verified";
 
 export interface SalePayment {
   method: PaymentMethod;
@@ -28,8 +30,11 @@ export interface SaleRecord {
   client: SaleClientInfo;
   payment: SalePayment;
   voucherCode?: string;
+  voucherImage?: string;
+  paymentStatus?: PaymentStatus;
   createdBy?: string;
   generateInvoice?: boolean;
+  invoiceEmail?: string | null;
 }
 
 export type SaleInput = Omit<SaleRecord, "id" | "createdAt">;

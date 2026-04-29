@@ -135,8 +135,8 @@ type StoredClient = Omit<
   memberShipEndDate: string | Date;
 };
 
-/* Clientes de ejemplo para desarrollo */
-const seedClients: StoredClient[] = [
+/* Consumir final -保留 para referencia */
+export const seedClients: StoredClient[] = [
   {
     id: 999,
     documentType: "CEDULA",
@@ -378,23 +378,22 @@ const normalizeClient = (client: StoredClient): ClientForm => ({
 
 /**
  * Carga clientes desde localStorage
- * @returns Array de clientes
+ * @returns Array de clientes (solo datos locales, no crea seed)
  */
 const loadClients = (): ClientForm[] => {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(seedClients));
-    return seedClients.map(normalizeClient);
+    return [];  // No usar datos seed - usar solo DB
   }
 
   try {
     const parsed = JSON.parse(raw) as StoredClient[];
     if (!Array.isArray(parsed)) {
-      return seedClients.map(normalizeClient);
+      return [];
     }
     return parsed.map(normalizeClient);
   } catch {
-    return seedClients.map(normalizeClient);
+    return [];
   }
 };
 

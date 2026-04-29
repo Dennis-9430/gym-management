@@ -24,6 +24,8 @@ export interface CartItem {
   quantity: number;
   subtotal: number;
   source: CatalogSource;
+  productId?: number | null;
+  serviceId?: number | null;
 }
 
 export interface CartTotals {

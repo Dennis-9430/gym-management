@@ -328,12 +328,11 @@ const sampleSales: SaleRecord[] = [
 ];
 
 const loadSales = (): SaleRecord[] => {
-  // Carga ventas desde localStorage
-  // Relacionado con: getSales (fallback)
+  // Carga ventas desde localStorage SOLO si existen datos (no crea semillas)
+  // NOTA: Ahora solo usa la API - si no hay datos en DB retorna array vacío
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleSales));
-    return sampleSales;
+    return [];  // No crear datos seed - usar solo DB
   }
 
   try {
@@ -341,7 +340,6 @@ const loadSales = (): SaleRecord[] => {
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     // Manejo de errores para parsing de JSON
-    // Relacionado con: localStorage corrupto
     return [];
   }
 };
@@ -415,6 +413,7 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
       voucherCode: input.voucherCode || null,
       createdBy: input.createdBy || "Sistema",
       generateInvoice: input.generateInvoice || false,
+      invoiceEmail: input.invoiceEmail || null,
     };
     
     const response = await fetch(API_BASE, {
@@ -447,6 +446,34 @@ export const updateSaleAPI = async (id: number, update: Partial<SaleRecord>): Pr
   } catch (error) {
     console.error("Error actualizando venta:", error);
     return null;
+  }
+};
+
+// Actualiza voucher/imagen de una venta
+export const updateVoucherAPI = async (saleId: string, voucherCode?: string, voucherImage?: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE}/${saleId}/voucher`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ voucherCode, voucherImage }),
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("Error actualizando voucher:", error);
+    return false;
+  }
+};
+
+// Marca pago como verificado (solo ADMIN)
+export const verifyPaymentAPI = async (saleId: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE}/${saleId}/verify`, {
+      method: "PUT",
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("Error verificando pago:", error);
+    return false;
   }
 };
 
