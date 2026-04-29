@@ -19,20 +19,23 @@
 }
 
 .back-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-primary);
-  cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-primary);
+  cursor: pointer;
   transition: background 150ms ease;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: #fff;
 }
 
 .back-btn:hover {
-  background: var(--color-bg-tertiary);
+  background: var(--color-primary-hover);
 }
 
 .invoice-list-header h2 {
@@ -391,4 +394,79 @@
   .invoice-table-wrapper {
     overflow-x: auto;
   }
+}
+
+/* Date filter */
+.invoice-filters {
+  margin-bottom: 20px;
+}
+
+.invoice-date-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-dark);
+  border-radius: 8px;
+  padding: 8px 12px;
+  max-width: fit-content;
+}
+
+.invoice-date-filter input[type="date"] {
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  outline: none;
+  width: 130px;
+  color: var(--color-text-primary);
+}
+
+.invoice-date-filter .date-label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.invoice-date-filter .date-separator {
+  color: var(--color-text-secondary);
+}
+
+.invoice-date-filter span:not(.date-label):not(.date-separator) {
+  color: var(--color-text-secondary);
+}
+
+/* Pagination */
+.invoice-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.invoice-pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.invoice-pagination-btn:hover:not(:disabled) {
+  background: var(--color-bg-muted);
+}
+
+.invoice-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.invoice-pagination-info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }

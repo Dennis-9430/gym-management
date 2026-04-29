@@ -879,14 +879,14 @@
 
 .voucher-modal-content {
   text-align: center;
-  padding: 32px;
+  padding: 16px;
 }
 
 .voucher-placeholder {
   background: #f9fafb;
   border: 2px dashed var(--color-border-dark);
   border-radius: 12px;
-  padding: 48px 32px;
+  padding: 24px 16px;
 }
 
 .voucher-placeholder p {
@@ -895,7 +895,7 @@
 }
 
 .voucher-code-display {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary) !important;
 }

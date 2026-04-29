@@ -4,7 +4,7 @@ import { services as defaultServices } from "../../types/payment.types";
 import { getServices } from "../../services/services.service";
 import "../../styles/paymentModal.css";
 
-/* Modal para registrar pagos de servicios */
+/* Modal para registrar pagos diarios */
 interface Props {
   onClose: () => void;
 }
@@ -65,7 +65,12 @@ const PaymentModal = ({ onClose }: Props) => {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={stopPropagation}>
-        <h2>Registrar Pago</h2>
+        <div className="modal-header">
+          <h2>Registrar Pago Diario</h2>
+          <button className="modal-close-btn" onClick={onClose}>
+            ×
+          </button>
+        </div>
 
         <form className="modal-form">
           {/* SERVICIOS */}

@@ -120,8 +120,8 @@
 
 .modal-centered {
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 25%;
+  transform: translateY(-25%);
 }
 
 .modal-sm {
