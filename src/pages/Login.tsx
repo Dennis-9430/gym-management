@@ -167,18 +167,18 @@ const Login = () => {
 
 <div className="login__field">
               <label htmlFor="email" className="login__label">
-                Correo Electrónico
+                Correo Electrónico o Usuario
               </label>
               <div className={`login__input-wrapper ${fieldErrors.email ? "login__input-wrapper--error" : ""}`}>
                 <Mail size={18} className="login__input-icon" />
                 <input
                   id="email"
                   className="login__input"
-                  type="email"
-                  placeholder="correo@ejemplo.com"
+                  type="text"
+                  placeholder="correo@ejemplo.com o usuario"
                   value={email}
                   onChange={handleEmailChange}
-                  autoComplete="email"
+                  autoComplete="username"
                   disabled={isLoading || isDemoSession}
                 />
               </div>
@@ -257,6 +257,18 @@ const Login = () => {
           </form>
 
           <div className="login__register">
+            <p>
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  alert("Funcionalidad en desarrollo. Contacta al administrador.");
+                }}
+                className="login__forgot"
+              >
+                ¿Olvidaste tu contraseña?
+              </a>
+            </p>
             <p>
               ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
             </p>
