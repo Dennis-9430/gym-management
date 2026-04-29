@@ -1,4 +1,4 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Crown } from "lucide-react";
 import type { Employee } from "../../types/employee.types";
 
 /* Tabla de empleados con acciones de seleccionar, editar y eliminar */
@@ -18,13 +18,14 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
           <th>Nombre</th>
           <th>Email</th>
           <th>Rol</th>
+          <th>Tipo</th>
           <th>Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         {employees.map((emp) => (
-          <tr key={emp.id} className="employee-row">
+          <tr key={emp.id} className={`employee-row ${(emp as any).isOwner ? 'employee-row--owner' : ''}`}>
             <td className="employee-cell-link" onClick={() => onSelect(emp.id)}>
               {emp.id}
             </td>
@@ -35,6 +36,18 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
               {emp.email}
             </td>
             <td>{emp.role}</td>
+            <td>
+              {(emp as any).isOwner ? (
+                <span className="employee-badge employee-badge--owner">
+                  <Crown size={12} />
+                  Owner
+                </span>
+              ) : (
+                <span className="employee-badge employee-badge--employee">
+                  Empleado
+                </span>
+              )}
+            </td>
             <td>{emp.status}</td>
             <td className="actions">
               <button

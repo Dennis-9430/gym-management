@@ -15,6 +15,7 @@ export interface Employee {
   password: string;
   role: EmployeeRole;
   status: EmployeeStatus;
+  isOwner?: boolean;
   createdAt: string;
 }
 
