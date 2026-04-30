@@ -1,5 +1,5 @@
 /* Pagina de gestion de empleados */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, X, Lock } from "lucide-react";
 import EmployeeForm from "../../components/employees/EmployeeForm";
@@ -19,12 +19,18 @@ const EmployeesPage = () => {
     search,
     setSearch,
     error,
+    refresh,
     addEmployee,
     updateEmployeeById,
     removeEmployee,
   } = useEmployees();
   const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+
+  // Cargar empleados al montar
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   const canAddEmployee = () => {
     if (!isPremium() && totalEmployees >= 1) {
