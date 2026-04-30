@@ -2,12 +2,14 @@ import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import type { ClientForm } from "../../types/client.types";
 import { getClients, updateClientAPI } from "../../services/clients.service";
+import { usePlanAccess } from "../../hooks/usePlanAccess";
 import PendingSubscriptionsList from "../../components/sales/PendingSubscriptions";
 import "../../styles/pos.css";
 
 /* Pagina de suscripciones pendientes por registrar */
 const PendingSubscriptionsPage = () => {
   const navigate = useNavigate();
+  const { isPremium } = usePlanAccess();
   const [clients, setClients] = useState<ClientForm[]>([]);
 
   const reloadClients = useCallback(async () => {
@@ -16,8 +18,13 @@ const PendingSubscriptionsPage = () => {
   }, []);
 
   useEffect(() => {
+    if (!isPremium()) {
+      alert("Las suscripciones pendientes están disponibles en el plan PREMIUM. ¡Upgrade tu plan para acceder!");
+      navigate("/dashboard");
+      return;
+    }
     reloadClients();
-  }, [reloadClients]);
+  }, [isPremium, navigate, reloadClients]);
 
   const pendingClients = clients.filter(
     (client) => client.memberShipStatus === "NONE"

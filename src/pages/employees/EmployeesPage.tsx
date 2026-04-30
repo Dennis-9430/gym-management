@@ -54,11 +54,6 @@ const EmployeesPage = () => {
     setShowForm(true);
   };
 
-  const openEditForm = (employee: Employee) => {
-    setEditingEmployee(employee);
-    setShowForm(true);
-  };
-
   const closeForm = () => {
     setEditingEmployee(null);
     setShowForm(false);
@@ -140,7 +135,6 @@ const EmployeesPage = () => {
           <EmployeeTable
             employees={employees}
             onSelect={(id) => navigate(`/employees/${id}`)}
-            onEdit={openEditForm}
             onDelete={handleDelete}
           />
         </div>

@@ -18,6 +18,7 @@ const DashboardCard = ({ title, icon, description, buttonLabel, plan, onClick }:
   const isLocked = plan === "PREMIUM" && !isPremium();
 
   const handleClick = () => {
+    if (isLocked) return;
     onClick();
   };
 

@@ -5,11 +5,10 @@ import type { Employee } from "../../types/employee.types";
 interface Props {
   employees: Employee[];
   onSelect: (id: number) => void;
-  onEdit: (employee: Employee) => void;
   onDelete: (id: number) => void;
 }
 
-const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
+const EmployeeTable = ({ employees, onSelect, onDelete }: Props) => {
   return (
     <table className="employee-table">
       <thead>
@@ -53,19 +52,22 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
               <button
                 type="button"
                 className="btn-edit"
-                onClick={() => onEdit(emp)}
+                onClick={() => onSelect(emp.id)}
               >
                 <Pencil size={16} />
-                Editar
+                Ver
               </button>
-              <button
-                type="button"
-                className="btn-delete"
-                onClick={() => onDelete(emp.id)}
-              >
-                <Trash2 size={16} />
-                Eliminar
-              </button>
+              {/* Owner no puede ser eliminado */}
+              {!emp.isOwner && (
+                <button
+                  type="button"
+                  className="btn-delete"
+                  onClick={() => onDelete(emp.id)}
+                >
+                  <Trash2 size={16} />
+                  Eliminar
+                </button>
+              )}
             </td>
           </tr>
         ))}

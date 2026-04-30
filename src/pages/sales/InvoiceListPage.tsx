@@ -5,6 +5,7 @@ import { FileText, Search, ArrowLeft, Send, Eye, Download } from "lucide-react";
 import invoiceService from "../../services/invoice.service";
 import { generateInvoicePDF } from "../../utils/invoicePdf";
 import type { Invoice } from "../../types/invoice.types";
+import { usePlanAccess } from "../../hooks/usePlanAccess";
 import "../../styles/invoiceList.css";
 
 const ITEMS_PER_PAGE = 20;
@@ -234,6 +235,7 @@ const MOCK_INVOICES: Invoice[] = [
 
 const InvoiceListPage = () => {
   const navigate = useNavigate();
+  const { isPremium } = usePlanAccess();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -243,11 +245,15 @@ const InvoiceListPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+    if (!isPremium()) {
+      alert("Las facturas están disponibles en el plan PREMIUM. ¡Upgrade tu plan para acceder!");
+      navigate("/dashboard");
+      return;
+    }
     // Siempre usar datos demo para evitar problemas de sesión
-    // La API real puede fallar pero mostraremos los datos mock
     setInvoices(MOCK_INVOICES);
     setLoading(false);
-  }, []);
+  }, [isPremium, navigate]);
 
   const hasValidToken = (): boolean => {
     const token = localStorage.getItem("tenantToken");
