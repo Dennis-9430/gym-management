@@ -14,6 +14,8 @@ interface TenantLoginResponse {
     businessName: string;
     plan: string;
     subscriptionStatus: string;
+    ownerFirstName?: string;
+    ownerLastName?: string;
   };
 }
 
@@ -98,6 +100,15 @@ const Login = () => {
       // Guardar token y datos del tenant
       localStorage.setItem("tenantToken", data.accessToken);
       localStorage.setItem("tenant", JSON.stringify(data.tenant));
+
+      // Guardar datos del owner si vienen del backend
+      if (data.tenant.ownerFirstName || data.tenant.ownerLastName) {
+        localStorage.setItem("ownerData", JSON.stringify({
+          firstName: data.tenant.ownerFirstName,
+          lastName: data.tenant.ownerLastName,
+          email: data.tenant.email
+        }));
+      }
 
       // Login con datos del tenant
       const user: AuthUser = {

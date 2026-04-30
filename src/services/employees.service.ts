@@ -41,6 +41,39 @@ export const getEmployees = async (): Promise<Employee[]> => {
     
     // Si la API retorna empleados, usarlos; si no, fallback
     if (employees.length > 0) {
+      // Verificar si es cuenta demo y agregar owner desde localStorage
+      const storedTenant = localStorage.getItem("tenant");
+      const storedOwner = localStorage.getItem("ownerData");
+      
+      if (storedTenant && storedOwner) {
+        const tenant = JSON.parse(storedTenant);
+        const owner = JSON.parse(storedOwner);
+        const demoEmails = ["demo-basic@gmail.com", "demo-pro@gmail.com"];
+        
+        if (demoEmails.includes(tenant.email?.toLowerCase())) {
+          // Crear empleado owner basado en datos del registro
+          const ownerEmployee: Employee = {
+            id: 0,
+            username: "owner",
+            documentNumber: "",
+            firstName: owner.firstName || "Demo",
+            lastName: owner.lastName || "Owner",
+            email: owner.email || tenant.email,
+            phone: "",
+            address: "",
+            notes: "Propietario del gimnasio",
+            password: "",
+            role: "ADMIN",
+            status: "ACTIVO",
+            isOwner: true,
+            createdAt: new Date().toISOString(),
+          };
+          
+          // Agregar owner al inicio
+          return [ownerEmployee, ...employees];
+        }
+      }
+      
       return employees;
     }
     
