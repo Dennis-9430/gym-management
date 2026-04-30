@@ -7,8 +7,6 @@ import {
   ShoppingCart,
   UserCog,
   Settings,
-  FileText,
-  Clock,
 } from "lucide-react";
 
 export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
@@ -93,28 +91,6 @@ export const sections: DashboardSection[] = [
     roles: ["ADMIN"],
     buttonLabel: "Ver reportes",
     description: "Análisis financiero del negocio",
-    plan: "PREMIUM",
-  },
-
-  {
-    title: "Facturas",
-    path: "/sales/invoices",
-    icon: FileText,
-    action: "NAVIGATE",
-    roles: ["ADMIN"],
-    buttonLabel: "Ver facturas",
-    description: "Lista de facturas emitidas",
-    plan: "PREMIUM",
-  },
-
-  {
-    title: "Suscripciones Pendientes",
-    path: "/sales/pending-subscriptions",
-    icon: Clock,
-    action: "NAVIGATE",
-    roles: ["ADMIN", "RECEPCIONISTA"],
-    buttonLabel: "Ver pendientes",
-    description: "Suscripciones por aprobar",
     plan: "PREMIUM",
   },
 
