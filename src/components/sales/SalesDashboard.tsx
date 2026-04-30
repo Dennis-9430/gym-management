@@ -7,6 +7,7 @@ import {
   FileText,
   Receipt,
 } from "lucide-react";
+import { usePlanAccess } from "../../hooks/usePlanAccess";
 
 /* Dashboard de ventas con opciones principales */
 interface SalesDashboardProps {
@@ -21,12 +22,21 @@ const SalesDashboard = ({
   onOpenMembershipModal,
 }: SalesDashboardProps) => {
   const navigate = useNavigate();
+  const { isPremium } = usePlanAccess();
 
   const goToPendingList = () => {
+    if (!isPremium()) {
+      alert("Las suscripciones pendientes están disponibles en el plan PREMIUM.");
+      return;
+    }
     navigate("/sales/pending");
   };
 
   const goToInvoices = () => {
+    if (!isPremium()) {
+      alert("Las facturas están disponibles en el plan PREMIUM.");
+      return;
+    }
     navigate("/sales/invoices");
   };
 
@@ -65,10 +75,10 @@ const SalesDashboard = ({
           <p>Visualiza cobros pendientes y renovaciones.</p>
           <button
             type="button"
-            className="pos-card-btn primary"
+            className={`pos-card-btn ${isPremium() ? "primary" : "locked"}`}
             onClick={goToPendingList}
           >
-            Ver lista
+            {isPremium() ? "Ver lista" : "🔒 PREMIUM"}
           </button>
         </div>
         <div className="pos-dashboard-card">
@@ -107,10 +117,10 @@ const SalesDashboard = ({
           <p>Historial y generación de facturas.</p>
           <button
             type="button"
-            className="pos-card-btn primary"
+            className={`pos-card-btn ${isPremium() ? "primary" : "locked"}`}
             onClick={goToInvoices}
           >
-            Ver facturas
+            {isPremium() ? "Ver facturas" : "🔒 PREMIUM"}
           </button>
         </div>
         {onOpenMembershipModal && (

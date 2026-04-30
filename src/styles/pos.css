@@ -87,6 +87,12 @@
   background: var(--color-primary-hover);
 }
 
+.pos-card-btn.locked {
+  background: var(--color-gray-300);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
 .pos-card-btn.ghost {
   background: var(--color-bg-secondary);
   color: var(--color-text-muted);
