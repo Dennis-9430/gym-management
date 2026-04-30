@@ -103,10 +103,12 @@ export const useEmployees = () => {
     }
   };
 
-  const getById = (id: number) => employees.find((emp) => emp.id === id) ?? null;
-
+const getById = (id: number) => employees.find((emp) => emp.id === id) ?? null;
+  const realEmployees = employees.filter(emp => emp.id !== 0);
+  
   return {
     employees: filteredEmployees,
+    realEmployees,
     totalEmployees: employees.length,
     search,
     setSearch,

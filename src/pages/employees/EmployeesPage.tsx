@@ -15,7 +15,7 @@ const EmployeesPage = () => {
   const { isPremium } = usePlanAccess();
   const {
     employees,
-    totalEmployees,
+    realEmployees,
     search,
     setSearch,
     error,
@@ -24,6 +24,8 @@ const EmployeesPage = () => {
     updateEmployeeById,
     removeEmployee,
   } = useEmployees();
+  
+  const realCount = realEmployees.length;
   const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
@@ -33,12 +35,14 @@ const EmployeesPage = () => {
   }, [refresh]);
 
   const canAddEmployee = () => {
-    if (!isPremium() && totalEmployees >= 1) {
-      alert("En el plan BASIC solo puedes tener 1 empleado. ¡Upgrade a PRO para hasta 3!");
+    // BASIC: solo owner, no empleados adicionales
+    // PREMIUM: owner + 2 empleados máximo
+    if (!isPremium()) {
+      alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
       return false;
     }
-    if (isPremium() && totalEmployees >= 3) {
-      alert("Has alcanzado el límite máximo de 3 empleados en el plan PRO.");
+    if (realCount >= 2) {
+      alert("Has alcanzado el límite máximo de 2 empleados en PREMIUM.");
       return false;
     }
     return true;
@@ -67,12 +71,12 @@ const EmployeesPage = () => {
     }
 
     if (!editingEmployee) {
-      if (!isPremium() && totalEmployees >= 1) {
-        alert("En el plan BASIC solo puedes tener 1 empleado. ¡Upgrade a PRO para hasta 3!");
+      if (!isPremium()) {
+        alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
         return;
       }
-      if (isPremium() && totalEmployees >= 3) {
-        alert("Has alcanzado el límite máximo de 3 empleados en el plan PRO.");
+      if (realCount >= 2) {
+        alert("Has alcanzado el límite máximo de 2 empleados en PREMIUM.");
         return;
       }
     }
@@ -110,13 +114,13 @@ const EmployeesPage = () => {
         </div>
         <div className="employees-actions">
           <EmployeeSearch value={search} onChange={setSearch} />
-          {totalEmployees >= 1 && !isPremium() ? (
+          {realCount >= 1 && !isPremium() ? (
             <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
               <Lock size={16} />
               <p>Agregar empleado</p>
               <span className="pro-badge">BASIC</span>
             </div>
-          ) : totalEmployees >= 3 && isPremium() ? (
+          ) : realCount >= 2 && isPremium() ? (
             <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
               <Lock size={16} />
               <p>Límite alcanzado</p>
@@ -130,10 +134,6 @@ const EmployeesPage = () => {
           )}
         </div>
       </section>
-
-      <div className="employees-stats">
-        Total empleados: {totalEmployees} | Mostrando: {employees.length}
-      </div>
 
       <section className="employees-list">
         <div className="employees-table-wrapper">

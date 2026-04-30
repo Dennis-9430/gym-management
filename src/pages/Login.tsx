@@ -102,11 +102,13 @@ const Login = () => {
       localStorage.setItem("tenant", JSON.stringify(data.tenant));
 
       // Guardar datos del owner si vienen del backend
-      if (data.tenant.ownerFirstName || data.tenant.ownerLastName) {
+      // El email del owner es siempre el mismo del tenant (login)
+      const ownerEmail = data.tenant.email;
+      if (data.tenant.ownerFirstName || data.tenant.ownerLastName || ownerEmail) {
         localStorage.setItem("ownerData", JSON.stringify({
-          firstName: data.tenant.ownerFirstName,
-          lastName: data.tenant.ownerLastName,
-          email: data.tenant.email
+          firstName: data.tenant.ownerFirstName || "Demo",
+          lastName: data.tenant.ownerLastName || "Owner",
+          email: ownerEmail
         }));
       }
 
