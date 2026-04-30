@@ -67,7 +67,7 @@ const SalesDashboard = ({
             Registrar suscripcion
           </button>
         </div>
-        <div className="pos-dashboard-card">
+        <div className={`pos-dashboard-card ${!isPremium() ? "pos-pending-locked" : ""}`}>
           <div className="pos-card-icon">
             <BadgeDollarSign size={22} />
           </div>
@@ -109,7 +109,7 @@ const SalesDashboard = ({
             Ver ventas
           </button>
         </div>
-        <div className="pos-dashboard-card">
+        <div className={`pos-dashboard-card ${!isPremium() ? "pos-pending-locked" : ""}`}>
           <div className="pos-card-icon">
             <FileText size={22} />
           </div>

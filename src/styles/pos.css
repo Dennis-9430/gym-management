@@ -93,6 +93,37 @@
   cursor: not-allowed;
 }
 
+/* Estilo bloqueado para cards tipo dashboard */
+.pos-pending-locked {
+  opacity: 0.85;
+  position: relative;
+}
+
+.pos-pending-locked .pos-pending-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #fef08a;
+  color: #854d0e;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.pos-pending-locked .pos-card-icon {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: var(--color-warning);
+}
+
+.pos-pending-locked .pos-card-btn.locked {
+  background: var(--color-gray-200);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
 .pos-card-btn.ghost {
   background: var(--color-bg-secondary);
   color: var(--color-text-muted);
