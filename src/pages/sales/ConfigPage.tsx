@@ -1,7 +1,7 @@
 /* Pagina de configuracion del negocio */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Building2, MessageSquare, Lock, Crown } from "lucide-react";
+import { ArrowLeft, Save, Building2, MessageSquare, Lock } from "lucide-react";
 import "../../styles/config.css";
 import { hasPlanFeature } from "../../services/api";
 import WhatsAppMessageModal from "../../components/whatsapp/WhatsAppMessageModal";
@@ -12,12 +12,6 @@ interface ConfigData {
   businessAddress: string;
   businessPhone: string;
   businessEmail: string;
-}
-
-interface OwnerData {
-  firstName: string;
-  lastName: string;
-  email: string;
 }
 
 const defaultConfig: ConfigData = {
@@ -32,14 +26,30 @@ const STORAGE_KEY = "gym-management.config";
 
 const loadConfig = (): ConfigData => {
   const stored = localStorage.getItem(STORAGE_KEY);
+  let baseConfig = defaultConfig;
+  
   if (stored) {
     try {
-      return JSON.parse(stored);
+      baseConfig = { ...defaultConfig, ...JSON.parse(stored) };
     } catch {
-      return defaultConfig;
+      baseConfig = defaultConfig;
     }
   }
-  return defaultConfig;
+  
+  // Cargar email del owner/tenant para demos
+  const storedTenant = localStorage.getItem("tenant");
+  if (storedTenant) {
+    try {
+      const tenant = JSON.parse(storedTenant);
+      if (tenant.email) {
+        baseConfig.businessEmail = tenant.email;
+      }
+    } catch {
+      // Ignorar
+    }
+  }
+  
+  return baseConfig;
 };
 
 const ConfigPage = () => {
@@ -48,33 +58,6 @@ const ConfigPage = () => {
   const [saved, setSaved] = useState(false);
   const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false);
   const isPro = hasPlanFeature("whatsapp:write");
-  const [ownerData, setOwnerData] = useState<OwnerData | null>(null);
-  const [isDemo, setIsDemo] = useState(false);
-
-  // Cargar datos del owner
-  useEffect(() => {
-    const storedTenant = localStorage.getItem("tenant");
-    const storedOwner = localStorage.getItem("ownerData");
-    
-    if (storedOwner) {
-      try {
-        setOwnerData(JSON.parse(storedOwner));
-      } catch {
-        // Ignorar error
-      }
-    }
-
-    // Verificar si es cuenta demo
-    if (storedTenant) {
-      try {
-        const tenant = JSON.parse(storedTenant);
-        const demoEmails = ["demo-basic@gmail.com", "demo-pro@gmail.com"];
-        setIsDemo(demoEmails.includes(tenant.email?.toLowerCase()));
-      } catch {
-        // Ignorar error
-      }
-    }
-  }, []);
 
   const handleSave = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
@@ -98,30 +81,6 @@ const ConfigPage = () => {
       </div>
 
       <div className="config-content">
-        {/* Sección Datos del Owner (solo lectura para demos) */}
-        {ownerData && isDemo && (
-          <div className="config-section">
-            <div className="config-section__header">
-              <Crown size={20} />
-              <h3>Propietario (Owner)</h3>
-            </div>
-            <div className="config-section__body config-section__body--readonly">
-              <div className="config-field">
-                <label>Nombre</label>
-                <input type="text" value={ownerData.firstName} disabled />
-              </div>
-              <div className="config-field">
-                <label>Apellido</label>
-                <input type="text" value={ownerData.lastName} disabled />
-              </div>
-              <div className="config-field">
-                <label>Email</label>
-                <input type="email" value={ownerData.email} disabled />
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="config-section">
           <div className="config-section__header">
             <Building2 size={20} />
@@ -171,6 +130,7 @@ const ConfigPage = () => {
                 value={config.businessEmail}
                 onChange={(e) => handleChange("businessEmail", e.target.value)}
                 placeholder="correo@ejemplo.com"
+                disabled={!!config.businessEmail}
               />
             </div>
           </div>
