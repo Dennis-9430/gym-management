@@ -13,6 +13,8 @@ interface Props {
   onCancel?: () => void;
   submitLabel?: string;
   requirePassword?: boolean;
+  isOwner?: boolean;
+  isNew?: boolean;
 }
 
 const roleOptions: EmployeeRole[] = ["ADMIN", "RECEPCIONISTA"];
@@ -38,6 +40,8 @@ const EmployeeForm = ({
   onCancel,
   submitLabel = "Guardar",
   requirePassword = true,
+  isOwner = false,
+  isNew = true,
 }: Props) => {
   const initialForm = useMemo(
     () => (initialValues ? { ...defaultValues, ...initialValues } : defaultValues),
@@ -104,6 +108,7 @@ const EmployeeForm = ({
           onChange={(e) =>
             updateField("status", e.target.value as EmployeeStatus)
           }
+          disabled={isOwner}
         >
           {statusOptions.map((status) => (
             <option key={status} value={status}>
@@ -154,6 +159,7 @@ const EmployeeForm = ({
           value={form.email}
           onChange={(e) => updateField("email", e.target.value)}
           placeholder="correo@email.com"
+          disabled={isOwner}
         />
       </div>
 
@@ -163,6 +169,7 @@ const EmployeeForm = ({
           value={form.username}
           onChange={(e) => updateField("username", e.target.value)}
           placeholder="Usuario"
+          disabled={!isNew}
         />
       </div>
       <div className="form-group">
@@ -182,6 +189,7 @@ const EmployeeForm = ({
           onChange={(e) =>
             updateField("role", e.target.value as EmployeeRole)
           }
+          disabled={isOwner}
         >
           {roleOptions.map((role) => (
             <option key={role} value={role}>

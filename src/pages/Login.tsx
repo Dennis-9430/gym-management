@@ -26,11 +26,20 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
   
   const { login } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
+  // Detectar mensaje de éxito del registro
+  useEffect(() => {
+    const message = searchParams.get("message");
+    if (message) {
+      setSuccessMessage(decodeURIComponent(message));
+    }
+  }, [searchParams]);
 
   // Detectar si viene de demo y prellenar credenciales
   const [isDemoSession, setIsDemoSession] = useState(false);
@@ -172,6 +181,11 @@ const Login = () => {
           </div>
 
           <form className="login__form" onSubmit={handleSubmit}>
+            {successMessage && (
+              <div className="login__success-global" role="status">
+                {successMessage}
+              </div>
+            )}
             {error && (
               <div className="login__error-global" role="alert">
                 {error}

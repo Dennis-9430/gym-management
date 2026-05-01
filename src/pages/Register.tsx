@@ -1,9 +1,21 @@
 /* Página de registro de nuevo gimnasio (Landing) */
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Dumbbell, User, Mail, Phone, Building2, Check, Loader2, Play } from "lucide-react";
+import {
+  Dumbbell,
+  User,
+  Mail,
+  Phone,
+  Building2,
+  Check,
+  Loader2,
+  Play,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import "../styles/login.css";
 import "../styles/register.css";
+import "../styles/register-form.css";
 
 interface Plan {
   id: string;
@@ -24,10 +36,10 @@ const PLANS: Plan[] = [
       "Membresías",
       "Inventario de Productos",
       "Punto de Venta (POS)",
-      "Registro de Asistencia"
+      "Registro de Asistencia",
     ],
     demoEmail: "demo-basic@gmail.com",
-    demoPassword: "demoBasic123"
+    demoPassword: "demoBasic123",
   },
   {
     id: "PREMIUM",
@@ -38,18 +50,20 @@ const PLANS: Plan[] = [
       "Gestión de Empleados (CRUD)",
       "Reportes Financieros",
       "Configuración Completa",
-      "Soporte Prioritario"
+      "Soporte Prioritario",
     ],
     demoEmail: "demo-pro@gmail.com",
-    demoPassword: "demoPro123"
-  }
+    demoPassword: "demoPro123",
+  },
 ];
 
 const Register = () => {
-  const [step, setStep] = useState<"plans" | "form" | "success">("plans");
+  const [step, setStep] = useState<"plans" | "form">("plans");
   const [selectedPlan, setSelectedPlan] = useState<string>("BASIC");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     businessName: "",
     email: "",
@@ -57,7 +71,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     ownerFirstName: "",
-    ownerLastName: ""
+    ownerLastName: "",
   });
   const [fieldErrors, setFieldErrors] = useState({
     businessName: "",
@@ -66,7 +80,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     ownerFirstName: "",
-    ownerLastName: ""
+    ownerLastName: "",
   });
 
   const navigate = useNavigate();
@@ -121,19 +135,22 @@ const Register = () => {
   };
 
   const handleDemoLogin = (planId: string) => {
-    const plan = PLANS.find(p => p.id === planId);
+    const plan = PLANS.find((p) => p.id === planId);
     if (!plan) {
       setError("Plan no encontrado");
       return;
     }
-    
+
     // Guardar credenciales en localStorage para login
-    localStorage.setItem("demoCredentials", JSON.stringify({
-      email: plan.demoEmail,
-      password: plan.demoPassword,
-      demoPlan: planId
-    }));
-    
+    localStorage.setItem(
+      "demoCredentials",
+      JSON.stringify({
+        email: plan.demoEmail,
+        password: plan.demoPassword,
+        demoPlan: planId,
+      }),
+    );
+
     // Redireccionar a login con parámetro
     navigate(`/?demo=true&plan=${planId}`);
   };
@@ -159,28 +176,39 @@ const Register = () => {
           businessPhone: formData.phone,
           plan: selectedPlan,
           ownerFirstName: formData.ownerFirstName,
-          ownerLastName: formData.ownerLastName
-        })
+          ownerLastName: formData.ownerLastName,
+        }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.detail || "Error al registrar el gimnasio");
+        const data = await response.json().catch(() => ({}));
+        throw new Error(
+          data.detail ||
+            `Error ${response.status}: No se pudo registrar el gimnasio`,
+        );
       }
 
-      setStep("success");
+      navigate("/", {
+        state: {
+          message:
+            "Gimnasio registrado exitosamente. Por favor, inicia sesión.",
+        },
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error de conexión");
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Error de conexión con el servidor";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (fieldErrors[field as keyof typeof fieldErrors]) {
-      setFieldErrors(prev => ({ ...prev, [field]: "" }));
+      setFieldErrors((prev) => ({ ...prev, [field]: "" }));
     }
     if (error) setError("");
   };
@@ -204,8 +232,8 @@ const Register = () => {
 
           <div className="register-landing__plans">
             {PLANS.map((plan) => (
-              <div 
-                key={plan.id} 
+              <div
+                key={plan.id}
                 className={`register-landing__plan ${selectedPlan === plan.id ? "register-landing__plan--selected" : ""}`}
                 onClick={() => setSelectedPlan(plan.id)}
               >
@@ -254,8 +282,13 @@ const Register = () => {
             </p>
             <p className="register-form__terms">
               Al registrarte, aceptas nuestros{" "}
-              <a href="/terms" target="_blank">Términos y Condiciones</a> y{" "}
-              <a href="/privacy" target="_blank">Política de Privacidad</a>
+              <a href="/terms" target="_blank">
+                Términos y Condiciones
+              </a>{" "}
+              y{" "}
+              <a href="/privacy" target="_blank">
+                Política de Privacidad
+              </a>
             </p>
           </div>
         </div>
@@ -263,49 +296,20 @@ const Register = () => {
     );
   }
 
-  if (step === "success") {
-    return (
-      <div className="register-success">
-        <div className="register-success__card">
-          <div className="register-success__icon">
-            <Check size={48} />
-          </div>
-          <h2>¡Registro exitoso!</h2>
-          <p>
-            Tu gimnasio <strong>{formData.businessName}</strong> ha sido registrado.
-          </p>
-          <p className="register-success__note">
-            Te hemos enviado las credenciales a <strong>{formData.email}</strong>
-          </p>
-          <p className="register-success__info">
-            Por favor, confirma tu correo electrónico. Mientras tanto, 
-            puedes usar las credenciales temporales para acceder al sistema.
-          </p>
-          <button
-            className="register-success__button"
-            onClick={() => navigate("/")}
-          >
-            Ir a Iniciar Sesión
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const selectedPlanData = PLANS.find(p => p.id === selectedPlan);
+  const selectedPlanData = PLANS.find((p) => p.id === selectedPlan);
 
   return (
     <div className="register-form">
-      <button 
-        className="register-form__back"
-        onClick={() => setStep("plans")}
-      >
+      <button className="register-form__back" onClick={() => setStep("plans")}>
         ← Volver a planes
       </button>
 
       <div className="register-form__header">
         <h2>Completa tu registro</h2>
-        <p>Plan seleccionado: <strong>{selectedPlanData?.name}</strong> - ${selectedPlanData?.price}/mes</p>
+        <p>
+          Plan seleccionado: <strong>{selectedPlanData?.name}</strong> - $
+          {selectedPlanData?.price}/mes
+        </p>
       </div>
 
       <form className="register-form__form" onSubmit={handleSubmit}>
@@ -318,113 +322,167 @@ const Register = () => {
         <div className="register-form__fields-grid">
           <div className="register-form__field register-form__field--full">
             <label>Nombre del Negocio</label>
-            <div className={`register-form__input-wrap ${fieldErrors.businessName ? "register-form__input-wrap--error" : ""}`}>
-            <Building2 size={18} />
-            <input
-              type="text"
-              placeholder="Nombre de tu gimnasio"
-              value={formData.businessName}
-              onChange={(e) => handleChange("businessName", e.target.value)}
-            />
+            <div
+              className={`register-form__input-wrap ${fieldErrors.businessName ? "register-form__input-wrap--error" : ""}`}
+            >
+              <Building2 size={18} />
+              <input
+                type="text"
+                placeholder="Nombre de tu negocio"
+                value={formData.businessName}
+                onChange={(e) => handleChange("businessName", e.target.value)}
+                maxLength={100}
+                autoComplete="organization"
+              />
+            </div>
+            {fieldErrors.businessName && (
+              <span className="register-form__field-error">
+                {fieldErrors.businessName}
+              </span>
+            )}
           </div>
-          {fieldErrors.businessName && (
-            <span className="register-form__field-error">{fieldErrors.businessName}</span>
-          )}
-        </div>
 
-        <div className="register-form__field">
-          <label>Correo Electrónico</label>
-          <div className={`register-form__input-wrap ${fieldErrors.email ? "register-form__input-wrap--error" : ""}`}>
-            <Mail size={18} />
-            <input
-              type="email"
-              placeholder="correo@ejemplo.com"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-            />
+          <div className="register-form__field register-form__field--full">
+            <label>Correo Electrónico</label>
+            <div
+              className={`register-form__input-wrap ${fieldErrors.email ? "register-form__input-wrap--error" : ""}`}
+            >
+              <Mail size={18} />
+              <input
+                type="email"
+                placeholder="correo@ejemplo.com"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                maxLength={254}
+                autoComplete="email"
+              />
+            </div>
+            {fieldErrors.email && (
+              <span className="register-form__field-error">
+                {fieldErrors.email}
+              </span>
+            )}
           </div>
-          {fieldErrors.email && (
-            <span className="register-form__field-error">{fieldErrors.email}</span>
-          )}
-        </div>
 
-        <div className="register-form__field">
-          <label>Teléfono (opcional)</label>
-          <div className="register-form__input-wrap">
-            <Phone size={18} />
-            <input
-              type="tel"
-              placeholder="+51 999 999 999"
-              value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-            />
+          <div className="register-form__field register-form__field--full">
+            <label>Teléfono (opcional)</label>
+            <div className="register-form__input-wrap">
+              <Phone size={18} />
+              <input
+                type="tel"
+                placeholder="+51 999 999 999"
+                value={formData.phone}
+                onChange={(e) => handleChange("phone", e.target.value)}
+                maxLength={20}
+                autoComplete="tel"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="register-form__field">
-          <label>Tu Nombre</label>
-          <div className={`register-form__input-wrap ${fieldErrors.ownerFirstName ? "register-form__input-wrap--error" : ""}`}>
-            <User size={18} />
-            <input
-              type="text"
-              placeholder="Nombre"
-              value={formData.ownerFirstName}
-              onChange={(e) => handleChange("ownerFirstName", e.target.value)}
-            />
+          <div className="register-form__field">
+            <label>Nombres</label>
+            <div
+              className={`register-form__input-wrap ${fieldErrors.ownerFirstName ? "register-form__input-wrap--error" : ""}`}
+            >
+              <User size={18} />
+              <input
+                type="text"
+                placeholder="Nombre"
+                value={formData.ownerFirstName}
+                onChange={(e) => handleChange("ownerFirstName", e.target.value)}
+                maxLength={50}
+                autoComplete="given-name"
+              />
+            </div>
+            {fieldErrors.ownerFirstName && (
+              <span className="register-form__field-error">
+                {fieldErrors.ownerFirstName}
+              </span>
+            )}
           </div>
-          {fieldErrors.ownerFirstName && (
-            <span className="register-form__field-error">{fieldErrors.ownerFirstName}</span>
-          )}
-        </div>
 
-        <div className="register-form__field">
-          <label>Tu Apellido</label>
-          <div className={`register-form__input-wrap ${fieldErrors.ownerLastName ? "register-form__input-wrap--error" : ""}`}>
-            <User size={18} />
-            <input
-              type="text"
-              placeholder="Apellido"
-              value={formData.ownerLastName}
-              onChange={(e) => handleChange("ownerLastName", e.target.value)}
-            />
+          <div className="register-form__field">
+            <label>Apellidos</label>
+            <div
+              className={`register-form__input-wrap ${fieldErrors.ownerLastName ? "register-form__input-wrap--error" : ""}`}
+            >
+              <User size={18} />
+              <input
+                type="text"
+                placeholder="Apellido"
+                value={formData.ownerLastName}
+                onChange={(e) => handleChange("ownerLastName", e.target.value)}
+                maxLength={50}
+                autoComplete="family-name"
+              />
+            </div>
+            {fieldErrors.ownerLastName && (
+              <span className="register-form__field-error">
+                {fieldErrors.ownerLastName}
+              </span>
+            )}
           </div>
-          {fieldErrors.ownerLastName && (
-            <span className="register-form__field-error">{fieldErrors.ownerLastName}</span>
-          )}
-        </div>
 
-        <div className="register-form__field">
-          <label>Contraseña</label>
-          <div className={`register-form__input-wrap ${fieldErrors.password ? "register-form__input-wrap--error" : ""}`}>
-            <User size={18} />
-            <input
-              type="password"
-              placeholder="Mínimo 6 caracteres"
-              value={formData.password}
-              onChange={(e) => handleChange("password", e.target.value)}
-            />
+          <div className="register-form__field">
+            <label>Contraseña</label>
+            <div
+              className={`register-form__input-wrap ${fieldErrors.password ? "register-form__input-wrap--error" : ""}`}
+            >
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Ingrese su contraseña"
+                value={formData.password}
+                onChange={(e) => handleChange("password", e.target.value)}
+                maxLength={32}
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="register-form__password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            {fieldErrors.password && (
+              <span className="register-form__field-error">
+                {fieldErrors.password}
+              </span>
+            )}
           </div>
-          {fieldErrors.password && (
-            <span className="register-form__field-error">{fieldErrors.password}</span>
-          )}
-        </div>
 
-        <div className="register-form__field">
-          <label>Confirmar Contraseña</label>
-          <div className={`register-form__input-wrap ${fieldErrors.confirmPassword ? "register-form__input-wrap--error" : ""}`}>
-            <User size={18} />
-            <input
-              type="password"
-              placeholder="Repite tu contraseña"
-              value={formData.confirmPassword}
-              onChange={(e) => handleChange("confirmPassword", e.target.value)}
-            />
+          <div className="register-form__field">
+            <label>Confirmar Contraseña</label>
+            <div
+              className={`register-form__input-wrap ${fieldErrors.confirmPassword ? "register-form__input-wrap--error" : ""}`}
+            >
+              <User size={18} />
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Ingrese su contraseña"
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  handleChange("confirmPassword", e.target.value)
+                }
+                maxLength={32}
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="register-form__password-toggle"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            {fieldErrors.confirmPassword && (
+              <span className="register-form__field-error">
+                {fieldErrors.confirmPassword}
+              </span>
+            )}
           </div>
-          {fieldErrors.confirmPassword && (
-            <span className="register-form__field-error">{fieldErrors.confirmPassword}</span>
-          )}
-        </div>
-
         </div>
 
         <button
@@ -449,8 +507,13 @@ const Register = () => {
         </p>
         <p className="register-form__terms">
           Al registrarte, aceptas nuestros{" "}
-          <a href="/terms" target="_blank">Términos y Condiciones</a> y{" "}
-          <a href="/privacy" target="_blank">Política de Privacidad</a>
+          <a href="/terms" target="_blank">
+            Términos y Condiciones
+          </a>{" "}
+          y{" "}
+          <a href="/privacy" target="_blank">
+            Política de Privacidad
+          </a>
         </p>
       </div>
     </div>

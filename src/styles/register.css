@@ -286,7 +286,7 @@
 
 .register-form__form {
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -327,13 +327,15 @@
 }
 
 .register-form__input-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  padding: 0 1rem;
+  padding: 0 0.75rem;
+  transition: all 0.3s ease;
 }
 
 .register-form__input-wrap:focus-within {
@@ -351,7 +353,7 @@
 
 .register-form__input-wrap input {
   flex: 1;
-  background: none;
+  background: transparent;
   border: none;
   color: white;
   padding: 0.875rem 0;
@@ -359,8 +361,37 @@
   outline: none;
 }
 
+.register-form__input-wrap input:-webkit-autofill,
+.register-form__input-wrap input:-webkit-autofill:hover,
+.register-form__input-wrap input:-webkit-autofill:focus,
+.register-form__input-wrap input:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  caret-color: white;
+  -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.1) inset !important;
+  background-color: transparent !important;
+}
+
 .register-form__input-wrap input::placeholder {
   color: rgba(255, 255, 255, 0.4);
+}
+
+.register-form__password-toggle {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.register-form__password-toggle:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .register-form__field-error {
@@ -469,8 +500,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Success */

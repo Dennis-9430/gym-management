@@ -104,7 +104,7 @@ export const useEmployees = () => {
   };
 
 const getById = (id: number) => employees.find((emp) => emp.id === id) ?? null;
-  const realEmployees = employees.filter(emp => emp.id !== 0);
+  const realEmployees = employees.filter(emp => !emp.isOwner);
   
   return {
     employees: filteredEmployees,

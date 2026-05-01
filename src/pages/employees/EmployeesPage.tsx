@@ -5,6 +5,7 @@ import { Plus, X, Lock } from "lucide-react";
 import EmployeeForm from "../../components/employees/EmployeeForm";
 import EmployeeSearch from "../../components/employees/EmployeeSearch";
 import EmployeeTable from "../../components/employees/EmployeeTable";
+import PasswordConfirmModal from "../../components/employees/PasswordConfirmModal";
 import { useEmployees } from "../../hooks/useEmployees";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../../types/employee.types";
@@ -25,9 +26,11 @@ const EmployeesPage = () => {
     removeEmployee,
   } = useEmployees();
   
-  const realCount = realEmployees.length;
+const realCount = realEmployees.length;
   const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [pendingEmployeeData, setPendingEmployeeData] = useState<EmployeeInput | null>(null);
 
   // Cargar empleados al montar
   useEffect(() => {
@@ -54,17 +57,24 @@ const EmployeesPage = () => {
     setShowForm(true);
   };
 
+  const openEditForm = (employee: Employee) => {
+    setEditingEmployee(employee);
+    setShowForm(true);
+  };
+
   const closeForm = () => {
     setEditingEmployee(null);
     setShowForm(false);
   };
 
-  const handleSubmit = (values: EmployeeInput) => {
-    const actionLabel = editingEmployee ? "actualizar" : "registrar";
-    if (!confirm(`Deseas ${actionLabel} este empleado?`)) {
-      return;
-    }
+  const hasSensitiveChange = (values: EmployeeInput, original?: Employee): boolean => {
+    if (!original) return true;
+    const usernameChanged = original.username !== values.username;
+    const passwordChanged = !!(values.password && values.password.trim());
+    return usernameChanged || passwordChanged;
+  };
 
+  const handleSubmit = (values: EmployeeInput) => {
     if (!editingEmployee) {
       if (!isPremium()) {
         alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
@@ -76,6 +86,17 @@ const EmployeesPage = () => {
       }
     }
 
+    const needsConfirmation = hasSensitiveChange(values, editingEmployee ?? undefined);
+    if (needsConfirmation) {
+      setPendingEmployeeData(values);
+      setShowPasswordModal(true);
+      return;
+    }
+
+    executeSubmit(values);
+  };
+
+  const executeSubmit = (values: EmployeeInput) => {
     try {
       if (editingEmployee) {
         const payload: Record<string, unknown> = { ...values };
@@ -89,6 +110,27 @@ const EmployeesPage = () => {
       closeForm();
     } catch {
       // error handled in hook
+    }
+  };
+
+  const handlePasswordConfirm = async (password: string) => {
+    if (!pendingEmployeeData) return;
+    
+    try {
+      const response = await fetch("/api/auth/verify-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Invalid password");
+      }
+      
+      setShowPasswordModal(false);
+      executeSubmit(pendingEmployeeData);
+    } catch {
+      alert("Contraseña incorrecta. Intenta de nuevo.");
     }
   };
 
@@ -135,6 +177,7 @@ const EmployeesPage = () => {
           <EmployeeTable
             employees={employees}
             onSelect={(id) => navigate(`/employees/${id}`)}
+            onEdit={openEditForm}
             onDelete={handleDelete}
           />
         </div>
@@ -165,11 +208,24 @@ const EmployeesPage = () => {
               onCancel={closeForm}
               submitLabel={editingEmployee ? "Actualizar" : "Guardar"}
               requirePassword={!editingEmployee}
+              isOwner={(editingEmployee as any)?.isOwner ?? false}
+              isNew={!editingEmployee}
             />
             {error && <p className="form-error">{error}</p>}
           </div>
         </div>
       )}
+
+      <PasswordConfirmModal
+        isOpen={showPasswordModal}
+        onClose={() => {
+          setShowPasswordModal(false);
+          setPendingEmployeeData(null);
+        }}
+        onConfirm={handlePasswordConfirm}
+        title="Confirmar cambios"
+        description="Ingresa tu contraseña para confirmar los cambios de usuario o contraseña"
+      />
     </main>
   );
 };

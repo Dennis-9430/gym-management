@@ -6,6 +6,7 @@ import {
   CreditCard,
   FileText,
   Receipt,
+  Lock,
 } from "lucide-react";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
 
@@ -73,12 +74,13 @@ const SalesDashboard = ({
           </div>
           <h3>Suscripciones pendientes</h3>
           <p>Visualiza cobros pendientes y renovaciones.</p>
+          {!isPremium() && <span className="pos-pending-badge">PRO</span>}
           <button
             type="button"
             className={`pos-card-btn ${isPremium() ? "primary" : "locked"}`}
             onClick={goToPendingList}
           >
-            {isPremium() ? "Ver lista" : "🔒 PREMIUM"}
+            {isPremium() ? "Ver lista" : <><Lock size={14} /> PREMIUM</>}
           </button>
         </div>
         <div className="pos-dashboard-card">
@@ -115,12 +117,13 @@ const SalesDashboard = ({
           </div>
           <h3>Facturas</h3>
           <p>Historial y generación de facturas.</p>
+          {!isPremium() && <span className="pos-pending-badge">PRO</span>}
           <button
             type="button"
             className={`pos-card-btn ${isPremium() ? "primary" : "locked"}`}
             onClick={goToInvoices}
           >
-            {isPremium() ? "Ver facturas" : "🔒 PREMIUM"}
+            {isPremium() ? "Ver facturas" : <><Lock size={14} /> PREMIUM</>}
           </button>
         </div>
         {onOpenMembershipModal && (

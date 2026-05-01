@@ -119,9 +119,20 @@
 }
 
 .pos-pending-locked .pos-card-btn.locked {
-  background: var(--color-gray-200);
+  background: var(--color-background-alt);
   color: var(--color-text-muted);
   cursor: not-allowed;
+  justify-content: center;
+}
+
+.pos-pending-locked .pos-card-btn.locked:hover {
+  background: var(--color-background-alt);
+}
+
+.pos-card-btn.locked svg {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
 }
 
 .pos-card-btn.ghost {
