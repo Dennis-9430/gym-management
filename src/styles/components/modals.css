@@ -47,7 +47,8 @@
    -------------------------------------------------------------------------- */
 .modal-sm {
   max-width: 400px;
-  height: 500px;
+  height: auto;
+  min-height: auto;
 }
 
 .modal-md {
@@ -347,6 +348,140 @@
   }
 
   .modal-footer .btn {
+    width: 100%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Password Confirm Modal
+   -------------------------------------------------------------------------- */
+.modal-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-bg-secondary);
+  border-radius: 50%;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.password-toggle:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Password Confirm Modal */
+.password-confirm-modal {
+  height: auto;
+  min-height: auto;
+  max-height: 90vh;
+}
+
+.password-confirm-modal .modal-header {
+  text-align: center;
+}
+
+.password-confirm-modal .modal-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.password-confirm-modal .modal-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  border-radius: 50%;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.password-confirm-modal .modal-title {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+}
+
+.password-confirm-modal .modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.password-confirm-modal .modal-body {
+  padding: 20px 24px;
+}
+
+.password-confirm-modal .modal-footer {
+  padding: 0 24px 24px;
+  justify-content: center;
+  gap: 12px;
+}
+
+.password-confirm-modal .modal-footer button {
+  flex: 1;
+  max-width: 160px;
+}
+
+@media (max-width: 480px) {
+  .password-confirm-modal {
+    padding: 16px;
+  }
+
+  .password-confirm-modal .modal-header-content {
+    padding-top: 8px;
+  }
+
+  .password-confirm-modal .modal-icon-wrapper {
+    width: 48px;
+    height: 48px;
+  }
+
+  .password-confirm-modal .modal-icon-wrapper svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .password-confirm-modal .modal-body {
+    padding: 16px;
+  }
+
+  .password-confirm-modal .modal-footer {
+    padding: 0 16px 16px;
+    flex-direction: column-reverse;
+  }
+
+  .password-confirm-modal .modal-footer button {
+    max-width: 100%;
     width: 100%;
   }
 }
