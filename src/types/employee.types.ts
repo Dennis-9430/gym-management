@@ -1,10 +1,12 @@
 /* Tipos para empleados y permisos */
 export type EmployeeRole = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
-export type EmployeeStatus = "ACTIVO" | "INACTIVO";
+export type EmployeeStatus = "ACTIVE" | "INACTIVE";
+export type DocumentType = "CEDULA" | "PASAPORTE" | "RUC";
 
 export interface Employee {
   id: number;
   username: string;
+  documentType: DocumentType;
   documentNumber: string;
   firstName: string;
   lastName: string;

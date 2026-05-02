@@ -3,6 +3,7 @@
 // Relacionado con: useEmployees.ts, EmployeesPage.tsx, backend/app/routers/employees.py
 
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
+import { getAuthHeaders, getAuthToken } from "./api";
 
 // Configuración de API - usa variable de entorno o fallback
 const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -16,7 +17,7 @@ const STORAGE_KEY = "gym-management.employees";
 // Relacionado con: backend/app/routers/employees.py (list_employees)
 export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
   try {
-    const response = await fetch(`${API_BASE}?status=ACTIVE`);
+    const response = await fetch(`${API_BASE}?status=ACTIVE`, { headers: getAuthHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener empleados");
     }
@@ -31,38 +32,61 @@ export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
 /* Obtiene empleados (intenta API, fallback localStorage) */
 // Relacionado con: useEmployees.ts, EmployeesPage.tsx
 export const getEmployees = async (): Promise<Employee[]> => {
-  // Primero verificar si es cuenta demo para agregar owner
+  // Cargar owner desde tenant
   const storedTenant = localStorage.getItem("tenant");
   const storedOwner = localStorage.getItem("ownerData");
   let ownerEmployee: Employee | null = null;
   
-  if (storedTenant && storedOwner) {
+  if (storedTenant) {
     const tenant = JSON.parse(storedTenant);
-    const demoEmails = ["demo-basic@gmail.com", "demo-pro@gmail.com"];
+    // Obtener username real del owner desde tenant o desde ownerData
+    const ownerDataStr = localStorage.getItem("ownerData");
+    const ownerData = ownerDataStr ? JSON.parse(ownerDataStr) : {};
+    const firstName = tenant.ownerFirstName || ownerData.firstName || tenant.businessName?.split(" ")[0] || "Owner";
+    const lastName = tenant.ownerLastName || ownerData.lastName || tenant.businessName?.split(" ").slice(1).join(" ") || "";
+    const ownerUsername = tenant.ownerUsername || ownerData.username || tenant.email?.split("@")[0] || "owner";
     
-    if (demoEmails.includes(tenant.email?.toLowerCase())) {
-      const owner = JSON.parse(storedOwner);
-      ownerEmployee = {
-        id: 0,
-        username: "owner",
-        documentNumber: "",
-        firstName: owner.firstName || "Demo",
-        lastName: owner.lastName || "Owner",
-        email: owner.email || tenant.email,
-        phone: "",
-        address: "",
-        notes: "Propietario del gimnasio",
-        password: "",
-        role: "ADMIN",
-        status: "ACTIVO",
-        isOwner: true,
-        createdAt: new Date().toISOString(),
-      };
-    }
-  }
-  
+    ownerEmployee = {
+      id: 0,
+      username: ownerUsername,
+      documentType: "CEDULA",
+      documentNumber: tenant.ruc || ownerData.documentNumber || "",
+      firstName: firstName,
+      lastName: lastName,
+      email: tenant.email || ownerData.email || "",
+      phone: tenant.phone || ownerData.phone || "",
+      address: tenant.address || ownerData.address || "",
+      notes: "Propietario del gimnasio",
+      password: "",
+      role: "ADMIN",
+      status: "ACTIVE",
+      isOwner: true,
+      createdAt: new Date().toISOString(),
+    };
+  } else if (storedOwner) {
+    // Legacy: cuenta demo
+    const owner = JSON.parse(storedOwner);
+    ownerEmployee = {
+      id: 0,
+      username: "owner",
+      documentType: "CEDULA",
+      documentNumber: "",
+      firstName: owner.firstName || "Demo",
+      lastName: owner.lastName || "Owner",
+      email: owner.email || "",
+      phone: "",
+      address: "",
+      notes: "Propietario del gimnasio",
+      password: "",
+      role: "ADMIN",
+      status: "ACTIVE",
+      isOwner: true,
+      createdAt: new Date().toISOString(),
+    };
+}
+   
   try {
-    const response = await fetch(`${API_BASE}?status=ACTIVE`);
+    const response = await fetch(`${API_BASE}?status=ACTIVE`, { headers: getAuthHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener empleados");
     }
@@ -107,6 +131,33 @@ export const getEmployeeById = async (id: number): Promise<Employee | null> => {
   }
 };
 
+/* Obtiene datos del owner actual desde el backend */
+export const getOwnerFromAPI = async (): Promise<Employee | null> => {
+  try {
+    const apiBase = getApiBaseUrl();
+    const token = getAuthToken();
+    const response = await fetch(`${apiBase}/api/tenants/owner`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Owner no encontrado");
+    }
+    const data = await response.json();
+    // Convertir id a número para consistencia local (el owner tiene id=0 localmente)
+    if (data.id) {
+      data.id = 0;
+    }
+    return data as Employee;
+  } catch (error) {
+    console.error("Error obteniendo owner:", error);
+    return null;
+  }
+};
+
 /* Crea empleado */
 export const createEmployeeAPI = async (
   input: EmployeeInput
@@ -114,7 +165,7 @@ export const createEmployeeAPI = async (
   try {
     const response = await fetch(API_BASE, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(input),
     });
     if (!response.ok) {
@@ -132,19 +183,35 @@ export const updateEmployeeAPI = async (
   id: number,
   update: EmployeeUpdate
 ): Promise<Employee | null> => {
+  if (!id || id <= 0) {
+    console.error("updateEmployeeAPI: ID inválido", id);
+    throw new Error("ID de empleado inválido");
+  }
+  
+  console.log("updateEmployeeAPI - ID:", id, "Payload:", update);
+  
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(update),
     });
+    
+    console.log("updateEmployeeAPI - Response status:", response.status);
+    
     if (!response.ok) {
-      throw new Error("Error al actualizar empleado");
+      const errorData = await response.json().catch(() => ({}));
+      console.error("updateEmployeeAPI - Error response:", errorData);
+      throw new Error(errorData.detail || "Error al actualizar empleado");
     }
+    
     return await response.json();
   } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
     console.error("Error actualizando empleado:", error);
-    return null;
+    throw new Error("Error al actualizar empleado");
   }
 };
 
@@ -153,6 +220,7 @@ export const deleteEmployeeAPI = async (id: number): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "DELETE",
+      headers: getAuthHeaders(),
     });
     return response.ok;
   } catch (error) {
@@ -167,6 +235,7 @@ const seedEmployees: Employee[] = [
   {
     id: 1,
     username: "admin",
+    documentType: "CEDULA",
     documentNumber: "0102030405",
     firstName: "Admin",
     lastName: "Sistema",
@@ -176,12 +245,13 @@ const seedEmployees: Employee[] = [
     notes: "",
     password: "admin123",
     role: "ADMIN",
-    status: "ACTIVO",
+    status: "ACTIVE",
     createdAt: new Date().toISOString(),
   },
   {
     id: 2,
     username: "dennis",
+    documentType: "CEDULA",
     documentNumber: "0203040506",
     firstName: "Dennis",
     lastName: "Empleado",
@@ -191,12 +261,13 @@ const seedEmployees: Employee[] = [
     notes: "",
     password: "123456",
     role: "RECEPCIONISTA",
-    status: "ACTIVO",
+    status: "ACTIVE",
     createdAt: new Date().toISOString(),
   },
   {
     id: 3,
     username: "trainer",
+    documentType: "CEDULA",
     documentNumber: "0304050607",
     firstName: "Luis",
     lastName: "Trainer",
@@ -206,7 +277,7 @@ const seedEmployees: Employee[] = [
     notes: "",
     password: "trainer123",
     role: "ENTRENADOR",
-    status: "INACTIVO",
+      status: "INACTIVE",
     createdAt: new Date().toISOString(),
   },
 ];

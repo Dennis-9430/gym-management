@@ -194,7 +194,7 @@ const PasswordConfirmModal = ({
           }
         }
       `}</style>
-      <div className="password-modal-overlay" onClick={handleClose}>
+      <div className="password-modal-overlay">
         <div className="password-modal" onClick={(e) => e.stopPropagation()}>
           <div className="password-modal-header">
             <div className="password-modal-icon">

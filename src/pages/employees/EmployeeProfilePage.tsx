@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "../../context/index.ts";
 import EmployeePermissions from "../../components/employees/EmployeePermissions";
-import { getEmployeeById } from "../../services/employees.service";
+import { getEmployeeById, getOwnerFromAPI } from "../../services/employees.service";
 import "../../styles/clientProfileCss/ClientProfile.css";
 
 const EmployeeProfilePage = () => {
@@ -15,15 +15,22 @@ const EmployeeProfilePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const parsedId = Number(id);
-    if (!Number.isNaN(parsedId)) {
-      getEmployeeById(parsedId)
-        .then(setEmployee)
-        .catch(console.error)
-        .finally(() => setLoading(false));
-    } else {
+    const loadEmployee = async () => {
+      setLoading(true);
+      const parsedId = Number(id);
+      
+      if (id === "owner" || parsedId <= 0) {
+        // Owner: obtener desde API
+        const ownerData = await getOwnerFromAPI();
+        setEmployee(ownerData);
+      } else if (!Number.isNaN(parsedId)) {
+        const empData = await getEmployeeById(parsedId);
+        setEmployee(empData);
+      }
       setLoading(false);
-    }
+    };
+    
+    loadEmployee();
   }, [id]);
 
   if (loading) {

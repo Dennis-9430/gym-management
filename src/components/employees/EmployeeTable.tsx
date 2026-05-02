@@ -14,9 +14,9 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
     <table className="employee-table">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Nombre</th>
           <th>Email</th>
+          <th>Usuario</th>
           <th>Rol</th>
           <th>Tipo</th>
           <th>Estado</th>
@@ -26,15 +26,11 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
       <tbody>
         {employees.map((emp) => (
           <tr key={emp.id} className={`employee-row ${(emp as any).isOwner ? 'employee-row--owner' : ''}`}>
-            <td className="employee-cell-link" onClick={() => onSelect(emp.id)}>
-              {emp.id}
-            </td>
-            <td className="employee-cell-link" onClick={() => onSelect(emp.id)}>
+            <td className={`employee-cell-link ${emp.isOwner ? 'employee-cell-link--owner' : ''}`} onClick={() => emp.isOwner && onSelect(emp.id)}>
               {emp.firstName} {emp.lastName}
             </td>
-            <td className="employee-cell-link" onClick={() => onSelect(emp.id)}>
-              {emp.email}
-            </td>
+            <td>{emp.email}</td>
+            <td>{emp.username || "-"}</td>
             <td>{emp.role}</td>
             <td>
               {(emp as any).isOwner ? (

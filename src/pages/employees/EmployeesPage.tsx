@@ -8,12 +8,18 @@ import EmployeeTable from "../../components/employees/EmployeeTable";
 import PasswordConfirmModal from "../../components/employees/PasswordConfirmModal";
 import { useEmployees } from "../../hooks/useEmployees";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
+import { useAccountType } from "../../hooks/useAccountType";
+import { getAuthToken } from "../../services/api";
+import { getEmployeeById, getOwnerFromAPI } from "../../services/employees.service";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../../types/employee.types";
 import "../../styles/employees.css";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const EmployeesPage = () => {
   const navigate = useNavigate();
   const { isPremium } = usePlanAccess();
+  const { isDemo, isOwner, employeeIdFromToken } = useAccountType();
   const {
     employees,
     realEmployees,
@@ -26,7 +32,7 @@ const EmployeesPage = () => {
     removeEmployee,
   } = useEmployees();
   
-const realCount = realEmployees.length;
+  const realCount = realEmployees.length;
   const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -38,8 +44,10 @@ const realCount = realEmployees.length;
   }, [refresh]);
 
   const canAddEmployee = () => {
-    // BASIC: solo owner, no empleados adicionales
-    // PREMIUM: owner + 2 empleados máximo
+    if (isDemo) {
+      alert("Las cuentas demo tienen acceso restringido.");
+      return false;
+    }
     if (!isPremium()) {
       alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
       return false;
@@ -57,9 +65,32 @@ const realCount = realEmployees.length;
     setShowForm(true);
   };
 
-  const openEditForm = (employee: Employee) => {
-    setEditingEmployee(employee);
-    setShowForm(true);
+  const openEditForm = async (employee: Employee) => {
+    if (isDemo) {
+      alert("Las cuentas demo tienen acceso restringido.");
+      return;
+    }
+    
+    // Si es el owner, obtener datos completos desde API
+    if (!employee.id || employee.id <= 0) {
+      const ownerData = await getOwnerFromAPI();
+      if (ownerData) {
+        setEditingEmployee(ownerData);
+        setShowForm(true);
+      } else {
+        setEditingEmployee(employee);
+        setShowForm(true);
+      }
+    } else {
+      // Para empleados normales, obtener datos desde API
+      const empData = await getEmployeeById(employee.id);
+      if (empData) {
+        setEditingEmployee(empData);
+      } else {
+        setEditingEmployee(employee);
+      }
+      setShowForm(true);
+    }
   };
 
   const closeForm = () => {
@@ -69,12 +100,14 @@ const realCount = realEmployees.length;
 
   const hasSensitiveChange = (values: EmployeeInput, original?: Employee): boolean => {
     if (!original) return true;
-    const usernameChanged = original.username !== values.username;
-    const passwordChanged = !!(values.password && values.password.trim());
-    return usernameChanged || passwordChanged;
+    return true; // Siempre mostrar confirmación para cualquier cambio
   };
 
-  const handleSubmit = (values: EmployeeInput) => {
+  const handleSubmit = async (values: EmployeeInput) => {
+    if (isDemo) {
+      alert("Las cuentas demo tienen acceso restringido.");
+      return;
+    }
     if (!editingEmployee) {
       if (!isPremium()) {
         alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
@@ -93,44 +126,103 @@ const realCount = realEmployees.length;
       return;
     }
 
-    executeSubmit(values);
+    await executeSubmit(values);
   };
 
-  const executeSubmit = (values: EmployeeInput) => {
+  const executeSubmit = async (values: EmployeeInput) => {
     try {
       if (editingEmployee) {
         const payload: Record<string, unknown> = { ...values };
         if (!payload.password || !(payload.password as string).trim()) {
           delete payload.password;
         }
-        updateEmployeeById(editingEmployee.id, payload as EmployeeUpdate);
+
+        // Owner usa endpoint especial /api/tenants/owner
+        if (!editingEmployee.id || editingEmployee.id <= 0) {
+          if (!isOwner || !employeeIdFromToken) {
+            console.error("executeSubmit: No se puede editar el owner sin employeeId del token");
+            alert("Error: No se pudo identificar al owner.");
+            closeForm();
+            return;
+          }
+          const allowedOwnerFields = ["firstName", "lastName", "phone", "address", "documentNumber", "documentType", "notes", "username", "password"] as const;
+          const ownerPayload: Record<string, string> = {};
+          for (const key of allowedOwnerFields) {
+            const val = values[key];
+            if (val !== undefined && val !== null && val.trim() !== "") {
+              ownerPayload[key] = val;
+            }
+          }
+          const token = getAuthToken();
+          const response = await fetch(`${API_BASE_URL}/api/tenants/owner`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(ownerPayload),
+          });
+          if (!response.ok) {
+            const err = await response.json();
+            alert(err.detail || "Error al actualizar owner");
+            return;
+          }
+          // Guardar username actualizado del owner en localStorage para persistencia
+          const updatedOwner = await response.json();
+          const tenant = JSON.parse(localStorage.getItem("tenant") || "{}");
+          if (updatedOwner.username) tenant.ownerUsername = updatedOwner.username;
+          if (updatedOwner.firstName) tenant.ownerFirstName = updatedOwner.firstName;
+          if (updatedOwner.lastName) tenant.ownerLastName = updatedOwner.lastName;
+          localStorage.setItem("tenant", JSON.stringify(tenant));
+          // Actualizar datos locales del owner directamente (no rely on refresh)
+          if (editingEmployee && (!editingEmployee.id || editingEmployee.id <= 0)) {
+            const updatedLocalEmp = {
+              ...editingEmployee,
+              username: updatedOwner.username || editingEmployee.username,
+              firstName: updatedOwner.firstName || editingEmployee.firstName,
+              lastName: updatedOwner.lastName || editingEmployee.lastName,
+            };
+            // Update via useEmployees state
+            setEditingEmployee(updatedLocalEmp);
+          }
+          // Refrescar lista de empleados
+          await refresh();
+        } else {
+          await updateEmployeeById(editingEmployee.id, payload as EmployeeUpdate);
+        }
       } else {
-        addEmployee(values);
+        await addEmployee(values);
       }
       closeForm();
-    } catch {
-      // error handled in hook
+    } catch (err) {
+      console.error("executeSubmit error:", err);
     }
   };
 
   const handlePasswordConfirm = async (password: string) => {
     if (!pendingEmployeeData) return;
     
+    const token = getAuthToken();
     try {
-      const response = await fetch("/api/auth/verify-password", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/verify-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify({ password }),
       });
       
       if (!response.ok) {
-        throw new Error("Invalid password");
+        const err = await response.json();
+        alert(err.detail || "Contraseña incorrecta");
+        return;
       }
       
       setShowPasswordModal(false);
-      executeSubmit(pendingEmployeeData);
+      await executeSubmit(pendingEmployeeData);
     } catch {
-      alert("Contraseña incorrecta. Intenta de nuevo.");
+      alert("Error al verificar contraseña");
     }
   };
 
@@ -176,7 +268,13 @@ const realCount = realEmployees.length;
         <div className="employees-table-wrapper">
           <EmployeeTable
             employees={employees}
-            onSelect={(id) => navigate(`/employees/${id}`)}
+            onSelect={(id) => {
+              if (id <= 0) {
+                navigate("/employees/owner");
+              } else {
+                navigate(`/employees/${id}`);
+              }
+            }}
             onEdit={openEditForm}
             onDelete={handleDelete}
           />
@@ -184,7 +282,7 @@ const realCount = realEmployees.length;
       </section>
 
       {showForm && (
-        <div className="employee-modal-backdrop" onClick={closeForm}>
+        <div className="employee-modal-backdrop">
           <div
             className="employee-modal"
             onClick={(e) => e.stopPropagation()}

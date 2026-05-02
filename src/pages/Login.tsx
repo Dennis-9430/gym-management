@@ -107,19 +107,31 @@ const Login = () => {
       }
 
       // Guardar token y datos del tenant
-      localStorage.setItem("tenantToken", data.accessToken);
-      localStorage.setItem("tenant", JSON.stringify(data.tenant));
-
-      // Guardar datos del owner si vienen del backend
-      // El email del owner es siempre el mismo del tenant (login)
-      const ownerEmail = data.tenant.email;
-      if (data.tenant.ownerFirstName || data.tenant.ownerLastName || ownerEmail) {
-        localStorage.setItem("ownerData", JSON.stringify({
-          firstName: data.tenant.ownerFirstName || "Demo",
-          lastName: data.tenant.ownerLastName || "Owner",
-          email: ownerEmail
-        }));
+      localStorage.setItem("accessToken", data.accessToken);
+      // Incluir ownerUsername en tenant si viene del backend
+      const tenantData: Record<string, unknown> = { ...data.tenant };
+      if ((data.tenant as any).ownerUsername) {
+        tenantData.ownerUsername = (data.tenant as any).ownerUsername;
       }
+      localStorage.setItem("tenant", JSON.stringify(tenantData));
+
+      // Guardar flag si es demo
+      const isDemo = new URLSearchParams(window.location.search).get("demo") === "true";
+      if (isDemo) {
+        localStorage.setItem("isDemo", "true");
+      } else {
+        localStorage.removeItem("isDemo");
+      }
+
+      // Guardar datos del owner
+      const ownerEmail = data.tenant.email;
+      const ownerUsername = (data.tenant as any).ownerUsername || ownerEmail?.split("@")[0] || "owner";
+      localStorage.setItem("ownerData", JSON.stringify({
+        firstName: data.tenant.ownerFirstName || "Demo",
+        lastName: data.tenant.ownerLastName || "Owner",
+        email: ownerEmail,
+        username: ownerUsername
+      }));
 
       // Login con datos del tenant
       const user: AuthUser = {
@@ -194,7 +206,7 @@ const Login = () => {
 
 <div className="login__field">
               <label htmlFor="email" className="login__label">
-                Correo Electrónico o Usuario
+                Usuario o Correo
               </label>
               <div className={`login__input-wrapper ${fieldErrors.email ? "login__input-wrapper--error" : ""}`}>
                 <Mail size={18} className="login__input-icon" />
@@ -202,7 +214,7 @@ const Login = () => {
                   id="email"
                   className="login__input"
                   type="text"
-                  placeholder="correo@ejemplo.com o usuario"
+                  placeholder="usuario o correo@email.com"
                   value={email}
                   onChange={handleEmailChange}
                   autoComplete="username"
