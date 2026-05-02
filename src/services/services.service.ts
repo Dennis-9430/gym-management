@@ -1,10 +1,18 @@
 /* Servicio para gestionar servicios/membresías desde MongoDB */
 import type { Service } from "../types/payment.types";
 import { services as defaultServices } from "../types/payment.types";
+import { getAuthToken } from "./api";
 
 // Configuración de API - usa variable de entorno o fallback
 const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_BASE = `${getApiBaseUrl()}/api/services`;
+
+const getHeaders = (): Record<string, string> => {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+};
 
 interface ServiceResponse {
   services: Service[];
@@ -14,7 +22,7 @@ interface ServiceResponse {
 /* Obtiene servicios desde MongoDB */
 export const getServices = async (): Promise<Service[]> => {
   try {
-    const response = await fetch(`${API_BASE}?active_only=true`);
+    const response = await fetch(`${API_BASE}?active_only=true`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener servicios");
     }
@@ -33,7 +41,7 @@ export const createService = async (
   try {
     const response = await fetch(API_BASE, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(service),
     });
     if (!response.ok) {
@@ -54,7 +62,7 @@ export const updateService = async (
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(service),
     });
     if (!response.ok) {
@@ -72,6 +80,7 @@ export const deleteService = async (id: string): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "DELETE",
+      headers: getHeaders(),
     });
     return response.ok;
   } catch (error) {

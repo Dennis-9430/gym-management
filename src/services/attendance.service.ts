@@ -1,7 +1,16 @@
 /* Servicio de asistencia - carga bajo demanda */
+import { getAuthToken } from "./api";
+
 // Configuración de API - usa variable de entorno o fallback
 const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_BASE = `${getApiBaseUrl()}/api/attendance`;
+
+const getHeaders = (): Record<string, string> => {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+};
 
 export interface AttendanceRecord {
   _id: string;
@@ -26,7 +35,7 @@ export interface TodayAttendance {
 /* Obtiene asistencia por fecha */
 export const getAttendanceByDate = async (date: string): Promise<AttendanceRecord[]> => {
   try {
-    const response = await fetch(`${API_BASE}?date=${date}`);
+    const response = await fetch(`${API_BASE}?date=${date}`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener asistencia");
     }
@@ -41,7 +50,7 @@ export const getAttendanceByDate = async (date: string): Promise<AttendanceRecor
 /* Obtiene asistencia de hoy */
 export const getTodayAttendance = async (): Promise<TodayAttendance | null> => {
   try {
-    const response = await fetch(`${API_BASE}/today`);
+    const response = await fetch(`${API_BASE}/today`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener asistencia de hoy");
     }
@@ -58,7 +67,7 @@ export const getAttendanceByRange = async (
   _endDate: string
 ): Promise<AttendanceRecord[]> => {
   try {
-    const response = await fetch(`${API_BASE}?date=${startDate}`);
+    const response = await fetch(`${API_BASE}?date=${startDate}`, { headers: getHeaders() });
     if (!response.ok) {
       return [];
     }

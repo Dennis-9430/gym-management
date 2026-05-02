@@ -3,9 +3,18 @@
 // Relacionado con: useListClientsHook.ts, ListClients.tsx, backend/app/routers/clients.py
 
 import type { ClientForm } from "../types/client.types";
+import { getAuthToken } from "./api";
 
 // Configuración de API - usa variable de entorno o fallback
 const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+// Función helper para obtener headers con token
+const getHeaders = (): Record<string, string> => {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+};
 
 // Constantes de configuracion
 // Relacionado con: backend/app/routers/clients.py
@@ -16,7 +25,7 @@ const STORAGE_KEY = "gym-management.clients";
 // Relacionado con: backend/app/routers/clients.py (list_clients)
 export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
   try {
-    const response = await fetch(`${API_BASE}?active_only=false`);
+    const response = await fetch(`${API_BASE}?active_only=false`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener clientes");
     }
@@ -60,7 +69,7 @@ export const findClientByDocument = (documentNumber: string): ClientForm | null 
 /* Obtiene cliente por ID */
 export const getClientById = async (id: number): Promise<ClientForm | null> => {
   try {
-    const response = await fetch(`${API_BASE}/${id}`);
+    const response = await fetch(`${API_BASE}/${id}`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Cliente no encontrado");
     }
@@ -78,7 +87,7 @@ export const createClientAPI = async (
   try {
     const response = await fetch(API_BASE, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(client),
     });
     if (!response.ok) {
@@ -99,7 +108,7 @@ export const updateClientAPI = async (
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(client),
     });
     if (!response.ok) {
@@ -117,6 +126,7 @@ export const deleteClientAPI = async (id: number): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "DELETE",
+      headers: getHeaders(),
     });
     return response.ok;
   } catch (error) {

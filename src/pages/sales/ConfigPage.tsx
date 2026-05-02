@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, Building2, MessageSquare, Lock, CreditCard, Users, Calendar, RefreshCw } from "lucide-react";
 import "../../styles/config.css";
-import { hasPlanFeature } from "../../services/api";
+import { hasPlanFeature, getAuthToken } from "../../services/api";
+import { useAccountType } from "../../hooks/useAccountType";
 import WhatsAppMessageModal from "../../components/whatsapp/WhatsAppMessageModal";
 
 interface ConfigData {
@@ -82,6 +83,7 @@ const ConfigPage = () => {
   const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false);
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
   const [renewing, setRenewing] = useState(false);
+  const { isDemo, ownerEditableFields } = useAccountType();
   const isPro = hasPlanFeature("whatsapp:write");
 
   useEffect(() => {
@@ -90,9 +92,8 @@ const ConfigPage = () => {
 
   const loadSubscription = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const tenantId = localStorage.getItem("tenantId");
-      if (!token || !tenantId) return;
+      const token = getAuthToken();
+      if (!token) return;
 
       const res = await fetch(`/api/tenants/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -112,11 +113,14 @@ const ConfigPage = () => {
   };
 
   const handleRenew = async () => {
+    if (isDemo) {
+      alert("Las cuentas demo tienen acceso restringido.");
+      return;
+    }
     try {
       setRenewing(true);
-      const token = localStorage.getItem("token");
-      const tenantId = localStorage.getItem("tenantId");
-      if (!token || !tenantId) return;
+      const token = getAuthToken();
+      if (!token) return;
 
       const res = await fetch(`/api/tenants/renew`, {
         method: "POST",
@@ -124,7 +128,6 @@ const ConfigPage = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ tenantId }),
       });
       if (res.ok) {
         await loadSubscription();
@@ -137,12 +140,22 @@ const ConfigPage = () => {
   };
 
   const handleSave = () => {
+    if (isDemo) {
+      alert("Las cuentas demo tienen acceso restringido.");
+      return;
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
 
   const handleChange = (field: keyof ConfigData, value: string | number) => {
+    if (isDemo) {
+      alert("Las cuentas demo tienen acceso restringido.");
+      return;
+    }
+    if (field === "businessEmail" && !ownerEditableFields.email) return;
+    if (field === "businessName" && !ownerEditableFields.businessName) return;
     setConfig((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -172,149 +185,171 @@ const ConfigPage = () => {
         <p className="config-subtitle">Administra la información de tu gimnasio</p>
       </header>
 
-      <section className="config-section__body">
-        <div className="config-section__header">
-          <CreditCard size={20} />
-          <h3>Suscripción</h3>
-        </div>
-
-        {subscription ? (
-          <div className="subscription-info">
-            <div className="subscription-grid">
-              <div className="subscription-item">
-                <span className="subscription-label">Plan</span>
-                <span className="subscription-value">{subscription.plan}</span>
+      <div className="config-layout">
+        {/* Row 1: Suscripción + WhatsApp */}
+        <div className="config-layout-row">
+          <div className="config-layout-col">
+            <section className="config-section__body">
+              <div className="config-section__header">
+                <CreditCard size={20} />
+                <h3>Suscripción</h3>
               </div>
-              <div className="subscription-item">
-                <span className="subscription-label">Estado</span>
-                <span className={`subscription-status ${getStatusClass(subscription.subscriptionStatus)}`}>
-                  {getStatusLabel(subscription.subscriptionStatus)}
-                </span>
-              </div>
-              <div className="subscription-item">
-                <span className="subscription-label">Vence</span>
-                <span className="subscription-value">
-                  <Calendar size={14} />
-                  {formatDate(subscription.subscriptionEndDate)}
-                </span>
-              </div>
-              <div className="subscription-item">
-                <span className="subscription-label">Usuarios</span>
-                <span className="subscription-value">
-                  <Users size={14} />
-                  {subscription.users.current}/{subscription.users.max}
-                </span>
-              </div>
-            </div>
 
-            <button
-              className="config-renew-btn"
-              onClick={handleRenew}
-              disabled={renewing}
-            >
-              <RefreshCw size={16} className={renewing ? "spin" : ""} />
-              {renewing ? "Renovando..." : "Renovar 30 días"}
-            </button>
-          </div>
-        ) : (
-          <p className="config-loading">Cargando...</p>
-        )}
-      </section>
+              {subscription ? (
+                <div className="subscription-info">
+                  <div className="subscription-grid">
+                    <div className="subscription-item">
+                      <span className="subscription-label">Plan</span>
+                      <span className="subscription-value">{subscription.plan}</span>
+                    </div>
+                    <div className="subscription-item">
+                      <span className="subscription-label">Estado</span>
+                      <span className={`subscription-status ${getStatusClass(subscription.subscriptionStatus)}`}>
+                        {getStatusLabel(subscription.subscriptionStatus)}
+                      </span>
+                    </div>
+                    <div className="subscription-item">
+                      <span className="subscription-label">Vence</span>
+                      <span className="subscription-value">
+                        <Calendar size={14} />
+                        {formatDate(subscription.subscriptionEndDate)}
+                      </span>
+                    </div>
+                    <div className="subscription-item">
+                      <span className="subscription-label">Usuarios</span>
+                      <span className="subscription-value">
+                        <Users size={14} />
+                        {subscription.users.current}/{subscription.users.max}
+                      </span>
+                    </div>
+                  </div>
 
-      <section className="config-section__body">
-        <div className="config-section__header">
-          <Building2 size={20} />
-          <h3>Datos del Negocio</h3>
-        </div>
-
-        <div className="config-grid">
-          <div className="config-field">
-            <label>Nombre del Negocio</label>
-            <input
-              type="text"
-              value={config.businessName}
-              onChange={(e) => handleChange("businessName", e.target.value)}
-              disabled
-            />
+                  <button
+                    className="config-renew-btn"
+                    onClick={handleRenew}
+                    disabled={renewing}
+                  >
+                    <RefreshCw size={16} className={renewing ? "spin" : ""} />
+                    {renewing ? "Renovando..." : "Renovar 30 días"}
+                  </button>
+                </div>
+              ) : (
+                <p className="config-loading">Cargando...</p>
+              )}
+            </section>
           </div>
 
-          <div className="config-field">
-            <label>Correo Electrónico</label>
-            <input
-              type="email"
-              value={config.businessEmail}
-              onChange={(e) => handleChange("businessEmail", e.target.value)}
-              disabled
-            />
-          </div>
-
-          <div className="config-field">
-            <label>RUC / Identificación</label>
-            <input
-              type="text"
-              value={config.businessRuc}
-              onChange={(e) => handleChange("businessRuc", e.target.value)}
-              placeholder="Ingrese RUC o identificación"
-            />
-          </div>
-
-          <div className="config-field">
-            <label>Teléfono</label>
-            <input
-              type="tel"
-              value={config.businessPhone}
-              onChange={(e) => handleChange("businessPhone", e.target.value)}
-              placeholder="+51 999 999 999"
-            />
-          </div>
-
-          <div className="config-field config-field--full">
-            <label>Dirección</label>
-            <input
-              type="text"
-              value={config.businessAddress}
-              onChange={(e) => handleChange("businessAddress", e.target.value)}
-              placeholder="Dirección del gimnasio"
-            />
+          <div className="config-layout-col">
+            {isPro ? (
+              <section className="config-section__body">
+                <div className="config-section__header">
+                  <MessageSquare size={20} />
+                  <h3>WhatsApp</h3>
+                </div>
+                <p className="config-description">
+                  Envía recordatorios automáticos de vencimiento de membresías a tus clientes.
+                </p>
+                <button className="config-whatsapp-btn" onClick={() => setWhatsAppModalOpen(true)}>
+                  <MessageSquare size={18} />
+                  Configurar WhatsApp
+                </button>
+              </section>
+            ) : (
+              <section className="config-section__body">
+                <div className="config-section__header">
+                  <Lock size={20} />
+                  <h3>WhatsApp</h3>
+                </div>
+                <p className="config-description">
+                  Disponible en plan PREMIUM. Actualiza tu plan para acceder a esta función.
+                </p>
+              </section>
+            )}
           </div>
         </div>
 
-        <div className="config-actions">
-          <button className="config-save-btn" onClick={handleSave}>
-            <Save size={18} />
-            Guardar Cambios
-          </button>
-          {saved && <span className="config-saved">¡Guardado exitosamente!</span>}
+        {/* Row 2: Datos del Negocio */}
+        <div className="config-layout-row">
+          <div className="config-layout-col config-layout-col--full">
+            <section className="config-section__body">
+              <div className="config-section__header">
+                <Building2 size={20} />
+                <h3>Datos del Negocio</h3>
+              </div>
+
+              <div className="config-grid">
+                <div className="config-field">
+                  <label>Nombre del Negocio</label>
+                  <input
+                    type="text"
+                    value={config.businessName}
+                    onChange={(e) => handleChange("businessName", e.target.value)}
+                    disabled={isDemo || !ownerEditableFields.businessName}
+                  />
+                  {!ownerEditableFields.businessName && !isDemo && (
+                    <span className="field-hint">No editable (dato del registro)</span>
+                  )}
+                </div>
+
+                <div className="config-field">
+                  <label>Correo Electrónico</label>
+                  <input
+                    type="email"
+                    value={config.businessEmail}
+                    onChange={(e) => handleChange("businessEmail", e.target.value)}
+                    disabled={isDemo || !ownerEditableFields.email}
+                  />
+                  {!ownerEditableFields.email && !isDemo && (
+                    <span className="field-hint">No editable (dato del registro)</span>
+                  )}
+                </div>
+
+                <div className="config-field">
+                  <label>RUC / Identificación</label>
+                  <input
+                    type="text"
+                    value={config.businessRuc}
+                    onChange={(e) => handleChange("businessRuc", e.target.value)}
+                    placeholder="Ingrese RUC o identificación"
+                    disabled={isDemo}
+                  />
+                </div>
+
+                <div className="config-field">
+                  <label>Teléfono</label>
+                  <input
+                    type="tel"
+                    value={config.businessPhone}
+                    onChange={(e) => handleChange("businessPhone", e.target.value)}
+                    placeholder="+51 999 999 999"
+                    disabled={isDemo}
+                  />
+                </div>
+
+                <div className="config-field config-field--full">
+                  <label>Dirección</label>
+                  <input
+                    type="text"
+                    value={config.businessAddress}
+                    onChange={(e) => handleChange("businessAddress", e.target.value)}
+                    placeholder="Dirección del gimnasio"
+                    disabled={isDemo}
+                  />
+                </div>
+              </div>
+
+              <div className="config-actions">
+                <button className="config-save-btn" onClick={handleSave} disabled={isDemo}>
+                  <Save size={18} />
+                  Guardar Cambios
+                </button>
+                {saved && <span className="config-saved">¡Guardado exitosamente!</span>}
+                {isDemo && <span className="field-hint">Las cuentas demo tienen acceso restringido</span>}
+              </div>
+            </section>
+          </div>
         </div>
-      </section>
-
-      {isPro && (
-        <section className="config-section__body">
-          <div className="config-section__header">
-            <MessageSquare size={20} />
-            <h3>WhatsApp</h3>
-          </div>
-          <p className="config-description">
-            Envía recordatorios automáticos de vencimiento de membresías a tus clientes.
-          </p>
-          <button className="config-whatsapp-btn" onClick={() => setWhatsAppModalOpen(true)}>
-            <MessageSquare size={18} />
-            Configurar WhatsApp
-          </button>
-        </section>
-      )}
-
-      {!isPro && (
-        <section className="config-section__body">
-          <div className="config-section__header">
-            <Lock size={20} />
-            <h3>WhatsApp</h3>
-          </div>
-          <p className="config-description">
-            Disponible en plan PREMIUM. Actualiza tu plan para acceder a esta función.
-          </p>
-        </section>
-      )}
+      </div>
 
       <WhatsAppMessageModal
         isOpen={whatsAppModalOpen}

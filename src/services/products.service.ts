@@ -4,9 +4,18 @@
 
 import type { Product, ProductInput, ProductUpdate } from "../types/product.types";
 import { services } from "../types/payment.types";
+import { getAuthToken } from "./api";
 
 // Configuración de API - usa variable de entorno o fallback
 const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+// Función helper para obtener headers con token
+const getHeaders = (): Record<string, string> => {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+};
 
 // Constantes de configuracion
 // Relacionado con: backend/app/routers/products.py
@@ -51,7 +60,7 @@ const saveProducts = (products: Product[]) => localStorage.setItem(STORAGE_KEY, 
 // Relacionado con: backend/app/routers/products.py (list_products)
 export const getProductsFromAPI = async (): Promise<Product[]> => {
   try {
-    const response = await fetch(`${API_BASE}?low_stock=false`);
+    const response = await fetch(`${API_BASE}?low_stock=false`, { headers: getHeaders() });
     if (!response.ok) throw new Error("Error al obtener productos");
     const data = await response.json();
     return data.products || [];
@@ -68,7 +77,7 @@ export const getProducts = async (): Promise<Product[]> => {
 // Relacionado con: backend/app/routers/products.py (get_product)
 export const getProductById = async (id: number): Promise<Product | null> => {
   try {
-    const response = await fetch(`${API_BASE}/${id}`);
+    const response = await fetch(`${API_BASE}/${id}`, { headers: getHeaders() });
     if (!response.ok) throw new Error("Producto no encontrado");
     return await response.json();
   } catch { return loadProducts().find((p) => p.id === id) ?? null; }
@@ -78,7 +87,7 @@ export const getProductById = async (id: number): Promise<Product | null> => {
 // Relacionado con: backend/app/routers/products.py (create_product)
 export const createProductAPI = async (input: ProductInput): Promise<Product | null> => {
   try {
-    const response = await fetch(API_BASE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) });
+    const response = await fetch(API_BASE, { method: "POST", headers: getHeaders(), body: JSON.stringify(input) });
     if (!response.ok) throw new Error("Error al crear producto");
     return await response.json();
   } catch (error) { console.error("Error creando producto:", error); return null; }
@@ -88,7 +97,7 @@ export const createProductAPI = async (input: ProductInput): Promise<Product | n
 // Relacionado con: backend/app/routers/products.py (update_product)
 export const updateProductAPI = async (id: number, update: ProductUpdate): Promise<Product | null> => {
   try {
-    const response = await fetch(`${API_BASE}/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(update) });
+    const response = await fetch(`${API_BASE}/${id}`, { method: "PUT", headers: getHeaders(), body: JSON.stringify(update) });
     if (!response.ok) throw new Error("Error al actualizar producto");
     return await response.json();
   } catch (error) { console.error("Error actualizando producto:", error); return null; }
@@ -98,7 +107,7 @@ export const updateProductAPI = async (id: number, update: ProductUpdate): Promi
 // Relacionado con: backend/app/routers/products.py (delete_product)
 export const deleteProductAPI = async (id: number): Promise<boolean> => {
   try {
-    const response = await fetch(`${API_BASE}/${id}`, { method: "DELETE" });
+    const response = await fetch(`${API_BASE}/${id}`, { method: "DELETE", headers: getHeaders() });
     return response.ok;
   } catch (error) { console.error("Error eliminando producto:", error); return false; }
 };

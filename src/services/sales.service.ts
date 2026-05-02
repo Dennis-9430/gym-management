@@ -3,9 +3,18 @@
 // Relacionado con: useTransactions.ts, SalesPages.tsx, backend/app/routers/sales.py
 
 import type { SaleInput, SaleRecord } from "../types/sales.types";
+import { getAuthToken } from "./api";
 
 // Configuración de API - usa variable de entorno o fallback
 const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+// Función helper para obtener headers con token
+const getHeaders = (): Record<string, string> => {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+};
 
 // Constantes de configuracion
 // Relacionado con: backend/app/routers/sales.py
@@ -360,7 +369,7 @@ export const saveSalesLocally = (sales: SaleRecord[]) => {
 // Relacionado con: backend/app/routers/sales.py (list_sales)
 export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
   try {
-    const response = await fetch(`${API_BASE}?limit=100`);
+    const response = await fetch(`${API_BASE}?limit=100`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener ventas");
     }
@@ -418,7 +427,7 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
     
     const response = await fetch(API_BASE, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(saleData),
     });
     if (!response.ok) {
@@ -436,7 +445,7 @@ export const updateSaleAPI = async (id: number, update: Partial<SaleRecord>): Pr
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(update),
     });
     if (!response.ok) {
@@ -454,7 +463,7 @@ export const updateVoucherAPI = async (saleId: string, voucherCode?: string, vou
   try {
     const response = await fetch(`${API_BASE}/${saleId}/voucher`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify({ voucherCode, voucherImage }),
     });
     return response.ok;
@@ -469,6 +478,7 @@ export const verifyPaymentAPI = async (saleId: string): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${saleId}/verify`, {
       method: "PUT",
+      headers: getHeaders(),
     });
     return response.ok;
   } catch (error) {

@@ -1,6 +1,16 @@
 /* Servicio para reportes financieros diarios */
+import { getAuthToken } from "./api";
+
 // Configuración de API - usa variable de entorno o fallback
 const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = `${getApiBaseUrl()}/api/reports`;
+
+const getHeaders = (): Record<string, string> => {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+};
 
 export interface FinancialReport {
   id?: number;
@@ -64,7 +74,7 @@ export const getFinancialSummary = async (
     if (endDate) params.append("end_date", endDate);
     if (params.toString()) url += `?${params.toString()}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener resumen financiero");
     }
@@ -81,7 +91,7 @@ export const getDailyReport = async (
   month: number
 ): Promise<DailyReport | null> => {
   try {
-    const response = await fetch(`${API_BASE}/financial/daily?year=${year}&month=${month}`);
+    const response = await fetch(`${API_BASE}/financial/daily?year=${year}&month=${month}`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener reporte diario");
     }
@@ -100,7 +110,7 @@ export const getClientsSummary = async (): Promise<{
   none: number;
 } | null> => {
   try {
-    const response = await fetch(`${API_BASE}/clients/summary`);
+    const response = await fetch(`${API_BASE}/clients/summary`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener resumen de clientes");
     }
@@ -116,7 +126,7 @@ export const getAttendanceSummary = async (
   days: number = 7
 ): Promise<AttendanceSummary | null> => {
   try {
-    const response = await fetch(`${API_BASE}/attendance/summary?days=${days}`);
+    const response = await fetch(`${API_BASE}/attendance/summary?days=${days}`, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener resumen de asistencia");
     }
