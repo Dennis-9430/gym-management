@@ -32,12 +32,19 @@ export const useEmployees = () => {
 
   const filteredEmployees = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return employees;
-    return employees.filter((emp) =>
-      `${emp.firstName} ${emp.lastName} ${emp.email} ${emp.username} ${emp.role}`
-        .toLowerCase()
-        .includes(query),
-    );
+    let filtered = employees;
+    if (query) {
+      filtered = employees.filter((emp) =>
+        `${emp.firstName} ${emp.lastName} ${emp.email} ${emp.username} ${emp.role}`
+          .toLowerCase()
+          .includes(query),
+      );
+    }
+    return filtered.sort((a, b) => {
+      if (a.isOwner) return -1;
+      if (b.isOwner) return 1;
+      return a.id - b.id;
+    });
   }, [employees, search]);
 
   const addEmployee = async (input: EmployeeInput) => {
@@ -61,9 +68,14 @@ export const useEmployees = () => {
   };
 
   const updateEmployeeById = async (id: number, update: EmployeeUpdate) => {
+    if (!id || id <= 0) {
+      console.error("updateEmployeeById: ID inválido", id);
+      setError("ID de empleado inválido");
+      throw new Error("ID de empleado inválido");
+    }
+    
     setError(null);
     try {
-      // Intentar API primero
       const updated = await updateEmployeeAPI(id, update);
       if (updated) {
         setEmployees((prev) =>
@@ -71,14 +83,10 @@ export const useEmployees = () => {
         );
         return updated;
       }
-      // Fallback local
-      const updatedLocal = updateEmployee(id, update);
-      setEmployees((prev) =>
-        prev.map((emp) => (emp.id === id ? updatedLocal : emp)),
-      );
-      return updatedLocal;
+      throw new Error("No se pudo actualizar el empleado");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
+      console.error("Error actualizando empleado:", message);
       setError(message);
       throw err;
     }

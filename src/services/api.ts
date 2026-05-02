@@ -9,17 +9,25 @@ const buildUrl = (endpoint: string) => {
   return `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 };
 
-/* Headers por defecto */
+/* Headers por defecto - para uso interno */
 const getHeaders = () => {
+  return getAuthHeaders();
+};
+
+/* Obtener token de autenticación */
+export const getAuthToken = (): string | null => {
+  return localStorage.getItem("accessToken");
+};
+
+/* Headers con token de autenticación */
+export const getAuthHeaders = (): Record<string, string> => {
+  const token = getAuthToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-
-  const token = localStorage.getItem("tenantToken");
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
-
   return headers;
 };
 
@@ -51,6 +59,7 @@ const handleResponse = async (response: Response) => {
 
     if (response.status === 401 && !window.location.pathname.includes("/sales/invoices")) {
       // Solo redirigir si NO estamos en la página de facturas (donde tenemos datos demo)
+      localStorage.removeItem("accessToken");
       localStorage.removeItem("tenantToken");
       localStorage.removeItem("tenant");
       window.location.href = "/";
