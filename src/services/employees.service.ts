@@ -17,7 +17,7 @@ const STORAGE_KEY = "gym-management.employees";
 // Relacionado con: backend/app/routers/employees.py (list_employees)
 export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
   try {
-    const response = await fetch(`${API_BASE}?status=ACTIVE`, { headers: getAuthHeaders() });
+    const response = await fetch(API_BASE, { headers: getAuthHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener empleados");
     }
@@ -86,7 +86,7 @@ export const getEmployees = async (): Promise<Employee[]> => {
 }
    
   try {
-    const response = await fetch(`${API_BASE}?status=ACTIVE`, { headers: getAuthHeaders() });
+    const response = await fetch(API_BASE, { headers: getAuthHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener empleados");
     }
