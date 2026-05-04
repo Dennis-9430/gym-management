@@ -112,7 +112,7 @@ const WhatsAppMessageModal = ({
       onSaved?.();
       onClose();
     } catch (error) {
-      console.error("Error guardando config:", error);
+      // Error handled silently
     } finally {
       setLoading(false);
     }

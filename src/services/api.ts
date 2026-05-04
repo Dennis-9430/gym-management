@@ -50,7 +50,6 @@ const handleResponse = async (response: Response) => {
         detail: { status: response.status, message: data.detail || "Sesión expirada" }
       }));
       // No redirigir automáticamente - deixar que el componente maneje
-      console.warn("Auth error:", response.status);
     }
 
     if (response.status === 403) {
@@ -82,7 +81,6 @@ export const apiGet = async (endpoint: string) => {
 
     return handleResponse(response);
   } catch (error) {
-    console.error("[API GET ERROR]", error);
     throw new Error("No se pudo conectar con el servidor");
   }
 };
@@ -98,7 +96,6 @@ export const apiPost = async (endpoint: string, body: unknown) => {
 
     return handleResponse(response);
   } catch (error) {
-    console.error("[API POST ERROR]", error);
     throw new Error("No se pudo conectar con el servidor");
   }
 };
@@ -114,7 +111,6 @@ export const apiPut = async (endpoint: string, body: unknown) => {
 
     return handleResponse(response);
   } catch (error) {
-    console.error("[API PUT ERROR]", error);
     throw new Error("No se pudo conectar con el servidor");
   }
 };
@@ -129,7 +125,6 @@ export const apiDelete = async (endpoint: string) => {
 
     return handleResponse(response);
   } catch (error) {
-    console.error("[API DELETE ERROR]", error);
     throw new Error("No se pudo conectar con el servidor");
   }
 };

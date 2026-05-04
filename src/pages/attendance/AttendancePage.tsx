@@ -72,7 +72,6 @@ const AttendancePage = () => {
         });
         setAttendanceRecords(mappedRecords);
       } catch (error) {
-        console.error("Error cargando asistencia:", error);
         setAttendanceRecords([]);
       } finally {
         setLoading(false);

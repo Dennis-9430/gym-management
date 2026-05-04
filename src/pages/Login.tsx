@@ -55,9 +55,9 @@ const Login = () => {
           setEmail(data.email || "");
           setPassword(data.password || "");
           setIsDemoSession(true);
-        } catch (e) {
-          console.error("Error parsing demo credentials:", e);
-        }
+      } catch (e) {
+        // Error parsing demo credentials
+      }
       }
     }
   }, [searchParams]);

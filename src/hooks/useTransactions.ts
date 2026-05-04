@@ -133,7 +133,6 @@ export const useTransactions = () => {
       setTransactions(salesData);
       setInvoices(invoicesData);
     } catch (error) {
-      console.error("Error cargando transacciones:", error);
       setTransactions([]);
       setInvoices([]);
     } finally {

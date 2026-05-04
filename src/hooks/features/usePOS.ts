@@ -163,7 +163,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
 
   // Carga productos desde API
   useEffect(() => {
-    getProducts().then(setProducts).catch(console.error);
+    getProducts().then(setProducts).catch(() => {});
   }, []);
 
   useEffect(() => {

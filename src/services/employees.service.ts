@@ -24,7 +24,6 @@ export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
     const data = await response.json();
     return data.employees || [];
   } catch (error) {
-    console.error("Error cargando empleados desde API:", error);
     throw error;
   }
 };
@@ -91,21 +90,15 @@ export const getEmployees = async (): Promise<Employee[]> => {
       throw new Error("Error al obtener empleados");
     }
     const data = await response.json();
-    console.log("getEmployees - data del backend:", data);
     let employees = data.employees || [];
-    console.log("getEmployees - empleados del API (sin owner):", employees.length, employees);
-    console.log("getEmployees - primer empleado keys:", Object.keys(employees[0] || {}));
     
     // Verificar si el API ya devuelve un owner
     const apiHasOwner = employees.some(e => (e as any).isOwner === true);
     
     // Agregar el owner local SOLO si el API no devuelve un owner
     if (ownerEmployee && !apiHasOwner) {
-      console.log("getEmployees - ownerEmployee que se agregará:", ownerEmployee);
       employees = [ownerEmployee, ...employees];
     }
-    
-    console.log("getEmployees - empleados finales:", employees.map((e: Employee) => ({ id: e.id, username: e.username, isOwner: (e as any).isOwner })));
     
     // Ordenar: owner primero, luego por id (puede ser string u número)
     return employees.sort((a: Employee, b: Employee) => {
@@ -134,18 +127,13 @@ export const getEmployees = async (): Promise<Employee[]> => {
 
 /* Obtiene empleado por ID */
 export const getEmployeeById = async (id: number | string): Promise<Employee | null> => {
-  console.log("getEmployeeById - id recibido:", id, "tipo:", typeof id);
   try {
     const response = await fetch(`${API_BASE}/${id}`, { headers: getAuthHeaders() });
-    console.log("getEmployeeById - Response status:", response.status);
     if (!response.ok) {
       throw new Error("Empleado no encontrado");
     }
-    const data = await response.json();
-    console.log("getEmployeeById - data recibida:", data);
-    return data;
-  } catch (error) {
-    console.error("getEmployeeById - Error:", error);
+    return await response.json();
+  } catch {
     const employees = loadEmployees();
     return employees.find((e) => e.id === id) ?? null;
   }
@@ -172,8 +160,7 @@ export const getOwnerFromAPI = async (): Promise<Employee | null> => {
       data.id = 0;
     }
     return data as Employee;
-  } catch (error) {
-    console.error("Error obteniendo owner:", error);
+  } catch {
     return null;
   }
 };
@@ -193,7 +180,6 @@ export const createEmployeeAPI = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error creando empleado:", error);
     return null;
   }
 };
@@ -206,11 +192,8 @@ export const updateEmployeeAPI = async (
   // Verificar que id sea válido (número > 0 o string no vacía)
   const idNum = typeof id === 'string' ? parseInt(id, 10) : id;
   if (!id || (!Number.isNaN(idNum) && idNum <= 0)) {
-    console.error("updateEmployeeAPI: ID inválido", id, typeof id);
     throw new Error("ID de empleado inválido: " + id);
   }
-  
-  console.log("updateEmployeeAPI - ID:", id, "Payload:", update);
   
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
@@ -219,11 +202,8 @@ export const updateEmployeeAPI = async (
       body: JSON.stringify(update),
     });
     
-    console.log("updateEmployeeAPI - Response status:", response.status);
-    
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error("updateEmployeeAPI - Error response:", errorData);
       throw new Error(errorData.detail || "Error al actualizar empleado");
     }
     
@@ -232,7 +212,6 @@ export const updateEmployeeAPI = async (
     if (error instanceof Error) {
       throw error;
     }
-    console.error("Error actualizando empleado:", error);
     throw new Error("Error al actualizar empleado");
   }
 };
@@ -246,7 +225,6 @@ export const deleteEmployeeAPI = async (id: number): Promise<boolean> => {
     });
     return response.ok;
   } catch (error) {
-    console.error("Error eliminando empleado:", error);
     return false;
   }
 };

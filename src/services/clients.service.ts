@@ -32,7 +32,6 @@ export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
     const data = await response.json();
     return data.clients || [];
   } catch (error) {
-    console.error("Error cargando clientes desde API:", error);
     throw error;
   }
 };
@@ -95,7 +94,6 @@ export const createClientAPI = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error creando cliente:", error);
     return null;
   }
 };
@@ -116,7 +114,6 @@ export const updateClientAPI = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error actualizando cliente:", error);
     return null;
   }
 };
@@ -130,7 +127,6 @@ export const deleteClientAPI = async (id: number): Promise<boolean> => {
     });
     return response.ok;
   } catch (error) {
-    console.error("Error eliminando cliente:", error);
     return false;
   }
 };

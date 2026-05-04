@@ -49,7 +49,7 @@ DEBUG=True
 - Password: adminKa123
 
 ---
-
+##COMMITS
 Tipos de commit (los más importantes)
 Tipo	Uso
 feat	Nueva funcionalidad
@@ -72,93 +72,5 @@ JWT_SECRET_KEY=short-key
 ENABLE_DEMO_SEED=true
 ## COMMITS REALIZADOS
 ###CONSOLA
-react-dom_client.js?v=222ed12b:20101 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
-SalesPages.tsx?t=1777309206451:53 Uncaught SyntaxError: Identifier 'saleModalOpen' has already been declared (at SalesPages.tsx?t=1777309206451:53:78)
-AppRouter.tsx:49 An error occurred in the <Route> component.
 
-Consider adding an error boundary to your tree to customize error handling behavior.
-Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
-
-defaultOnUncaughtError @ react-dom_client.js?v=222ed12b:6964
-logUncaughtError @ react-dom_client.js?v=222ed12b:7018
-runWithFiberInDEV @ react-dom_client.js?v=222ed12b:995
-lane.callback @ react-dom_client.js?v=222ed12b:7046
-callCallback @ react-dom_client.js?v=222ed12b:5489
-commitCallbacks @ react-dom_client.js?v=222ed12b:5501
-runWithFiberInDEV @ react-dom_client.js?v=222ed12b:997
-commitLayoutEffectOnFiber @ react-dom_client.js?v=222ed12b:9974
-flushLayoutEffects @ react-dom_client.js?v=222ed12b:12922
-commitRoot @ react-dom_client.js?v=222ed12b:12801
-commitRootWhenReady @ react-dom_client.js?v=222ed12b:12014
-performWorkOnRoot @ react-dom_client.js?v=222ed12b:11948
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=222ed12b:13503
-performWorkUntilDeadline @ react-dom_client.js?v=222ed12b:34
-<Route>
-exports.createElement @ chunk-FONOKHZP.js?v=222ed12b:819
-RenderedRoute @ react-router-dom.js?v=222ed12b:6336
-react_stack_bottom_frame @ react-dom_client.js?v=222ed12b:18507
-renderWithHooksAgain @ react-dom_client.js?v=222ed12b:5727
-renderWithHooks @ react-dom_client.js?v=222ed12b:5663
-updateFunctionComponent @ react-dom_client.js?v=222ed12b:7473
-beginWork @ react-dom_client.js?v=222ed12b:8523
-runWithFiberInDEV @ react-dom_client.js?v=222ed12b:995
-performUnitOfWork @ react-dom_client.js?v=222ed12b:12559
-workLoopConcurrentByScheduler @ react-dom_client.js?v=222ed12b:12555
-renderRootConcurrent @ react-dom_client.js?v=222ed12b:12537
-performWorkOnRoot @ react-dom_client.js?v=222ed12b:11764
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=222ed12b:13503
-performWorkUntilDeadline @ react-dom_client.js?v=222ed12b:34
-<RenderedRoute>
-exports.createElement @ chunk-FONOKHZP.js?v=222ed12b:819
-getChildren @ react-router-dom.js?v=222ed12b:6442
-(anónimas) @ react-router-dom.js?v=222ed12b:6466
-_renderMatches @ react-router-dom.js?v=222ed12b:6404
-useRoutesImpl @ react-router-dom.js?v=222ed12b:6169
-useRoutes @ react-router-dom.js?v=222ed12b:6113
-Routes @ react-router-dom.js?v=222ed12b:7195
-react_stack_bottom_frame @ react-dom_client.js?v=222ed12b:18507
-renderWithHooksAgain @ react-dom_client.js?v=222ed12b:5727
-renderWithHooks @ react-dom_client.js?v=222ed12b:5663
-updateFunctionComponent @ react-dom_client.js?v=222ed12b:7473
-beginWork @ react-dom_client.js?v=222ed12b:8523
-runWithFiberInDEV @ react-dom_client.js?v=222ed12b:995
-performUnitOfWork @ react-dom_client.js?v=222ed12b:12559
-workLoopConcurrentByScheduler @ react-dom_client.js?v=222ed12b:12555
-renderRootConcurrent @ react-dom_client.js?v=222ed12b:12537
-performWorkOnRoot @ react-dom_client.js?v=222ed12b:11764
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=222ed12b:13503
-performWorkUntilDeadline @ react-dom_client.js?v=222ed12b:34
-<Routes>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=222ed12b:245
-AppRouter @ AppRouter.tsx:49
-react_stack_bottom_frame @ react-dom_client.js?v=222ed12b:18507
-renderWithHooksAgain @ react-dom_client.js?v=222ed12b:5727
-renderWithHooks @ react-dom_client.js?v=222ed12b:5663
-updateFunctionComponent @ react-dom_client.js?v=222ed12b:7473
-beginWork @ react-dom_client.js?v=222ed12b:8523
-runWithFiberInDEV @ react-dom_client.js?v=222ed12b:995
-performUnitOfWork @ react-dom_client.js?v=222ed12b:12559
-workLoopSync @ react-dom_client.js?v=222ed12b:12422
-renderRootSync @ react-dom_client.js?v=222ed12b:12406
-performWorkOnRoot @ react-dom_client.js?v=222ed12b:11764
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=222ed12b:13503
-performWorkUntilDeadline @ react-dom_client.js?v=222ed12b:34
-<AppRouter>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=222ed12b:245
-App @ App.tsx:11
-react_stack_bottom_frame @ react-dom_client.js?v=222ed12b:18507
-renderWithHooksAgain @ react-dom_client.js?v=222ed12b:5727
-renderWithHooks @ react-dom_client.js?v=222ed12b:5663
-updateFunctionComponent @ react-dom_client.js?v=222ed12b:7473
-beginWork @ react-dom_client.js?v=222ed12b:8523
-runWithFiberInDEV @ react-dom_client.js?v=222ed12b:995
-performUnitOfWork @ react-dom_client.js?v=222ed12b:12559
-workLoopSync @ react-dom_client.js?v=222ed12b:12422
-renderRootSync @ react-dom_client.js?v=222ed12b:12406
-performWorkOnRoot @ react-dom_client.js?v=222ed12b:11764
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=222ed12b:13503
-performWorkUntilDeadline @ react-dom_client.js?v=222ed12b:34
-<App>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=222ed12b:245
-(anónimas) @ main.tsx:11
 

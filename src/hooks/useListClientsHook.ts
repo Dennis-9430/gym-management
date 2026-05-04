@@ -51,8 +51,6 @@ export const useClients = () => {
     try {
       const clients: ClientForm[] = await getClients();
       dispatch({ type: "SET_CLIENTS", payload: clients });
-    } catch (err) {
-      console.error("Error cargando clientes:", err);
     } finally {
       setLoading(false);
     }
@@ -70,8 +68,7 @@ export const useClients = () => {
       // Recargar la lista después de eliminar
       await reloadClients();
       return true;
-    } catch (err) {
-      console.error("Error eliminando cliente:", err);
+    } catch {
       return false;
     }
   }, [reloadClients]);

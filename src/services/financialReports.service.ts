@@ -45,7 +45,6 @@ export interface AttendanceSummary {
   daily: { date: string; count: number }[];
 }
 
-const API_BASE = `${getApiBaseUrl()}/api/reports`;
 const STORAGE_KEY = "gym-management.financial-reports";
 
 const loadReports = (): FinancialReport[] => {
@@ -80,7 +79,6 @@ export const getFinancialSummary = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error cargando resumen financiero:", error);
     return null;
   }
 };
@@ -97,7 +95,6 @@ export const getDailyReport = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error cargando reporte diario:", error);
     return null;
   }
 };
@@ -116,7 +113,6 @@ export const getClientsSummary = async (): Promise<{
     }
     return await response.json();
   } catch (error) {
-    console.error("Error cargando resumen de clientes:", error);
     return null;
   }
 };
@@ -132,7 +128,6 @@ export const getAttendanceSummary = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error cargando resumen de asistencia:", error);
     return null;
   }
 };

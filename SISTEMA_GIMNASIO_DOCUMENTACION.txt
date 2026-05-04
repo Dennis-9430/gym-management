@@ -1,0 +1,920 @@
+# SISTEMA DE GESTIÓN DE GIMNASIO - DOCUMENTACIÓN TÉCNICA
+
+## ÍNDICE
+1. [Arquitectura General](#1-arquitectura-general)
+2. [Base de Datos - MongoDB](#2-base-de-datos---mongodb)
+3. [Sistema de Autenticación](#3-sistema-de-autenticación)
+4. [Roles y Permisos](#4-roles-y-permisos)
+5. [Flujo de Datos](#5-flujo-de-datos)
+6. [APIs Principales](#6-apis-principales)
+
+---
+
+## 1. ARQUITECTURA GENERAL
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      FRONTEND (React)                       │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │   Login     │  │  Dashboard  │  │  Gestión (CRUD)     │ │
+│  │   Pages     │  │   Pages     │  │  Empleados/Clientes │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+│                          │                                  │
+│  ┌────────────────────────────────────────────────────────┐│
+│  │           CONTEXTO DE AUTENTICACIÓN (AuthProvider)       ││
+│  │  - Token JWT                                             ││
+│  │  - Datos del tenant/owner                                ││
+│  │  - Rol actual (isOwner, isAdmin, isRecepcionista)       ││
+│  └────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+                           │ HTTP + JWT
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    BACKEND (FastAPI)                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │  Routers    │  │   Models    │  │      Services       │ │
+│  │  (API)      │  │  (Pydantic) │  │  (Lógica negocio)   │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    MONGODB DATABASE                          │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌───────┐ ┌───────┐      │
+│  │tenants │ │employees│ │clients │ │sales │ │products│      │
+│  └────────┘ └────────┘ └────────┘ └───────┘ └───────┘      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. BASE DE DATOS - MONGODB
+
+### Colecciones Principales
+
+#### `tenants` - Gimnasios/Empresas
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-unique",
+  "email": "email@ejemplo.com",
+  "businessName": "Nombre del Gimnasio",
+  "businessPhone": "+59170000000",
+  "businessAddress": "Dirección",
+  "businessRuc": "123456789",
+  "plan": "BASIC | PREMIUM",
+  "subscriptionStatus": "ACTIVE | EXPIRED | PENDING | CANCELLED",
+  "subscriptionEndDate": "datetime | null",
+  "ownerEmployeeId": "ObjectId del owner",
+  "taxRate": 12.0,
+  "currency": "USD",
+  "openingHour": "06:00",
+  "closingHour": "22:00",
+  "wsspReminderDays": 3,
+  "wsspEnabled": false,
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+```
+
+#### `employees` - Empleados del Gimnasio
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-del-tenant",
+  "username": "usuario_login",
+  "documentType": "CEDULA | PASAPORTE | RUC",
+  "documentNumber": "12345678",
+  "firstName": "Nombre",
+  "lastName": "Apellido",
+  "email": "email@ejemplo.com",
+  "phone": "+59170000000",
+  "address": "Dirección",
+  "notes": "Notas",
+  "role": "ADMIN | RECEPCIONISTA",
+  "status": "ACTIVE | INACTIVE | SUSPENDED",
+  "isOwner": true | false,
+  "password": "hash-bcrypt",
+  "permissions": [
+    { "module": "modulo", "actions": ["action1", "action2"] }
+  ],
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+```
+
+#### `users` - Credenciales de Login (Separada de employees)
+```json
+{
+  "_id": "ObjectId",
+  "username": "email-o-usuario",
+  "password_hash": "hash-bcrypt",
+  "role": "ADMIN | RECEPCIONISTA",
+  "employeeId": "ObjectId-del-employee",
+  "tenantId": "uuid-del-tenant",
+  "isOwner": true | false,
+  "createdAt": "datetime"
+}
+```
+
+#### `clients` - Clientes del Gimnasio
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-del-tenant",
+  "documentType": "CEDULA | PASAPORTE | RUC",
+  "documentNumber": "12345678",
+  "firstName": "Nombre",
+  "lastName": "Apellido",
+  "phone": "+59170000000",
+  "email": "email@ejemplo.com",
+  "address": "Dirección",
+  "emergencyContact": "Contacto de emergencia",
+  "emergencyPhone": "+59170000000",
+  "notes": "Notas",
+  "membership": "Quincenal | Mensual | Trimestral | Semestral | Anual",
+  "membershipStatus": "ACTIVE | EXPIRED | NONE",
+  "membershipStartDate": "datetime | null",
+  "membershipEndDate": "datetime | null",
+  "fingerPrint": false,
+  "createdAt": "datetime"
+}
+```
+
+#### `sales` - Ventas y Pagos
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-del-tenant",
+  "clientId": "ObjectId-del-cliente",
+  "clientName": "Nombre del cliente",
+  "items": [
+    {
+      "type": "service | product",
+      "name": "Nombre",
+      "price": 100.00,
+      "quantity": 1
+    }
+  ],
+  "subtotal": 100.00,
+  "tax": 12.00,
+  "total": 112.00,
+  "paymentMethod": "CASH | CARD | TRANSFER | QR",
+  "status": "COMPLETED | PENDING | CANCELLED",
+  "createdBy": "employeeId",
+  "createdAt": "datetime"
+}
+```
+
+#### `products` - Inventario
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-del-tenant",
+  "code": "COD-001",
+  "name": "Producto",
+  "description": "Descripción",
+  "price": 50.00,
+  "cost": 25.00,
+  "stock": 100,
+  "minStock": 10,
+  "category": "Suplementos | Accesorios | Otro",
+  "imageUrl": "url-imagen",
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+```
+
+#### `services` - Membresías/Servicios
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-del-tenant",
+  "name": "Membresía Mensual",
+  "description": "Descripción",
+  "price": 100.00,
+  "duration": "30",
+  "durationUnit": "days | weeks | months",
+  "type": "membership | service | class",
+  "active": true,
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+```
+
+#### `attendance` - Registro de Asistencias
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-del-tenant",
+  "clientId": "ObjectId-del-cliente",
+  "checkIn": "datetime",
+  "checkOut": "datetime | null",
+  "date": "YYYY-MM-DD"
+}
+```
+
+#### `invoices` - Facturas
+```json
+{
+  "_id": "ObjectId",
+  "tenantId": "uuid-del-tenant",
+  "invoiceNumber": "001-001-000001",
+  "clientId": "ObjectId-del-cliente",
+  "clientName": "Nombre",
+  "items": [...],
+  "subtotal": 100.00,
+  "tax": 12.00,
+  "total": 112.00,
+  "paymentMethod": "CASH | CARD | TRANSFER | QR",
+  "status": "COMPLETED | PENDING | CANCELLED",
+  "createdBy": "employeeId",
+  "createdAt": "datetime"
+}
+```
+
+---
+
+## 3. SISTEMA DE AUTENTICACIÓN
+
+### Flujo de Login
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     FRONTEND                                 │
+│                                                             │
+│  1. Usuario ingresa email + password                        │
+│  2. POST /api/tenants/login (para owner/empleados)          │
+│     POST /api/auth/login (forma alternativa)                │
+│                                                             │
+│  3. Recibe JWT token + datos del tenant                    │
+│  4. Guarda en localStorage:                                │
+│     - token                                                 │
+│     - tenant (datos completos)                             │
+│     - ownerData (datos del owner)                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     BACKEND                                  │
+│                                                             │
+│  Login Flow (routers/tenants.py):                          │
+│                                                             │
+│  1. Buscar employee por email/username (SIN filtro status)  │
+│  2. Si existe:                                              │
+│     a. Verificar status != "INACTIVE"                      │
+│        └─ Si INACTIVE → 403 "Tu cuenta está INACTIVA..."  │
+│     b. Verificar password con bcrypt                        │
+│        └─ Si wrong → 401 "Credenciales incorrectas"       │
+│  3. Si no existe employee, buscar en tenants (legacy)      │
+│  4. Crear JWT con:                                         │
+│     - sub: email                                            │
+│     - role: ADMIN | RECEPCIONISTA                           │
+│     - tenantId: uuid                                        │
+│     - plan: BASIC | PREMIUM                                  │
+│     - employeeId: ObjectId                                  │
+│     - isOwner: true | false                                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Dos Colecciones de Autenticación
+
+| Aspecto | `employees` | `users` |
+|---------|------------|---------|
+| Propósito | Datos personales del empleado | Credenciales de login |
+| Contraseña | Hasheada (bcrypt) | Hasheada (bcrypt) |
+| Status | ✅ Tiene `status` | ❌ No tiene |
+| Link | - | Tiene `employeeId` |
+| Uso | CRUD de empleados | Login con `/api/auth/login` |
+
+### Validación de Status INACTIVE
+
+```python
+# En /api/tenants/login (routers/tenants.py)
+employee = await db.employees.find_one({
+    "$or": [{"email": email}, {"username": username}]
+    # NOTA: NO se filtra por status aquí
+})
+
+if employee.get("status") == "INACTIVE":
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Tu cuenta está INACTIVA. Contacta al administrador."
+    )
+```
+
+---
+
+## 4. ROLES Y PERMISOS
+
+### Jerarquía de Roles
+
+```
+                    ┌─────────────────┐
+                    │     GERENTE     │
+                    │   (isOwner)     │
+                    │   role=ADMIN    │
+                    └────────┬────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+     ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+     │   ADMIN     │  │   ADMIN     │  │ RECEPCIONISTA│
+     │  (empleado)  │  │  (empleado)  │  │  (empleado)  │
+     └─────────────┘  └─────────────┘  └─────────────┘
+```
+
+### Definición de Roles
+
+#### GERENTE (Owner)
+- `isOwner: true`
+- `role: ADMIN`
+- Se crea automáticamente al registrar el tenant
+- Tiene TODOS los permisos
+- NO puede eliminarse a sí mismo
+
+#### ADMIN (Empleado Admin)
+- `isOwner: false`
+- `role: ADMIN`
+- Creado por el owner o admin existente
+- Puede crear/editar/eliminar recepcionistas
+- NO puede editar admins ni owners
+
+#### RECEPCIONISTA
+- `isOwner: false`
+- `role: RECEPCIONISTA`
+- Solo puede VER empleados y clientes
+- NO puede crear, editar ni eliminar
+- NO ve la sección de permisos en el perfil
+
+### Permisos por Rol
+
+#### GERENTE (Owner)
+| Módulo | Ver | Crear | Editar | Eliminar |
+|--------|-----|-------|--------|----------|
+| Empleados | ✅ Todos | ✅ | ✅ Todos | ✅ Todos* |
+| Clientes | ✅ Todos | ✅ | ✅ | ✅ |
+| Productos | ✅ | ✅ | ✅ | ✅ |
+| Ventas | ✅ | ✅ | ✅ | ✅ |
+| Reportes | ✅ | - | - | - |
+| Configuración | ✅ | - | ✅ | - |
+
+*No puede eliminarse a sí mismo
+
+#### ADMIN (Empleado)
+| Módulo | Ver | Crear | Editar | Eliminar |
+|--------|-----|-------|--------|----------|
+| Empleados | ✅ Todos | ✅ | ✅ Solo recepcionistas | ✅ Solo recepcionistas |
+| Clientes | ✅ Todos | ✅ | ✅ | ✅ |
+| Productos | ✅ | ✅ | ✅ | ✅ |
+| Ventas | ✅ | ✅ | ✅ | ✅ |
+| Reportes | ✅ | - | - | - |
+| Configuración | ✅ | - | ✅ | - |
+
+#### RECEPCIONISTA
+| Módulo | Ver | Crear | Editar | Eliminar |
+|--------|-----|-------|--------|----------|
+| Empleados | ✅ Todos | ❌ | ❌ | ❌ |
+| Clientes | ✅ | ✅ | ✅ | ❌ |
+| Productos | ✅ | ❌ | ❌ | ❌ |
+| Ventas | ✅ | ✅ | ❌ | ❌ |
+| Reportes | ❌ | - | - | - |
+| Configuración | ❌ | - | - | - |
+
+### Implementación en Frontend
+
+```typescript
+// hooks/useAccountType.ts
+export const useAccountType = () => {
+  const { user } = useAuth();
+  
+  // Decodificar JWT
+  const payload = decodeToken(user?.token);
+  
+  // isOwner: si tiene el flag en el token
+  const isOwner = payload?.isOwner === true;
+  
+  // isAdmin: si el rol del token es ADMIN
+  const isAdmin = payload?.role === "ADMIN";
+  
+  // isRecepcionista: si el rol es RECEPCIONISTA
+  const isRecepcionista = payload?.role === "RECEPCIONISTA";
+  
+  // isDemo: cuenta demo legacy
+  const isDemo = !payload?.tenantId;
+  
+  return { isOwner, isAdmin, isRecepcionista, isDemo };
+};
+```
+
+### Filtrado de Dashboard por Rol
+
+```typescript
+// types/dashboard.section.ts
+export const sections: DashboardSection[] = [
+  {
+    title: "Reporte Financiero",
+    path: "/financial",
+    roles: ["ADMIN"],  // Solo ADMIN y Owner
+  },
+  {
+    title: "Registro de Pago Diario",
+    path: "/payments",
+    roles: ["ADMIN", "RECEPCIONISTA"],  // Todos menos堂
+  },
+];
+
+// useFilteredSections filtra basándose en useAccountType()
+export const useFilteredSections = (): DashboardSection[] => {
+  const { isOwner, isAdmin, isRecepcionista } = useAccountType();
+  
+  return sections.filter((section) => {
+    if (isOwner && section.roles.includes("ADMIN")) return true;
+    if (isAdmin && section.roles.includes("ADMIN")) return true;
+    if (isRecepcionista && section.roles.includes("RECEPCIONISTA")) return true;
+    return false;
+  });
+};
+```
+
+---
+
+## 5. FLUJO DE DATOS
+
+### Registro de Nuevo Gimnasio (Tenant)
+
+```
+USUARIO                    FRONTEND                    BACKEND
+  │                            │                          │
+  │─── Registro Form ─────────>│                          │
+  │                            │─── POST /tenants/register─>│
+  │                            │                          │
+  │                            │                          │ 1. Crear tenant en `tenants`
+  │                            │                          │ 2. Crear employee owner en `employees`
+  │                            │                          │ 3. Crear user en `users`
+  │                            │                          │ 4. Vincular ownerEmployeeId en tenant
+  │                            │                          │
+  │                            │<─── TenantResponse ───────│
+  │                            │                          │
+  │<─── Login Exitoso ─────────│                          │
+  │    + JWT Token             │                          │
+```
+
+### Creación de Empleado
+
+```
+ADMIN/OWNER                 FRONTEND                    BACKEND
+  │                            │                          │
+  │─── Form Empleado ─────────>│                          │
+  │                            │─── POST /employees ───────>│
+  │                            │                          │
+  │                            │                          │ 1. Validar datos
+  │                            │                          │ 2. Hash password con bcrypt
+  │                            │                          │ 3. Insertar en `employees`
+  │                            │                          │ 4. Insertar en `users` (para login)
+  │                            │                          │ 5. Retornar EmployeeResponse
+  │                            │                          │
+  │<─── Empleado Creado ──────│                          │
+```
+
+### Cambio de Status a INACTIVE
+
+```
+OWNER                       FRONTEND                    BACKEND
+  │                            │                          │
+  │─── Editar Status ─────────>│                          │
+  │    = "INACTIVE"            │                          │
+  │                            │─── PUT /employees/{id} ──>│
+  │                            │    { status: "INACTIVE" } │
+  │                            │                          │
+  │                            │<─── 200 OK ──────────────│
+  │                            │                          │
+  │<─── Empleado Inactivo ────│                          │
+  │    (Sigue en la lista)     │                          │
+```
+
+### Login con Cuenta INACTIVE
+
+```
+EMPLEADO                    FRONTEND                    BACKEND
+  │                            │                          │
+  │─── Login ────────────────>│                          │
+  │    email + password        │─── POST /tenants/login ──>│
+  │                            │                          │
+  │                            │                          │ 1. Buscar employee por email
+  │                            │                          │ 2. Verificar status === "INACTIVE"
+  │                            │                          │ 3. → 403 Forbidden
+  │                            │                          │
+  │                            │<─── 403 "Tu cuenta está──│
+  │                            │         INACTIVA..."     │
+  │                            │                          │
+  │<─── Error 403 ────────────│                          │
+  │    "Tu cuenta está        │                          │
+  │     INACTIVA. Contacta    │                          │
+  │     al administrador."     │                          │
+```
+
+---
+
+## 6. APIs PRINCIPALES
+
+### Autenticación
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/api/tenants/register` | Registrar nuevo tenant con owner |
+| POST | `/api/tenants/login` | Login para owner/empleados |
+| POST | `/api/auth/login` | Login alternativo |
+| POST | `/api/auth/logout` | Logout |
+| GET | `/api/auth/me` | Datos del usuario actual |
+| POST | `/api/auth/change-password` | Cambiar contraseña |
+
+### Empleados
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/employees` | Listar empleados (filtro opcional: ?status=ACTIVE) |
+| GET | `/api/employees/{id}` | Obtener empleado por ID |
+| POST | `/api/employees` | Crear empleado |
+| PUT | `/api/employees/{id}` | Actualizar empleado |
+| DELETE | `/api/employees/{id}` | Eliminar empleado |
+| PUT | `/api/employees/{id}/permissions` | Actualizar permisos |
+
+### Clientes
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/clients` | Listar clientes |
+| GET | `/api/clients/{id}` | Obtener cliente por ID |
+| POST | `/api/clients` | Crear cliente |
+| PUT | `/api/clients/{id}` | Actualizar cliente |
+| DELETE | `/api/clients/{id}` | Eliminar cliente |
+
+### Ventas
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/sales` | Listar ventas |
+| POST | `/api/sales` | Crear venta |
+| PUT | `/api/sales/{id}` | Actualizar venta |
+| GET | `/api/sales/config` | Configuración del tenant |
+
+### Productos
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/products` | Listar productos |
+| POST | `/api/products` | Crear producto |
+| PUT | `/api/products/{id}` | Actualizar producto |
+| DELETE | `/api/products/{id}` | Eliminar producto |
+
+### Servicios/Membresías
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/services` | Listar servicios |
+| POST | `/api/services` | Crear servicio |
+| PUT | `/api/services/{id}` | Actualizar servicio |
+| DELETE | `/api/services/{id}` | Eliminar servicio |
+
+### Asistencias
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/attendance` | Listar asistencias |
+| POST | `/api/attendance/checkin` | Registrar entrada |
+| POST | `/api/attendance/checkout` | Registrar salida |
+
+### Reportes
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/sales/financial-summary` | Resumen financiero |
+| GET | `/api/sales/daily-report` | Reporte diario |
+| GET | `/api/clients/summary` | Resumen de clientes |
+
+---
+
+## ENDPOINTS DE AUTENTICACIÓN - DETALLE
+
+### POST `/api/tenants/register`
+
+**Request:**
+```json
+{
+  "email": "gimnasio@email.com",
+  "password": "contraseña123",
+  "businessName": "Mi Gimnasio",
+  "businessPhone": "+59170000000",
+  "businessAddress": "Av. Principal #123",
+  "businessRuc": "123456789",
+  "plan": "BASIC",
+  "ownerFirstName": "Juan",
+  "ownerLastName": "Pérez"
+}
+```
+
+**Response:**
+```json
+{
+  "accessToken": "eyJ...",
+  "tokenType": "bearer",
+  "tenant": {
+    "id": "...",
+    "tenantId": "uuid",
+    "email": "gimnasio@email.com",
+    "businessName": "Mi Gimnasio",
+    "ownerFirstName": "Juan",
+    "ownerLastName": "Pérez",
+    "plan": "BASIC"
+  }
+}
+```
+
+### POST `/api/tenants/login`
+
+**Request:**
+```json
+{
+  "email": "gimnasio@email.com",
+  "password": "contraseña123"
+}
+```
+
+**Response (éxito):**
+```json
+{
+  "accessToken": "eyJ...",
+  "tokenType": "bearer",
+  "tenant": { ... }
+}
+```
+
+**Response (INACTIVE):**
+```
+HTTP 403
+{
+  "detail": "Tu cuenta está INACTIVA. Contacta al administrador."
+}
+```
+
+**Response (error):**
+```
+HTTP 401
+{
+  "detail": "Credenciales incorrectas"
+}
+```
+
+---
+
+## CÓMO IMPLEMENTAR ESTE SISTEMA
+
+### PARTE 1: BACKEND
+
+#### Paso 1: Estructura del Proyecto
+```
+backend/
+├── app/
+│   ├── __init__.py
+│   ├── main.py              # FastAPI app entry point
+│   ├── config.py            # Configuración de entorno
+│   ├── database.py          # Conexión MongoDB
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── tenant.py        # Schemas de tenant
+│   │   ├── employee.py      # Schemas de empleado
+│   │   ├── client.py       # Schemas de cliente
+│   │   ├── sale.py         # Schemas de venta
+│   │   ├── product.py      # Schemas de producto
+│   │   ├── service.py      # Schemas de servicio
+│   │   ├── invoice.py      # Schemas de factura
+│   │   ├── attendance.py   # Schemas de asistencia
+│   │   └── notification.py # Schemas de notificaciones
+│   ├── routers/
+│   │   ├── __init__.py
+│   │   ├── tenants.py      # Registro y login de tenants
+│   │   ├── employees.py    # CRUD de empleados
+│   │   ├── clients.py     # CRUD de clientes
+│   │   ├── sales.py       # CRUD de ventas
+│   │   ├── products.py     # CRUD de productos
+│   │   ├── services.py    # CRUD de servicios
+│   │   ├── invoices.py    # CRUD de facturas
+│   │   └── attendance.py # Registro de asistencia
+│   ├── auth/
+│   │   ├── __init__.py
+│   │   ├── router.py      # Endpoints de auth
+│   │   ├── service.py     # Lógica de autenticación
+│   │   ├── schemas.py     # Schemas de auth
+│   │   └── utils.py       # Utilidades JWT y password
+│   ├── scheduler/
+│   │   └── jobs.py        # Tareas programadas
+│   └── middleware/
+│       └── rate_limit.py  # Rate limiting
+├── requirements.txt
+├── .env
+└── README.md
+```
+
+#### Paso 2: Dependencias (requirements.txt)
+```
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+motor==0.3.1
+pydantic[email]==2.5.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+```
+
+#### Paso 3: Configuración de Base de Datos
+```python
+# database.py
+from motor.motor_asyncio import AsyncIOMotorClient
+
+class Collections:
+    TENANTS = "tenants"
+    USERS = "users"
+    EMPLOYEES = "employees"
+    CLIENTS = "clients"
+    PRODUCTS = "products"
+    SALES = "sales"
+    ATTENDANCE = "attendance"
+    SERVICES = "services"
+    INVOICES = "invoices"
+```
+
+#### Paso 4: Modelos de Datos
+Crear esquemas Pydantic para cada colección siguiendo el formato:
+```python
+# models/employee.py
+class EmployeeRole(str, Enum):
+    ADMIN = "ADMIN"
+    RECEPCIONISTA = "RECEPCIONISTA"
+
+class EmployeeStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    SUSPENDED = "SUSPENDED"
+```
+
+#### Paso 5: Sistema de Login con Status
+```python
+# routers/tenants.py
+@router.post("/login")
+async def login_tenant(data: TenantLoginRequest):
+    employee = await db.employees.find_one({
+        "$or": [{"email": email}, {"username": username}]
+    })
+    
+    if employee.get("status") == "INACTIVE":
+        raise HTTPException(403, "Tu cuenta está INACTIVA...")
+```
+
+### PARTE 2: FRONTEND
+
+#### Paso 1: Estructura del Proyecto
+```
+frontend/
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx
+│   ├── context/
+│   │   └── AuthProvider.tsx    # Contexto de autenticación
+│   ├── hooks/
+│   │   ├── useAccountType.ts   # Detección de rol
+│   │   ├── useEmployees.ts     # Gestión de empleados
+│   │   └── useListClientsHook.ts # Gestión de clientes
+│   ├── pages/
+│   │   ├── Login.tsx
+│   │   ├── Dashboard.tsx
+│   │   ├── employees/
+│   │   │   ├── EmployeesPage.tsx
+│   │   │   └── EmployeeProfilePage.tsx
+│   │   └── clients/
+│   ├── components/
+│   │   ├── employees/
+│   │   │   ├── EmployeeTable.tsx
+│   │   │   ├── EmployeeForm.tsx
+│   │   │   └── EmployeePermissions.tsx
+│   │   └── ...
+│   ├── services/
+│   │   ├── api.ts             # Helper de API
+│   │   ├── employees.service.ts
+│   │   └── clients.service.ts
+│   ├── types/
+│   │   ├── employee.types.ts
+│   │   ├── client.types.ts
+│   │   └── dashboard.section.ts # Secciones filtradas por rol
+│   └── styles/
+├── package.json
+└── .env
+```
+
+#### Paso 2: Hook de Tipo de Cuenta
+```typescript
+// hooks/useAccountType.ts
+export const useAccountType = () => {
+  const { user } = useAuth();
+  const payload = decodeToken(user?.token);
+  
+  return {
+    isOwner: payload?.isOwner === true,
+    isAdmin: payload?.role === "ADMIN",
+    isRecepcionista: payload?.role === "RECEPCIONISTA",
+  };
+};
+```
+
+#### Paso 3: Filtrado de Dashboard
+```typescript
+// types/dashboard.section.ts
+export const sections: DashboardSection[] = [
+  { title: "Reporte Financiero", roles: ["ADMIN"] },
+  { title: "Registro de Pagos", roles: ["ADMIN", "RECEPCIONISTA"] },
+];
+
+export const useFilteredSections = () => {
+  const { isOwner, isAdmin, isRecepcionista } = useAccountType();
+  return sections.filter(/* filtrar por rol */);
+};
+```
+
+#### Paso 4: Permisos en Tablas
+```typescript
+// components/employees/EmployeeTable.tsx
+const { isOwner, isAdmin } = useAccountType();
+
+const canEdit = isOwner || (isAdmin && !isEmployeeOwner);
+const canDelete = isOwner || (isAdmin && isEmployeeRecepcionista);
+```
+
+---
+
+## FLUJO COMPLETO: DESDE REGISTRO HASTA PERMISOS
+
+```
+1. REGISTRO DEL GIMNASIO
+   Usuario → /tenants/register
+   ├── Crea tenant en MongoDB
+   ├── Crea employee owner (isOwner=true, role=ADMIN)
+   ├── Crea user para login (vincular con employeeId)
+   └── Retorna JWT
+
+2. LOGIN DEL GERENTE
+   Usuario → /tenants/login
+   ├── Busca employee por email
+   ├── Verifica status != "INACTIVE"
+   ├── Verifica password
+   └── Retorna JWT con isOwner=true
+
+3. CREACIÓN DE ADMIN
+   Gerente → Crea empleado con role=ADMIN
+   ├── Inserta en employees
+   ├── Inserta en users (con employeeId)
+   └── Admin puede ahora hacer login
+
+4. CREACIÓN DE RECEPCIONISTA
+   Admin → Crea empleado con role=RECEPCIONISTA
+   ├── Inserta en employees
+   ├── Inserta en users
+   └── Recepcionista puede hacer login
+
+5. FILTRADO EN DASHBOARD
+   Usuario abre Dashboard
+   ├── useAccountType() detecta rol desde JWT
+   ├── useFilteredSections() filtra secciones
+   └── Se muestran solo las secciones permitidas
+
+6. RESTRICCIÓN DE ACCIONES
+   Usuario intenta editar/eliminar
+   ├── EmployeeTable revisa permisos con useAccountType
+   ├── Botones ocultados según rol
+   └── Backend también valida (futuro)
+```
+
+---
+
+## CONSIDERACIONES IMPORTANTES
+
+### Seguridad
+1. Contraseñas siempre hasheadas con bcrypt
+2. JWT con expiración (30 min por defecto)
+3. Tokens en Authorization header (Bearer)
+4. Rate limiting activo (100 req/min por IP)
+5. Validación de ObjectId en endpoints
+
+### Mejoras Futuras
+1. Validación de permisos en backend (actualmentesolo frontend)
+2. Refresh tokens
+3. Logs de auditoría
+4. 2FA para Gerentes
+5. Permisos granulares por módulo
+
+---
+
+*Documento generado: Mayo 2026*
+*Versión del sistema: 2.0*

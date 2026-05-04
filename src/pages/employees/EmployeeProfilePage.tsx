@@ -40,10 +40,9 @@ const EmployeeProfilePage = () => {
             setError("Empleado no encontrado");
           }
         }
-      } catch (err) {
-        console.error("Error cargando empleado:", err);
-        setError("Error al cargar el perfil");
-      }
+    } catch (err) {
+      setError("Error al cargar el perfil");
+    }
       setLoading(false);
     };
     

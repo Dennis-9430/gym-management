@@ -64,7 +64,7 @@ export const getProductsFromAPI = async (): Promise<Product[]> => {
     if (!response.ok) throw new Error("Error al obtener productos");
     const data = await response.json();
     return data.products || [];
-  } catch (error) { console.error("Error cargando productos desde API:", error); throw error; }
+  } catch (error) { throw error; }
 };
 
 // Obtiene productos (intenta API, fallback localStorage)
@@ -90,7 +90,7 @@ export const createProductAPI = async (input: ProductInput): Promise<Product | n
     const response = await fetch(API_BASE, { method: "POST", headers: getHeaders(), body: JSON.stringify(input) });
     if (!response.ok) throw new Error("Error al crear producto");
     return await response.json();
-  } catch (error) { console.error("Error creando producto:", error); return null; }
+  } catch (error) { return null; }
 };
 
 // Actualiza producto en MongoDB
@@ -100,7 +100,7 @@ export const updateProductAPI = async (id: number, update: ProductUpdate): Promi
     const response = await fetch(`${API_BASE}/${id}`, { method: "PUT", headers: getHeaders(), body: JSON.stringify(update) });
     if (!response.ok) throw new Error("Error al actualizar producto");
     return await response.json();
-  } catch (error) { console.error("Error actualizando producto:", error); return null; }
+  } catch (error) { return null; }
 };
 
 // Elimina producto en MongoDB
@@ -109,7 +109,7 @@ export const deleteProductAPI = async (id: number): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, { method: "DELETE", headers: getHeaders() });
     return response.ok;
-  } catch (error) { console.error("Error eliminando producto:", error); return false; }
+  } catch (error) { return false; }
 };
 
 // Funciones locales (Fallback)

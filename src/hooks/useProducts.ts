@@ -64,7 +64,7 @@ export const useProducts = () => {
       const data = await getProducts();
       setProducts(data);
     } catch (err) {
-      console.error("Error cargando productos:", err);
+      // Error handled silently
     } finally {
       setLoading(false);
     }

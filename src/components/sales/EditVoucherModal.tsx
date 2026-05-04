@@ -46,7 +46,7 @@ const EditVoucherModal = ({ isOpen, onClose, sale, onSave }: EditVoucherModalPro
       onSave();
       onClose();
     } catch (error) {
-      console.error("Error guardando:", error);
+      // Error handled silently
     } finally {
       setLoading(false);
     }

@@ -129,7 +129,7 @@ const handleCheckout = useCallback(() => {
           setGenerateInvoice(false);
           setInvoiceEmail("");
         })
-        .catch(console.error);
+        .catch(() => {});
     }
   }, [
     items,

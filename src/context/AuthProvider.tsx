@@ -66,8 +66,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         dispatch({ type: "LOGIN", payload: parsedUser });
       }
     } catch (error) {
-      // Manejar errores de parseo (posible corrupción de datos)
-      console.error("Error restoring auth state:", error);
+      // Error restoring auth state
       localStorage.removeItem("user");
     } finally {
       // Indicar que la inicialización ha terminado

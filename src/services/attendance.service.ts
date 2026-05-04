@@ -42,7 +42,6 @@ export const getAttendanceByDate = async (date: string): Promise<AttendanceRecor
     const data: AttendanceListResponse = await response.json();
     return data.records || [];
   } catch (error) {
-    console.error("Error cargando asistencia:", error);
     return [];
   }
 };
@@ -56,7 +55,6 @@ export const getTodayAttendance = async (): Promise<TodayAttendance | null> => {
     }
     return await response.json();
   } catch (error) {
-    console.error("Error cargando asistencia de hoy:", error);
     return null;
   }
 };

@@ -376,7 +376,6 @@ export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
     const data = await response.json();
     return data.sales || [];
   } catch (error) {
-    console.error("Error cargando ventas desde API:", error);
     throw error;
   }
 };
@@ -435,7 +434,6 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
     }
     return await response.json();
   } catch (error) {
-    console.error("Error creando venta:", error);
     return null;
   }
 };
@@ -453,7 +451,6 @@ export const updateSaleAPI = async (id: number, update: Partial<SaleRecord>): Pr
     }
     return await response.json();
   } catch (error) {
-    console.error("Error actualizando venta:", error);
     return null;
   }
 };
@@ -468,7 +465,6 @@ export const updateVoucherAPI = async (saleId: string, voucherCode?: string, vou
     });
     return response.ok;
   } catch (error) {
-    console.error("Error actualizando voucher:", error);
     return false;
   }
 };
@@ -482,7 +478,6 @@ export const verifyPaymentAPI = async (saleId: string): Promise<boolean> => {
     });
     return response.ok;
   } catch (error) {
-    console.error("Error verificando pago:", error);
     return false;
   }
 };

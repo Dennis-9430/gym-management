@@ -111,15 +111,10 @@ const canAddEmployee = () => {
       return;
     }
 
-    console.log("openEditForm - employee recibido:", employee);
-    console.log("openEditForm - employee.id:", employee.id, "tipo:", typeof employee.id);
-
     // Si es el owner, obtener datos completos desde API
     if (isGerente) {
-      console.log("openEditForm - Es owner, obteniendo datos desde API...");
       const ownerData = await getOwnerFromAPI();
       if (ownerData) {
-        console.log("openEditForm - Owner data desde API:", ownerData);
         setEditingEmployee(ownerData);
         setShowForm(true);
       } else {
@@ -129,19 +124,15 @@ const canAddEmployee = () => {
     } else {
       // Validar que el empleado tenga un ID válido (no undefined, null, 0, "0", "owner")
       const empId = employee.id as number | string;
-      console.log("openEditForm - No es owner, empId:", empId);
       
       if (!empId || empId === 0 || empId === "0" || empId === "owner") {
-        console.error("openEditForm: ID de empleado inválido", employee.id);
         setEditingEmployee(employee);
         setShowForm(true);
         return;
       }
       
       // Para empleados normales, obtener datos desde API
-      console.log("openEditForm - Llamando getEmployeeById con:", empId);
       const empData = await getEmployeeById(empId);
-      console.log("openEditForm - empData recibido:", empData);
       if (empData) {
         setEditingEmployee(empData);
       } else {
@@ -204,12 +195,11 @@ const canAddEmployee = () => {
 
         // Si es el owner, usar endpoint especial /api/tenants/owner
         if ((editingEmployee as any).isOwner === true) {
-          if (!isOwner || !employeeIdFromToken) {
-            console.error("executeSubmit: No se puede editar el owner sin employeeId del token");
-            alert("Error: No se pudo identificar al owner.");
-            closeForm();
-            return;
-          }
+        if (!isOwner || !employeeIdFromToken) {
+          alert("Error: No se pudo identificar al owner.");
+          closeForm();
+          return;
+        }
           const allowedOwnerFields = ["firstName", "lastName", "phone", "address", "documentNumber", "documentType", "notes", "username", "password"] as const;
           const ownerPayload: Record<string, string> = {};
           for (const key of allowedOwnerFields) {
@@ -263,7 +253,7 @@ const canAddEmployee = () => {
       }
       closeForm();
     } catch (err) {
-      console.error("executeSubmit error:", err);
+      // Error handled silently
     }
   };
 

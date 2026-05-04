@@ -22,8 +22,6 @@ export const useEmployees = () => {
     try {
       const data = await getEmployees();
       setEmployees(data);
-    } catch (err) {
-      console.error("Error cargando empleados:", err);
     } finally {
       setLoading(false);
     }
@@ -81,7 +79,6 @@ const sortEmployees = (a: Employee, b: Employee): number => {
   const updateEmployeeById = async (id: number | string, update: EmployeeUpdate) => {
     const idNum = typeof id === 'string' ? parseInt(id, 10) : id;
     if (!id || (!Number.isNaN(idNum) && idNum <= 0)) {
-      console.error("updateEmployeeById: ID inválido", id, typeof id);
       setError("ID de empleado inválido");
       throw new Error("ID de empleado inválido: " + id);
     }
@@ -98,7 +95,6 @@ const sortEmployees = (a: Employee, b: Employee): number => {
       throw new Error("No se pudo actualizar el empleado");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
-      console.error("Error actualizando empleado:", message);
       setError(message);
       throw err;
     }

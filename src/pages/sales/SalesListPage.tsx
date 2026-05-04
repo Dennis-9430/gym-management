@@ -32,7 +32,7 @@ const SalesListPage = () => {
       const data = await getSales();
       setSales(data);
     } catch (error) {
-      console.error("Error cargando ventas:", error);
+      // Error handled silently
     } finally {
       setLoading(false);
     }
@@ -80,7 +80,7 @@ const SalesListPage = () => {
       await verifyPaymentAPI(saleId);
       await loadSales();
     } catch (error) {
-      console.error("Error verificando pago:", error);
+      // Error handled silently
     } finally {
       setUpdating(null);
     }

@@ -41,7 +41,6 @@ const EmployeePermissions = ({ role, isAdmin, employeeId, isOwnerManaging = fals
   };
 
   const handleSave = () => {
-    console.log("Guardando permisos para empleado", employeeId, permissions);
     setIsEditing(false);
   };
 

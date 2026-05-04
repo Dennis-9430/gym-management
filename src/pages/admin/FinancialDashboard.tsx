@@ -141,7 +141,7 @@ const FinancialDashboard = () => {
   }, [summaryByEmployee]);
 
   useEffect(() => {
-    getFinancialSummary(selectedDate, selectedDate).then(console.log).catch(console.error);
+    getFinancialSummary(selectedDate, selectedDate).then(() => {}).catch(() => {});
   }, [selectedDate]);
 
   return (

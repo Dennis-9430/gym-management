@@ -29,7 +29,6 @@ export const getServices = async (): Promise<Service[]> => {
     const data: ServiceResponse = await response.json();
     return data.services;
   } catch (error) {
-    console.error("Error cargando servicios:", error);
     return defaultServices;
   }
 };
@@ -49,7 +48,6 @@ export const createService = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error creando servicio:", error);
     return null;
   }
 };
@@ -70,7 +68,6 @@ export const updateService = async (
     }
     return await response.json();
   } catch (error) {
-    console.error("Error actualizando servicio:", error);
     return null;
   }
 };
@@ -84,7 +81,6 @@ export const deleteService = async (id: string): Promise<boolean> => {
     });
     return response.ok;
   } catch (error) {
-    console.error("Error eliminando servicio:", error);
     return false;
   }
 };

@@ -273,7 +273,6 @@ const InvoiceListPage = () => {
       const response = await invoiceService.getInvoices(0, 100);
       setInvoices(response.invoices);
     } catch (error) {
-      console.warn("API no disponible o sesión expirada, usando datos de demo");
       setInvoices(MOCK_INVOICES);
     } finally {
       setLoading(false);
