@@ -2,6 +2,22 @@ import { useMemo, useState, useCallback, useEffect } from "react";
 import type { SaleRecord, SaleInput, PaymentMethod } from "../types/sales.types";
 import type { CartItem } from "../types/pos.types";
 import { getSales, updateSaleAPI, createSaleAPI } from "../services/sales.service";
+import { getInvoicesFromAPI, type InvoiceRecord } from "../services/invoices.service";
+
+/**
+ * Transacción unificada para reportes (sale o invoice)
+ */
+export interface UnifiedTransaction {
+  id: string;
+  type: "sale" | "invoice";
+  createdAt: string;
+  items: CartItem[];
+  total: number;
+  clientName: string;
+  paymentMethod: PaymentMethod;
+  createdBy: string;
+  invoiceNumber?: string;
+}
 
 /**
  * Resumen de transacciones por metodo de pago y tipo de venta.
@@ -95,24 +111,31 @@ const isServiceItem = (item: CartItem): boolean => {
  * @returns Objeto con transacciones y funciones utilitarias
  */
 export const useTransactions = () => {
-  // Estado local de transacciones cargadas desde la API
+  // Estado local de transacciones (ventas)
   const [transactions, setTransactions] = useState<SaleRecord[]>([]);
-  // Indicador de carga para UI
+  // Estado de facturas
+  const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
+  // Indicador de carga
   const [loading, setLoading] = useState(true);
 
   /**
-   * Carga todas las transacciones desde la API de ventas.
-   * Actualiza el estado local con los datos obtenus.
-   * Se ejecuta automaticamente al montar el componente.
+   * Carga todas las transacciones y facturas desde la API.
+   * Actualiza el estado local con los datos obtenidos.
    */
   const loadTransactions = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getSales();
-      setTransactions(data);
+      // Cargar ventas y facturas en paralelo
+      const [salesData, invoicesData] = await Promise.all([
+        getSales(),
+        getInvoicesFromAPI()
+      ]);
+      setTransactions(salesData);
+      setInvoices(invoicesData);
     } catch (error) {
       console.error("Error cargando transacciones:", error);
       setTransactions([]);
+      setInvoices([]);
     } finally {
       setLoading(false);
     }
@@ -375,6 +398,62 @@ export const useTransactions = () => {
 
 
   /**
+   * Obtiene transacciones unificadas (ventas + facturas).
+   * Convierte facturas al formato de SaleRecord para compatibilidad.
+   *
+   * @returns Array de transacciones unificadas ordenadas por fecha
+   */
+  const getUnifiedTransactions = useMemo(() => {
+    // Convertir facturas a formato de SaleRecord
+    const invoiceRecords: SaleRecord[] = invoices.map(inv => ({
+      id: inv.id as unknown as number,
+      createdAt: inv.createdAt,
+      items: inv.items.map((item, idx) => ({
+        key: `${inv.id}-${idx}`,
+        id: idx,
+        name: item.name,
+        category: inv.type === "MEMBERSHIP" ? "servicio" : "bar",
+        stock: null,
+        unitPrice: item.unitPrice,
+        unitDiscount: 0,
+        quantity: item.quantity,
+        subtotal: item.subtotal,
+        source: inv.type === "MEMBERSHIP" ? "MEMBERSHIP" : "PRODUCT",
+      })),
+      totals: {
+        subtotal: inv.totals.subtotal,
+        taxableSubtotal: inv.totals.subtotal - inv.totals.discountAmount,
+        vatSubtotal: inv.totals.taxAmount,
+        discountRate: 0,
+        discountAmount: inv.totals.discountAmount,
+        taxRate: 0,
+        taxAmount: inv.totals.taxAmount,
+        iceAmount: 0,
+        total: inv.totals.total,
+      },
+      client: {
+        documentNumber: inv.client.documentNumber,
+        firstName: inv.client.firstName,
+        lastName: inv.client.lastName,
+        email: inv.client.email,
+        phone: inv.client.phone,
+      },
+      payment: {
+        method: inv.payment.method as PaymentMethod,
+        cashAmount: inv.payment.cashAmount,
+        transferAmount: inv.payment.transferAmount,
+      },
+      createdBy: inv.createdBy,
+      invoiceNumber: inv.invoiceNumber,
+    }));
+
+    // Combinar ventas y facturas, ordenar por fecha
+    const unified = [...transactions, ...invoiceRecords];
+    return unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }, [transactions, invoices]);
+
+
+  /**
    * Obtiene el nombre del empleado que creo la transaccion.
    *
    * @param createdBy - Nombre del creador (opcional)
@@ -415,6 +494,7 @@ export const useTransactions = () => {
 
   return {
     transactions,
+    invoices,
     loading,
     getTodayTransactions,
     getTransactionsByDate,
@@ -429,6 +509,7 @@ export const useTransactions = () => {
     getEmployeeName,
     formatTime,
     formatMethodLabel,
+    getUnifiedTransactions,
     reload,
   };
 };

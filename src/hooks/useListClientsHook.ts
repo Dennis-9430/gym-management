@@ -4,7 +4,7 @@ import {
   initialState,
 } from "./reducers/listClients.reducer";
 import type { ClientForm } from "../types/client.types";
-import { getClients } from "../services/clients.service";
+import { getClients, deleteClientAPI } from "../services/clients.service";
 
 /**
  * Hook personalizado para manage the state of the client list with MongoDB.
@@ -57,6 +57,24 @@ export const useClients = () => {
       setLoading(false);
     }
   }, []);
+
+  /**
+   * Elimina un cliente por ID.
+   *
+   * @param {number} id - ID del cliente a eliminar
+   * @returns {Promise<boolean>} - true si se eliminó exitosamente
+   */
+  const deleteClient = useCallback(async (id: number): Promise<boolean> => {
+    try {
+      await deleteClientAPI(id);
+      // Recargar la lista después de eliminar
+      await reloadClients();
+      return true;
+    } catch (err) {
+      console.error("Error eliminando cliente:", err);
+      return false;
+    }
+  }, [reloadClients]);
 
   // Efecto para cargar clientes al iniciar el hook
   useEffect(() => {
@@ -118,6 +136,7 @@ export const useClients = () => {
     totalClients,
     activeClients,
     reloadClients,
+    deleteClient,
     filterMode: state.filterMode,
     loading,
   };
