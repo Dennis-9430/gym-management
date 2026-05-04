@@ -4,6 +4,7 @@ import ProductForm from "../../components/products/ProductForm";
 import ProductSearch from "../../components/products/ProductSearch";
 import ProductTable from "../../components/products/ProductTable";
 import { useAuth } from "../../context/index.ts";
+import { useAccountType } from "../../hooks/useAccountType";
 import { useProducts } from "../../hooks/useProducts";
 import type { Product, ProductInput } from "../../types/product.types";
 import "../../styles/products.css";
@@ -11,7 +12,13 @@ import "../../styles/products.css";
 /* Pagina de gestion de productos e inventario */
 const Products = () => {
   const { user } = useAuth();
+  const { isOwner } = useAccountType();
   const isAdmin = user?.role === "ADMIN";
+
+  // Gerente y Admin pueden agregar/editar productos
+  // Recepcionista NO puede
+  const canManageProducts = isOwner || isAdmin;
+
   const {
     products,
     totalProducts,
@@ -38,12 +45,20 @@ const Products = () => {
 
   /** Abre formulario para nuevo producto */
   const openNewForm = () => {
+    if (!canManageProducts) {
+      alert("No tienes permisos para agregar productos.");
+      return;
+    }
     setEditingProduct(null);
     setShowForm(true);
   };
 
   /** Abre formulario para editar producto */
   const openEditForm = (product: Product) => {
+    if (!canManageProducts) {
+      alert("No tienes permisos para editar productos.");
+      return;
+    }
     setEditingProduct(product);
     setShowForm(true);
   };
@@ -59,6 +74,10 @@ const Products = () => {
    * @param {ProductInput} values - datos del producto
    */
   const handleSubmit = (values: ProductInput) => {
+    if (!canManageProducts) {
+      alert("No tienes permisos para gestionar productos.");
+      return;
+    }
     const actionLabel = editingProduct ? "actualizar" : "registrar";
     if (!confirm(`Deseas ${actionLabel} este producto?`)) {
       return;
@@ -76,6 +95,10 @@ const Products = () => {
   };
 
   const handleDelete = (id: number) => {
+    if (!canManageProducts) {
+      alert("No tienes permisos para eliminar productos.");
+      return;
+    }
     if (confirm("Deseas eliminar este producto?")) {
       removeProduct(id);
     }
@@ -94,20 +117,22 @@ const Products = () => {
           {/* Orden real recomendado: búsqueda/filtro primero, CTA al final */}
           <ProductSearch
             value={search}
-            onChange={setSearch}
+onChange={setSearch}
             category={categoryFilter}
             onCategoryChange={setCategoryFilter}
           />
-          <button className="product-add-btn" onClick={openNewForm}>
-            <Plus size={18} />
-            Agregar producto
-          </button>
+          {canManageProducts && (
+            <button className="product-add-btn" onClick={openNewForm}>
+              <Plus size={18} />
+              Agregar producto
+            </button>
+          )}
         </div>
       </section>
 
       <div className="products-stats">
         Total productos: {totalProducts} | Mostrando: {products.length}
-        {isAdmin && (
+        {canManageProducts && (
           <span> | Total inventario: ${totalInventoryValue.toFixed(2)}</span>
         )}
       </div>
@@ -118,6 +143,7 @@ const Products = () => {
             products={products}
             onEdit={openEditForm}
             onDelete={handleDelete}
+            canManage={canManageProducts}
           />
         </div>
       </section>

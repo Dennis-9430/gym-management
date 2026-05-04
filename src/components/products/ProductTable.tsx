@@ -7,9 +7,10 @@ interface Props {
   products: Product[];
   onEdit: (product: Product) => void;
   onDelete: (id: number) => void;
+  canManage?: boolean; // true si puede editar/eliminar productos
 }
 
-const ProductTable = ({ products, onEdit, onDelete }: Props) => {
+const ProductTable = ({ products, onEdit, onDelete, canManage = true }: Props) => {
   return (
     <table className="product-table">
       <thead>
@@ -21,7 +22,7 @@ const ProductTable = ({ products, onEdit, onDelete }: Props) => {
           <th>Precio unitario</th>
           <th>Cantidad</th>
           <th>Total inventario</th>
-          <th>Acciones</th>
+          {canManage && <th>Acciones</th>}
         </tr>
       </thead>
       <tbody>
@@ -36,24 +37,26 @@ const ProductTable = ({ products, onEdit, onDelete }: Props) => {
               <td>${product.unitPrice.toFixed(2)}</td>
               <td>{product.quantity}</td>
               <td>${total.toFixed(2)}</td>
-              <td className="actions">
-                <button
-                  type="button"
-                  className="btn-edit"
-                  onClick={() => onEdit(product)}
-                >
-                  <Pencil size={16} />
-                  Editar
-                </button>
-                <button
-                  type="button"
-                  className="btn-delete"
-                  onClick={() => onDelete(product.id)}
-                >
-                  <Trash2 size={16} />
-                  Eliminar
-                </button>
-              </td>
+              {canManage && (
+                <td className="actions">
+                  <button
+                    type="button"
+                    className="btn-edit"
+                    onClick={() => onEdit(product)}
+                  >
+                    <Pencil size={16} />
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-delete"
+                    onClick={() => onDelete(product.id)}
+                  >
+                    <Trash2 size={16} />
+                    Eliminar
+                  </button>
+                </td>
+              )}
             </tr>
           );
         })}
