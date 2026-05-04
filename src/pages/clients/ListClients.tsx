@@ -4,11 +4,16 @@ import ClientTable from "../../components/clientsTable/ClientTable";
 import ClientModal from "../../components/clientsModal/ClientModal";
 import { useClients } from "../../hooks/useListClientsHook";
 import { usePOS } from "../../hooks/features/usePOS";
+import { useAccountType } from "../../hooks/useAccountType";
+import { useAuth } from "../../context";
 import SubscriptionModal from "../../components/sales/SubscriptionModal";
 import {} from "../../styles/listClients.css";
 
 /* Pagina de listado de clientes con busqueda y filtros */
 const ListClients = () => {
+  const { user } = useAuth();
+  const { isOwner } = useAccountType();
+
   const {
     clients,
     search,
@@ -21,6 +26,7 @@ const ListClients = () => {
     totalClients,
     activeClients,
     reloadClients,
+    deleteClient,
     filterMode,
   } = useClients();
 
@@ -56,7 +62,25 @@ const ListClients = () => {
     handlePendingSubscription,
   } = usePOS();
 
+  // Gerente y Admin pueden eliminar clientes
+  // Recepcionista NO puede eliminar clientes
+  const canDeleteClients = isOwner || user?.role === "ADMIN";
+
   const [showModal, setShowModal] = useState(false);
+
+  /** Maneja la eliminación de un cliente */
+  const handleDeleteClient = async (clientId: number) => {
+    if (!canDeleteClients) {
+      alert("No tienes permisos para eliminar clientes.");
+      return;
+    }
+    const success = await deleteClient(clientId);
+    if (!success) {
+      alert("Error al eliminar el cliente.");
+    }
+  };
+
+  const showActions = filterMode === "INACTIVE" || filterMode === "ALL";
 
   /** Abre modal para nuevo cliente */
   const openNewModal = () => {
@@ -71,8 +95,6 @@ const ListClients = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
-  const showActions = filterMode === "INACTIVE" || filterMode === "ALL";
 
   return (
     <>
@@ -94,6 +116,7 @@ const ListClients = () => {
           sortField={sortField}
           sortDirection={sortDirection}
           showActions={showActions}
+          onDelete={canDeleteClients ? handleDeleteClient : undefined}
         />
       </div>
 

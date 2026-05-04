@@ -1,4 +1,6 @@
+import { useAuth } from "../../context";
 import type { ClientProps } from "../../types/client.types";
+import { useAccountType } from "../../hooks/useAccountType";
 
 /* Muestra informacion personal y de membresia del cliente */
 interface Props extends ClientProps {
@@ -6,6 +8,13 @@ interface Props extends ClientProps {
 }
 
 const ClientInfo = ({ client, onEdit }: Props) => {
+  const { user } = useAuth();
+  const { isOwner } = useAccountType();
+
+  // Gerente y Admin pueden editar clientes
+  // Recepcionista NO puede editar clientes
+  const canEdit = isOwner || user?.role === "ADMIN";
+
   return (
     <div className="card card-info">
       <h3>Informacion Personal</h3>
@@ -34,9 +43,11 @@ const ClientInfo = ({ client, onEdit }: Props) => {
       <p>
         <strong>Telefono de Emergencia</strong> {client.emergencyPhone}
       </p>
-      <button className="btn-edit" onClick={onEdit}>
-        Editar informacion
-      </button>
+      {canEdit && (
+        <button className="btn-edit" onClick={onEdit}>
+          Editar informacion
+        </button>
+      )}
 
       {(client.memberShip || client.memberShipStartDate || client.memberShipEndDate) && (
         <>
