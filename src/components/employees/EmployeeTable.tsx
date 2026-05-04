@@ -11,7 +11,7 @@ interface Props {
 }
 
 const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
-  const { isOwner, isDemo, isAdmin, isRecepcionista } = useAccountType();
+  const { isOwner, isDemo, isAdmin } = useAccountType();
 
   // Solo Gerente y Admin ven la columna de acciones
   // Recepcionista NO ve acciones
@@ -32,7 +32,6 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
       <tbody>
         {employees.map((emp, index) => {
           const isEmployeeOwner = (emp as any).isOwner === true;
-          const isEmployeeAdmin = emp.role === "ADMIN" && !isEmployeeOwner;
           const isEmployeeRecepcionista = emp.role === "RECEPCIONISTA";
 
           // Permisos de Editar
