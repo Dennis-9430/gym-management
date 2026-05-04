@@ -48,8 +48,7 @@ export const useFilteredSections = (): DashboardSection[] => {
   });
 };
 
-// Exportar secciones originales para uso en otros lugares
-export { sections };
+// Secciones del dashboard por rol
 export const sections: DashboardSection[] = [
   {
     title: "Registro de Pago Diario",
