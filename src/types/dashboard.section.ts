@@ -8,6 +8,7 @@ import {
   UserCog,
   Settings,
 } from "lucide-react";
+import { useAccountType } from "../hooks/useAccountType";
 
 export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
 export type SectionAction = "NAVIGATE" | "MODAL";
@@ -21,6 +22,34 @@ export interface DashboardSection {
   description?: string;
   plan?: "BASIC" | "PREMIUM";
 }
+
+// Hook para filtrar secciones por rol y permisos reales
+export const useFilteredSections = (): DashboardSection[] => {
+  const { isOwner, isAdmin, isRecepcionista } = useAccountType();
+
+  // Filtrar secciones según el rol real (no solo el token)
+  return sections.filter((section) => {
+    // Owner ve todo lo que sea ADMIN
+    if (isOwner && section.roles.includes("ADMIN")) {
+      return true;
+    }
+
+    // Admin (token ADMIN) ve secciones ADMIN
+    if (isAdmin && section.roles.includes("ADMIN")) {
+      return true;
+    }
+
+    // Recepcionista ve solo secciones RECEPCIONISTA
+    if (isRecepcionista && section.roles.includes("RECEPCIONISTA")) {
+      return true;
+    }
+
+    return false;
+  });
+};
+
+// Exportar secciones originales para uso en otros lugares
+export { sections };
 export const sections: DashboardSection[] = [
   {
     title: "Registro de Pago Diario",

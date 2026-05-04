@@ -4,7 +4,7 @@ export type EmployeeStatus = "ACTIVE" | "INACTIVE";
 export type DocumentType = "CEDULA" | "PASAPORTE" | "RUC";
 
 export interface Employee {
-  id: number;
+  id: number | string;
   username: string;
   documentType: DocumentType;
   documentNumber: string;

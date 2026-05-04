@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
+import { useAccountType } from "../hooks/useAccountType";
 import "../styles/navbar.css";
 import {
   User,
@@ -13,12 +14,13 @@ import {
  * Proporciona navegación global y funcionalidad de logout para la aplicación.
  * Muestra el branding del gimnasio, información del usuario autenticado
  * y enlaces de navegación cuando hay sesión activa.
- * 
+ *
  * @returns {JSX.Element} Barra de navegación renderizada
  */
 const Navbar = () => {
   // Obtenemos el usuario actual y la función de logout del contexto de autenticación
   const { user, logout } = useAuth();
+  const { isOwner } = useAccountType();
   // Hook para navegación programática
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const Navbar = () => {
    * Maneja el cierre de sesión del usuario.
    * Ejecuta el logout a través del contexto de autenticación
    * y redirige al usuario a la página principal.
-   * 
+   *
    * @returns {void}
    */
   const handleLogout = () => {
@@ -37,21 +39,27 @@ const Navbar = () => {
   };
 
   /**
+   * Genera el label del rol para mostrar
+   * Usa isOwner del hook para determinar correctamente el rol
+   */
+  const getRoleLabel = () => {
+    if (isOwner) return "Gerente";
+    if (user?.role === "ADMIN") return "Admin";
+    return "Recepcionista";
+  };
+
+  /**
    * Genera el nombre a visualizar en la barra de navegación.
-   * Para usuarios ADMIN, prepende el rol al nombre de usuario.
-   * Para otros usuarios, retorna solo el nombre de usuario.
-   * 
+   * Muestra rol + nombre para cualquier usuario.
+   *
    * @returns {string} Nombre formateado para mostrar
    */
   const getDisplayName = () => {
     // Retorna cadena vacía si no hay usuario autenticado
     if (!user) return "";
-    // Si el usuario es ADMIN, prepende "admin - " al username
-    if (user.role === "ADMIN") {
-      return `admin - ${user.username}`;
-    }
-    // Para usuarios no admin, retorna solo el nombre de usuario
-    return user.username;
+    // Formato: [Rol] - Nombre
+    const roleLabel = getRoleLabel();
+    return `${roleLabel} - ${user.username}`;
   };
 
   return (
@@ -59,11 +67,11 @@ const Navbar = () => {
       <div className="navbar__containner">
         <div className="navbar__brand">
           <Dumbbell size={22} />
-          <h1>
+          <h1 className="navbar__brand-title">
             Gym Management
             {user && (
               <span className="navbar__username">
-                <User size={22} />
+                <User size={16} />
                 <span className="navbar__username-text">{getDisplayName()}</span>
               </span>
             )}

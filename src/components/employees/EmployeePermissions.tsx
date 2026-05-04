@@ -8,19 +8,24 @@ import {
 
 /* Componente para ver y editar permisos de empleado por modulo */
 interface Props {
-  role: EmployeeRole;
+  role: EmployeeRole | "GERENTE";
   isAdmin: boolean;
   employeeId: number;
+  isOwnerManaging?: boolean; // true si el owner está gestionando permisos de otro
+  isReadOnly?: boolean; // true si es el propio Gerente viendo sus permisos
 }
 
-const EmployeePermissions = ({ role, isAdmin, employeeId }: Props) => {
+const EmployeePermissions = ({ role, isAdmin, employeeId, isOwnerManaging = false, isReadOnly = false }: Props) => {
   const [permissions, setPermissions] = useState<RolePermissions>(
-    getRolePermissions(role),
+    getRolePermissions(role as EmployeeRole),
   );
   const [isEditing, setIsEditing] = useState(false);
 
+  // Owner o Admin pueden editar permisos (pero no si es readOnly)
+  const canEdit = (isOwnerManaging || isAdmin) && !isReadOnly;
+
   const handleToggle = (moduleKey: string, actionKey: string) => {
-    if (!isEditing) return;
+    if (!isEditing || isReadOnly) return;
 
     setPermissions((prev) => ({
       ...prev,
@@ -41,7 +46,7 @@ const EmployeePermissions = ({ role, isAdmin, employeeId }: Props) => {
   };
 
   const handleCancel = () => {
-    setPermissions(getRolePermissions(role));
+    setPermissions(getRolePermissions(role as EmployeeRole));
     setIsEditing(false);
   };
 
@@ -54,7 +59,7 @@ const EmployeePermissions = ({ role, isAdmin, employeeId }: Props) => {
           <Settings size={18} />
           Permisos del Sistema
         </h3>
-        {isAdmin && !isEditing && (
+        {canEdit && !isEditing && (
           <button
             className="employee-permissions__edit-btn"
             onClick={() => setIsEditing(true)}

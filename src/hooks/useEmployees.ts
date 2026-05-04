@@ -5,7 +5,6 @@ import {
   getEmployees,
   createEmployee,
   createEmployeeAPI,
-  updateEmployee,
   updateEmployeeAPI,
   deleteEmployee,
   deleteEmployeeAPI,
@@ -43,23 +42,35 @@ export const useEmployees = () => {
     return filtered.sort((a, b) => {
       if (a.isOwner) return -1;
       if (b.isOwner) return 1;
-      return a.id - b.id;
+      if (typeof a.id === 'number' && typeof b.id === 'number') {
+        return a.id - b.id;
+      }
+      return String(a.id).localeCompare(String(b.id));
     });
   }, [employees, search]);
 
-  const addEmployee = async (input: EmployeeInput) => {
-    setError(null);
-    try {
-      // Intentar API primero
-      const created = await createEmployeeAPI(input);
-      if (created) {
-        setEmployees((prev) => [...prev, created].sort((a, b) => a.id - b.id));
-        return created;
+const sortEmployees = (a: Employee, b: Employee): number => {
+      if (a.isOwner) return -1;
+      if (b.isOwner) return 1;
+      if (typeof a.id === 'number' && typeof b.id === 'number') {
+        return a.id - b.id;
       }
-      // Fallback local
-      const createdLocal = createEmployee(input);
-      setEmployees((prev) => [...prev, createdLocal].sort((a, b) => a.id - b.id));
-      return createdLocal;
+      return String(a.id).localeCompare(String(b.id));
+    };
+    
+    const addEmployee = async (input: EmployeeInput) => {
+      setError(null);
+      try {
+        // Intentar API primero
+        const created = await createEmployeeAPI(input);
+        if (created) {
+          setEmployees((prev) => [...prev, created].sort(sortEmployees));
+          return created;
+        }
+        // Fallback local
+        const createdLocal = createEmployee(input);
+        setEmployees((prev) => [...prev, createdLocal].sort(sortEmployees));
+        return createdLocal;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
       setError(message);
@@ -67,11 +78,12 @@ export const useEmployees = () => {
     }
   };
 
-  const updateEmployeeById = async (id: number, update: EmployeeUpdate) => {
-    if (!id || id <= 0) {
-      console.error("updateEmployeeById: ID inválido", id);
+  const updateEmployeeById = async (id: number | string, update: EmployeeUpdate) => {
+    const idNum = typeof id === 'string' ? parseInt(id, 10) : id;
+    if (!id || (!Number.isNaN(idNum) && idNum <= 0)) {
+      console.error("updateEmployeeById: ID inválido", id, typeof id);
       setError("ID de empleado inválido");
-      throw new Error("ID de empleado inválido");
+      throw new Error("ID de empleado inválido: " + id);
     }
     
     setError(null);
@@ -79,7 +91,7 @@ export const useEmployees = () => {
       const updated = await updateEmployeeAPI(id, update);
       if (updated) {
         setEmployees((prev) =>
-          prev.map((emp) => (emp.id === id ? updated : emp)),
+          prev.map((emp) => (emp.id === id || emp.id === idNum ? updated : emp)),
         );
         return updated;
       }
@@ -92,18 +104,18 @@ export const useEmployees = () => {
     }
   };
 
-  const removeEmployee = async (id: number) => {
+  const removeEmployee = async (id: number | string) => {
     setError(null);
     try {
-      // Intentar API primero
-      const deleted = await deleteEmployeeAPI(id);
+      // Para ObjectId strings, pasar directo; para números hacer parse
+      const apiId = typeof id === 'string' && /^[a-fA-F0-9]{24}$/.test(id) ? id : 
+                    typeof id === 'string' ? parseInt(id, 10) : id;
+      
+      const deleted = await deleteEmployeeAPI(apiId);
       if (deleted) {
         setEmployees((prev) => prev.filter((emp) => emp.id !== id));
         return;
       }
-      // Fallback local
-      deleteEmployee(id);
-      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error inesperado";
       setError(message);

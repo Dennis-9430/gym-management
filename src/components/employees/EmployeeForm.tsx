@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import type {
   EmployeeInput,
   EmployeeRole,
@@ -8,7 +9,7 @@ import { useAccountType } from "../../hooks/useAccountType";
 
 /* Formulario para crear o editar empleados */
 interface Props {
-  idValue?: number | null;
+  idValue?: number | string | null;
   initialValues?: EmployeeInput;
   onSubmit: (values: EmployeeInput) => void;
   onCancel?: () => void;
@@ -65,6 +66,7 @@ const EmployeeForm = ({
     return defaultValues;
   });
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   
   // Cuando initialValues cambia, actualizar el form
   useEffect(() => {
@@ -218,13 +220,23 @@ const EmployeeForm = ({
       </div>
       <div className="form-group">
         <label>Contrasena</label>
-        <input
-          type="password"
-          value={form.password}
-          onChange={(e) => updateField("password", e.target.value)}
-          placeholder="Contrasena"
-          disabled={isDemo}
-        />
+        <div className="password-input-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={form.password}
+            onChange={(e) => updateField("password", e.target.value)}
+            placeholder="Contrasena"
+            disabled={isDemo}
+          />
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword(!showPassword)}
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
       </div>
 
       <div className="form-group ">

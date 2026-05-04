@@ -47,7 +47,7 @@ export const getEmployees = async (): Promise<Employee[]> => {
     const ownerUsername = tenant.ownerUsername || ownerData.username || tenant.email?.split("@")[0] || "owner";
     
     ownerEmployee = {
-      id: 0,
+      id: "owner",
       username: ownerUsername,
       documentType: "CEDULA",
       documentNumber: tenant.ruc || ownerData.documentNumber || "",
@@ -67,7 +67,7 @@ export const getEmployees = async (): Promise<Employee[]> => {
     // Legacy: cuenta demo
     const owner = JSON.parse(storedOwner);
     ownerEmployee = {
-      id: 0,
+      id: "owner",
       username: "owner",
       documentType: "CEDULA",
       documentNumber: "",
@@ -91,41 +91,61 @@ export const getEmployees = async (): Promise<Employee[]> => {
       throw new Error("Error al obtener empleados");
     }
     const data = await response.json();
-    const employees = data.employees || [];
+    console.log("getEmployees - data del backend:", data);
+    let employees = data.employees || [];
+    console.log("getEmployees - empleados del API (sin owner):", employees.length, employees);
+    console.log("getEmployees - primer empleado keys:", Object.keys(employees[0] || {}));
     
-    // Si la API retorna empleados, agregarlos después del owner (demo)
-    if (employees.length > 0) {
-      return ownerEmployee 
-        ? [ownerEmployee, ...employees] 
-        : employees;
+    // Verificar si el API ya devuelve un owner
+    const apiHasOwner = employees.some(e => (e as any).isOwner === true);
+    
+    // Agregar el owner local SOLO si el API no devuelve un owner
+    if (ownerEmployee && !apiHasOwner) {
+      console.log("getEmployees - ownerEmployee que se agregará:", ownerEmployee);
+      employees = [ownerEmployee, ...employees];
     }
     
-    // API vacía o error, verificar si hay ownerdemo
-    if (ownerEmployee) {
-      return [ownerEmployee];
-    }
+    console.log("getEmployees - empleados finales:", employees.map((e: Employee) => ({ id: e.id, username: e.username, isOwner: (e as any).isOwner })));
     
-    // Fallback local
-    return seedEmployees;
+    // Ordenar: owner primero, luego por id (puede ser string u número)
+    return employees.sort((a: Employee, b: Employee) => {
+      if ((a as any).isOwner === true) return -1;
+      if ((b as any).isOwner === true) return 1;
+      // Si ambos son números
+      if (typeof a.id === 'number' && typeof b.id === 'number') {
+        return a.id - b.id;
+      }
+      // Si alguno es string o ambos, comparar como strings
+      return String(a.id).localeCompare(String(b.id));
+    });
   } catch {
-    // Error de red o API
-    if (ownerEmployee) {
-      return [ownerEmployee];
-    }
+    // Error de red o API - fallback local
     const employees = loadEmployees();
-    return [...employees].sort((a, b) => a.id - b.id);
+    return [...employees].sort((a, b) => {
+      if (a.isOwner) return -1;
+      if (b.isOwner) return 1;
+      if (typeof a.id === 'number' && typeof b.id === 'number') {
+        return a.id - b.id;
+      }
+      return String(a.id).localeCompare(String(b.id));
+    });
   }
 };
 
 /* Obtiene empleado por ID */
-export const getEmployeeById = async (id: number): Promise<Employee | null> => {
+export const getEmployeeById = async (id: number | string): Promise<Employee | null> => {
+  console.log("getEmployeeById - id recibido:", id, "tipo:", typeof id);
   try {
-    const response = await fetch(`${API_BASE}/${id}`);
+    const response = await fetch(`${API_BASE}/${id}`, { headers: getAuthHeaders() });
+    console.log("getEmployeeById - Response status:", response.status);
     if (!response.ok) {
       throw new Error("Empleado no encontrado");
     }
-    return await response.json();
-  } catch {
+    const data = await response.json();
+    console.log("getEmployeeById - data recibida:", data);
+    return data;
+  } catch (error) {
+    console.error("getEmployeeById - Error:", error);
     const employees = loadEmployees();
     return employees.find((e) => e.id === id) ?? null;
   }
@@ -180,12 +200,14 @@ export const createEmployeeAPI = async (
 
 /* Actualiza empleado */
 export const updateEmployeeAPI = async (
-  id: number,
+  id: number | string,
   update: EmployeeUpdate
 ): Promise<Employee | null> => {
-  if (!id || id <= 0) {
-    console.error("updateEmployeeAPI: ID inválido", id);
-    throw new Error("ID de empleado inválido");
+  // Verificar que id sea válido (número > 0 o string no vacía)
+  const idNum = typeof id === 'string' ? parseInt(id, 10) : id;
+  if (!id || (!Number.isNaN(idNum) && idNum <= 0)) {
+    console.error("updateEmployeeAPI: ID inválido", id, typeof id);
+    throw new Error("ID de empleado inválido: " + id);
   }
   
   console.log("updateEmployeeAPI - ID:", id, "Payload:", update);
@@ -228,59 +250,6 @@ export const deleteEmployeeAPI = async (id: number): Promise<boolean> => {
     return false;
   }
 };
-
-/* Empleados de ejemplo para desarrollo */
-// Relacionado con: getEmployees (fallback)
-const seedEmployees: Employee[] = [
-  {
-    id: 1,
-    username: "admin",
-    documentType: "CEDULA",
-    documentNumber: "0102030405",
-    firstName: "Admin",
-    lastName: "Sistema",
-    email: "admin@gym.com",
-    phone: "099999999",
-    address: "Direccion admin",
-    notes: "",
-    password: "admin123",
-    role: "ADMIN",
-    status: "ACTIVE",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    username: "dennis",
-    documentType: "CEDULA",
-    documentNumber: "0203040506",
-    firstName: "Dennis",
-    lastName: "Empleado",
-    email: "dennis@gym.com",
-    phone: "098888888",
-    address: "Direccion empleado",
-    notes: "",
-    password: "123456",
-    role: "RECEPCIONISTA",
-    status: "ACTIVE",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    username: "trainer",
-    documentType: "CEDULA",
-    documentNumber: "0304050607",
-    firstName: "Luis",
-    lastName: "Trainer",
-    email: "trainer@gym.com",
-    phone: "097777777",
-    address: "Direccion entrenador",
-    notes: "",
-    password: "trainer123",
-    role: "ENTRENADOR",
-      status: "INACTIVE",
-    createdAt: new Date().toISOString(),
-  },
-];
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 const normalizeUsername = (username: string) => username.trim().toLowerCase();
@@ -350,7 +319,7 @@ export const createEmployee = (input: EmployeeInput): Employee => {
   }
 
   const nextId = employees.length
-    ? Math.max(...employees.map((e) => e.id)) + 1
+    ? Math.max(...employees.map((e) => typeof e.id === 'number' ? e.id : 0)) + 1
     : 1;
 
   const employee: Employee = {

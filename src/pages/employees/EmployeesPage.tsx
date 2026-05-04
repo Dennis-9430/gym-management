@@ -9,6 +9,7 @@ import PasswordConfirmModal from "../../components/employees/PasswordConfirmModa
 import { useEmployees } from "../../hooks/useEmployees";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
 import { useAccountType } from "../../hooks/useAccountType";
+import { useAuth } from "../../context";
 import { getAuthToken } from "../../services/api";
 import { getEmployeeById, getOwnerFromAPI } from "../../services/employees.service";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../../types/employee.types";
@@ -20,6 +21,7 @@ const EmployeesPage = () => {
   const navigate = useNavigate();
   const { isPremium } = usePlanAccess();
   const { isDemo, isOwner, employeeIdFromToken } = useAccountType();
+  const { user } = useAuth();
   const {
     employees,
     realEmployees,
@@ -43,17 +45,34 @@ const EmployeesPage = () => {
     refresh();
   }, [refresh]);
 
-  const canAddEmployee = () => {
+const canAddEmployee = () => {
     if (isDemo) {
       alert("Las cuentas demo tienen acceso restringido.");
       return false;
     }
-    if (!isPremium()) {
-      alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
+
+    // Gerente y Admin pueden crear empleados
+    if (!isOwner && user?.role !== "ADMIN") {
+      alert("No tienes permisos para crear empleados.");
       return false;
     }
-    if (realCount >= 2) {
-      alert("Has alcanzado el límite máximo de 2 empleados en PREMIUM.");
+
+    // PREMIUM: 3 admins (incluyendo owner) + 3 recepcionistas = 6 total
+    const admins = employees.filter(e => e.role === "ADMIN" || (e as any).isOwner);
+    const recepcionistas = employees.filter(e => e.role === "RECEPCIONISTA");
+
+    if (isPremium()) {
+      if (admins.length >= 3) {
+        alert("Has alcanzado el límite máximo de 3 administradores en tu plan.");
+        return false;
+      }
+      if (recepcionistas.length >= 3) {
+        alert("Has alcanzado el límite máximo de 3 empleados recepcionistas en tu plan.");
+        return false;
+      }
+    } else {
+      // BASIC: solo el owner
+      alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
       return false;
     }
     return true;
@@ -70,11 +89,37 @@ const EmployeesPage = () => {
       alert("Las cuentas demo tienen acceso restringido.");
       return;
     }
-    
+
+    const isGerente = (employee as any).isOwner === true;
+    const isAdmin = employee.role === "ADMIN" && !isGerente;
+    const isRecepcionista = employee.role === "RECEPCIONISTA";
+
+    // Gerente: puede editar a todos (incluyendo su propia fila)
+    // Admin: solo puede editar recepcionistas (NO admins, NO gerente)
+    if (isOwner) {
+      // Gerente: puede editar a cualquiera (incluyendo su propia fila para editar sus datos)
+      // El formulario bloqueará campos sensibles (email, rol, estatus)
+      // Se permite la edición sin restricciones
+    } else if (user?.role === "ADMIN") {
+      // Admin: solo puede editar recepcionistas
+      if (!isRecepcionista) {
+        alert("No tienes permisos para editar a este empleado.");
+        return;
+      }
+    } else {
+      alert("No tienes permisos para editar empleados.");
+      return;
+    }
+
+    console.log("openEditForm - employee recibido:", employee);
+    console.log("openEditForm - employee.id:", employee.id, "tipo:", typeof employee.id);
+
     // Si es el owner, obtener datos completos desde API
-    if (!employee.id || employee.id <= 0) {
+    if (isGerente) {
+      console.log("openEditForm - Es owner, obteniendo datos desde API...");
       const ownerData = await getOwnerFromAPI();
       if (ownerData) {
+        console.log("openEditForm - Owner data desde API:", ownerData);
         setEditingEmployee(ownerData);
         setShowForm(true);
       } else {
@@ -82,8 +127,21 @@ const EmployeesPage = () => {
         setShowForm(true);
       }
     } else {
+      // Validar que el empleado tenga un ID válido (no undefined, null, 0, "0", "owner")
+      const empId = employee.id as number | string;
+      console.log("openEditForm - No es owner, empId:", empId);
+      
+      if (!empId || empId === 0 || empId === "0" || empId === "owner") {
+        console.error("openEditForm: ID de empleado inválido", employee.id);
+        setEditingEmployee(employee);
+        setShowForm(true);
+        return;
+      }
+      
       // Para empleados normales, obtener datos desde API
-      const empData = await getEmployeeById(employee.id);
+      console.log("openEditForm - Llamando getEmployeeById con:", empId);
+      const empData = await getEmployeeById(empId);
+      console.log("openEditForm - empData recibido:", empData);
       if (empData) {
         setEditingEmployee(empData);
       } else {
@@ -98,7 +156,7 @@ const EmployeesPage = () => {
     setShowForm(false);
   };
 
-  const hasSensitiveChange = (values: EmployeeInput, original?: Employee): boolean => {
+  const hasSensitiveChange = (_values: EmployeeInput, original?: Employee): boolean => {
     if (!original) return true;
     return true; // Siempre mostrar confirmación para cualquier cambio
   };
@@ -113,8 +171,15 @@ const EmployeesPage = () => {
         alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
         return;
       }
-      if (realCount >= 2) {
-        alert("Has alcanzado el límite máximo de 2 empleados en PREMIUM.");
+      const admins = employees.filter(e => e.role === "ADMIN" || (e as any).isOwner);
+      const recepcionistas = employees.filter(e => e.role === "RECEPCIONISTA");
+      
+      if (values.role === "ADMIN" && admins.length >= 3) {
+        alert("Has alcanzado el límite máximo de 3 administradores en tu plan.");
+        return;
+      }
+      if (values.role === "RECEPCIONISTA" && recepcionistas.length >= 3) {
+        alert("Has alcanzado el límite máximo de 3 empleados recepcionistas en tu plan.");
         return;
       }
     }
@@ -137,8 +202,8 @@ const EmployeesPage = () => {
           delete payload.password;
         }
 
-        // Owner usa endpoint especial /api/tenants/owner
-        if (!editingEmployee.id || editingEmployee.id <= 0) {
+        // Si es el owner, usar endpoint especial /api/tenants/owner
+        if ((editingEmployee as any).isOwner === true) {
           if (!isOwner || !employeeIdFromToken) {
             console.error("executeSubmit: No se puede editar el owner sin employeeId del token");
             alert("Error: No se pudo identificar al owner.");
@@ -174,20 +239,23 @@ const EmployeesPage = () => {
           if (updatedOwner.firstName) tenant.ownerFirstName = updatedOwner.firstName;
           if (updatedOwner.lastName) tenant.ownerLastName = updatedOwner.lastName;
           localStorage.setItem("tenant", JSON.stringify(tenant));
-          // Actualizar datos locales del owner directamente (no rely on refresh)
-          if (editingEmployee && (!editingEmployee.id || editingEmployee.id <= 0)) {
-            const updatedLocalEmp = {
-              ...editingEmployee,
-              username: updatedOwner.username || editingEmployee.username,
-              firstName: updatedOwner.firstName || editingEmployee.firstName,
-              lastName: updatedOwner.lastName || editingEmployee.lastName,
-            };
-            // Update via useEmployees state
-            setEditingEmployee(updatedLocalEmp);
-          }
           // Refrescar lista de empleados
           await refresh();
-        } else {
+        } else if (editingEmployee.id && editingEmployee.id !== "owner") {
+          // Verificar que el ID sea válido (número > 0 o string ObjectId válida)
+          const idStr = editingEmployee.id as string;
+          const idNum = parseInt(idStr, 10);
+          const isValidObjectId = /^[a-fA-F0-9]{24}$/.test(idStr);
+          const isValidNumber = !Number.isNaN(idNum) && idNum > 0;
+          
+          if (!isValidObjectId && !isValidNumber) {
+            alert("Error: No se puede identificar el empleado a editar.");
+            closeForm();
+            return;
+          }
+          // Empleado normal: usar /api/employees/{id}
+          // Enviar payload completo, el backend maneja el hashing de password
+          const payload: Record<string, unknown> = { ...values };
           await updateEmployeeById(editingEmployee.id, payload as EmployeeUpdate);
         }
       } else {
@@ -224,9 +292,50 @@ const EmployeesPage = () => {
     } catch {
       alert("Error al verificar contraseña");
     }
-  };
+};
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number | string) => {
+    if (isDemo) {
+      alert("Las cuentas demo tienen acceso restringido.");
+      return;
+    }
+    
+    // Encontrar el empleado a eliminar
+    const employeeToDelete = employees.find(e => {
+      const empId = e.id as number | string;
+      return String(empId) === String(id) || empId === id;
+    });
+    
+    if (!employeeToDelete) {
+      alert("Empleado no encontrado.");
+      return;
+    }
+    
+    const isTargetOwner = (employeeToDelete as any).isOwner === true;
+    const isTargetAdmin = employeeToDelete.role === "ADMIN" && !isTargetOwner;
+    const isTargetRecepcionista = employeeToDelete.role === "RECEPCIONISTA";
+    const isTargetSelf = employeeIdFromToken && String(employeeIdFromToken) === String(id);
+    
+    // Validaciones de permisos:
+    // 1. Nadie puede eliminarse a sí mismo
+    if (isTargetSelf) {
+      alert("No puedes eliminarte a ti mismo.");
+      return;
+    }
+    
+    // 2. Nadie puede eliminar al owner
+    if (isTargetOwner) {
+      alert("No puedes eliminar al owner.");
+      return;
+    }
+    
+    // 3. Admin solo puede eliminar recepcionistas (NO admins, NO owner, NO sí mismo)
+    // 4. Owner puede eliminar admins y recepcionistas (ya se validó que no es owner ni self)
+    if (user?.role === "ADMIN" && !isTargetRecepcionista) {
+      alert("No tienes permisos para eliminar a este empleado.");
+      return;
+    }
+    
     if (confirm("Deseas eliminar este empleado?")) {
       removeEmployee(id);
     }
@@ -243,24 +352,38 @@ const EmployeesPage = () => {
         </div>
         <div className="employees-actions">
           <EmployeeSearch value={search} onChange={setSearch} />
-          {realCount >= 1 && !isPremium() ? (
+          {isDemo ? (
+            <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
+              <Lock size={16} />
+              <p>Agregar empleado</p>
+              <span className="pro-badge">DEMO</span>
+            </div>
+          ) : !isPremium() ? (
             <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
               <Lock size={16} />
               <p>Agregar empleado</p>
               <span className="pro-badge">BASIC</span>
             </div>
-          ) : realCount >= 2 && isPremium() ? (
-            <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
-              <Lock size={16} />
-              <p>Límite alcanzado</p>
-              <span className="pro-badge">PRO</span>
-            </div>
-          ) : (
-            <button className="employee-add-btn" onClick={openNewForm}>
-              <Plus size={18} />
-              Agregar empleado
-            </button>
-          )}
+          ) : (() => {
+            const admins = employees.filter(e => e.role === "ADMIN" || (e as any).isOwner);
+            const recepcionistas = employees.filter(e => e.role === "RECEPCIONISTA");
+            const atLimit = admins.length >= 3 && recepcionistas.length >= 3;
+            if (atLimit) {
+              return (
+                <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
+                  <Lock size={16} />
+                  <p>Límite alcanzado</p>
+                  <span className="pro-badge">PREMIUM</span>
+                </div>
+              );
+            }
+            return (
+              <button className="employee-add-btn" onClick={openNewForm}>
+                <Plus size={18} />
+                Agregar empleado
+              </button>
+            );
+          })()}
         </div>
       </section>
 
@@ -269,9 +392,13 @@ const EmployeesPage = () => {
           <EmployeeTable
             employees={employees}
             onSelect={(id) => {
-              if (id <= 0) {
+              const idStr = String(id);
+              
+              // Solo "owner" string va al perfil del owner
+              if (idStr === "owner") {
                 navigate("/employees/owner");
               } else {
+                // ObjectId o número → perfil del empleado
                 navigate(`/employees/${id}`);
               }
             }}
