@@ -16,6 +16,7 @@ import type { ReactNode } from "react";
 import type { AuthUser } from "../types/user.types";
 import { authReducer } from "../hooks/authHook";
 import { AuthContext } from "./AuthContext";
+import { clearAuthStorage } from "../services/api";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -50,6 +51,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isInitialized, setIsInitialized] = useState(false);
 
   /**
+   * Limpia datos obsoletos de localStorage de versiones anteriores
+   */
+  const cleanupOldData = () => {
+    const oldKeys = [
+      "old_users", "old_auth", "old_token",
+      "gym_users", "gym_auth", "gym_token",
+      "products", "clients", "sales",
+      "financial_reports", "employees",
+    ];
+    oldKeys.forEach((key) => localStorage.removeItem(key));
+  };
+
+  /**
    * Efecto que se ejecuta al montar el componente.
    * Restaura el usuario desde localStorage si existe una sesión previa.
    * 
@@ -57,6 +71,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    * @description Restaura la sesión del usuario desde localStorage al iniciar la aplicación
    */
   useEffect(() => {
+    // Limpiar datos obsoletos
+    cleanupOldData();
+
     try {
       // Intentar recuperar el usuario guardado en localStorage
       const storeUser = localStorage.getItem("user");
@@ -97,8 +114,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    * @returns {void}
    */
   const logout = () => {
-    // Eliminar el usuario de localStorage
-    localStorage.removeItem("user");
+    // Limpiar TODOS los datos de autenticación
+    clearAuthStorage();
     // Reiniciar el estado global
     dispatch({ type: "LOGOUT" });
   };

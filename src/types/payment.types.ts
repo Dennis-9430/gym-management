@@ -1,14 +1,38 @@
 /* Tipos para servicios y pagos */
+
+// Tipos de servicio
+export type ServiceType = "daily" | "membership" | "special";
+
+// Unidades de duración
+export type DurationUnit = "days" | "weeks" | "months";
+
+// Método de pago
 export type PaymentMethod = "CASH" | "TRANSFER";
 
+// Servicio completo (viene del backend)
 export interface Service {
-  id: number;
+  id: string;
+  tenantId?: string;
+  name: string;
+  description?: string;
+  price: number;
+  duration: number;
+  durationUnit: DurationUnit;
+  type: ServiceType;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Servicio simple (para selectores, dropdowns)
+export interface ServiceSimple {
+  id: string;
   name: string;
   price: number;
+  duration?: number;
+  durationUnit?: DurationUnit;
+  type?: ServiceType;
 }
-export const services: Service[] = [
-  { id: 1, name: "Pago Diario Gym", price: 2 },
-  { id: 2, name: "Pago Caminadora", price: 1.5 },
-  { id: 3, name: "Mensualidad", price: 25 },
-  { id: 4, name: "Quincenal", price: 15 },
-];
+
+// Servicios default (fallback si falla API) - NO USAR, ahora el backend los crea
+export const services: Service[] = [];

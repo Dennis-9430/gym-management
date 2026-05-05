@@ -3,18 +3,21 @@ export type CatalogSource = "PRODUCT" | "MEMBERSHIP";
 
 export interface CatalogItem {
   key: string;
-  id: number;
+  id: string | number;
   name: string;
   description: string;
   category: string;
   unitPrice: number;
   stock: number | null;
   source: CatalogSource;
+  serviceId?: string;
+  duration?: number;
+  durationUnit?: string;
 }
 
 export interface CartItem {
   key: string;
-  id: number;
+  id: string | number;
   name: string;
   description: string;
   category: string;
@@ -24,8 +27,8 @@ export interface CartItem {
   quantity: number;
   subtotal: number;
   source: CatalogSource;
-  productId?: number | null;
-  serviceId?: number | null;
+  productId?: string | number | null;
+  serviceId?: string | number | null;
 }
 
 export interface CartTotals {

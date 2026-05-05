@@ -25,7 +25,7 @@ const STORAGE_KEY = "gym-management.clients";
 // Relacionado con: backend/app/routers/clients.py (list_clients)
 export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
   try {
-    const response = await fetch(`${API_BASE}?active_only=false`, { headers: getHeaders() });
+    const response = await fetch(API_BASE, { headers: getHeaders() });
     if (!response.ok) {
       throw new Error("Error al obtener clientes");
     }

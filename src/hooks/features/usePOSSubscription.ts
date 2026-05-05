@@ -1,19 +1,17 @@
 /**
  * usePOSSubscription.ts - Hook para Suscripciones
  * 
- * Gestiona suscripciones de membres韆s: cliente, servicio, descuento, pago.
- * @author Sistema de Gesti髇 Gimnasio
- * @version 1.0.0
+ * Gestiona suscripciones de membres铆as: cliente, servicio, descuento, pago.
+ * @author Sistema de Gesti贸n Gimnasio
+ * @version 2.0.0
  */
 
 import { useState, useMemo, useCallback } from "react";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
 import type { PaymentMethod } from "../../types/sales.types";
-import { updateClient } from "../../services/clients.service";
+import { assignMembership } from "../../services/services.service";
 import { round2, clampPercent } from "../../utils/format/number";
-import { parseDateInput, addDays } from "../../utils/date/date";
-import { getMembershipDays } from "../../utils/membership/days";
 
 // Interfaz de retorno
 export interface UsePOSSubscriptionReturn {
@@ -186,14 +184,14 @@ export const usePOSSubscription = (
     );
   }, [subscriptionTotal]);
 
-  // Handler: registrar suscripci髇 activa
-const handleRegisterSubscription = useCallback(() => {
+  // Handler: registrar suscripci贸n activa
+  const handleRegisterSubscription = useCallback(async () => {
     if (!subscriptionClient) {
       alert("Selecciona un cliente.");
       return;
     }
     if (!subscriptionService) {
-      alert("Selecciona una suscripcion.");
+      alert("Selecciona una suscripci贸n.");
       return;
     }
     if (subscriptionPaymentMethod === "MIXED") {
@@ -206,19 +204,13 @@ const handleRegisterSubscription = useCallback(() => {
       return;
     }
 
-    const startDate = parseDateInput(subscriptionStartDate);
-    const days = getMembershipDays(subscriptionService.name);
-    const endDate = addDays(startDate, days);
-
-    updateClient(subscriptionClient.id, {
-      ...subscriptionClient,
-      memberShip: subscriptionService.name,
-      memberShipStatus: "ACTIVE",
-      memberShipStartDate: startDate,
-      memberShipEndDate: endDate,
-    });
-    reloadClients();
-    handleCloseSubscriptionModal();
+    try {
+      await assignMembership(subscriptionClient.id, subscriptionService.id, subscriptionStartDate);
+      reloadClients();
+      handleCloseSubscriptionModal();
+    } catch (error) {
+      alert("Error al registrar la membres铆a. Intenta de nuevo.");
+    }
   }, [
     subscriptionClient,
     subscriptionService,
@@ -230,29 +222,24 @@ const handleRegisterSubscription = useCallback(() => {
     handleCloseSubscriptionModal,
   ]);
 
-  // Handler: registrar suscripci髇 pendiente
-const handlePendingSubscription = useCallback(() => {
+  // Handler: registrar suscripci贸n pendiente
+  const handlePendingSubscription = useCallback(async () => {
     if (!subscriptionClient) {
       alert("Selecciona un cliente.");
       return;
     }
     if (!subscriptionService) {
-      alert("Selecciona una suscripcion.");
+      alert("Selecciona una suscripci贸n.");
       return;
     }
-    const startDate = parseDateInput(subscriptionStartDate);
-    const days = getMembershipDays(subscriptionService.name);
-    const endDate = addDays(startDate, days);
 
-    updateClient(subscriptionClient.id, {
-      ...subscriptionClient,
-      memberShip: subscriptionService.name,
-      memberShipStatus: "NONE",
-      memberShipStartDate: startDate,
-      memberShipEndDate: endDate,
-    });
-    reloadClients();
-    handleCloseSubscriptionModal();
+    try {
+      await assignMembership(subscriptionClient.id, subscriptionService.id, subscriptionStartDate);
+      reloadClients();
+      handleCloseSubscriptionModal();
+    } catch (error) {
+      alert("Error al registrar la membres铆a pendiente. Intenta de nuevo.");
+    }
   }, [
     subscriptionClient,
     subscriptionService,
@@ -262,13 +249,10 @@ const handlePendingSubscription = useCallback(() => {
   ]);
 
   const handleDeletePending = useCallback((client: ClientForm) => {
-    if (!confirm("Deseas eliminar esta suscripcion pendiente?")) {
+    if (!confirm("驴Deseas eliminar esta suscripci贸n pendiente?")) {
       return;
     }
-    updateClient(client.id, {
-      ...client,
-      memberShipStatus: "EXPIRED",
-    });
+    // TODO: Implementar endpoint para marcar como cancelada
     reloadClients();
   }, [reloadClients]);
 

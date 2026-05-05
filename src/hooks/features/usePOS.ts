@@ -9,7 +9,7 @@
 
 import { useMemo, useCallback, useEffect, useRef, useState } from "react";
 import { getProducts } from "../../services/products.service";
-import { services } from "../../types/payment.types";
+import { getMembershipServices } from "../../services/services.service";
 import type { CatalogItem } from "../../types/pos.types";
 import { PRODUCT_CATEGORY_LABELS } from "../../types/product.types";
 import type { PaymentMethod } from "../../types/sales.types";
@@ -22,8 +22,8 @@ import { usePOSSales } from "./usePOSSales";
 import { usePOSSubscription } from "./usePOSSubscription";
 import { matchesQuery } from "../../utils/string/normalize";
 
-// Construye el cat�logo unificado de productos y membres�as
-const buildCatalog = (products: Product[]): CatalogItem[] => {
+// Construye el catálogo unificado de productos y membresías
+const buildCatalog = (products: Product[], memberships: Service[]): CatalogItem[] => {
   const productItems: CatalogItem[] = products
     .filter((product) => product.category !== "SERVICIOS_GYM")
     .map((product) => ({
@@ -37,15 +37,19 @@ const buildCatalog = (products: Product[]): CatalogItem[] => {
       source: "PRODUCT",
     }));
 
-  const membershipItems: CatalogItem[] = services.map((service) => ({
+  // Membresías desde API (precio > $5)
+  const membershipItems: CatalogItem[] = memberships.map((service) => ({
     key: `membership-${service.id}`,
     id: service.id,
     name: service.name,
-    description: "Servicio del gimnasio",
+    description: service.description || "Membresía del gimnasio",
     category: PRODUCT_CATEGORY_LABELS.SERVICIOS_GYM,
     unitPrice: service.price,
     stock: null,
     source: "MEMBERSHIP",
+    serviceId: service.id,
+    duration: service.duration,
+    durationUnit: service.durationUnit,
   }));
 
   return [...productItems, ...membershipItems];
@@ -160,10 +164,12 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
   const subscription = usePOSSubscription(clients.clients, clients.reloadClients, initialSubscriptionClient);
   const hasOpenedModal = useRef(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [memberships, setMemberships] = useState<Service[]>([]);
 
-  // Carga productos desde API
+  // Carga productos y membresías desde API
   useEffect(() => {
     getProducts().then(setProducts).catch(() => {});
+    getMembershipServices().then(setMemberships).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -173,7 +179,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     }
   }, [initialSubscriptionClient, subscription]);
 
-  const catalog = useMemo(() => buildCatalog(products), [products]);
+  const catalog = useMemo(() => buildCatalog(products, memberships), [products, memberships]);
 
   const filteredCatalog = useMemo(() => {
     if (!clients.search.trim()) {
