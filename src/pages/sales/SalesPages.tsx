@@ -9,8 +9,7 @@ import SubscriptionModal from "../../components/sales/SubscriptionModal";
 import MembershipModal from "../../components/sales/MembershipModal";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
-import { services as defaultServices } from "../../types/payment.types";
-import { getServices } from "../../services/services.service";
+import { getServices, getMembershipServices, getDailyServices } from "../../services/services.service";
 import "../../styles/pos.css";
 
 const SalesPages = () => {
@@ -27,32 +26,18 @@ const SalesPages = () => {
   const [membershipServices, setMembershipServices] = useState<Service[]>([]);
   const [servicesLoaded, setServicesLoaded] = useState(false);
 
-  // Carga servicios desde MongoDB al cargar la pagina
+  // Carga TODOS los servicios para el modal de Membresías
   useEffect(() => {
     if (!servicesLoaded) {
-      getServices()
-        .then((data) => {
-          setMembershipServices(data.length > 0 ? data : defaultServices);
-        })
-        .catch(() => {
-          setMembershipServices(defaultServices);
-        })
-        .finally(() => setServicesLoaded(true));
+      loadMembershipServices();
     }
   }, [servicesLoaded]);
 
-  const handleSaveMembership = (service: Service) => {
-    setMembershipServices((prev) => {
-      const existing = prev.find((s) => s.id === service.id);
-      if (existing) {
-        return prev.map((s) => (s.id === service.id ? service : s));
-      }
-      return [...prev, service];
-    });
-  };
-
-  const handleDeleteMembership = (id: number) => {
-    setMembershipServices((prev) => prev.filter((s) => s.id !== id));
+  const loadMembershipServices = () => {
+    getServices()
+      .then(setMembershipServices)
+      .catch(() => setMembershipServices([]))
+      .finally(() => setServicesLoaded(true));
   };
 
 const {
@@ -226,8 +211,7 @@ const {
           isOpen={membershipModalOpen}
           onClose={() => setMembershipModalOpen(false)}
           services={membershipServices}
-          onSave={handleSaveMembership}
-          onDelete={handleDeleteMembership}
+          onRefresh={loadMembershipServices}
         />
       )}
     </main>

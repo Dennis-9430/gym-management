@@ -1,8 +1,10 @@
 /* Servicio de API con manejo de errores y protección por plan */
 
 // URL del backend (usa .env o fallback)
-const API_BASE_URL =
+export const getApiBaseUrl = () =>
   import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+const API_BASE_URL = getApiBaseUrl();
 
 /* Construir URL correctamente */
 const buildUrl = (endpoint: string) => {
@@ -17,6 +19,18 @@ const getHeaders = () => {
 /* Obtener token de autenticación */
 export const getAuthToken = (): string | null => {
   return localStorage.getItem("accessToken");
+};
+
+/** Limpia TODOS los datos de autenticación y sesión */
+export const clearAuthStorage = () => {
+  const keysToRemove = [
+    "accessToken",
+    "tenantToken",
+    "tenant",
+    "user",
+    "isDemo",
+  ];
+  keysToRemove.forEach((key) => localStorage.removeItem(key));
 };
 
 /* Headers con token de autenticación */
@@ -58,9 +72,7 @@ const handleResponse = async (response: Response) => {
 
     if (response.status === 401 && !window.location.pathname.includes("/sales/invoices")) {
       // Solo redirigir si NO estamos en la página de facturas (donde tenemos datos demo)
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("tenantToken");
-      localStorage.removeItem("tenant");
+      clearAuthStorage();
       window.location.href = "/";
       throw new Error("Sesión expirada");
     }

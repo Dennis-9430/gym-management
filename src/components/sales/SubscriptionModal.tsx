@@ -5,6 +5,7 @@ import {
   UserRound,
   X,
 } from "lucide-react";
+import { useEffect } from "react";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
 import type { PaymentMethod } from "../../types/sales.types";
@@ -91,13 +92,23 @@ const SubscriptionModal = ({
 }: SubscriptionModalProps) => {
   const servicesList = services || defaultServices;
   
+  // Cerrar con tecla Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+  
   if (!isOpen) return null;
 
   return (
-    <div className="pos-modal-backdrop" onClick={onClose}>
+    <div className="pos-modal-backdrop">
       <div
         className="pos-modal pos-modal-sm"
-        onClick={(event) => event.stopPropagation()}
       >
         <div className="pos-modal-header">
           <div>

@@ -1,54 +1,79 @@
 /* Servicio para gestionar servicios/membresías desde MongoDB */
 import type { Service } from "../types/payment.types";
-import { services as defaultServices } from "../types/payment.types";
-import { getAuthToken } from "./api";
+import { getAuthHeaders, getApiBaseUrl } from "./api";
 
-// Configuración de API - usa variable de entorno o fallback
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
 const API_BASE = `${getApiBaseUrl()}/api/services`;
-
-const getHeaders = (): Record<string, string> => {
-  const token = getAuthToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return headers;
-};
 
 interface ServiceResponse {
   services: Service[];
   total: number;
 }
 
-/* Obtiene servicios desde MongoDB */
+/* Obtiene TODOS los servicios desde MongoDB */
 export const getServices = async (): Promise<Service[]> => {
   try {
-    const response = await fetch(`${API_BASE}?active_only=true`, { headers: getHeaders() });
+    const response = await fetch(`${API_BASE}?active_only=false`, { headers: getAuthHeaders() });
     if (!response.ok) {
-      throw new Error("Error al obtener servicios");
+      const errorData = await response.json().catch(() => ({}));
+      throw { response: { data: errorData } };
     }
     const data: ServiceResponse = await response.json();
     return data.services;
-  } catch (error) {
-    return defaultServices;
+  } catch (error: any) {
+    console.error("Error getServices:", error);
+    throw error;
+  }
+};
+
+/* Obtiene servicios para pago diario (precio <= $7) */
+export const getDailyServices = async (): Promise<Service[]> => {
+  try {
+    const response = await fetch(`${API_BASE}?max_price=7&active_only=true`, { headers: getAuthHeaders() });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw { response: { data: errorData } };
+    }
+    const data: ServiceResponse = await response.json();
+    return data.services;
+  } catch (error: any) {
+    console.error("Error getDailyServices:", error);
+    throw error;
+  }
+};
+
+/* Obtiene membresías (precio > $5) */
+export const getMembershipServices = async (): Promise<Service[]> => {
+  try {
+    const response = await fetch(`${API_BASE}?min_price=5.01&active_only=true`, { headers: getAuthHeaders() });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw { response: { data: errorData } };
+    }
+    const data: ServiceResponse = await response.json();
+    return data.services;
+  } catch (error: any) {
+    console.error("Error getMembershipServices:", error);
+    throw error;
   }
 };
 
 /* Crea un nuevo servicio */
 export const createService = async (
-  service: Omit<Service, "id">
+  service: Omit<Service, "id" | "createdAt" | "updatedAt">
 ): Promise<Service | null> => {
   try {
     const response = await fetch(API_BASE, {
       method: "POST",
-      headers: getHeaders(),
+      headers: getAuthHeaders(),
       body: JSON.stringify(service),
     });
     if (!response.ok) {
-      throw new Error("Error al crear servicio");
+      const errorData = await response.json().catch(() => ({}));
+      throw { response: { data: errorData } };
     }
     return await response.json();
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
@@ -60,33 +85,54 @@ export const updateService = async (
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "PUT",
-      headers: getHeaders(),
+      headers: getAuthHeaders(),
       body: JSON.stringify(service),
     });
     if (!response.ok) {
-      throw new Error("Error al actualizar servicio");
+      const errorData = await response.json().catch(() => ({}));
+      throw { response: { data: errorData } };
     }
     return await response.json();
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
-/* Elimina un servicio */
+/* Elimina un servicio (soft delete) */
 export const deleteService = async (id: string): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "DELETE",
-      headers: getHeaders(),
+      headers: getAuthHeaders(),
     });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw { response: { data: errorData } };
+    }
     return response.ok;
   } catch (error) {
     return false;
   }
 };
 
-/* Obtiene servicios filtrados por precio (para registro diario) */
-export const getDailyServices = async (): Promise<Service[]> => {
-  const services = await getServices();
-  return services.filter((s) => s.price <= 7);
+/* Asigna membresía a un cliente */
+export const assignMembership = async (
+  clientId: number,
+  serviceId: string,
+  startDate?: string
+): Promise<any> => {
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/api/clients/${clientId}/assign-membership`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ serviceId, startDate }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw { response: { data: errorData } };
+    }
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
 };

@@ -7,6 +7,7 @@ import {
   X,
   FileText,
 } from "lucide-react";
+import { useEffect } from "react";
 import CartTable from "../pos/CartTable";
 import type { ClientForm } from "../../types/client.types";
 import type { CatalogItem, CartItem, CartTotals } from "../../types/pos.types";
@@ -101,11 +102,22 @@ const SaleModal = ({
   invoiceEmail,
   onInvoiceEmailChange,
 }: SaleModalProps) => {
+  // Cerrar con tecla Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="pos-modal-backdrop" onClick={onClose}>
-      <div className="pos-modal" onClick={(event) => event.stopPropagation()}>
+    <div className="pos-modal-backdrop">
+      <div className="pos-modal">
         <div className="pos-modal-header">
           <div>
             <h3>Agregar venta</h3>

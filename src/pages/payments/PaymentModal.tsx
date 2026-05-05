@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import type { PaymentMethod, Service } from "../../types/payment.types";
-import { services as defaultServices } from "../../types/payment.types";
-import { getServices } from "../../services/services.service";
+import { getDailyServices } from "../../services/services.service";
 import "../../styles/paymentModal.css";
 
 /* Modal para registrar pagos diarios */
@@ -14,18 +13,18 @@ const PaymentModal = ({ onClose }: Props) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [showServices, setShowServices] = useState(false);
   const [showMethods, setShowMethods] = useState(false);
-  const [servicesList, setServicesList] = useState<Service[]>(defaultServices);
+  const [servicesList, setServicesList] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Carga servicios desde MongoDB al abrir el modal
+  // Carga servicios diarios ($1-$5) desde MongoDB al abrir el modal
   useEffect(() => {
-    getServices()
+    getDailyServices()
       .then((data) => {
-        if (data.length > 0) {
-          setServicesList(data);
-        }
+        setServicesList(data);
+        setLoading(false);
       })
       .catch(() => {
-        // Mantiene defaultServices en caso de error
+        setLoading(false);
       });
   }, []);
 
@@ -62,8 +61,19 @@ const PaymentModal = ({ onClose }: Props) => {
     e.stopPropagation();
   };
 
+  // Cerrar con tecla Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop">
       <div className="modal-content" onClick={stopPropagation}>
         <div className="modal-header">
           <h2>Registrar Pago Diario</h2>
@@ -82,24 +92,33 @@ const PaymentModal = ({ onClose }: Props) => {
                 type="button"
                 className="select-trigger"
                 onClick={toggleServices}
+                disabled={loading}
               >
-                {selectedService
-                  ? `${selectedService.name} - $${selectedService.price}`
-                  : "Selecciona un servicio"}
+                {loading
+                  ? "Cargando..."
+                  : selectedService
+                    ? `${selectedService.name} - $${Number(selectedService.price).toFixed(2)}`
+                    : "Selecciona un servicio"}
               </button>
 
               {showServices && (
                 <ul className="select-dropdown">
-                  {servicesList
-                    .filter((service) => service.price <= 7)
-                    .map((service) => (
-                      <li
-                        key={service.id}
-                        onClick={() => handleSelectService(service)}
-                      >
-                        {service.name} - ${service.price}
-                      </li>
-                    ))}
+                  {servicesList.length === 0 && !loading && (
+                    <li className="no-results">No hay servicios disponibles</li>
+                  )}
+                  {servicesList.map((service) => (
+                    <li
+                      key={service.id}
+                      onClick={() => handleSelectService(service)}
+                    >
+                      {service.name} - ${Number(service.price).toFixed(2)}
+                      {service.duration && (
+                        <span className="service-duration">
+                          ({service.duration} {service.durationUnit})
+                        </span>
+                      )}
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>
@@ -138,7 +157,7 @@ const PaymentModal = ({ onClose }: Props) => {
             <button
               type="button"
               onClick={handleConfirm}
-              disabled={!selectedService}
+              disabled={!selectedService || !paymentMethod}
               className="btn-primary"
             >
               Confirmar Pago

@@ -1,12 +1,40 @@
 import { useState, useEffect } from "react";
 import { X, Plus, Pencil, Trash2, Save } from "lucide-react";
-import type { Service } from "../../types/payment.types";
+import type {
+  Service,
+  DurationUnit,
+  ServiceType,
+} from "../../types/payment.types";
+import {
+  createService,
+  updateService,
+  deleteService,
+} from "../../services/services.service";
+import { getAuthToken } from "../../services/api";
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+  tenantId: string;
+  sub: string;
+  exp: number;
+}
+
+const getTenantId = (): string => {
+  const token = getAuthToken();
+  if (!token) return "";
+  try {
+    const payload = jwtDecode<JwtPayload>(token);
+    return payload.tenantId || "";
+  } catch {
+    return "";
+  }
+};
 
 /* Datos del formulario de membresía */
 interface MembershipFormData {
-  id?: number;
+  id?: string | number;
   name: string;
-  price: number;
+  price: string; // String para manejar decimales durante escritura
   days: number;
   description: string;
   isActive: boolean;
@@ -16,39 +44,58 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   services: Service[];
-  onSave: (service: Service) => void;
-  onDelete: (id: number) => void;
+  onRefresh: () => void;
 }
 
-const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props) => {
+const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | number | null>(null);
   const [formData, setFormData] = useState<MembershipFormData>({
     name: "",
-    price: 0,
+    price: "",
     days: 30,
     description: "",
     isActive: true,
   });
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!isOpen) {
-      setShowForm(false);
-      setEditingId(null);
-      setFormData({ name: "", price: 0, days: 30, description: "", isActive: true });
-      setError("");
-    }
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({
+      name: "",
+      price: "",
+      days: 30,
+      description: "",
+      isActive: true,
+    });
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
   const handleEdit = (service: Service) => {
-    const days = getDaysFromService(service);
+    const days = service.duration || getDaysFromService(service);
     setFormData({
       id: service.id,
       name: service.name,
-      price: service.price,
+      price: String(service.price),
       days,
-      description: "",
+      description: service.description || "",
       isActive: true,
     });
     setEditingId(service.id);
@@ -64,12 +111,18 @@ const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props)
   };
 
   const handleNew = () => {
-    setFormData({ name: "", price: 0, days: 30, description: "", isActive: true });
+    setFormData({
+      name: "",
+      price: "",
+      days: 30,
+      description: "",
+      isActive: true,
+    });
     setEditingId(null);
     setShowForm(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -78,7 +131,8 @@ const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props)
       return;
     }
 
-    if (formData.price <= 0) {
+    const numericPrice = parseFloat(formData.price);
+    if (!formData.price || isNaN(numericPrice) || numericPrice <= 0) {
       setError("El precio debe ser mayor a 0");
       return;
     }
@@ -88,34 +142,53 @@ const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props)
       return;
     }
 
-    const service: Service = {
-      id: editingId || Date.now(),
-      name: formData.name.trim(),
-      price: Number(formData.price),
-    };
+    setSaving(true);
+    try {
+      const serviceData = {
+        tenantId: getTenantId(),
+        name: formData.name.trim(),
+        description: formData.description,
+        price: numericPrice,
+        duration: formData.days,
+        durationUnit: "days" as DurationUnit,
+        type: "membership" as ServiceType,
+        isActive: true,
+      };
 
-    onSave(service);
-    setShowForm(false);
-    setEditingId(null);
-  };
+      if (editingId) {
+        await updateService(editingId as string, serviceData);
+      } else {
+        await createService(serviceData);
+      }
 
-  const handleDelete = (id: number) => {
-    if (confirm("¿Estás seguro de eliminar esta membresía?")) {
-      onDelete(id);
+      onRefresh();
+      setShowForm(false);
+      setEditingId(null);
+    } catch (err: any) {
+      const message = err?.response?.data?.detail || err?.message || "Error al guardar. Intenta de nuevo.";
+      setError(message);
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleCancel = () => {
-    setShowForm(false);
-    setEditingId(null);
-    setFormData({ name: "", price: 0, days: 30, description: "", isActive: true });
+  const handleDelete = async (id: string | number) => {
+    if (!confirm("¿Estás seguro de eliminar esta membresía?")) {
+      return;
+    }
+    try {
+      await deleteService(id as string);
+      onRefresh();
+    } catch (err) {
+      alert("Error al eliminar la membresía.");
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="membership-modal-backdrop" onClick={onClose}>
-      <div className="membership-modal" onClick={(e) => e.stopPropagation()}>
+    <div className="membership-modal-backdrop">
+      <div className="membership-modal">
         <div className="membership-modal__header">
           <div>
             <h3>Membresías</h3>
@@ -149,8 +222,10 @@ const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props)
                   {services.map((service) => (
                     <tr key={service.id}>
                       <td>{service.name}</td>
-                      <td>{getDaysFromService(service)} días</td>
-                      <td>${service.price.toFixed(2)}</td>
+                      <td>
+                        {service.duration || getDaysFromService(service)} días
+                      </td>
+                      <td>${Number(service.price).toFixed(2)}</td>
                       <td className="membership-modal__actions-cell">
                         <button
                           className="membership-modal__btn-edit"
@@ -180,7 +255,9 @@ const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props)
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="Ej: Mensual, Quincenal"
               />
             </div>
@@ -189,21 +266,60 @@ const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props)
               <div className="membership-form__group">
                 <label>Duración (días)</label>
                 <input
-                  type="number"
-                  min="1"
-                  value={formData.days}
-                  onChange={(e) => setFormData({ ...formData, days: Number(e.target.value) })}
+                  type="text"
+                  inputMode="numeric"
+                  value={formData.days || ""}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    setFormData({
+                      ...formData,
+                      days: val ? parseInt(val, 10) : 0,
+                    });
+                  }}
                 />
               </div>
 
               <div className="membership-form__group">
                 <label>Precio ($)</label>
                 <input
-                  type="number"
-                  min="0"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                  onChange={(e) => {
+                    let val = e.target.value;
+
+                    // Permitir solo números y punto/coma
+                    val = val.replace(/[^0-9.,]/g, "");
+
+                    // Convertir coma a punto
+                    val = val.replace(",", ".");
+
+                    // Solo un punto decimal
+                    const dotIndex = val.indexOf(".");
+                    if (dotIndex !== -1) {
+                      val =
+                        val.substring(0, dotIndex + 1) +
+                        val.substring(dotIndex + 1).replace(/[.,]/g, "");
+                    }
+
+                    // Máximo 2 decimales
+                    if (dotIndex !== -1) {
+                      const intPart = val.substring(0, dotIndex);
+                      const decPart = val.substring(dotIndex + 1, dotIndex + 3);
+                      val = `${intPart}.${decPart}`;
+                    }
+
+                    setFormData({ ...formData, price: val });
+                  }}
+                  onBlur={() => {
+                    if (formData.price) {
+                      const num = parseFloat(formData.price);
+                      setFormData({
+                        ...formData,
+                        price: isNaN(num) ? "" : num.toFixed(2),
+                      });
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -211,14 +327,18 @@ const MembershipModal = ({ isOpen, onClose, services, onSave, onDelete }: Props)
             {error && <p className="membership-form__error">{error}</p>}
 
             <div className="membership-form__actions">
-              <button type="submit" className="membership-form__save">
+              <button
+                type="submit"
+                className="membership-form__save"
+                disabled={saving}
+              >
                 <Save size={16} />
-                {editingId ? "Actualizar" : "Guardar"}
+                {saving ? "Guardando..." : editingId ? "Actualizar" : "Guardar"}
               </button>
               <button
                 type="button"
                 className="membership-form__cancel"
-                onClick={handleCancel}
+                onClick={onClose}
               >
                 Cancelar
               </button>
