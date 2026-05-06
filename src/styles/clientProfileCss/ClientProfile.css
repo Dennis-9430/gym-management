@@ -435,6 +435,76 @@
   }
 }
 
+/* Badge styles */
+.badge {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.badge-success {
+  background: var(--color-success-light);
+  color: #166534;
+}
+
+.badge-danger {
+  background: var(--color-danger-light);
+  color: #991b1b;
+}
+
+.badge-default {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+}
+
+/* ClientStats membership styles */
+.client-stats__info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.membership-name {
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.membership-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.date-item svg {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.days-remaining {
+  color: #166534;
+  font-weight: var(--font-weight-medium);
+  padding: 8px 12px;
+  background: var(--color-success-light);
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.no-membership {
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
 /* EmployeePermissions */
 .employee-permissions__header {
   display: flex;

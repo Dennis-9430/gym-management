@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "./context/index.ts";
+import { ToastProvider } from "./context/ToastProvider.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/index.css";
 import App from "./App.tsx";
@@ -8,7 +9,9 @@ import App from "./App.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </AuthProvider>
   </StrictMode>,
 );

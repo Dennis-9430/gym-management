@@ -68,10 +68,11 @@ const ClientTable = ({
           </tr>
         </thead>
         <tbody>
-          {clients.map((client) => (
+          {clients.map((client, index) => (
             <ClientRow
               key={client.id}
               client={client}
+              index={index}
               showActions={showActions}
               canDelete={canDelete}
               onDelete={onDelete}

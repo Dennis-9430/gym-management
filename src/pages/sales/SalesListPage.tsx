@@ -203,23 +203,27 @@ const SalesListPage = () => {
               <th>Acciones</th>
             </tr>
           </thead>
-<tbody>
-              {filteredSales.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="pos-empty">
-                    No hay ventas para mostrar
-                  </td>
-                </tr>
-              ) : (
-                filteredSales.map((sale) => (
-                  <tr key={sale.id}>
+          <tbody>
+            {filteredSales.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="pos-empty">
+                  No hay ventas para mostrar
+                </td>
+              </tr>
+            ) : (
+              filteredSales.map((sale) => (
+                <tr key={sale.id}>
                   <td>{formatDate(sale.createdAt)}</td>
                   <td>
                     <div className="sale-client">
                       <strong>
-                        {sale.client.firstName} {sale.client.lastName}
+                        {sale.client.firstName || sale.client.lastName
+                          ? `${sale.client.firstName || ""} ${sale.client.lastName || ""}`.trim()
+                          : "Consumidor Final"}
                       </strong>
-                      <span>{sale.client.documentNumber}</span>
+                      {sale.client.documentNumber && (
+                        <span>{sale.client.documentNumber}</span>
+                      )}
                     </div>
                   </td>
                   <td>{getPaymentMethod(sale.payment.method)}</td>
@@ -269,15 +273,6 @@ const SalesListPage = () => {
             )}
           </tbody>
         </table>
-      </div>
-
-      <div className="pos-list-summary">
-        <span>
-          {filteredSales.length} venta(s) de {sales.length}
-        </span>
-        <span>
-          Total: ${filteredSales.reduce((sum, s) => sum + s.totals.total, 0).toFixed(2)}
-        </span>
       </div>
 
       <EditVoucherModal

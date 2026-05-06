@@ -1,8 +1,8 @@
 /**
- * usePOSClients.ts - Hook para Búsqueda de Clientes
+ * usePOSClients.ts - Hook para Bï¿½squeda de Clientes
  * 
- * Gestiona búsqueda y filtrado de clientes en el POS.
- * @author Sistema de Gestión Gimnasio
+ * Gestiona bï¿½squeda y filtrado de clientes en el POS.
+ * @author Sistema de Gestiï¿½n Gimnasio
  * @version 1.0.0
  */
 
@@ -29,7 +29,7 @@ export interface UsePOSClientsReturn {
   reloadClients: () => void;
 }
 
-// Hook de búsqueda de clientes
+// Hook de bï¿½squeda de clientes
 export const usePOSClients = (
   initialSubscriptionClient?: ClientForm,
   saleClientInput?: string,
@@ -41,15 +41,17 @@ export const usePOSClients = (
   const [subscriptionClient, setSubscriptionClient] = useState<ClientForm | null>(initialSubscriptionClient || null);
 
   // Carga clientes desde API
-const reloadClients = useCallback(async () => {
+  const reloadClients = useCallback(async () => {
     const loadedClients = await getClients();
     setClients(loadedClients);
     return loadedClients;
   }, []);
 
+  // Carga clientes una sola vez al montar
   useEffect(() => {
     reloadClients();
-  }, [reloadClients]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const pendingClients = useMemo(
     () => clients.filter((client) => client.memberShipStatus === "NONE"),

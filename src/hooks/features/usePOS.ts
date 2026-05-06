@@ -177,7 +177,7 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
       hasOpenedModal.current = true;
       subscription.setSubscriptionModalOpen(true);
     }
-  }, [initialSubscriptionClient, subscription]);
+  }, [initialSubscriptionClient, subscription.setSubscriptionModalOpen]);
 
   const catalog = useMemo(() => buildCatalog(products, memberships), [products, memberships]);
 

@@ -7,7 +7,7 @@ export type ServiceType = "daily" | "membership" | "special";
 export type DurationUnit = "days" | "weeks" | "months";
 
 // Método de pago
-export type PaymentMethod = "CASH" | "TRANSFER";
+export type PaymentMethod = "CASH" | "TRANSFER" | "MIXED";
 
 // Servicio completo (viene del backend)
 export interface Service {

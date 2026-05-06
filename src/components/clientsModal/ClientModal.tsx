@@ -4,7 +4,7 @@ import useClientForm from "../../hooks/useClientForm";
 import PersonalDataFields from "../formClients/PersonalDataFields";
 import ContactFields from "../formClients/ContactFields";
 import EmergencyFields from "../formClients/EmergencyFields";
-import { createClient, updateClient } from "../../services/clients.service";
+import { createClientAPI, updateClientAPI } from "../../services/clients.service";
 import type { ClientForm } from "../../types/client.types";
 
 interface Props {
@@ -31,6 +31,7 @@ const ClientModal = ({
 
   useEffect(() => {
     if (initialClient) {
+      updateField("documentType", (initialClient as any).documentType || "CEDULA");
       updateField("documentNumber", initialClient.documentNumber || "");
       updateField("firstName", initialClient.firstName || "");
       updateField("lastName", initialClient.lastName || "");
@@ -42,6 +43,16 @@ const ClientModal = ({
       updateField("notes", initialClient.notes || "");
     }
   }, [initialClient, updateField]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
 
   const validateRequiredFields = () => {
     const missing: string[] = [];
@@ -60,7 +71,7 @@ const ClientModal = ({
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateRequiredFields()) return;
@@ -72,8 +83,8 @@ const ClientModal = ({
 
     try {
       if (isEdit && initialClient) {
-        const updated = updateClient(initialClient.id, {
-          ...initialClient,
+        const updated = await updateClientAPI(initialClient.id, {
+          documentType: (form as any).documentType || "CEDULA",
           documentNumber: form.documentNumber,
           firstName: form.firstName,
           lastName: form.lastName,
@@ -84,14 +95,29 @@ const ClientModal = ({
           emergencyPhone: form.emergencyPhone,
           notes: form.notes,
         });
-        onSaved?.(updated);
+        if (updated) {
+          onSaved?.(updated);
+        }
       } else {
-        const created = createClient(form);
-        onSaved?.(created);
+        await createClientAPI({
+          documentType: (form as any).documentType || "CEDULA",
+          documentNumber: form.documentNumber,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          phone: form.phone,
+          email: form.email,
+          address: form.address,
+          emergencyContact: form.emergencyContact,
+          emergencyPhone: form.emergencyPhone,
+          notes: form.notes,
+        });
+        onSaved?.();
       }
       onClose();
-    } catch {
+    } catch (err) {
+      console.error("Error al guardar cliente:", err);
       alert("No se pudo guardar el cliente.");
+      onSaved?.();
     }
   };
 

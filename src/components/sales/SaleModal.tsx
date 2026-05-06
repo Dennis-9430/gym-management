@@ -8,6 +8,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useEffect } from "react";
+import { DecimalInput } from "../common/DecimalInput";
 import CartTable from "../pos/CartTable";
 import type { ClientForm } from "../../types/client.types";
 import type { CatalogItem, CartItem, CartTotals } from "../../types/pos.types";
@@ -224,35 +225,28 @@ const SaleModal = ({
               >
                 <option value="CASH">Efectivo</option>
                 <option value="TRANSFER">Transferencia</option>
-                <option value="DEPOSIT">Deposito/Tarjeta</option>
+                <option value="MIXED">Mixto (Efectivo + Transferencia)</option>
               </select>
             </div>
 
-            {paymentMethod === "DEPOSIT" ? (
+            {paymentMethod === "MIXED" && (
               <div className="pos-payment-grid">
                 <div className="pos-field">
                   <label>Efectivo</label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
+                  <DecimalInput
                     value={cashAmount}
-                    onChange={(e) => onCashChange(parseDecimal(e.target.value))}
+                    onChange={onCashChange}
+                    placeholder="0.00"
                   />
                 </div>
                 <div className="pos-field">
                   <label>Transferencia</label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
+                  <DecimalInput
                     value={transferAmount}
-                    onChange={(e) => onTransferChange(parseDecimal(e.target.value))}
+                    onChange={onTransferChange}
+                    placeholder="0.00"
                   />
                 </div>
-              </div>
-            ) : (
-              <div className="pos-field">
-                <label>Monto</label>
-                <input type="text" value={totals.total} readOnly />
               </div>
             )}
 

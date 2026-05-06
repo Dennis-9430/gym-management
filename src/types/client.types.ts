@@ -9,8 +9,8 @@ export type MemberShipStatus = "ACTIVE" | "EXPIRED" | "NONE" | "PENDING";
 /* Tipo que representa un cliente del gimnasio */
 export interface ClientForm extends Person {
   name?: string;
-  id: number;
-  documentType: DocumentType;
+  id: number | string;
+  documentType: string;
   documentNumber: string;
 
   firstName: string;

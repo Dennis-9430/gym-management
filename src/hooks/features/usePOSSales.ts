@@ -104,6 +104,7 @@ const handleCheckout = useCallback(() => {
       : {
           documentNumber: saleClientInput.trim() || defaultClientDocument,
           firstName: defaultClientLabel,
+          lastName: "",
         };
 
     if (confirm("Deseas registrar esta venta?")) {

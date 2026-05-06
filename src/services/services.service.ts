@@ -117,7 +117,7 @@ export const deleteService = async (id: string): Promise<boolean> => {
 
 /* Asigna membresía a un cliente */
 export const assignMembership = async (
-  clientId: number,
+  clientId: number | string,
   serviceId: string,
   startDate?: string
 ): Promise<any> => {

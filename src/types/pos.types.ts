@@ -1,5 +1,5 @@
 /* Tipos para sistema POS (carrito de compras) */
-export type CatalogSource = "PRODUCT" | "MEMBERSHIP";
+export type CatalogSource = "PRODUCT" | "MEMBERSHIP" | "DAILY";
 
 export interface CatalogItem {
   key: string;

@@ -11,7 +11,7 @@ import "../../styles/clientProfileCss/ClientProfile.css";
 const ClientProfile = () => {
   const { id } = useParams();
   const { clients, reloadClients } = useClients();
-  const client = clients.find((c) => c.id === Number(id));
+  const client = clients.find((c) => String(c.id) === String(id));
   const navigate = useNavigate();
   const [showEdit, setShowEdit] = useState(false);
 

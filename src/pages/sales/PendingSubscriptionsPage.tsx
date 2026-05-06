@@ -24,7 +24,7 @@ const PendingSubscriptionsPage = () => {
       return;
     }
     reloadClients();
-  }, [isPremium, navigate, reloadClients]);
+  }, [isPremium, navigate]);
 
   const pendingClients = clients.filter(
     (client) => client.memberShipStatus === "NONE"

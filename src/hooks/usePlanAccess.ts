@@ -1,14 +1,15 @@
 /* Hook para verificar acceso por plan */
+import { useCallback } from "react";
 import { getTenantPlan } from "../services/api";
 
 /* Hook para verificar acceso */
 export const usePlanAccess = () => {
-  const isPremium = (): boolean => {
+  const isPremium = useCallback((): boolean => {
     const plan = getTenantPlan();
     return plan === "PREMIUM";
-  };
+  }, []);
 
-  const checkAccess = (feature: string): boolean => {
+  const checkAccess = useCallback((feature: string): boolean => {
     const plan = getTenantPlan();
     if (!plan) return false;
     
@@ -25,7 +26,7 @@ export const usePlanAccess = () => {
     }
     
     return basicFeatures.includes(feature);
-  };
+  }, []);
   
   return {
     checkAccess,

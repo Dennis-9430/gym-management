@@ -6,12 +6,15 @@
  * @version 2.0.0
  */
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useContext } from "react";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
-import type { PaymentMethod } from "../../types/sales.types";
+import type { PaymentMethod, SaleRecord } from "../../types/sales.types";
 import { assignMembership } from "../../services/services.service";
 import { round2, clampPercent } from "../../utils/format/number";
+import { ToastContext } from "../../context/ToastContext";
+import { createSaleAPI } from "../../services/sales.service";
+import { useAuth } from "../../context";
 
 // Interfaz de retorno
 export interface UsePOSSubscriptionReturn {
@@ -64,6 +67,8 @@ export const usePOSSubscription = (
   reloadClients: () => void,
   initialClient?: ClientForm,
 ): UsePOSSubscriptionReturn => {
+  const toast = useContext(ToastContext);
+  const { user } = useAuth();
   const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [subscriptionSearch, setSubscriptionSearch] = useState(initialClient?.documentNumber || "");
   const [subscriptionClient, setSubscriptionClient] = useState<ClientForm | null>(initialClient || null);
@@ -73,7 +78,13 @@ export const usePOSSubscription = (
   const [subscriptionCashAmount, setSubscriptionCashAmount] = useState(0);
   const [subscriptionTransferAmount, setSubscriptionTransferAmount] = useState(0);
   const [subscriptionPaid, setSubscriptionPaid] = useState(0);
-  const [subscriptionStartDate, setSubscriptionStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const getLocalDateString = () => {
+    const now = new Date();
+    return now.getFullYear() + '-' + 
+      String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+      String(now.getDate()).padStart(2, '0');
+  };
+  const [subscriptionStartDate, setSubscriptionStartDate] = useState(getLocalDateString());
   const [subscriptionDiscountPercent, setSubscriptionDiscountPercent] = useState(0);
   const [subscriptionDiscountUsd, setSubscriptionDiscountUsd] = useState(0);
 
@@ -136,7 +147,7 @@ export const usePOSSubscription = (
     setSubscriptionCashAmount(0);
     setSubscriptionTransferAmount(0);
     setSubscriptionPaid(0);
-    setSubscriptionStartDate(new Date().toISOString().slice(0, 10));
+    setSubscriptionStartDate(getLocalDateString());
     setSubscriptionDiscountPercent(0);
     setSubscriptionDiscountUsd(0);
   }, []);
@@ -187,29 +198,77 @@ export const usePOSSubscription = (
   // Handler: registrar suscripción activa
   const handleRegisterSubscription = useCallback(async () => {
     if (!subscriptionClient) {
-      alert("Selecciona un cliente.");
+      toast?.showToast("Selecciona un cliente.", "error");
       return;
     }
     if (!subscriptionService) {
-      alert("Selecciona una suscripción.");
+      toast?.showToast("Selecciona una suscripción.", "error");
       return;
     }
     if (subscriptionPaymentMethod === "MIXED") {
       if (Math.abs(subscriptionPaidValue - subscriptionTotal) > 0.01) {
-        alert("El efectivo y transferencia debe igualar el total.");
+        toast?.showToast("El efectivo y transferencia debe igualar el total.", "error");
         return;
       }
     } else if (subscriptionPaidValue < subscriptionTotal) {
-      alert("El monto pagado debe cubrir el total.");
+      toast?.showToast("El monto pagado debe cubrir el total.", "error");
       return;
     }
 
+    const clientData = {
+      documentNumber: subscriptionClient.documentNumber || "",
+      firstName: subscriptionClient.firstName || "",
+      lastName: subscriptionClient.lastName || "",
+      email: subscriptionClient.email || "",
+      phone: subscriptionClient.phone || "",
+      address: subscriptionClient.address || "",
+    };
+
     try {
       await assignMembership(subscriptionClient.id, subscriptionService.id, subscriptionStartDate);
+
+      const saleData: Omit<SaleRecord, "id" | "createdAt"> = {
+        items: [{
+          key: Date.now().toString(),
+          id: subscriptionService.id,
+          name: subscriptionService.name,
+          description: subscriptionService.description || "",
+          category: "servicio",
+          stock: null,
+          unitPrice: subscriptionService.price,
+          unitDiscount: 0,
+          quantity: 1,
+          subtotal: subscriptionTotal,
+          source: "MEMBERSHIP",
+        }],
+        totals: {
+          subtotal: subscriptionTotal,
+          taxableSubtotal: subscriptionTotal,
+          vatSubtotal: 0,
+          discountRate: 0,
+          discountAmount: subscriptionDiscountUsd,
+          taxRate: 0,
+          taxAmount: 0,
+          iceAmount: 0,
+          total: subscriptionTotal,
+        },
+        client: clientData,
+        payment: {
+          method: subscriptionPaymentMethod,
+          cashAmount: subscriptionCashAmount,
+          transferAmount: subscriptionTransferAmount,
+        },
+        createdBy: user?.username || "Sistema",
+        generateInvoice: true,
+        invoiceEmail: clientData.email || null,
+      };
+      await createSaleAPI(saleData as any);
+
+      toast?.showToast("Suscripción registrada. Recibido enviado al correo.", "success");
       reloadClients();
       handleCloseSubscriptionModal();
     } catch (error) {
-      alert("Error al registrar la membresía. Intenta de nuevo.");
+      toast?.showToast("Error al registrar la membresía.", "error");
     }
   }, [
     subscriptionClient,
@@ -218,27 +277,33 @@ export const usePOSSubscription = (
     subscriptionPaidValue,
     subscriptionTotal,
     subscriptionStartDate,
+    subscriptionCashAmount,
+    subscriptionTransferAmount,
+    subscriptionDiscountUsd,
+    user,
     reloadClients,
     handleCloseSubscriptionModal,
+    toast,
   ]);
 
   // Handler: registrar suscripción pendiente
   const handlePendingSubscription = useCallback(async () => {
     if (!subscriptionClient) {
-      alert("Selecciona un cliente.");
+      toast?.showToast("Selecciona un cliente.", "error");
       return;
     }
     if (!subscriptionService) {
-      alert("Selecciona una suscripción.");
+      toast?.showToast("Selecciona una suscripción.", "error");
       return;
     }
 
     try {
       await assignMembership(subscriptionClient.id, subscriptionService.id, subscriptionStartDate);
+      toast?.showToast("Suscripción pendiente registrada.", "success");
       reloadClients();
       handleCloseSubscriptionModal();
     } catch (error) {
-      alert("Error al registrar la membresía pendiente. Intenta de nuevo.");
+      toast?.showToast("Error al registrar la membresía pendiente.", "error");
     }
   }, [
     subscriptionClient,
@@ -246,6 +311,7 @@ export const usePOSSubscription = (
     subscriptionStartDate,
     reloadClients,
     handleCloseSubscriptionModal,
+    toast,
   ]);
 
   const handleDeletePending = useCallback((client: ClientForm) => {

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import type { PaymentMethod, Service } from "../../types/payment.types";
 import { getDailyServices } from "../../services/services.service";
+import { createSaleAPI } from "../../services/sales.service";
+import { useAuth } from "../../context";
+import { useToast } from "../../context/ToastContext";
 import "../../styles/paymentModal.css";
 
 /* Modal para registrar pagos diarios */
@@ -9,6 +12,8 @@ interface Props {
 }
 
 const PaymentModal = ({ onClose }: Props) => {
+  const { user } = useAuth();
+  const toast = useToast();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [showServices, setShowServices] = useState(false);
@@ -30,13 +35,64 @@ const PaymentModal = ({ onClose }: Props) => {
 
   /* handles */
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selectedService) {
-      alert("Complete todos los campos");
+      alert("Selecciona un servicio");
+      return;
+    }
+    if (!paymentMethod) {
+      alert("Selecciona un método de pago");
       return;
     }
 
-    onClose();
+    try {
+      await createSaleAPI({
+        items: [{
+          key: Date.now().toString(),
+          id: parseInt(selectedService.id) || 0,
+          name: selectedService.name,
+          description: selectedService.description || "",
+          category: "servicio",
+          stock: null,
+          unitPrice: selectedService.price,
+          unitDiscount: 0,
+          quantity: 1,
+          subtotal: selectedService.price,
+          source: "DAILY",
+        }],
+        totals: {
+          subtotal: selectedService.price,
+          taxableSubtotal: selectedService.price,
+          vatSubtotal: 0,
+          discountRate: 0,
+          discountAmount: 0,
+          taxRate: 0,
+          taxAmount: 0,
+          iceAmount: 0,
+          total: selectedService.price,
+        },
+        client: {
+          documentNumber: "99999999",
+          firstName: "Consumidor",
+          lastName: "Final",
+          email: "",
+          phone: "",
+          address: "",
+        },
+        payment: {
+          method: paymentMethod,
+          cashAmount: paymentMethod === "CASH" ? selectedService.price : 0,
+          transferAmount: paymentMethod === "TRANSFER" ? selectedService.price : 0,
+        },
+        createdBy: user?.username || "Sistema",
+        generateInvoice: true,
+        invoiceEmail: null,
+      });
+      toast.showToast("Pago registrado exitosamente", "success");
+      onClose();
+    } catch (error) {
+      toast.showToast("Error al registrar el pago", "error");
+    }
   };
 
   const toggleServices = () => {

@@ -17,6 +17,20 @@
   border: 1px solid var(--color-border-dark);
 }
 
+.pos-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.pos-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
 .pos-btn-primary {
   border: none;
   background: var(--color-primary);

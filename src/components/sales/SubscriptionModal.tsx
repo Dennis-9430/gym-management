@@ -1,16 +1,10 @@
-import {
-  ClipboardList,
-  CreditCard,
-  Search,
-  UserRound,
-  X,
-} from "lucide-react";
+import { ClipboardList, CreditCard, Search, UserRound, X } from "lucide-react";
 import { useEffect } from "react";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
 import type { PaymentMethod } from "../../types/sales.types";
 import { services as defaultServices } from "../../types/payment.types";
-import { parseDecimal } from "../../utils/format/number";
+import { DecimalInput } from "../common/DecimalInput";
 
 /* Modal para registrar suscripciones de membresia */
 interface SubscriptionModalProps {
@@ -91,7 +85,7 @@ const SubscriptionModal = ({
   onPending,
 }: SubscriptionModalProps) => {
   const servicesList = services || defaultServices;
-  
+
   // Cerrar con tecla Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -102,14 +96,12 @@ const SubscriptionModal = ({
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
-  
+
   if (!isOpen) return null;
 
   return (
     <div className="pos-modal-backdrop">
-      <div
-        className="pos-modal pos-modal-sm"
-      >
+      <div className="pos-modal pos-modal-sm">
         <div className="pos-modal-header">
           <div>
             <h3>Registrar suscripcion</h3>
@@ -127,16 +119,19 @@ const SubscriptionModal = ({
               <UserRound size={18} />
               <h4>Cliente</h4>
             </div>
-            <div 
+            <div
               className="pos-search-wrapper"
-              style={{ marginBottom: (search.trim().length > 0 || selectedClient) ? '20px' : '0' }}
+              style={{
+                marginBottom:
+                  search.trim().length > 0 || selectedClient ? "20px" : "0",
+              }}
             >
               <div className="pos-search">
                 <Search size={16} />
                 <input
                   value={search}
                   onChange={(e) => {
-                    if (selectedClient && e.target.value.trim() !== '') {
+                    if (selectedClient && e.target.value.trim() !== "") {
                       onSelectClient(null as any);
                     }
                     onSearchChange(e.target.value);
@@ -144,7 +139,7 @@ const SubscriptionModal = ({
                   onFocus={() => {
                     if (selectedClient) {
                       onSelectClient(null as any);
-                      onSearchChange('');
+                      onSearchChange("");
                     }
                   }}
                   placeholder="Buscar por cedula o nombre"
@@ -166,7 +161,8 @@ const SubscriptionModal = ({
                             <span className="sep">|</span> {client.address}
                           </span>
                           <span className="pos-suggestion-meta">
-                            <span className="sep-right">Cedula:</span> {client.documentNumber}
+                            <span className="sep-right">Cedula:</span>{" "}
+                            {client.documentNumber}
                           </span>
                         </button>
                       </li>
@@ -178,15 +174,62 @@ const SubscriptionModal = ({
               )}
             </div>
             {selectedClient && (
-              <div className="pos-client-card" style={{ marginTop: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <strong>{selectedClient.firstName} {selectedClient.lastName}</strong>
+              <div className="pos-client-card" style={{ marginTop: "10px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <strong>
+                    {selectedClient.firstName} {selectedClient.lastName}
+                  </strong>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', fontSize: '0.85rem', color: '#64748b' }}>
-                  <div>Cedula:<br/><strong style={{color: '#0f172a'}}>{selectedClient.documentNumber}</strong></div>
-                  {selectedClient.address && <div>Direccion:<br/><strong style={{color: '#0f172a'}}>{selectedClient.address}</strong></div>}
-                  {selectedClient.email && <div>Email:<br/><strong style={{color: '#0f172a'}}>{selectedClient.email}</strong></div>}
-                  {selectedClient.phone && <div>Telefono:<br/><strong style={{color: '#0f172a'}}>{selectedClient.phone}</strong></div>}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: "8px",
+                    fontSize: "0.85rem",
+                    color: "#64748b",
+                  }}
+                >
+                  <div>
+                    Cedula:
+                    <br />
+                    <strong style={{ color: "#0f172a" }}>
+                      {selectedClient.documentNumber}
+                    </strong>
+                  </div>
+                  {selectedClient.address && (
+                    <div>
+                      Direccion:
+                      <br />
+                      <strong style={{ color: "#0f172a" }}>
+                        {selectedClient.address}
+                      </strong>
+                    </div>
+                  )}
+                  {selectedClient.email && (
+                    <div>
+                      Email:
+                      <br />
+                      <strong style={{ color: "#0f172a" }}>
+                        {selectedClient.email}
+                      </strong>
+                    </div>
+                  )}
+                  {selectedClient.phone && (
+                    <div>
+                      Telefono:
+                      <br />
+                      <strong style={{ color: "#0f172a" }}>
+                        {selectedClient.phone}
+                      </strong>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -214,13 +257,13 @@ const SubscriptionModal = ({
                   {showServices && (
                     <ul className="pos-select-dropdown">
                       {servicesList
-                        .filter((service) => service.price <= 7)
+                        .filter((service) => service.price > 7)
                         .map((service) => (
                           <li
                             key={service.id}
                             onClick={() => onSelectService(service)}
                           >
-                            {service.name} - ${service.price}
+                            {service.name} - ${Number(service.price).toFixed(2)}
                           </li>
                         ))}
                     </ul>
@@ -255,61 +298,50 @@ const SubscriptionModal = ({
               >
                 <option value="CASH">Efectivo</option>
                 <option value="TRANSFER">Transferencia</option>
-                <option value="DEPOSIT">Deposito/Tarjeta</option>
+                <option value="MIXED">Mixto (Efectivo + Transferencia)</option>
               </select>
             </div>
 
-            {paymentMethod === "DEPOSIT" && (
+            {paymentMethod === "MIXED" && (
               <div className="pos-payment-grid">
                 <div className="pos-field">
                   <label>Efectivo</label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
+                  <DecimalInput
                     value={cashAmount}
-                    onChange={(e) =>
-                      onCashChange(parseDecimal(e.target.value))
-                    }
+                    onChange={onCashChange}
+                    placeholder="0.00"
                   />
                 </div>
                 <div className="pos-field">
                   <label>Transferencia</label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
+                  <DecimalInput
                     value={transferAmount}
-                    onChange={(e) =>
-                      onTransferChange(parseDecimal(e.target.value))
-                    }
+                    onChange={onTransferChange}
+                    placeholder="0.00"
                   />
                 </div>
               </div>
             )}
-          </div>
+
+            </div>
 
           {/* Descuentos y totales */}
           <div className="pos-section">
             <div className="pos-two-col">
               <div className="pos-field">
                 <label>Descuento especial (%)</label>
-                <input
-                  type="text"
-                  inputMode="decimal"
+                <DecimalInput
                   value={discountPercent}
-                  onChange={(e) =>
-                    onDiscountPercentChange(parseDecimal(e.target.value))
-                  }
+                  onChange={onDiscountPercentChange}
+                  placeholder="0"
                 />
               </div>
               <div className="pos-field">
                 <label>Descuento especial USD</label>
-                <input
-                  type="text"
-                  inputMode="decimal"
+                <DecimalInput
                   value={discountUsd}
-                  onChange={(e) =>
-                    onDiscountUsdChange(parseDecimal(e.target.value))
-                  }
+                  onChange={onDiscountUsdChange}
+                  placeholder="0.00"
                 />
               </div>
             </div>
@@ -320,12 +352,11 @@ const SubscriptionModal = ({
               </div>
               <div className="pos-field">
                 <label>Pagado</label>
-                <input
-                  type="text"
-                  inputMode="decimal"
+                <DecimalInput
                   value={paidValue}
-                  onChange={(e) => onPaidChange(parseDecimal(e.target.value))}
-                  readOnly={paymentMethod === "DEPOSIT"}
+                  onChange={onPaidChange}
+                  placeholder="0.00"
+                  className=""
                 />
               </div>
             </div>
@@ -351,11 +382,7 @@ const SubscriptionModal = ({
             >
               Pendiente
             </button>
-            <button
-              type="button"
-              className="pos-cancel-btn"
-              onClick={onClose}
-            >
+            <button type="button" className="pos-cancel-btn" onClick={onClose}>
               Cancelar
             </button>
           </div>

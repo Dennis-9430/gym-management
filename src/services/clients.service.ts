@@ -30,7 +30,25 @@ export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
       throw new Error("Error al obtener clientes");
     }
     const data = await response.json();
-    return data.clients || [];
+    return (data.clients || []).map((client: any) => ({
+      id: client.id || client._id || "",
+      documentType: client.documentType || "CEDULA",
+      documentNumber: client.documentNumber || "",
+      firstName: client.firstName || "",
+      lastName: client.lastName || "",
+      email: client.email || "",
+      phone: client.phone || "",
+      address: client.address || "",
+      emergencyContact: client.emergencyContact || "",
+      emergencyPhone: client.emergencyPhone || "",
+      notes: client.notes || "",
+      createdAt: client.createdAt ? new Date(client.createdAt) : undefined,
+      memberShip: client.membership || "Por registrar",
+      memberShipStartDate: client.membershipStartDate ? new Date(client.membershipStartDate) : new Date(),
+      memberShipEndDate: client.membershipEndDate ? new Date(client.membershipEndDate) : new Date(),
+      memberShipStatus: client.membershipStatus || "NONE",
+      fingerPrint: client.fingerPrint || false,
+    }));
   } catch (error) {
     throw error;
   }

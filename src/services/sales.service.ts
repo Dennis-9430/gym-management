@@ -374,7 +374,57 @@ export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
       throw new Error("Error al obtener ventas");
     }
     const data = await response.json();
-    return data.sales || [];
+    const sales = data.sales || [];
+    return sales.map((sale: any) => {
+      const clientFirstName = sale.clientFirstName || "";
+      const clientLastName = sale.clientLastName || "";
+      return {
+        id: sale.id || "",
+        createdAt: sale.createdAt || new Date().toISOString(),
+        items: (sale.items || []).map((item: any) => ({
+          key: Date.now().toString() + Math.random(),
+          id: item.productId || item.serviceId || 0,
+          name: item.productName || item.name || "",
+          description: item.description || "",
+          category: item.category || "",
+          stock: item.stock ?? null,
+          unitPrice: item.unitPrice || 0,
+          unitDiscount: item.unitDiscount || 0,
+          quantity: item.quantity || 1,
+          subtotal: item.subtotal || 0,
+          source: item.source || "",
+        })),
+        totals: {
+          subtotal: sale.subtotal || 0,
+          taxableSubtotal: sale.subtotal || 0,
+          vatSubtotal: 0,
+          discountRate: 0,
+          discountAmount: 0,
+          taxRate: 0,
+          taxAmount: sale.tax || 0,
+          iceAmount: 0,
+          total: sale.total || 0,
+        },
+        client: {
+          documentNumber: sale.clientDocument || "",
+          firstName: clientFirstName,
+          lastName: clientLastName,
+          email: sale.clientEmail || "",
+          phone: sale.clientPhone || "",
+          address: sale.clientAddress || "",
+        },
+        payment: {
+          method: sale.paymentMethod || "CASH",
+          cashAmount: sale.cashAmount || 0,
+          transferAmount: sale.transferAmount || 0,
+        },
+        paymentStatus: sale.paymentStatus,
+        voucherCode: sale.voucherCode,
+        createdBy: sale.createdBy,
+        generateInvoice: sale.generateInvoice,
+        invoiceEmail: sale.invoiceEmail,
+      };
+    });
   } catch (error) {
     throw error;
   }
@@ -412,6 +462,8 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
       tax: input.totals?.taxAmount || 0,
       total: input.totals?.total || 0,
       paymentMethod: input.payment?.method || "CASH",
+      cashAmount: input.payment?.cashAmount || 0,
+      transferAmount: input.payment?.transferAmount || 0,
       clientDocument: input.client?.documentNumber || null,
       clientFirstName: input.client?.firstName || null,
       clientLastName: input.client?.lastName || null,
@@ -432,7 +484,55 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
     if (!response.ok) {
       throw new Error("Error al crear venta");
     }
-    return await response.json();
+    const apiResponse = await response.json();
+    const clientFirstName = apiResponse.clientFirstName || "";
+    const clientLastName = apiResponse.clientLastName || "";
+    return {
+      id: apiResponse.id || "",
+      createdAt: apiResponse.createdAt || new Date().toISOString(),
+      items: (apiResponse.items || []).map((item: any) => ({
+        key: Date.now().toString() + Math.random(),
+        id: item.productId || item.serviceId || 0,
+        name: item.productName || item.name || "",
+        description: item.description || "",
+        category: item.category || "",
+        stock: null,
+        unitPrice: item.unitPrice || 0,
+        unitDiscount: item.unitDiscount || 0,
+        quantity: item.quantity || 1,
+        subtotal: item.subtotal || 0,
+        source: item.source || "SALE",
+      })),
+      totals: {
+        subtotal: apiResponse.subtotal || 0,
+        taxableSubtotal: apiResponse.subtotal || 0,
+        vatSubtotal: 0,
+        discountRate: 0,
+        discountAmount: 0,
+        taxRate: 0,
+        taxAmount: apiResponse.tax || 0,
+        iceAmount: 0,
+        total: apiResponse.total || 0,
+      },
+      client: {
+        documentNumber: apiResponse.clientDocument || "",
+        firstName: clientFirstName,
+        lastName: clientLastName,
+        email: apiResponse.clientEmail || "",
+        phone: apiResponse.clientPhone || "",
+        address: apiResponse.clientAddress || "",
+      },
+      payment: {
+        method: apiResponse.paymentMethod || "CASH",
+        cashAmount: apiResponse.paymentMethod === "CASH" ? (apiResponse.total || 0) : 0,
+        transferAmount: ["TRANSFER", "MIXED"].includes(apiResponse.paymentMethod) ? (apiResponse.total || 0) : 0,
+      },
+      paymentStatus: apiResponse.paymentStatus,
+      voucherCode: apiResponse.voucherCode,
+      createdBy: apiResponse.createdBy,
+      generateInvoice: apiResponse.generateInvoice,
+      invoiceEmail: apiResponse.invoiceEmail,
+    };
   } catch (error) {
     return null;
   }

@@ -5,12 +5,13 @@ import { UserPlus, BadgePlus, Trash2 } from "lucide-react";
 /* Fila de cliente con acciones de perfil y suscripcion */
 interface Props {
   client: ClientForm;
+  index: number;
   showActions: boolean;
   canDelete?: boolean;
-  onDelete?: (clientId: number) => void;
+  onDelete?: (clientId: number | string) => void;
 }
 
-const ClientRow = ({ client, showActions, canDelete, onDelete }: Props) => {
+const ClientRow = ({ client, index, showActions, canDelete, onDelete }: Props) => {
   const navigate = useNavigate();
   const gotoProfile = () => {
     navigate(`/clients/${client.id}`);
@@ -26,9 +27,16 @@ const ClientRow = ({ client, showActions, canDelete, onDelete }: Props) => {
     }
   };
 
+  const formatDate = (date: any) => {
+    if (!date) return "-";
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "-";
+    return d.toLocaleDateString();
+  };
+
   return (
     <tr>
-      <td>{client.id} </td>
+      <td>{index + 1}</td>
       <td
         className="client-link"
         onClick={gotoProfile}
@@ -39,7 +47,7 @@ const ClientRow = ({ client, showActions, canDelete, onDelete }: Props) => {
       <td>{client.lastName}</td>
       <td> {client.firstName}</td>
 
-      <td>{client.memberShipEndDate.toLocaleDateString()}</td>
+      <td>{formatDate(client.memberShipEndDate)}</td>
       {showActions && (
         <td className="actions">
           {client.memberShipStatus === "NONE" ? (

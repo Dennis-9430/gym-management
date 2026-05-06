@@ -24,21 +24,17 @@ const SalesPages = () => {
   const isAdmin = user?.role === "ADMIN";
   const [membershipModalOpen, setMembershipModalOpen] = useState(false);
   const [membershipServices, setMembershipServices] = useState<Service[]>([]);
-  const [servicesLoaded, setServicesLoaded] = useState(false);
-
-  // Carga TODOS los servicios para el modal de Membresías
-  useEffect(() => {
-    if (!servicesLoaded) {
-      loadMembershipServices();
-    }
-  }, [servicesLoaded]);
 
   const loadMembershipServices = () => {
     getServices()
       .then(setMembershipServices)
-      .catch(() => setMembershipServices([]))
-      .finally(() => setServicesLoaded(true));
+      .catch(() => setMembershipServices([]));
   };
+
+  // Carga servicios una sola vez al montar
+  useEffect(() => {
+    loadMembershipServices();
+  }, []);
 
 const {
     // State
@@ -53,8 +49,6 @@ const {
     voucherCode,
     saleClientResults,
     matchedSaleClient,
-    generateInvoice,
-    invoiceEmail,
     search,
     filteredCatalog,
 
@@ -85,8 +79,6 @@ const {
     setPaymentMethod,
     setVoucherCode,
     setSaleModalOpen,
-    setGenerateInvoice,
-    setInvoiceEmail,
     setSearch,
     setSubscriptionSearch,
     setSubscriptionShowServices,
@@ -165,10 +157,6 @@ const {
         onDiscountRateChange={handleDiscountChange}
         onTaxRateChange={handleTaxChange}
         onCheckout={handleCheckout}
-        generateInvoice={generateInvoice ?? false}
-        onGenerateInvoiceChange={setGenerateInvoice}
-        invoiceEmail={invoiceEmail ?? ""}
-        onInvoiceEmailChange={setInvoiceEmail}
       />
 
       <SubscriptionModal

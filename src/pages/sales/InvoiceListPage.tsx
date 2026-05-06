@@ -250,9 +250,7 @@ const InvoiceListPage = () => {
       navigate("/dashboard");
       return;
     }
-    // Siempre usar datos demo para evitar problemas de sesión
-    setInvoices(MOCK_INVOICES);
-    setLoading(false);
+    loadInvoices();
   }, [isPremium, navigate]);
 
   const hasValidToken = (): boolean => {

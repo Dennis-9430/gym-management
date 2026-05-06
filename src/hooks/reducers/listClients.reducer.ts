@@ -27,7 +27,7 @@ export const initialState: State = {
   search: "",
   sortField: null,
   sortDirection: "asc",
-  filterMode: "ACTIVE",
+  filterMode: "ALL",
 };
 
 // Funciones helper de filtrado y ordenamiento
@@ -107,7 +107,7 @@ export const listClientsReducer = (state: State, action: Action): State => {
       const filteredClients = applyFilters(
         action.payload,
         state.search,
-        state.filterMode,
+        "ALL",  // Mostrar todos al recargar
         state.sortField,
         state.sortDirection,
       );
@@ -115,6 +115,7 @@ export const listClientsReducer = (state: State, action: Action): State => {
         ...state,
         clients: action.payload,
         filteredClients,
+        filterMode: "ALL",  // Reset filter to show all
       };
     }
     case "SEARCH": {
