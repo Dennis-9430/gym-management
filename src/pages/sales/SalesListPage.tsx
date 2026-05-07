@@ -12,6 +12,7 @@ const SalesListPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isAdmin = user?.role === "ADMIN";
+  const canManageSales = isAdmin || user?.role === "GERENTE";
   const [sales, setSales] = useState<SaleRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
@@ -74,7 +75,7 @@ const SalesListPage = () => {
   };
 
   const handleVerifyPayment = async (saleId: string) => {
-    if (!isAdmin) return;
+    if (!canManageSales) return;
     setUpdating(saleId);
     try {
       await verifyPaymentAPI(saleId);
@@ -234,7 +235,7 @@ const SalesListPage = () => {
                   <td>{getStatusBadge(sale.paymentStatus)}</td>
                   <td>
                     <div className="sale-actions">
-                      {isAdmin && sale.paymentStatus === "pending" && (
+                      {canManageSales && sale.paymentStatus === "pending" && (
                         <button
                           className="pos-btn-icon"
                           title="Verificar pago"
@@ -248,7 +249,7 @@ const SalesListPage = () => {
                           )}
                         </button>
                       )}
-                      {isAdmin && (
+                      {canManageSales && (
                         <button
                           className="pos-btn-icon"
                           title="Editar voucher / Subir comprobante"
