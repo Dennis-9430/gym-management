@@ -22,6 +22,7 @@ const SalesPages = () => {
 
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
+  const canManageMemberships = isAdmin || user?.role === "GERENTE";
   const [membershipModalOpen, setMembershipModalOpen] = useState(false);
   const [membershipServices, setMembershipServices] = useState<Service[]>([]);
 
@@ -120,7 +121,7 @@ const {
       <SalesDashboard
         onOpenSubscriptionModal={() => handleOpenSubscriptionModal()}
         onOpenSaleModal={() => setSaleModalOpen(true)}
-        onOpenMembershipModal={isAdmin ? () => setMembershipModalOpen(true) : undefined}
+        onOpenMembershipModal={canManageMemberships ? () => setMembershipModalOpen(true) : undefined}
       />
 
       <SaleModal
@@ -194,7 +195,7 @@ const {
         onPending={handlePendingSubscription}
       />
 
-      {isAdmin && (
+      {canManageMemberships && (
         <MembershipModal
           isOpen={membershipModalOpen}
           onClose={() => setMembershipModalOpen(false)}
