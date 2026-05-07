@@ -16,6 +16,7 @@ export interface Service {
   name: string;
   description?: string;
   price: number;
+  taxRate?: number;
   duration: number;
   durationUnit: DurationUnit;
   type: ServiceType;

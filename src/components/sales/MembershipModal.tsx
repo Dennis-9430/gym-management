@@ -35,6 +35,7 @@ interface MembershipFormData {
   id?: string | number;
   name: string;
   price: string; // String para manejar decimales durante escritura
+  taxRate: string; // String para manejar decimales (% IVA)
   days: number;
   description: string;
   isActive: boolean;
@@ -53,6 +54,7 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
   const [formData, setFormData] = useState<MembershipFormData>({
     name: "",
     price: "",
+    taxRate: "",
     days: 30,
     description: "",
     isActive: true,
@@ -66,6 +68,7 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
     setFormData({
       name: "",
       price: "",
+      taxRate: "",
       days: 30,
       description: "",
       isActive: true,
@@ -94,6 +97,7 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
       id: service.id,
       name: service.name,
       price: String(service.price),
+      taxRate: service.taxRate ? String(service.taxRate) : "",
       days,
       description: service.description || "",
       isActive: true,
@@ -114,6 +118,7 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
     setFormData({
       name: "",
       price: "",
+      taxRate: "",
       days: 30,
       description: "",
       isActive: true,
@@ -142,6 +147,8 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
       return;
     }
 
+    const numericTaxRate = formData.taxRate ? parseFloat(formData.taxRate) : 0;
+
     setSaving(true);
     try {
       const serviceData = {
@@ -149,6 +156,7 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
         name: formData.name.trim(),
         description: formData.description,
         price: numericPrice,
+        taxRate: numericTaxRate,
         duration: formData.days,
         durationUnit: "days" as DurationUnit,
         type: "membership" as ServiceType,
@@ -214,7 +222,10 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
                   <tr>
                     <th>Nombre</th>
                     <th>Duración</th>
-                    <th>Precio</th>
+                    <th>Subtotal</th>
+                    <th>IVA (%)</th>
+                    <th>IVA ($)</th>
+                    <th>Total (PVP)</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -225,7 +236,26 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
                       <td>
                         {service.duration || getDaysFromService(service)} días
                       </td>
-                      <td>${Number(service.price).toFixed(2)}</td>
+                      <td>
+                        ${(() => {
+                          const pvp = Number(service.price);
+                          const tr = service.taxRate || 0;
+                          if (tr <= 0) return pvp.toFixed(2);
+                          const subtotal = pvp / (1 + tr / 100);
+                          return subtotal.toFixed(2);
+                        })()}
+                      </td>
+                      <td>{service.taxRate || 0}%</td>
+                      <td>
+                        ${(() => {
+                          const pvp = Number(service.price);
+                          const tr = service.taxRate || 0;
+                          if (tr <= 0) return "0.00";
+                          const subtotal = pvp / (1 + tr / 100);
+                          return (subtotal * tr / 100).toFixed(2);
+                        })()}
+                      </td>
+                      <td><strong>${Number(service.price).toFixed(2)}</strong></td>
                       <td className="membership-modal__actions-cell">
                         <button
                           className="membership-modal__btn-edit"
@@ -280,7 +310,7 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
               </div>
 
               <div className="membership-form__group">
-                <label>Precio ($)</label>
+                <label>Precio Total (PVP $)</label>
                 <input
                   type="text"
                   inputMode="decimal"
@@ -322,7 +352,65 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
                   }}
                 />
               </div>
+
+              <div className="membership-form__group">
+                <label>IVA (%)</label>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={formData.taxRate}
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/[^0-9.,]/g, "");
+                    val = val.replace(",", ".");
+                    const dotIndex = val.indexOf(".");
+                    if (dotIndex !== -1) {
+                      val = val.substring(0, dotIndex + 1) + val.substring(dotIndex + 1).replace(/[.,]/g, "");
+                    }
+                    if (dotIndex !== -1) {
+                      val = val.substring(0, dotIndex + 3);
+                    }
+                    setFormData({ ...formData, taxRate: val });
+                  }}
+                  placeholder="15"
+                />
+              </div>
             </div>
+
+            {/* Preview de totales con IVA incluido */}
+            {formData.price && parseFloat(formData.price) > 0 && (
+              <div className="membership-form__preview">
+                {(() => {
+                  const pvp = parseFloat(formData.price) || 0;
+                  const tr = parseFloat(formData.taxRate) || 0;
+                  if (tr <= 0) {
+                    return (
+                      <div className="membership-form__preview-row">
+                        <span>Total (PVP):</span>
+                        <strong>${pvp.toFixed(2)}</strong>
+                      </div>
+                    );
+                  }
+                  const subtotal = pvp / (1 + tr / 100);
+                  const ivaAmount = subtotal * tr / 100;
+                  return (
+                    <>
+                      <div className="membership-form__preview-row">
+                        <span>Subtotal (Base {tr}%):</span>
+                        <span>${subtotal.toFixed(2)}</span>
+                      </div>
+                      <div className="membership-form__preview-row">
+                        <span>IVA ({tr}%):</span>
+                        <span>${ivaAmount.toFixed(2)}</span>
+                      </div>
+                      <div className="membership-form__preview-row membership-form__preview-total">
+                        <span>Total (PVP):</span>
+                        <strong>${pvp.toFixed(2)}</strong>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
 
             {error && <p className="membership-form__error">{error}</p>}
 
