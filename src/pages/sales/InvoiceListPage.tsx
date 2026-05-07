@@ -31,7 +31,7 @@ const InvoiceListPage = () => {
   }, [isPremium, navigate]);
 
   const hasValidToken = (): boolean => {
-    const token = localStorage.getItem("tenantToken");
+    const token = localStorage.getItem("accessToken");
     return !!token;
   };
 
