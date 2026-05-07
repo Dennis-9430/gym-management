@@ -1,5 +1,5 @@
 /* Tipos para empleados y permisos */
-export type EmployeeRole = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
+export type EmployeeRole = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR" | "GERENTE";
 export type EmployeeStatus = "ACTIVE" | "INACTIVE";
 export type DocumentType = "CEDULA" | "PASAPORTE" | "RUC";
 

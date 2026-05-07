@@ -68,6 +68,58 @@ const defaultPermissions: RolePermissions = {
   },
 };
 
+const gerentePermissions: RolePermissions = {
+  clients: {
+    module: "Módulo Clientes",
+    actions: [
+      { key: "create", label: "Crear", enabled: true },
+      { key: "read", label: "Ver", enabled: true },
+      { key: "update", label: "Editar", enabled: true },
+      { key: "delete", label: "Eliminar", enabled: true },
+    ],
+  },
+  employees: {
+    module: "Módulo Empleados",
+    actions: [
+      { key: "create", label: "Crear", enabled: true },
+      { key: "read", label: "Ver", enabled: true },
+      { key: "update", label: "Editar", enabled: true },
+      { key: "delete", label: "Eliminar", enabled: true },
+    ],
+  },
+  products: {
+    module: "Módulo Productos",
+    actions: [
+      { key: "create", label: "Crear", enabled: true },
+      { key: "read", label: "Ver", enabled: true },
+      { key: "update", label: "Editar", enabled: true },
+      { key: "delete", label: "Eliminar", enabled: true },
+    ],
+  },
+  sales: {
+    module: "Módulo Ventas",
+    actions: [
+      { key: "create", label: "Crear", enabled: true },
+      { key: "read", label: "Ver", enabled: true },
+      { key: "update", label: "Editar", enabled: true },
+      { key: "delete", label: "Eliminar", enabled: true },
+    ],
+  },
+  reports: {
+    module: "Módulo Reportes",
+    actions: [
+      { key: "read", label: "Ver", enabled: true },
+      { key: "export", label: "Exportar", enabled: true },
+    ],
+  },
+  config: {
+    module: "Módulo Configuración",
+    actions: [
+      { key: "access", label: "Acceso", enabled: true },
+    ],
+  },
+};
+
 const adminPermissions: RolePermissions = {
   clients: {
     module: "Módulo Clientes",
@@ -220,6 +272,8 @@ const trainerPermissions: RolePermissions = {
 
 export const getRolePermissions = (role: string) => {
   switch (role) {
+    case "GERENTE":
+      return gerentePermissions;
     case "ADMIN":
       return adminPermissions;
     case "RECEPCIONISTA":
@@ -231,4 +285,4 @@ export const getRolePermissions = (role: string) => {
   }
 };
 
-export { adminPermissions, receptionistPermissions, trainerPermissions, defaultPermissions };
+export { gerentePermissions, adminPermissions, receptionistPermissions, trainerPermissions, defaultPermissions };

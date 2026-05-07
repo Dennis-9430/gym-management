@@ -1,7 +1,7 @@
 import type { Person } from "./person.types";
 
 /* Roles disponibles en el sistema */
-export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR";
+export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR" | "GERENTE";
 
 /* Planes de suscripción */
 export type SubscriptionPlan = "BASIC" | "PREMIUM";

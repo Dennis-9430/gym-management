@@ -115,6 +115,17 @@ const Login = () => {
       }
       localStorage.setItem("tenant", JSON.stringify(tenantData));
 
+      // Decodificar token para obtener rol real
+      let userRole: "ADMIN" | "RECEPCIONISTA" | "GERENTE" = "ADMIN";
+      try {
+        const base64Url = data.accessToken.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
+        userRole = payload.role || "ADMIN";
+      } catch {
+        // Usar ADMIN por defecto si no se puede decodificar
+      }
+
       // Guardar flag si es demo
       const isDemo = new URLSearchParams(window.location.search).get("demo") === "true";
       if (isDemo) {
@@ -123,20 +134,10 @@ const Login = () => {
         localStorage.removeItem("isDemo");
       }
 
-      // Guardar datos del owner
-      const ownerEmail = data.tenant.email;
-      const ownerUsername = (data.tenant as any).ownerUsername || ownerEmail?.split("@")[0] || "owner";
-      localStorage.setItem("ownerData", JSON.stringify({
-        firstName: data.tenant.ownerFirstName || "Demo",
-        lastName: data.tenant.ownerLastName || "Owner",
-        email: ownerEmail,
-        username: ownerUsername
-      }));
-
-      // Login con datos del tenant
+      // Login con datos del tenant y rol real
       const user: AuthUser = {
         username: data.tenant.businessName,
-        role: "ADMIN",
+        role: userRole,
         tenantId: data.tenant.tenantId,
         plan: data.tenant.plan as AuthUser["plan"],
         subscriptionStatus: data.tenant.subscriptionStatus as AuthUser["subscriptionStatus"]

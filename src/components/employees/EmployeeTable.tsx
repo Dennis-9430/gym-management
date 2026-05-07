@@ -11,11 +11,11 @@ interface Props {
 }
 
 const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
-  const { isOwner, isDemo, isAdmin } = useAccountType();
+  const { isOwner, isDemo, isAdmin, isGerente } = useAccountType();
 
-  // Solo Gerente y Admin ven la columna de acciones
+  // Solo Gerente, Admin y Owner ven la columna de acciones
   // Recepcionista NO ve acciones
-  const showActions = (isOwner || (isAdmin && !isDemo));
+  const showActions = (isOwner || isGerente || (isAdmin && !isDemo));
 
   return (
     <table className="employee-table">
@@ -32,22 +32,23 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
       <tbody>
         {employees.map((emp, index) => {
           const isEmployeeOwner = (emp as any).isOwner === true;
+          const isEmployeeGerente = emp.role === "GERENTE";
           const isEmployeeRecepcionista = emp.role === "RECEPCIONISTA";
 
           // Permisos de Editar
-          // - Gerente: puede editar a todos
+          // - Owner/Gerente: puede editar a todos
           // - Admin: solo puede editar recepcionistas
           // - Recepcionista: NO puede editar a nadie
-          const canEdit = isOwner
-            ? true // Gerente puede editar a todos
+          const canEdit = (isOwner || isGerente)
+            ? true // Owner/Gerente puede editar a todos
             : (isAdmin && isEmployeeRecepcionista);
 
           // Permisos de Eliminar
-          // - Gerente: puede eliminar admins y recepcionistas (NO a sí mismo)
+          // - Owner/Gerente: puede eliminar admins y recepcionistas (NO a si mismo)
           // - Admin: solo puede eliminar recepcionistas
           // - Recepcionista: NO puede eliminar a nadie
-          const canDelete = isOwner
-            ? !isEmployeeOwner // Gerente: elimina admins y recepcionistas (no a sí mismo)
+          const canDelete = (isOwner || isGerente)
+            ? !isEmployeeOwner // Owner/Gerente: elimina admins y recepcionistas (no a si mismo)
             : (isAdmin && isEmployeeRecepcionista);
 
           return (
@@ -64,7 +65,7 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
               <td>{emp.email}</td>
               <td>{emp.username || "-"}</td>
               <td>
-                {isEmployeeOwner ? (
+                {isEmployeeOwner || isEmployeeGerente ? (
                   <span className="employee-badge employee-badge--owner">
                     <Crown size={12} />
                     Gerente

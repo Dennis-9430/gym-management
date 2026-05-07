@@ -26,6 +26,7 @@ export const useAccountType = () => {
 
   const isDemo = useMemo(() => localStorage.getItem("isDemo") === "true", []);
   const isOwner = useMemo(() => tokenPayload?.isOwner === true, [tokenPayload]);
+  const isGerente = useMemo(() => isOwner || tokenPayload?.role === "GERENTE", [tokenPayload, isOwner]);
   const isRecepcionista = useMemo(() => tokenPayload?.role === "RECEPCIONISTA", [tokenPayload]);
   const isAdmin = useMemo(() => tokenPayload?.role === "ADMIN", [tokenPayload]);
   
@@ -76,6 +77,7 @@ export const useAccountType = () => {
   return {
     isDemo,
     isOwner,
+    isGerente,
     isRecepcionista,
     isAdmin,
     ownerUsername,

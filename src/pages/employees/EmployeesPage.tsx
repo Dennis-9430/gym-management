@@ -51,8 +51,8 @@ const canAddEmployee = () => {
       return false;
     }
 
-    // Gerente y Admin pueden crear empleados
-    if (!isOwner && user?.role !== "ADMIN") {
+    // Owner (Gerente), Admin pueden crear empleados
+    if (!isOwner && user?.role !== "ADMIN" && user?.role !== "GERENTE") {
       alert("No tienes permisos para crear empleados.");
       return false;
     }
@@ -94,12 +94,11 @@ const canAddEmployee = () => {
     const isAdmin = employee.role === "ADMIN" && !isGerente;
     const isRecepcionista = employee.role === "RECEPCIONISTA";
 
-    // Gerente: puede editar a todos (incluyendo su propia fila)
+    // Owner (Gerente): puede editar a todos
     // Admin: solo puede editar recepcionistas (NO admins, NO gerente)
-    if (isOwner) {
-      // Gerente: puede editar a cualquiera (incluyendo su propia fila para editar sus datos)
-      // El formulario bloqueará campos sensibles (email, rol, estatus)
-      // Se permite la edición sin restricciones
+    if (isOwner || user?.role === "GERENTE") {
+      // Gerente: puede editar a cualquiera
+      // El formulario bloqueara campos sensibles (email, rol, estatus)
     } else if (user?.role === "ADMIN") {
       // Admin: solo puede editar recepcionistas
       if (!isRecepcionista) {
@@ -303,11 +302,12 @@ const canAddEmployee = () => {
     
     const isTargetOwner = (employeeToDelete as any).isOwner === true;
     const isTargetAdmin = employeeToDelete.role === "ADMIN" && !isTargetOwner;
+    const isTargetGerente = employeeToDelete.role === "GERENTE";
     const isTargetRecepcionista = employeeToDelete.role === "RECEPCIONISTA";
     const isTargetSelf = employeeIdFromToken && String(employeeIdFromToken) === String(id);
     
     // Validaciones de permisos:
-    // 1. Nadie puede eliminarse a sí mismo
+    // 1. Nadie puede eliminarse a si mismo
     if (isTargetSelf) {
       alert("No puedes eliminarte a ti mismo.");
       return;
@@ -319,9 +319,11 @@ const canAddEmployee = () => {
       return;
     }
     
-    // 3. Admin solo puede eliminar recepcionistas (NO admins, NO owner, NO sí mismo)
-    // 4. Owner puede eliminar admins y recepcionistas (ya se validó que no es owner ni self)
-    if (user?.role === "ADMIN" && !isTargetRecepcionista) {
+    // 3. Owner (Gerente) puede eliminar a cualquiera
+    // 4. Admin solo puede eliminar recepcionistas (NO admins, NO gerente, NO owner)
+    if (isOwner || user?.role === "GERENTE") {
+      // Puede eliminar a cualquiera (ya se validó que no es owner ni self)
+    } else if (user?.role === "ADMIN" && !isTargetRecepcionista) {
       alert("No tienes permisos para eliminar a este empleado.");
       return;
     }

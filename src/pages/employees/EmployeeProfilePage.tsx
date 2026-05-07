@@ -10,7 +10,7 @@ import "../../styles/clientProfileCss/ClientProfile.css";
 const EmployeeProfilePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isOwner: currentUserIsOwner, isAdmin, isRecepcionista: isRecepcionistaUser, employeeIdFromToken } = useAccountType();
+  const { isOwner: currentUserIsOwner, isAdmin, isRecepcionista: isRecepcionistaUser, isGerente, employeeIdFromToken } = useAccountType();
 
   const [employee, setEmployee] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -84,24 +84,24 @@ const EmployeeProfilePage = () => {
   );
   const isRecepcionistaProfile = employee.role === "RECEPCIONISTA";
 
-  // Determinar permisos de visualización
+  // Determinar permisos de visualizacion
   // Gerente, Admin y Recepcionista pueden ver perfiles
   const canViewProfile = true;
 
-  // Determinar permisos de edición de perfil
-  // - Gerente: puede editar a todos
+  // Determinar permisos de edicion de perfil
+  // - Owner/Gerente: puede editar a todos
   // - Admin: solo puede editar recepcionistas
   // - Recepcionista: NO puede editar a nadie
-  const canEditProfile = currentUserIsOwner
-    ? true // Gerente: puede editar a todos
+  const canEditProfile = (currentUserIsOwner || isGerente)
+    ? true // Owner/Gerente: puede editar a todos
     : (isAdmin && isRecepcionistaProfile); // Admin: solo puede editar recepcionistas
 
   // Determinar permisos para gestionar permisos de empleados
-  // - Gerente: puede gestionar permisos de todos
+  // - Owner/Gerente: puede gestionar permisos de todos
   // - Admin: solo puede gestionar permisos de recepcionistas
   // - Recepcionista: NO puede gestionar permisos de nadie
-  const canManagePermissions = currentUserIsOwner
-    ? true // Gerente: puede gestionar permisos de todos
+  const canManagePermissions = (currentUserIsOwner || isGerente)
+    ? true // Owner/Gerente: puede gestionar permisos de todos
     : (isAdmin && isRecepcionistaProfile && !isRecepcionistaUser); // Admin: solo puede gestionar permisos de recepcionistas (no su propio perfil)
   
   if (!canViewProfile && !currentUserIsOwner) {
@@ -193,8 +193,8 @@ const EmployeeProfilePage = () => {
           </div>
         </div>
 
-{/* Sección de permisos del Empleado (solo Gerente o Admin viendo perfil de otro) */}
-        {!isOwnerProfile && (currentUserIsOwner || isAdmin) && !isRecepcionistaUser && (
+{/* Seccion de permisos del Empleado (solo Owner/Gerente o Admin viendo perfil de otro) */}
+        {!isOwnerProfile && (currentUserIsOwner || isGerente || isAdmin) && !isRecepcionistaUser && (
           <div className="permissions-section">
             <div className="permissions-header">
               <Shield size={20} />
@@ -204,13 +204,13 @@ const EmployeeProfilePage = () => {
               role={employee.role}
               isAdmin={isAdmin}
               employeeId={employee.id}
-              isOwnerManaging={currentUserIsOwner}
+              isOwnerManaging={currentUserIsOwner || isGerente}
             />
           </div>
         )}
 
-        {/* Sección de permisos del GERENTE (cuando ve su propio perfil) */}
-        {isOwnerProfile && currentUserIsOwner && (
+        {/* Seccion de permisos del GERENTE (cuando ve su propio perfil) */}
+        {isOwnerProfile && (currentUserIsOwner || isGerente) && (
           <div className="permissions-section permissions-section--readonly">
             <div className="permissions-header">
               <Shield size={20} />
