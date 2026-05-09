@@ -168,25 +168,28 @@ export const useTransactions = () => {
    */
   const loadTransactions = useCallback(async () => {
     setLoading(true);
-    try {
-      // Cargar ventas y facturas en paralelo
-      const [salesData, invoicesData] = await Promise.all([
-        getSales(),
-        getInvoicesFromAPI()
-      ]);
-      setTransactions(salesData);
-      setInvoices(invoicesData);
-    } catch (error) {
-      setTransactions([]);
-      setInvoices([]);
-    } finally {
-      setLoading(false);
-    }
+    // Cargar ventas y facturas por separado para que si una falla no afecte a la otra
+    const [salesData, invoicesData] = await Promise.all([
+      getSales().catch(() => [] as SaleRecord[]),
+      getInvoicesFromAPI().catch(() => [] as InvoiceRecord[]),
+    ]);
+    setTransactions(salesData);
+    setInvoices(invoicesData);
+    setLoading(false);
   }, []);
 
   // Carga inicial al montar el hook
   useEffect(() => {
     loadTransactions();
+  }, [loadTransactions]);
+
+  // Recarga al volver a la página (navegación desde POS)
+  useEffect(() => {
+    const handleFocus = () => {
+      loadTransactions();
+    };
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
   }, [loadTransactions]);
 
   /**
