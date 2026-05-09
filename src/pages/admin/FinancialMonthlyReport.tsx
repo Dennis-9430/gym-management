@@ -104,7 +104,7 @@ const FinancialMonthlyReport = () => {
     }
     
     return summaries;
-  }, [monthTransactions]);
+  }, [monthTransactions, getDisplayName]);
 
   const totalSummary = useMemo(() => {
     const base = Object.values(summaryByEmployee).reduce(
@@ -182,7 +182,7 @@ const FinancialMonthlyReport = () => {
   return (
     <div className="financial-dashboard">
       <div className="financial-dashboard__header">
-        <button className="btn-back" onClick={() => navigate("/financial/dashboard")}>
+        <button className="btn-back" onClick={() => navigate(-1)}>
           <ArrowLeft size={22} />
           Atrás
         </button>
