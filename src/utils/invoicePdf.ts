@@ -117,9 +117,14 @@ export const generateInvoicePDF = (invoice: Invoice): void => {
   const totalsX = pageWidth - 70;
   doc.setFontSize(10);
   doc.setTextColor(...grayColor);
+  // Calcular tasa efectiva de IVA desde los totales
+  const effectiveTaxRate = invoice.totals.subtotal > 0 && invoice.totals.taxAmount > 0
+    ? Math.round((invoice.totals.taxAmount / invoice.totals.subtotal) * 100)
+    : 0;
+
   doc.text("Subtotal:", totalsX, finalY);
   doc.text("Descuento:", totalsX, finalY + 6);
-  doc.text("IVA (15%):", totalsX, finalY + 12);
+  doc.text(effectiveTaxRate > 0 ? `IVA (${effectiveTaxRate}%):` : "IVA:", totalsX, finalY + 12);
   
   doc.setTextColor(...darkColor);
   doc.text(formatCurrency(invoice.totals.subtotal), pageWidth - 20, finalY, { align: "right" });

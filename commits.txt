@@ -1,6 +1,11 @@
 
  opencode -s ses_2f8783017ffeThSx4YukPflOwc
 
+Si querés volver a este estado exacto: 7/5/26 todo bien menos facturas
+
+- Frontend: git reset --hard d94a65
+- Backend: git reset --hard 85d4c3
+
 direccion del archivo:
 ## COMANDOS PARA CORRER EL SISTEMA
 

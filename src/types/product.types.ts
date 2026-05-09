@@ -29,6 +29,7 @@ export interface Product {
   description: string;
   category: ProductCategory;
   unitPrice: number;
+  taxRate: number;
   quantity: number;
   minStock: number;
   createdAt: string;

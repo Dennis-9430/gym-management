@@ -25,7 +25,7 @@ interface DailyData {
 /* Reporte financiero mensual y anual con graficos */
 const FinancialMonthlyReport = () => {
   const navigate = useNavigate();
-  const { transactions, groupByYear } = useTransactions();
+  const { transactions, groupByYear, isServiceItem } = useTransactions();
 
   const [selectedMonth, setSelectedMonth] = useState<string>(
     new Date().toISOString().slice(0, 7)
@@ -56,10 +56,7 @@ const FinancialMonthlyReport = () => {
       }
       
       for (const item of txn.items) {
-        const isService = ["mensual", "quincenal", "semanal", "diario", "promo"].some(k => 
-          item.name.toLowerCase().includes(k)
-        );
-        if (isService) {
+        if (isServiceItem(item)) {
           summaries[employee].services += item.subtotal;
         } else {
           summaries[employee].bar += item.subtotal;
@@ -79,7 +76,7 @@ const FinancialMonthlyReport = () => {
   }, [monthTransactions]);
 
   const totalSummary = useMemo(() => {
-    return Object.values(summaryByEmployee).reduce(
+    const base = Object.values(summaryByEmployee).reduce(
       (acc, curr) => ({
         services: acc.services + curr.services,
         bar: acc.bar + curr.bar,
@@ -89,7 +86,23 @@ const FinancialMonthlyReport = () => {
       }),
       { services: 0, bar: 0, cash: 0, transfer: 0, total: 0 }
     );
-  }, [summaryByEmployee]);
+    // Calcula IVA y base imponible directamente de las transacciones
+    let taxableBase = 0;
+    let iva = 0;
+    for (const txn of monthTransactions) {
+      for (const item of txn.items) {
+        if (item.taxRate > 0) {
+          const rate = item.taxRate / 100;
+          const b = Math.round((item.subtotal / (1 + rate)) * 100) / 100;
+          taxableBase += b;
+          iva += Math.round((item.subtotal - b) * 100) / 100;
+        } else {
+          taxableBase += item.subtotal;
+        }
+      }
+    }
+    return { ...base, taxableBase, iva };
+  }, [summaryByEmployee, monthTransactions]);
 
   const dailyData = useMemo(() => {
     const daily: Record<string, DailyData> = {};
@@ -101,10 +114,7 @@ const FinancialMonthlyReport = () => {
       }
       
       for (const item of txn.items) {
-        const isService = ["mensual", "quincenal", "semanal", "diario", "promo"].some(k => 
-          item.name.toLowerCase().includes(k)
-        );
-        if (isService) {
+        if (isServiceItem(item)) {
           daily[day].services += item.subtotal;
         } else {
           daily[day].bar += item.subtotal;

@@ -5,20 +5,18 @@ import { round2, parseDecimal } from "../../utils/format/number";
 /* Tabla del carrito de compras */
 interface Props {
   items: CartItem[];
-  taxRate: number;
   onQtyChange: (key: string, quantity: number) => void;
   onDiscountChange: (key: string, discount: number) => void;
   onRemove: (key: string) => void;
 }
 
-const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: Props) => {
+const CartTable = ({ items, onQtyChange, onDiscountChange, onRemove }: Props) => {
   return (
     <table className="pos-cart-table">
       <thead>
         <tr>
-          <th>Cod</th>
+          <th>#</th>
           <th>Nombre</th>
-          <th>Descripcion</th>
           <th>Cantidad</th>
           <th>Precio</th>
           <th>Desc %</th>
@@ -30,20 +28,25 @@ const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: 
       <tbody>
         {items.length === 0 ? (
           <tr>
-            <td colSpan={9} className="pos-empty-row">
+            <td colSpan={8} className="pos-empty-row">
               No hay items en el carrito.
             </td>
           </tr>
         ) : (
-          items.map((item) => {
-            const description = item.description || "--";
-            const itemTax = round2(item.subtotal * taxRate);
-            const itemTotal = round2(item.subtotal + itemTax);
+          items.map((item, index) => {
+            // IVA incluido: el subtotal (PVP * qty) ya incluye IVA
+            const basePrice = item.taxRate > 0
+              ? round2(item.subtotal / (1 + item.taxRate / 100))
+              : item.subtotal;
+            const itemTax = round2(item.subtotal - basePrice);
+            const itemTotal = item.subtotal;
+            const taxLabel = item.taxRate > 0
+              ? `$${itemTax.toFixed(2)}`
+              : `Exento`;
             return (
               <tr key={item.key}>
-                <td>{item.id}</td>
+                <td>{index + 1}</td>
                 <td>{item.name}</td>
-                <td className="pos-description">{description}</td>
                 <td>
                   <div className="pos-qty-control">
                     <input
@@ -84,7 +87,7 @@ const CartTable = ({ items, taxRate, onQtyChange, onDiscountChange, onRemove }: 
                     }
                   />
                 </td>
-                <td>${itemTax.toFixed(2)}</td>
+                <td>{taxLabel}</td>
                 <td>${itemTotal.toFixed(2)}</td>
                 <td>
                   <button

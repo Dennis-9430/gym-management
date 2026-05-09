@@ -85,7 +85,7 @@ const PaymentModal = ({ onClose }: Props) => {
           transferAmount: paymentMethod === "TRANSFER" ? selectedService.price : 0,
         },
         createdBy: user?.username || "Sistema",
-        generateInvoice: true,
+        generateInvoice: false,
         invoiceEmail: null,
       });
       toast.showToast("Pago registrado exitosamente", "success");

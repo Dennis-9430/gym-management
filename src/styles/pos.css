@@ -501,7 +501,11 @@
 
 .pos-description {
   min-width: 180px;
+  max-width: 260px;
   color: var(--color-text-muted);
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.3;
 }
 
 .pos-type {
@@ -1742,6 +1746,15 @@
   color: white;
 }
 
+.pos-btn-icon--danger {
+  color: var(--color-error, #ef4444);
+}
+
+.pos-btn-icon--danger:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
 .pos-list-summary {
   display: flex;
   justify-content: space-between;
@@ -2079,4 +2092,87 @@
 .edit-voucher-modal .remove-image:hover {
   background: var(--color-error);
   color: white;
+}
+
+/* Sale Detail Modal */
+.sale-detail {
+  padding: 8px 0;
+}
+
+.sale-detail__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+}
+
+.sale-detail__field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.sale-detail__field svg {
+  color: var(--color-action);
+  flex-shrink: 0;
+}
+
+.sale-detail__items-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.sale-detail__table {
+  margin-bottom: 16px;
+}
+
+.sale-detail__table th {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.sale-detail__table td {
+  font-size: var(--font-size-sm);
+}
+
+.sale-detail__item-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-icon-membership {
+  color: var(--color-action);
+}
+
+.item-icon-product {
+  color: var(--color-success);
+}
+
+.sale-detail__total-label {
+  text-align: right;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.sale-detail__footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.sale-detail__footer small {
+  color: var(--color-text-muted);
 }

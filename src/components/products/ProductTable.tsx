@@ -15,26 +15,39 @@ const ProductTable = ({ products, onEdit, onDelete, canManage = true }: Props) =
     <table className="product-table">
       <thead>
         <tr>
-          <th>ID</th>
+          <th>#</th>
+          <th>Cod.</th>
           <th>Nombre</th>
-          <th>Descripcion</th>
           <th>Categoria</th>
-          <th>Precio unitario</th>
-          <th>Cantidad</th>
-          <th>Total inventario</th>
+          <th>IVA</th>
+          <th>PVP</th>
+          <th>Base</th>
+          <th>IVA $</th>
+          <th>Cant.</th>
+          <th>Total inv.</th>
           {canManage && <th>Acciones</th>}
         </tr>
       </thead>
       <tbody>
-        {products.map((product) => {
-          const total = product.unitPrice * product.quantity;
+        {products.map((product, index) => {
+          const taxRate = product.taxRate ?? 0;
+          const pvp = product.unitPrice;
+          const base = taxRate > 0 ? pvp / (1 + taxRate / 100) : pvp;
+          const iva = pvp - base;
+          const total = pvp * product.quantity;
           return (
             <tr key={product.id}>
-              <td>{product.id}</td>
-              <td>{product.name}</td>
-              <td>{product.description}</td>
+              <td>{index + 1}</td>
+              <td style={{ fontFamily: "monospace", fontSize: "0.8rem", color: "#64748b" }}>{product.code}</td>
+              <td>
+                <div>{product.name}</div>
+                <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>{product.description}</div>
+              </td>
               <td>{PRODUCT_CATEGORY_LABELS[product.category]}</td>
-              <td>${product.unitPrice.toFixed(2)}</td>
+              <td>{taxRate > 0 ? `${taxRate}%` : "Exento"}</td>
+              <td>${pvp.toFixed(2)}</td>
+              <td>${base.toFixed(2)}</td>
+              <td>${iva.toFixed(2)}</td>
               <td>{product.quantity}</td>
               <td>${total.toFixed(2)}</td>
               {canManage && (

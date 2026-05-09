@@ -24,12 +24,12 @@ const STORAGE_KEY = "gym-management.products";
 
 // Productos de ejemplo -保留 para referencia
 export const seedProducts: Product[] = [
-  { id: 1, code: "SUP-001", name: "Whey Protein", description: "Proteina de suero 1kg", category: "SUPLEMENTOS", unitPrice: 35, quantity: 10, minStock: 5, createdAt: new Date().toISOString() },
-  { id: 2, code: "BEB-001", name: "Agua", description: "Botella 600ml", category: "BEBIDAS", unitPrice: 1, quantity: 60, minStock: 20, createdAt: new Date().toISOString() },
-  { id: 3, code: "ACC-001", name: "Guantes", description: "Guantes de entrenamiento", category: "ACCESORIOS", unitPrice: 12, quantity: 15, minStock: 5, createdAt: new Date().toISOString() },
-  { id: 4, code: "ROP-001", name: "Camiseta", description: "Camiseta deportiva", category: "ROPA", unitPrice: 18, quantity: 20, minStock: 5, createdAt: new Date().toISOString() },
+  { id: 1, code: "SUP-001", name: "Whey Protein", description: "Proteina de suero 1kg", category: "SUPLEMENTOS", unitPrice: 35, taxRate: 15, quantity: 10, minStock: 5, createdAt: new Date().toISOString() },
+  { id: 2, code: "BEB-001", name: "Agua", description: "Botella 600ml", category: "BEBIDAS", unitPrice: 1, taxRate: 0, quantity: 60, minStock: 20, createdAt: new Date().toISOString() },
+  { id: 3, code: "ACC-001", name: "Guantes", description: "Guantes de entrenamiento", category: "ACCESORIOS", unitPrice: 12, taxRate: 15, quantity: 15, minStock: 5, createdAt: new Date().toISOString() },
+  { id: 4, code: "ROP-001", name: "Camiseta", description: "Camiseta deportiva", category: "ROPA", unitPrice: 18, taxRate: 15, quantity: 20, minStock: 5, createdAt: new Date().toISOString() },
   // Incluye servicios como productos
-  ...services.map((service, index) => ({ id: 5 + index, code: `SER-00${index + 1}`, name: service.name, description: "Servicio del gimnasio", category: "SERVICIOS_GYM" as const, unitPrice: service.price, quantity: 1, minStock: 0, createdAt: new Date().toISOString() })),
+  ...services.map((service, index) => ({ id: 5 + index, code: `SER-00${index + 1}`, name: service.name, description: "Servicio del gimnasio", category: "SERVICIOS_GYM" as const, unitPrice: service.price, taxRate: service.taxRate ?? 15, quantity: 1, minStock: 0, createdAt: new Date().toISOString() })),
 ];
 
 // Funciones de manejo de datos locales (Fallback)
@@ -58,12 +58,38 @@ const saveProducts = (products: Product[]) => localStorage.setItem(STORAGE_KEY, 
 
 // Obtiene productos desde MongoDB
 // Relacionado con: backend/app/routers/products.py (list_products)
+/** Mapea el campo `stock` del backend a `quantity` del frontend */
+const mapApiProduct = (p: any): Product => ({
+  id: p.id ?? p._id,
+  code: p.code ?? "",
+  name: p.name ?? "",
+  description: p.description ?? "",
+  category: p.category ?? "SUPLEMENTOS",
+  unitPrice: p.unitPrice ?? 0,
+  taxRate: p.taxRate ?? 0,
+  quantity: p.stock ?? p.quantity ?? 0,
+  minStock: p.minStock ?? 0,
+  createdAt: p.createdAt ?? new Date().toISOString(),
+});
+
+/** Mapea del frontend al backend: `quantity` → `stock` */
+const toApiPayload = (input: ProductInput) => ({
+  code: input.code,
+  name: input.name,
+  description: input.description,
+  category: input.category,
+  unitPrice: input.unitPrice,
+  taxRate: input.taxRate,
+  stock: input.quantity,
+  minStock: input.minStock,
+});
+
 export const getProductsFromAPI = async (): Promise<Product[]> => {
   try {
     const response = await fetch(`${API_BASE}?low_stock=false`, { headers: getHeaders() });
     if (!response.ok) throw new Error("Error al obtener productos");
     const data = await response.json();
-    return data.products || [];
+    return (data.products || []).map(mapApiProduct);
   } catch (error) { throw error; }
 };
 
@@ -79,27 +105,33 @@ export const getProductById = async (id: number): Promise<Product | null> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, { headers: getHeaders() });
     if (!response.ok) throw new Error("Producto no encontrado");
-    return await response.json();
+    const data = await response.json();
+    return mapApiProduct(data);
   } catch { return loadProducts().find((p) => p.id === id) ?? null; }
 };
 
 // Crea producto en MongoDB
 // Relacionado con: backend/app/routers/products.py (create_product)
 export const createProductAPI = async (input: ProductInput): Promise<Product | null> => {
-  try {
-    const response = await fetch(API_BASE, { method: "POST", headers: getHeaders(), body: JSON.stringify(input) });
-    if (!response.ok) throw new Error("Error al crear producto");
-    return await response.json();
-  } catch (error) { return null; }
+  const response = await fetch(API_BASE, { method: "POST", headers: getHeaders(), body: JSON.stringify(toApiPayload(input)) });
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.detail || "Error al crear producto");
+  }
+  const data = await response.json();
+  return mapApiProduct(data);
 };
 
 // Actualiza producto en MongoDB
 // Relacionado con: backend/app/routers/products.py (update_product)
 export const updateProductAPI = async (id: number, update: ProductUpdate): Promise<Product | null> => {
   try {
-    const response = await fetch(`${API_BASE}/${id}`, { method: "PUT", headers: getHeaders(), body: JSON.stringify(update) });
+    const payload = { ...update } as any;
+    if ("quantity" in payload) { payload.stock = payload.quantity; delete payload.quantity; }
+    const response = await fetch(`${API_BASE}/${id}`, { method: "PUT", headers: getHeaders(), body: JSON.stringify(payload) });
     if (!response.ok) throw new Error("Error al actualizar producto");
-    return await response.json();
+    const data = await response.json();
+    return mapApiProduct(data);
   } catch (error) { return null; }
 };
 
@@ -129,7 +161,7 @@ export const getProductByIdLocal = (id: number): Product | null => loadProducts(
 export const createProduct = (input: ProductInput): Product => {
   const products = loadProducts();
   const nextId = products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-  const product: Product = { id: nextId, createdAt: new Date().toISOString(), ...input };
+  const product: Product = { id: nextId, createdAt: new Date().toISOString(), taxRate: 0, ...input };
   const updated = [...products, product];
   saveProducts(updated);
   return product;

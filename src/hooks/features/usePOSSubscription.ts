@@ -231,6 +231,7 @@ export const usePOSSubscription = (
         items: [{
           key: Date.now().toString(),
           id: subscriptionService.id,
+          serviceId: subscriptionService.id,
           name: subscriptionService.name,
           description: subscriptionService.description || "",
           category: "servicio",
@@ -255,16 +256,27 @@ export const usePOSSubscription = (
         client: clientData,
         payment: {
           method: subscriptionPaymentMethod,
-          cashAmount: subscriptionCashAmount,
-          transferAmount: subscriptionTransferAmount,
+          cashAmount: subscriptionPaymentMethod === "MIXED"
+            ? subscriptionCashAmount
+            : subscriptionPaymentMethod === "TRANSFER"
+              ? 0
+              : subscriptionPaidValue,
+          transferAmount: subscriptionPaymentMethod === "MIXED"
+            ? subscriptionTransferAmount
+            : subscriptionPaymentMethod === "CASH"
+              ? 0
+              : subscriptionPaidValue,
         },
         createdBy: user?.username || "Sistema",
         generateInvoice: true,
         invoiceEmail: clientData.email || null,
       };
-      await createSaleAPI(saleData as any);
-
-      toast?.showToast("Suscripción registrada. Recibido enviado al correo.", "success");
+      const saleResult = await createSaleAPI(saleData as any);
+      if (!saleResult) {
+        toast?.showToast("La membresía se asignó pero hubo un error al generar la factura.", "warning");
+      } else {
+        toast?.showToast("Suscripción registrada. Recibido enviado al correo.", "success");
+      }
       reloadClients();
       handleCloseSubscriptionModal();
     } catch (error) {

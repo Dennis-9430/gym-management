@@ -84,7 +84,7 @@ export const findClientByDocument = (documentNumber: string): ClientForm | null 
 };
 
 /* Obtiene cliente por ID */
-export const getClientById = async (id: number): Promise<ClientForm | null> => {
+export const getClientById = async (id: number | string): Promise<ClientForm | null> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, { headers: getHeaders() });
     if (!response.ok) {
@@ -118,14 +118,14 @@ export const createClientAPI = async (
 
 /* Actualiza cliente */
 export const updateClientAPI = async (
-  id: number,
+  id: number | string,
   client: Partial<ClientForm>
 ): Promise<ClientForm | null> => {
   try {
-    const response = await fetch(`${API_BASE}/${id}`, {
+    const response = await fetch(`${API_BASE}/update`, {
       method: "PUT",
       headers: getHeaders(),
-      body: JSON.stringify(client),
+      body: JSON.stringify({ ...client, client_id: id }),
     });
     if (!response.ok) {
       throw new Error("Error al actualizar cliente");
@@ -137,7 +137,7 @@ export const updateClientAPI = async (
 };
 
 /* Elimina cliente */
-export const deleteClientAPI = async (id: number): Promise<boolean> => {
+export const deleteClientAPI = async (id: number | string): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "DELETE",
@@ -483,7 +483,7 @@ export const createClient = (input: Omit<ClientForm, "id" | "createdAt">): Clien
   return newClient;
 };
 
-export const updateClient = (id: number, update: ClientForm): ClientForm => {
+export const updateClient = (id: number | string, update: ClientForm): ClientForm => {
   const clients = loadClients();
   const index = clients.findIndex((client) => client.id === id);
   if (index === -1) {

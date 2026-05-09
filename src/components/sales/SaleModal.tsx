@@ -44,7 +44,6 @@ interface SaleModalProps {
   filteredCatalog: CatalogItem[];
   onAddItem: (item: CatalogItem) => void;
   items: CartItem[];
-  taxRate: number;
   onQtyChange: (key: string, quantity: number) => void;
   onDiscountChange: (key: string, discount: number) => void;
   onRemoveItem: (key: string) => void;
@@ -86,7 +85,6 @@ const SaleModal = ({
   filteredCatalog,
   onAddItem,
   items,
-  taxRate,
   onQtyChange,
   onDiscountChange,
   onRemoveItem,
@@ -335,7 +333,6 @@ const SaleModal = ({
             <div className="pos-cart-table-wrapper">
               <CartTable
                 items={items}
-                taxRate={taxRate}
                 onQtyChange={onQtyChange}
                 onDiscountChange={onDiscountChange}
                 onRemove={onRemoveItem}

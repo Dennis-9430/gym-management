@@ -88,12 +88,17 @@
   font-size: var(--font-size-sm);
   color: #374151;
   font-weight: var(--font-weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .transaction-items {
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   padding-right: 16px;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .transaction-amount {
@@ -1090,16 +1095,67 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
+  .financial-summary {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .financial-summary__card {
+    min-width: 140px;
+    flex: 1 1 calc(50% - 8px);
+    max-width: none;
+  }
+
+  .financial-summary__card--total {
+    flex: 1 1 100%;
+  }
+
+  .date-selector {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .financial-report__filters {
+    flex-direction: column;
+  }
+
+  .financial-report__filter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .financial-dashboard__charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .financial-report {
+    padding: 12px;
+  }
+
+  .financial-dashboard {
+    padding: 12px;
+  }
+
   .financial-summary {
     flex-direction: column;
     align-items: center;
-    gap: 8px;
   }
 
   .financial-summary__card {
     width: 100%;
     max-width: 100%;
+    flex: none;
+  }
+
+  .financial-summary__card--total {
+    order: 0;
   }
 
   .transaction-item {
@@ -1118,6 +1174,18 @@
     text-align: left;
   }
 
+  .transaction-items {
+    order: -2;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .transaction-time {
+    order: -1;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
   .transaction-actions {
     display: none;
   }
@@ -1127,169 +1195,11 @@
     margin-left: auto;
   }
 
-  .financial-dashboard__charts {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .financial-summary {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .date-selector {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .financial-report__filters {
-    flex-direction: column;
-  }
-
-  .financial-report__filter-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 640px) {
-  .financial-report {
-    padding: 12px;
-  }
-
-  .financial-dashboard {
-    padding: 12px;
-  }
-
-  .transaction-item {
-    padding: 16px;
-    gap: 12px;
-  }
-
-  .transaction-time {
-    font-size: var(--font-size-sm);
-  }
-
-  .transaction-employee {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  .transaction-items {
-    font-size: var(--font-size-sm);
-  }
-
-  .transaction-amount {
-    font-size: var(--font-size-lg);
-  }
-
-  .transaction-method {
-    font-size: var(--font-size-sm);
-    padding: 8px 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .financial-summary {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-
-  .financial-summary__card--total {
-    grid-column: span 1;
-    order: -1;
-  }
-
-  .financial-summary__card {
-    min-width: 0;
-  }
-
-  .date-selector {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .financial-report__filters {
-    flex-direction: column;
-  }
-
-  .financial-report__filter-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 640px) {
-  .financial-summary {
-    grid-template-columns: 1fr;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .financial-summary__card--total {
-    grid-column: span 1;
-    order: 0;
-    width: 100%;
-  }
-
-  .financial-summary__card {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .transaction-item {
-    grid-template-columns: 1fr;
-  }
-
-  .transaction-time,
-  .transaction-employee,
-  .transaction-amount,
-  .transaction-method {
-    justify-self: start;
-  }
-
-  .transaction-items {
-    grid-column: span 1;
-    border-top: none;
-    padding-top: 0;
-    margin-top: 0;
-  }
-
-  .financial-report {
-    padding: 16px;
-  }
-
-  .financial-dashboard {
-    padding: 16px;
-  }
-
   .chart-wrapper {
-    padding: 16px;
+    padding: 12px;
   }
 
   .chart-title {
     font-size: var(--font-size-base);
-  }
-
-  .date-selector {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .date-selector-label {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 8px;
-  }
-
-  .financial-summary {
-    flex-direction: column;
-    align-items: center;
   }
 }

@@ -4,6 +4,7 @@ import {
   PRODUCT_CATEGORIES,
   PRODUCT_CATEGORY_LABELS,
 } from "../../types/product.types";
+import { DecimalInput } from "../common/DecimalInput";
 
 /* Formulario para crear o editar productos */
 interface Props {
@@ -20,6 +21,7 @@ const defaultValues: ProductInput = {
   description: "",
   category: "SUPLEMENTOS",
   unitPrice: 0,
+  taxRate: 15,
   quantity: 0,
   minStock: 5,
 };
@@ -133,35 +135,59 @@ const ProductForm = ({
       </div>
 
       <div className="form-group">
-        <label>Precio unitario</label>
-        <input
-          type="number"
-          min="0"
-          step="0.01"
+        <label>Precio de venta (PVP) <small>$</small></label>
+        <DecimalInput
           value={form.unitPrice}
-          onChange={(e) => updateField("unitPrice", Number(e.target.value))}
+          onChange={(val) => updateField("unitPrice", val)}
+          placeholder="0.00"
         />
       </div>
 
       <div className="form-group">
+        <label>IVA %</label>
+        <select
+          value={form.taxRate}
+          onChange={(e) => updateField("taxRate", Number(e.target.value))}
+        >
+          <option value={0}>Exento / 0%</option>
+          <option value={15}>15% (bienes generales)</option>
+        </select>
+      </div>
+
+      {form.unitPrice > 0 && form.taxRate > 0 && (
+        <div className="form-group full-width" style={{ fontSize: "0.85rem", color: "#64748b", padding: "8px 0" }}>
+          <strong>Desglose de IVA incluido:</strong><br />
+          PVP: <strong>${form.unitPrice.toFixed(2)}</strong> |&nbsp;
+          Base: <strong>${(form.unitPrice / (1 + form.taxRate / 100)).toFixed(2)}</strong> |&nbsp;
+          IVA ({form.taxRate}%): <strong>${(form.unitPrice - form.unitPrice / (1 + form.taxRate / 100)).toFixed(2)}</strong>
+        </div>
+      )}
+
+      <div className="form-group">
         <label>Cantidad</label>
         <input
-          type="number"
-          min="0"
-          step="1"
-          value={form.quantity}
-          onChange={(e) => updateField("quantity", Number(e.target.value))}
+          type="text"
+          inputMode="numeric"
+          value={form.quantity || ""}
+          onChange={(e) => {
+            const cleaned = e.target.value.replace(/\D/g, "");
+            updateField("quantity", cleaned ? parseInt(cleaned, 10) : 0);
+          }}
+          placeholder="0"
         />
       </div>
 
       <div className="form-group">
         <label>Stock minimo</label>
         <input
-          type="number"
-          min="0"
-          step="1"
-          value={form.minStock}
-          onChange={(e) => updateField("minStock", Number(e.target.value))}
+          type="text"
+          inputMode="numeric"
+          value={form.minStock || ""}
+          onChange={(e) => {
+            const cleaned = e.target.value.replace(/\D/g, "");
+            updateField("minStock", cleaned ? parseInt(cleaned, 10) : 0);
+          }}
+          placeholder="0"
         />
       </div>
 

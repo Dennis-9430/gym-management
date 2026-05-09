@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, X } from "lucide-react";
 import ProductForm from "../../components/products/ProductForm";
 import ProductSearch from "../../components/products/ProductSearch";
@@ -30,7 +30,10 @@ const Products = () => {
     addProduct,
     updateProductById,
     removeProduct,
+    refresh,
   } = useProducts();
+
+  useEffect(() => { refresh(); }, [refresh]);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
@@ -73,7 +76,7 @@ const Products = () => {
    * Maneja el submit del formulario
    * @param {ProductInput} values - datos del producto
    */
-  const handleSubmit = (values: ProductInput) => {
+  const handleSubmit = async (values: ProductInput) => {
     if (!canManageProducts) {
       alert("No tienes permisos para gestionar productos.");
       return;
@@ -84,13 +87,13 @@ const Products = () => {
     }
     try {
       if (editingProduct) {
-        updateProductById(editingProduct.id, values);
+        await updateProductById(editingProduct.id, values);
       } else {
-        addProduct(values);
+        await addProduct(values);
       }
       closeForm();
     } catch {
-      // error handled in hook
+      // error handled in hook — el formulario se queda abierto para mostrar el error
     }
   };
 

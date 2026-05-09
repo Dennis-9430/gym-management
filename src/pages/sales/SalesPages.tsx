@@ -48,6 +48,8 @@ const {
     cashAmount,
     transferAmount,
     voucherCode,
+    generateInvoice,
+    invoiceEmail,
     saleClientResults,
     matchedSaleClient,
     search,
@@ -80,6 +82,8 @@ const {
     setPaymentMethod,
     setVoucherCode,
     setSaleModalOpen,
+    setGenerateInvoice,
+    setInvoiceEmail,
     setSearch,
     setSubscriptionSearch,
     setSubscriptionShowServices,
@@ -146,7 +150,6 @@ const {
         filteredCatalog={filteredCatalog}
         onAddItem={handleAddFromSearch}
         items={items}
-        taxRate={taxRate}
         onQtyChange={handleQtyChange}
         onDiscountChange={updateItemDiscount}
         onRemoveItem={removeItem}
@@ -158,6 +161,10 @@ const {
         onDiscountRateChange={handleDiscountChange}
         onTaxRateChange={handleTaxChange}
         onCheckout={handleCheckout}
+        generateInvoice={generateInvoice}
+        onGenerateInvoiceChange={setGenerateInvoice}
+        invoiceEmail={invoiceEmail}
+        onInvoiceEmailChange={setInvoiceEmail}
       />
 
       <SubscriptionModal

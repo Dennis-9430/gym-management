@@ -33,9 +33,14 @@
 }
 
 .form-error {
-  margin-top: 4px;
-  font-size: var(--font-size-xs);
-  color: var(--color-danger);
+  margin-top: 8px;
+  padding: 10px 12px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: #fff;
+  background: var(--color-danger);
+  border-radius: 6px;
+  text-align: center;
 }
 
 /* --------------------------------------------------------------------------

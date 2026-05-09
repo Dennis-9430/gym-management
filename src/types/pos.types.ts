@@ -10,6 +10,7 @@ export interface CatalogItem {
   unitPrice: number;
   stock: number | null;
   source: CatalogSource;
+  taxRate?: number;
   serviceId?: string;
   duration?: number;
   durationUnit?: string;
@@ -27,6 +28,7 @@ export interface CartItem {
   quantity: number;
   subtotal: number;
   source: CatalogSource;
+  taxRate: number;
   productId?: string | number | null;
   serviceId?: string | number | null;
 }

@@ -35,6 +35,7 @@ const buildCatalog = (products: Product[], memberships: Service[]): CatalogItem[
       unitPrice: product.unitPrice,
       stock: product.quantity,
       source: "PRODUCT",
+      taxRate: product.taxRate,
     }));
 
   // Membresías desde API (precio > $5)
@@ -47,6 +48,7 @@ const buildCatalog = (products: Product[], memberships: Service[]): CatalogItem[
     unitPrice: service.price,
     stock: null,
     source: "MEMBERSHIP",
+    taxRate: service.taxRate ?? 0,
     serviceId: service.id,
     duration: service.duration,
     durationUnit: service.durationUnit,

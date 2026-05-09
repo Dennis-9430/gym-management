@@ -15,7 +15,7 @@ import "../../styles/financial.css";
 const FinancialDashboard = () => {
   const navigate = useNavigate();
   const { isPremium } = usePlanAccess();
-  const { transactions, groupByMonth, getTransactionsByDate } =
+  const { transactions, groupByMonth, getTransactionsByDate, isServiceItem, calcItemIVA } =
     useTransactions();
 
   useEffect(() => {
@@ -86,14 +86,7 @@ const FinancialDashboard = () => {
       }
 
       for (const item of txn.items) {
-        const isService = [
-          "mensual",
-          "quincenal",
-          "semanal",
-          "diario",
-          "promo",
-        ].some((k) => item.name.toLowerCase().includes(k));
-        if (isService) {
+        if (isServiceItem(item)) {
           summaries[employee].services += item.subtotal;
         } else {
           summaries[employee].bar += item.subtotal;
@@ -138,7 +131,10 @@ const FinancialDashboard = () => {
       }),
       { services: 0, bar: 0, cash: 0, transfer: 0, total: 0 },
     );
+    // taxableBase e iva se calculan en el FinancialReport, no por empleado
   }, [summaryByEmployee]);
+
+
 
   useEffect(() => {
     getFinancialSummary(selectedDate, selectedDate).then(() => {}).catch(() => {});

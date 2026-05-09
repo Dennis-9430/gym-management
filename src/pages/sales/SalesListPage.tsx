@@ -2,17 +2,19 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context";
 import { useNavigate } from "react-router";
-import { getSales, verifyPaymentAPI } from "../../services/sales.service";
+import { getSales, verifyPaymentAPI, deleteSaleAPI } from "../../services/sales.service";
 import type { SaleRecord, PaymentStatus } from "../../types/sales.types";
-import { Search, Filter, CheckCircle, Clock, Eye, Edit, Loader2, ArrowLeft } from "lucide-react";
+import { Search, Filter, CheckCircle, Clock, Eye, Edit, Loader2, ArrowLeft, Trash2, PackageOpen, ShoppingBag, CreditCard, Hash, User, DollarSign } from "lucide-react";
 import EditVoucherModal from "../../components/sales/EditVoucherModal";
+import Modal from "../../components/common/Modal";
 import "../../styles/pos.css";
 
 const SalesListPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isAdmin = user?.role === "ADMIN";
-  const canManageSales = isAdmin || user?.role === "GERENTE";
+  const isGerente = user?.role === "GERENTE";
+  const canManageSales = isAdmin || isGerente;
   const [sales, setSales] = useState<SaleRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
@@ -22,6 +24,8 @@ const SalesListPage = () => {
   const [updating, setUpdating] = useState<string | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [saleToEdit, setSaleToEdit] = useState<SaleRecord | null>(null);
+  const [detailSale, setDetailSale] = useState<SaleRecord | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
 
   useEffect(() => {
     loadSales();
@@ -69,6 +73,7 @@ const SalesListPage = () => {
     return date.toLocaleDateString("es-ES", {
       day: "2-digit",
       month: "short",
+      year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -95,6 +100,21 @@ const SalesListPage = () => {
   const handleViewImage = (sale: SaleRecord) => {
     if (sale.voucherImage) {
       window.open(sale.voucherImage, "_blank");
+    }
+  };
+
+  const handleViewDetail = (sale: SaleRecord) => {
+    setDetailSale(sale);
+    setDetailModalOpen(true);
+  };
+
+  const handleDeleteSale = async (sale: SaleRecord) => {
+    if (!confirm(`¿Estás seguro de eliminar la venta #${sale.id}?`)) return;
+    const success = await deleteSaleAPI(sale.id.toString());
+    if (success) {
+      await loadSales();
+    } else {
+      alert("Error al eliminar la venta");
     }
   };
 
@@ -235,6 +255,13 @@ const SalesListPage = () => {
                   <td>{getStatusBadge(sale.paymentStatus)}</td>
                   <td>
                     <div className="sale-actions">
+                      <button
+                        className="pos-btn-icon"
+                        title="Ver detalle de venta"
+                        onClick={() => handleViewDetail(sale)}
+                      >
+                        <PackageOpen size={16} />
+                      </button>
                       {canManageSales && sale.paymentStatus === "pending" && (
                         <button
                           className="pos-btn-icon"
@@ -267,6 +294,15 @@ const SalesListPage = () => {
                           <Eye size={16} />
                         </button>
                       )}
+                      {isGerente && (
+                        <button
+                          className="pos-btn-icon pos-btn-icon--danger"
+                          title="Eliminar venta"
+                          onClick={() => handleDeleteSale(sale)}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -282,6 +318,84 @@ const SalesListPage = () => {
         sale={saleToEdit}
         onSave={loadSales}
       />
+
+      <Modal
+        isOpen={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        title="Detalle de Venta"
+        size="md"
+        centered
+      >
+        {detailSale && (
+          <div className="sale-detail">
+            <div className="sale-detail__header">
+              <div className="sale-detail__field">
+                <Hash size={14} />
+                <span>Venta #{typeof detailSale.id === "string" ? detailSale.id.slice(0, 8) : detailSale.id}</span>
+              </div>
+              <div className="sale-detail__field">
+                <User size={14} />
+                <span>
+                  {detailSale.client.firstName || detailSale.client.lastName
+                    ? `${detailSale.client.firstName || ""} ${detailSale.client.lastName || ""}`.trim()
+                    : "Consumidor Final"}
+                </span>
+              </div>
+              <div className="sale-detail__field">
+                <DollarSign size={14} />
+                <span>Total: ${detailSale.totals.total.toFixed(2)}</span>
+              </div>
+              <div className="sale-detail__field">
+                <CreditCard size={14} />
+                <span>{getPaymentMethod(detailSale.payment.method)}</span>
+              </div>
+            </div>
+
+            <h4 className="sale-detail__items-title">Productos / Servicios</h4>
+            <table className="pos-table sale-detail__table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cant.</th>
+                  <th>P.Unit</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {detailSale.items.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>
+                      <div className="sale-detail__item-name">
+                        {item.source === "MEMBERSHIP" || item.source === "DAILY" ? (
+                          <ShoppingBag size={14} className="item-icon-membership" />
+                        ) : (
+                          <PackageOpen size={14} className="item-icon-product" />
+                        )}
+                        {item.name}
+                      </div>
+                    </td>
+                    <td>{item.quantity}</td>
+                    <td>${item.unitPrice.toFixed(2)}</td>
+                    <td className="sale-total">${item.subtotal.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={3} className="sale-detail__total-label">Total</td>
+                  <td className="sale-total">${detailSale.totals.total.toFixed(2)}</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            {detailSale.createdBy && (
+              <div className="sale-detail__footer">
+                <small>Registrado por: {detailSale.createdBy}</small>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

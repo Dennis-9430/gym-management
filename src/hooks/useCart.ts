@@ -87,6 +87,7 @@ export const useCart = () => {
           quantity: 1,
           subtotal: calcSubtotal(item.unitPrice, 0, 1),
           source: item.source,
+          taxRate: item.taxRate ?? 0,
         },
       ];
     });
@@ -134,17 +135,50 @@ export const useCart = () => {
 
   const totals = useMemo<CartTotals>(() => {
     const subtotal = round2(items.reduce((sum, i) => sum + i.subtotal, 0));
+
+    if (items.length === 0) {
+      return {
+        subtotal: 0,
+        taxableSubtotal: 0,
+        vatSubtotal: 0,
+        discountRate: 0,
+        discountAmount: 0,
+        taxRate: 0,
+        taxAmount: 0,
+        iceAmount: 0,
+        total: 0,
+      };
+    }
+
+    // Descuento global distribuido proporcionalmente
     const discountAmount = round2(subtotal * discountRate);
-    const taxableSubtotal = Math.max(0, subtotal - discountAmount);
-    const vatSubtotal = round2(taxableSubtotal);
-    const taxAmount = round2(vatSubtotal * taxRate);
+    const discountFactor = subtotal > 0 ? (subtotal - discountAmount) / subtotal : 1;
+
+    // IVA incluido: el PVP ya incluye IVA, calculamos base imponible = PVP / (1 + tasa)
+    let taxableBase = 0;
+    let taxAmount = 0;
+
+    for (const item of items) {
+      const discountedPvp = round2(item.subtotal * discountFactor); // PVP del item tras descuento global
+      if (item.taxRate > 0) {
+        const rate = item.taxRate / 100;
+        const base = round2(discountedPvp / (1 + rate));
+        taxableBase += base;
+        taxAmount += round2(discountedPvp - base);
+      } else {
+        taxableBase += discountedPvp;
+      }
+    }
+
+    taxableBase = round2(taxableBase);
+    taxAmount = round2(taxAmount);
     const iceAmount = 0;
-    const total = round2(taxableSubtotal + taxAmount + iceAmount);
+    const total = round2(subtotal - discountAmount); // PVP con IVA incluido - descuento
 
     return {
       subtotal,
-      taxableSubtotal,
-      vatSubtotal,
+      taxableSubtotal: taxableBase,
+      vatSubtotal: taxableBase,
       discountRate,
       discountAmount,
       taxRate,

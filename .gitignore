@@ -25,7 +25,12 @@ dist-ssr
 
 desarrolloBackend.txt
 *.md
-# backend/
+backend/
+.env
+nul
+error_consola.txt
+SOLUCION_*.txt
+openspec/
 commits.txt
 promp.txt
 PLAN_IMPLEMENTACION.txt

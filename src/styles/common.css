@@ -119,9 +119,7 @@
 }
 
 .modal-centered {
-  position: relative;
-  top: 25%;
-  transform: translateY(-25%);
+  max-height: 50vh;
 }
 
 .modal-sm {
