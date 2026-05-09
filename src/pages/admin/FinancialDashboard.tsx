@@ -1,6 +1,7 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTransactions } from "../../hooks/useTransactions";
+import { useEmployees } from "../../hooks/useEmployees";
 import FinancialBarChart from "../../components/financial/FinancialBarChart";
 import FinancialSummaryTable from "../../components/financial/FinancialSummaryTable";
 import { ArrowLeft, TrendingUp } from "lucide-react";
@@ -17,6 +18,7 @@ const FinancialDashboard = () => {
   const { isPremium } = usePlanAccess();
   const { transactions, groupByMonth, getTransactionsByDate, isServiceItem, calcItemIVA } =
     useTransactions();
+  const { employees, refresh: refreshEmployees } = useEmployees();
 
   useEffect(() => {
     if (!isPremium()) {
@@ -25,6 +27,28 @@ const FinancialDashboard = () => {
       return;
     }
   }, [isPremium, navigate]);
+
+  useEffect(() => {
+    refreshEmployees();
+  }, [refreshEmployees]);
+
+  // Mapa username/email → nombre completo
+  const employeeNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const emp of employees) {
+      const fullName = [emp.firstName, emp.lastName].filter(Boolean).join(" ");
+      if (fullName) {
+        map[emp.username] = fullName;
+        if (emp.email) map[emp.email] = fullName;
+      }
+    }
+    return map;
+  }, [employees]);
+
+  const getDisplayName = useCallback((name?: string): string => {
+    if (!name) return "Sistema";
+    return employeeNameMap[name] || name;
+  }, [employeeNameMap]);
 
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const today = new Date();
@@ -75,7 +99,7 @@ const FinancialDashboard = () => {
     > = {};
 
     for (const txn of todayTransactions) {
-      const employee = txn.createdBy || "Sistema";
+      const employee = getDisplayName(txn.createdBy);
       if (!summaries[employee]) {
         summaries[employee] = {
           services: 0,
@@ -113,7 +137,7 @@ const FinancialDashboard = () => {
           txn.payment.method === "TRANSFER" || txn.payment.method === "MIXED",
       )
       .map((txn) => ({
-        employee: txn.createdBy || "Sistema",
+        employee: getDisplayName(txn.createdBy),
         voucherCode: txn.voucherCode || "N/A",
         voucherImage: txn.voucherImage,
       }));

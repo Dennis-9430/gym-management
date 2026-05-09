@@ -97,6 +97,14 @@ export interface YearlyData {
   month: string;
   /** Clave del mes (ej: 2024-01) */
   monthKey: string;
+  /** Total de servicios en el mes */
+  services: number;
+  /** Total de productos del bar en el mes */
+  bar: number;
+  /** Total en efectivo del mes */
+  cash: number;
+  /** Total por transferencia del mes */
+  transfer: number;
   /** Base imponible del mes */
   taxableBase: number;
   /** IVA generado en el mes */
@@ -397,7 +405,11 @@ export const useTransactions = () => {
    * @returns Array de YearlyData con todos los meses del anio
    */
   const groupByYear = useCallback((txns: SaleRecord[], year: number): YearlyData[] => {
-    const filtered = txns.filter(t => t.createdAt.startsWith(String(year)));
+    // Filtrar por anio usando fecha local
+    const filtered = txns.filter(t => {
+      const d = new Date(t.createdAt);
+      return d.getFullYear() === year;
+    });
     const months: Record<string, YearlyData> = {};
 
     // Inicializa todos los meses del anio
@@ -407,6 +419,10 @@ export const useTransactions = () => {
       months[monthKey] = {
         month: date.toLocaleDateString("es-ES", { month: "long" }),
         monthKey,
+        services: 0,
+        bar: 0,
+        cash: 0,
+        transfer: 0,
         total: 0,
         taxableBase: 0,
         iva: 0,
@@ -415,19 +431,31 @@ export const useTransactions = () => {
 
     // Acumula los totales de cada mes
     for (const txn of filtered) {
-      const monthKey = txn.createdAt.slice(0, 7);
+      const d = new Date(txn.createdAt);
+      const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
       if (months[monthKey]) {
         for (const item of txn.items) {
           const { base, iva: itemIVA } = calcItemIVA(item);
+          if (isServiceItem(item)) {
+            months[monthKey].services += item.subtotal;
+          } else {
+            months[monthKey].bar += item.subtotal;
+          }
           months[monthKey].total += item.subtotal;
           months[monthKey].taxableBase += base;
           months[monthKey].iva += itemIVA;
+        }
+        if (txn.payment.method === "CASH" || txn.payment.method === "MIXED") {
+          months[monthKey].cash += txn.payment.cashAmount;
+        }
+        if (txn.payment.method === "TRANSFER" || txn.payment.method === "MIXED") {
+          months[monthKey].transfer += txn.payment.transferAmount;
         }
       }
     }
 
     return Object.values(months);
-  }, []);
+  }, [calcItemIVA, isServiceItem]);
 
 
   /**

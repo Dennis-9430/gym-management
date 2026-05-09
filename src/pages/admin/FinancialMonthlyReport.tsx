@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTransactions } from "../../hooks/useTransactions";
+import { useEmployees } from "../../hooks/useEmployees";
 import FinancialSummaryTable from "../../components/financial/FinancialSummaryTable";
 import { ArrowLeft, Calendar, TrendingUp } from "lucide-react";
 import {
@@ -26,10 +27,35 @@ interface DailyData {
 const FinancialMonthlyReport = () => {
   const navigate = useNavigate();
   const { transactions, groupByYear, isServiceItem } = useTransactions();
+  const { employees, refresh: refreshEmployees } = useEmployees();
 
-  const [selectedMonth, setSelectedMonth] = useState<string>(
-    new Date().toISOString().slice(0, 7)
-  );
+  useEffect(() => {
+    refreshEmployees();
+  }, [refreshEmployees]);
+
+  // Mapa username/email → nombre completo
+  const employeeNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const emp of employees) {
+      const fullName = [emp.firstName, emp.lastName].filter(Boolean).join(" ");
+      if (fullName) {
+        map[emp.username] = fullName;
+        if (emp.email) map[emp.email] = fullName;
+      }
+    }
+    return map;
+  }, [employees]);
+
+  const getDisplayName = useCallback((name?: string): string => {
+    if (!name) return "Sistema";
+    return employeeNameMap[name] || name;
+  }, [employeeNameMap]);
+
+  // Fecha local para el selector de mes
+  const [selectedMonth, setSelectedMonth] = useState<string>(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
   const [viewMode, setViewMode] = useState<"monthly" | "yearly">("monthly");
   const currentYear = new Date().getFullYear();
 
@@ -43,14 +69,19 @@ const FinancialMonthlyReport = () => {
   }, [transactions]);
 
   const monthTransactions = useMemo(() => {
-    return transactions.filter((txn) => txn.createdAt.startsWith(selectedMonth));
+    // selectedMonth es "YYYY-MM" en local
+    return transactions.filter((txn) => {
+      const d = new Date(txn.createdAt);
+      const localMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      return localMonth === selectedMonth;
+    });
   }, [transactions, selectedMonth]);
 
   const summaryByEmployee = useMemo(() => {
     const summaries: Record<string, { services: number; bar: number; cash: number; transfer: number; total: number }> = {};
     
     for (const txn of monthTransactions) {
-      const employee = txn.createdBy || "Sistema";
+      const employee = getDisplayName(txn.createdBy);
       if (!summaries[employee]) {
         summaries[employee] = { services: 0, bar: 0, cash: 0, transfer: 0, total: 0 };
       }
@@ -282,10 +313,10 @@ const FinancialMonthlyReport = () => {
             <h3 className="section-title">Resumen del Año {currentYear}</h3>
             <FinancialSummaryTable 
               summary={{
-                services: yearlyData.reduce((acc, _m) => acc, 0),
-                bar: yearlyData.reduce((acc, _m) => acc, 0),
-                cash: 0,
-                transfer: 0,
+                services: yearlyData.reduce((acc, m) => acc + m.services, 0),
+                bar: yearlyData.reduce((acc, m) => acc + m.bar, 0),
+                cash: yearlyData.reduce((acc, m) => acc + (m as any).cash || 0, 0),
+                transfer: yearlyData.reduce((acc, m) => acc + (m as any).transfer || 0, 0),
                 total: yearlyData.reduce((acc, m) => acc + m.total, 0),
               }} 
               employeeData={{}} 
