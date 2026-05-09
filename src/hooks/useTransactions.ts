@@ -198,9 +198,14 @@ export const useTransactions = () => {
    * @returns Array de ventas de hoy ordenadas por fecha
    */
   const getTodayTransactions = useMemo(() => {
-    const today = new Date().toISOString().split("T")[0];
+    const now = new Date();
     return transactions
-      .filter(t => t.createdAt.startsWith(today))
+      .filter(t => {
+        const d = new Date(t.createdAt);
+        return d.getFullYear() === now.getFullYear() &&
+               d.getMonth() === now.getMonth() &&
+               d.getDate() === now.getDate();
+      })
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [transactions]);
 
@@ -212,7 +217,11 @@ export const useTransactions = () => {
    */
   const getTransactionsByDate = useCallback((date: string) => {
     return transactions
-      .filter(t => t.createdAt.startsWith(date))
+      .filter(t => {
+        const d = new Date(t.createdAt);
+        const localDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        return localDate === date;
+      })
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [transactions]);
 
