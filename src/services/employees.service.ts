@@ -5,12 +5,9 @@
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../types/employee.types";
 import { getAuthHeaders, getAuthToken } from "./api";
 
-// Configuración de API - usa variable de entorno o fallback
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
-
-// Constantes de configuracion
-// Relacionado con: backend/app/routers/employees.py
-const API_BASE = `${getApiBaseUrl()}/api/employees`;
+// Configuración de API - usa variable de entorno o proxy de Vite
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/employees` : "/api/employees";
 const STORAGE_KEY = "gym-management.employees";
 
 // Obtiene empleados desde MongoDB

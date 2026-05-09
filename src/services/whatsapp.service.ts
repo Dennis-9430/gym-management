@@ -1,9 +1,9 @@
 /* API de WhatsApp Notifications */
 import { getAuthToken } from "./api";
 
-// Configuración de API - usa variable de entorno o fallback
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
-const API_BASE = `${getApiBaseUrl()}/api/notifications`;
+// Configuración de API - usa variable de entorno o proxy de Vite
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/notifications` : "/api/notifications";
 
 const getHeaders = (): Record<string, string> => {
   const token = getAuthToken();

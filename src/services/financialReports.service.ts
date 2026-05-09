@@ -1,9 +1,9 @@
 /* Servicio para reportes financieros diarios */
 import { getAuthToken } from "./api";
 
-// Configuración de API - usa variable de entorno o fallback
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
-const API_BASE = `${getApiBaseUrl()}/api/reports`;
+// Configuración de API - usa variable de entorno o proxy de Vite
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/reports` : "/api/reports";
 
 const getHeaders = (): Record<string, string> => {
   const token = getAuthToken();

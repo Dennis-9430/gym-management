@@ -6,7 +6,7 @@
  * @version 1.0.0
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod, SaleClientInfo } from "../../types/sales.types";
 import type { ClientForm } from "../../types/client.types";
@@ -75,6 +75,16 @@ export const usePOSSales = (
       setTransferAmount(0);
     }
   }, [totals.total]);
+
+  // Sincronizar montos cuando cambia el total (el usuario agrega/quita items)
+  // Solo para CASH y TRANSFER donde el usuario no ve inputs de monto
+  useEffect(() => {
+    if (paymentMethod === "CASH") {
+      setCashAmount(totals.total);
+    } else if (paymentMethod === "TRANSFER") {
+      setTransferAmount(totals.total);
+    }
+  }, [totals.total, paymentMethod]);
 
   // Handler: registro de venta
 const handleCheckout = useCallback(() => {

@@ -1,10 +1,10 @@
 /* Servicio de API con manejo de errores y protección por plan */
 
-// URL del backend (usa .env o fallback)
+// URL del backend (usa .env para producción, ruta relativa para proxy de desarrollo)
 export const getApiBaseUrl = () =>
-  import.meta.env.VITE_API_URL || "http://localhost:8000";
+  import.meta.env.VITE_API_URL || "";
 
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = getApiBaseUrl() || "";
 
 /* Construir URL correctamente */
 const buildUrl = (endpoint: string) => {

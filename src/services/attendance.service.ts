@@ -1,9 +1,9 @@
 /* Servicio de asistencia - carga bajo demanda */
 import { getAuthToken } from "./api";
 
-// Configuración de API - usa variable de entorno o fallback
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
-const API_BASE = `${getApiBaseUrl()}/api/attendance`;
+// Configuración de API - usa variable de entorno o proxy de Vite
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/attendance` : "/api/attendance";
 
 const getHeaders = (): Record<string, string> => {
   const token = getAuthToken();

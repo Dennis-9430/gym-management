@@ -5,8 +5,9 @@
 import type { ClientForm } from "../types/client.types";
 import { getAuthToken } from "./api";
 
-// Configuración de API - usa variable de entorno o fallback
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+// Configuración de API - usa variable de entorno o proxy de Vite
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/clients` : "/api/clients";
 
 // Función helper para obtener headers con token
 const getHeaders = (): Record<string, string> => {
@@ -15,10 +16,6 @@ const getHeaders = (): Record<string, string> => {
   if (token) headers["Authorization"] = `Bearer ${token}`;
   return headers;
 };
-
-// Constantes de configuracion
-// Relacionado con: backend/app/routers/clients.py
-const API_BASE = `${getApiBaseUrl()}/api/clients`;
 const STORAGE_KEY = "gym-management.clients";
 
 // Obtiene clientes desde MongoDB

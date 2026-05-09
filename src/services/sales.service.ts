@@ -5,8 +5,11 @@
 import type { SaleInput, SaleRecord } from "../types/sales.types";
 import { getAuthToken } from "./api";
 
-// Configuración de API - usa variable de entorno o fallback
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+// Configuración de API - usa variable de entorno o proxy de Vite
+// Si VITE_API_URL está definida, usa URL absoluta (producción).
+// Si no, usa ruta relativa que pasa por el proxy de Vite (desarrollo).
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/sales` : "/api/sales";
 
 // Función helper para obtener headers con token
 const getHeaders = (): Record<string, string> => {
@@ -15,10 +18,6 @@ const getHeaders = (): Record<string, string> => {
   if (token) headers["Authorization"] = `Bearer ${token}`;
   return headers;
 };
-
-// Constantes de configuracion
-// Relacionado con: backend/app/routers/sales.py
-const API_BASE = `${getApiBaseUrl()}/api/sales`;
 const STORAGE_KEY = "gym-management.sales";
 
 // Funciones helper de fechas
@@ -380,7 +379,9 @@ export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
       const clientLastName = sale.clientLastName || "";
       return {
         id: sale.id || "",
-        createdAt: sale.createdAt || new Date().toISOString(),
+        // Backend guarda createdAt en UTC pero no incluye "Z".
+        // Agregarlo explícitamente para que JS lo parse correctamente como UTC.
+        createdAt: (sale.createdAt || new Date().toISOString()).replace(/Z?$/, "Z"),
         items: (sale.items || []).map((item: any) => ({
           key: Date.now().toString() + Math.random(),
           id: item.productId || item.serviceId || 0,
@@ -491,7 +492,7 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
     const clientLastName = apiResponse.clientLastName || "";
     return {
       id: apiResponse.id || "",
-      createdAt: apiResponse.createdAt || new Date().toISOString(),
+      createdAt: (apiResponse.createdAt || new Date().toISOString()).replace(/Z?$/, "Z"),
       items: (apiResponse.items || []).map((item: any) => ({
         key: Date.now().toString() + Math.random(),
         id: item.productId || item.serviceId || 0,

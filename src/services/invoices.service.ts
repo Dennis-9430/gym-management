@@ -5,7 +5,8 @@
 import { getAuthToken } from "./api";
 
 // Configuración de API
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "http://localhost:8000";
+const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/invoices` : "/api/invoices";
 
 // Función helper para obtener headers con token
 const getHeaders = (): Record<string, string> => {
@@ -14,8 +15,6 @@ const getHeaders = (): Record<string, string> => {
   if (token) headers["Authorization"] = `Bearer ${token}`;
   return headers;
 };
-
-const API_BASE = `${getApiBaseUrl()}/api/invoices`;
 
 /**
  * Datos de una factura
@@ -64,7 +63,12 @@ export const getInvoicesFromAPI = async (): Promise<InvoiceRecord[]> => {
       throw new Error("Error al obtener facturas");
     }
     const data = await response.json();
-    return data.invoices || [];
+    const invoices = data.invoices || [];
+    // Backend guarda createdAt en UTC sin "Z". Agregarlo para parse correcto.
+    return invoices.map((inv: InvoiceRecord) => ({
+      ...inv,
+      createdAt: (inv.createdAt || new Date().toISOString()).replace(/Z?$/, "Z"),
+    }));
   } catch (error) {
     return [];
   }
