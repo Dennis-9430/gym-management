@@ -7,7 +7,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   transaction: SaleRecord | null;
-  onSave: (id: number, updates: Partial<SaleRecord>) => void;
+  onSave: (id: string | number, updates: Partial<SaleRecord>) => void;
 }
 
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [

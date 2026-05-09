@@ -51,8 +51,8 @@ const sampleSales: SaleRecord[] = [
     id: 1,
     createdAt: getDaysAgo(0),
     items: [
-      { key: "1", id: 1, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP" },
-      { key: "2", id: 2, name: "Agua", description: "Botella de agua", category: "bar", stock: 50, unitPrice: 1.5, unitDiscount: 0, quantity: 2, subtotal: 3, source: "PRODUCT" },
+      { key: "1", id: 1, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP", taxRate: 15 },
+      { key: "2", id: 2, name: "Agua", description: "Botella de agua", category: "bar", stock: 50, unitPrice: 1.5, unitDiscount: 0, quantity: 2, subtotal: 3, source: "PRODUCT", taxRate: 0 },
     ],
     totals: { subtotal: 33, taxableSubtotal: 33, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 33 },
     client: { documentNumber: "12345678", firstName: "Juan", lastName: "Pérez" },
@@ -63,7 +63,7 @@ const sampleSales: SaleRecord[] = [
     id: 2,
     createdAt: getDaysAgo(0),
     items: [
-      { key: "3", id: 3, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 1, subtotal: 18, source: "MEMBERSHIP" },
+      { key: "3", id: 3, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 1, subtotal: 18, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 18, taxableSubtotal: 18, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 18 },
     client: { documentNumber: "87654321", firstName: "María", lastName: "García" },
@@ -75,8 +75,8 @@ const sampleSales: SaleRecord[] = [
     id: 3,
     createdAt: getDaysAgo(0),
     items: [
-      { key: "4", id: 4, name: "Bebida Energética", description: "Bebida energizante", category: "bar", stock: 30, unitPrice: 3, unitDiscount: 0, quantity: 3, subtotal: 9, source: "PRODUCT" },
-      { key: "5", id: 5, name: "Snack", description: "Snack proteico", category: "bar", stock: 20, unitPrice: 2.5, unitDiscount: 0, quantity: 2, subtotal: 5, source: "PRODUCT" },
+      { key: "4", id: 4, name: "Bebida Energética", description: "Bebida energizante", category: "bar", stock: 30, unitPrice: 3, unitDiscount: 0, quantity: 3, subtotal: 9, source: "PRODUCT", taxRate: 15 },
+      { key: "5", id: 5, name: "Snack", description: "Snack proteico", category: "bar", stock: 20, unitPrice: 2.5, unitDiscount: 0, quantity: 2, subtotal: 5, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 14, taxableSubtotal: 14, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 14 },
     client: { documentNumber: "11223344", firstName: "Pedro", lastName: "López" },
@@ -88,7 +88,7 @@ const sampleSales: SaleRecord[] = [
     id: 4,
     createdAt: getDaysAgo(1),
     items: [
-      { key: "6", id: 6, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 1, subtotal: 10, source: "MEMBERSHIP" },
+      { key: "6", id: 6, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 1, subtotal: 10, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 10, taxableSubtotal: 10, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 10 },
     client: { documentNumber: "55667788", firstName: "Ana", lastName: "Martínez" },
@@ -99,7 +99,7 @@ const sampleSales: SaleRecord[] = [
     id: 5,
     createdAt: getDaysAgo(1),
     items: [
-      { key: "7", id: 7, name: "Proteína", description: "Suplemento proteico", category: "bar", stock: 15, unitPrice: 25, unitDiscount: 0, quantity: 1, subtotal: 25, source: "PRODUCT" },
+      { key: "7", id: 7, name: "Proteína", description: "Suplemento proteico", category: "bar", stock: 15, unitPrice: 25, unitDiscount: 0, quantity: 1, subtotal: 25, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 25, taxableSubtotal: 25, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 25 },
     client: { documentNumber: "99887766", firstName: "Carlos", lastName: "Rodríguez" },
@@ -111,7 +111,7 @@ const sampleSales: SaleRecord[] = [
     id: 6,
     createdAt: getDaysAgo(2),
     items: [
-      { key: "8", id: 8, name: "Promo Mensual + Agua", description: "Promoción mensual", category: "servicio", stock: null, unitPrice: 32, unitDiscount: 0, quantity: 1, subtotal: 32, source: "MEMBERSHIP" },
+      { key: "8", id: 8, name: "Promo Mensual + Agua", description: "Promoción mensual", category: "servicio", stock: null, unitPrice: 32, unitDiscount: 0, quantity: 1, subtotal: 32, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 32, taxableSubtotal: 32, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 32 },
     client: { documentNumber: "44332211", firstName: "Laura", lastName: "Fernández" },
@@ -122,8 +122,8 @@ const sampleSales: SaleRecord[] = [
     id: 7,
     createdAt: getDaysAgo(3),
     items: [
-      { key: "9", id: 9, name: "Membresía Diaria", description: "Acceso diario", category: "servicio", stock: null, unitPrice: 5, unitDiscount: 0, quantity: 2, subtotal: 10, source: "MEMBERSHIP" },
-      { key: "10", id: 10, name: "Agua", description: "Botella de agua", category: "bar", stock: 50, unitPrice: 1.5, unitDiscount: 0, quantity: 4, subtotal: 6, source: "PRODUCT" },
+      { key: "9", id: 9, name: "Membresía Diaria", description: "Acceso diario", category: "servicio", stock: null, unitPrice: 5, unitDiscount: 0, quantity: 2, subtotal: 10, source: "MEMBERSHIP", taxRate: 15 },
+      { key: "10", id: 10, name: "Agua", description: "Botella de agua", category: "bar", stock: 50, unitPrice: 1.5, unitDiscount: 0, quantity: 4, subtotal: 6, source: "PRODUCT", taxRate: 0 },
     ],
     totals: { subtotal: 16, taxableSubtotal: 16, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 16 },
     client: { documentNumber: "66554433", firstName: "Miguel", lastName: "Torres" },
@@ -135,7 +135,7 @@ const sampleSales: SaleRecord[] = [
     id: 8,
     createdAt: getDaysAgo(4),
     items: [
-      { key: "11", id: 11, name: "Bebida", description: "Bebida", category: "bar", stock: 30, unitPrice: 2.5, unitDiscount: 0, quantity: 4, subtotal: 10, source: "PRODUCT" },
+      { key: "11", id: 11, name: "Bebida", description: "Bebida", category: "bar", stock: 30, unitPrice: 2.5, unitDiscount: 0, quantity: 4, subtotal: 10, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 10, taxableSubtotal: 10, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 10 },
     client: { documentNumber: "11223355", firstName: "Sofia", lastName: "Jiménez" },
@@ -148,7 +148,7 @@ const sampleSales: SaleRecord[] = [
     id: 9,
     createdAt: getDateString(2026, 3, 1),
     items: [
-      { key: "12", id: 12, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP" },
+      { key: "12", id: 12, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 30, taxableSubtotal: 30, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 30 },
     client: { documentNumber: "12345678", firstName: "Juan", lastName: "Pérez" },
@@ -159,7 +159,7 @@ const sampleSales: SaleRecord[] = [
     id: 10,
     createdAt: getDateString(2026, 3, 5),
     items: [
-      { key: "13", id: 13, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 1, subtotal: 18, source: "MEMBERSHIP" },
+      { key: "13", id: 13, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 1, subtotal: 18, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 18, taxableSubtotal: 18, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 18 },
     client: { documentNumber: "87654321", firstName: "María", lastName: "García" },
@@ -171,7 +171,7 @@ const sampleSales: SaleRecord[] = [
     id: 11,
     createdAt: getDateString(2026, 3, 10),
     items: [
-      { key: "14", id: 14, name: "Proteína", description: "Suplemento proteico", category: "bar", stock: 15, unitPrice: 25, unitDiscount: 0, quantity: 2, subtotal: 50, source: "PRODUCT" },
+      { key: "14", id: 14, name: "Proteína", description: "Suplemento proteico", category: "bar", stock: 15, unitPrice: 25, unitDiscount: 0, quantity: 2, subtotal: 50, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 50, taxableSubtotal: 50, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 50 },
     client: { documentNumber: "55667788", firstName: "Ana", lastName: "Martínez" },
@@ -183,8 +183,8 @@ const sampleSales: SaleRecord[] = [
     id: 12,
     createdAt: getDateString(2026, 3, 15),
     items: [
-      { key: "15", id: 15, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 3, subtotal: 30, source: "MEMBERSHIP" },
-      { key: "16", id: 16, name: "Bebida Energética", description: "Bebida energizante", category: "bar", stock: 30, unitPrice: 3, unitDiscount: 0, quantity: 3, subtotal: 9, source: "PRODUCT" },
+      { key: "15", id: 15, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 3, subtotal: 30, source: "MEMBERSHIP", taxRate: 15 },
+      { key: "16", id: 16, name: "Bebida Energética", description: "Bebida energizante", category: "bar", stock: 30, unitPrice: 3, unitDiscount: 0, quantity: 3, subtotal: 9, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 39, taxableSubtotal: 39, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 39 },
     client: { documentNumber: "99887766", firstName: "Carlos", lastName: "Rodríguez" },
@@ -196,7 +196,7 @@ const sampleSales: SaleRecord[] = [
     id: 13,
     createdAt: getDateString(2026, 3, 20),
     items: [
-      { key: "17", id: 17, name: "Snack", description: "Snack proteico", category: "bar", stock: 20, unitPrice: 2.5, unitDiscount: 0, quantity: 4, subtotal: 10, source: "PRODUCT" },
+      { key: "17", id: 17, name: "Snack", description: "Snack proteico", category: "bar", stock: 20, unitPrice: 2.5, unitDiscount: 0, quantity: 4, subtotal: 10, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 10, taxableSubtotal: 10, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 10 },
     client: { documentNumber: "11223344", firstName: "Pedro", lastName: "López" },
@@ -207,7 +207,7 @@ const sampleSales: SaleRecord[] = [
     id: 14,
     createdAt: getDateString(2026, 3, 25),
     items: [
-      { key: "18", id: 18, name: "Membresía Diaria", description: "Acceso diario", category: "servicio", stock: null, unitPrice: 5, unitDiscount: 0, quantity: 5, subtotal: 25, source: "MEMBERSHIP" },
+      { key: "18", id: 18, name: "Membresía Diaria", description: "Acceso diario", category: "servicio", stock: null, unitPrice: 5, unitDiscount: 0, quantity: 5, subtotal: 25, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 25, taxableSubtotal: 25, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 25 },
     client: { documentNumber: "66554433", firstName: "Miguel", lastName: "Torres" },
@@ -218,7 +218,7 @@ const sampleSales: SaleRecord[] = [
     id: 15,
     createdAt: getDateString(2026, 3, 28),
     items: [
-      { key: "19", id: 19, name: "Promo Mensual + Agua", description: "Promoción mensual", category: "servicio", stock: null, unitPrice: 32, unitDiscount: 0, quantity: 1, subtotal: 32, source: "MEMBERSHIP" },
+      { key: "19", id: 19, name: "Promo Mensual + Agua", description: "Promoción mensual", category: "servicio", stock: null, unitPrice: 32, unitDiscount: 0, quantity: 1, subtotal: 32, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 32, taxableSubtotal: 32, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 32 },
     client: { documentNumber: "44332211", firstName: "Laura", lastName: "Fernández" },
@@ -231,7 +231,7 @@ const sampleSales: SaleRecord[] = [
     id: 16,
     createdAt: getDateString(2026, 2, 2),
     items: [
-      { key: "20", id: 20, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP" },
+      { key: "20", id: 20, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 30, taxableSubtotal: 30, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 30 },
     client: { documentNumber: "12345678", firstName: "Juan", lastName: "Pérez" },
@@ -242,7 +242,7 @@ const sampleSales: SaleRecord[] = [
     id: 17,
     createdAt: getDateString(2026, 2, 8),
     items: [
-      { key: "21", id: 21, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 2, subtotal: 36, source: "MEMBERSHIP" },
+      { key: "21", id: 21, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 2, subtotal: 36, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 36, taxableSubtotal: 36, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 36 },
     client: { documentNumber: "87654321", firstName: "María", lastName: "García" },
@@ -254,8 +254,8 @@ const sampleSales: SaleRecord[] = [
     id: 18,
     createdAt: getDateString(2026, 2, 14),
     items: [
-      { key: "22", id: 22, name: "Bebida Energética", description: "Bebida energizante", category: "bar", stock: 30, unitPrice: 3, unitDiscount: 0, quantity: 5, subtotal: 15, source: "PRODUCT" },
-      { key: "23", id: 23, name: "Snack", description: "Snack proteico", category: "bar", stock: 20, unitPrice: 2.5, unitDiscount: 0, quantity: 4, subtotal: 10, source: "PRODUCT" },
+      { key: "22", id: 22, name: "Bebida Energética", description: "Bebida energizante", category: "bar", stock: 30, unitPrice: 3, unitDiscount: 0, quantity: 5, subtotal: 15, source: "PRODUCT", taxRate: 15 },
+      { key: "23", id: 23, name: "Snack", description: "Snack proteico", category: "bar", stock: 20, unitPrice: 2.5, unitDiscount: 0, quantity: 4, subtotal: 10, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 25, taxableSubtotal: 25, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 25 },
     client: { documentNumber: "11223344", firstName: "Pedro", lastName: "López" },
@@ -267,7 +267,7 @@ const sampleSales: SaleRecord[] = [
     id: 19,
     createdAt: getDateString(2026, 2, 20),
     items: [
-      { key: "24", id: 24, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 2, subtotal: 20, source: "MEMBERSHIP" },
+      { key: "24", id: 24, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 2, subtotal: 20, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 20, taxableSubtotal: 20, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 20 },
     client: { documentNumber: "55667788", firstName: "Ana", lastName: "Martínez" },
@@ -278,7 +278,7 @@ const sampleSales: SaleRecord[] = [
     id: 20,
     createdAt: getDateString(2026, 2, 25),
     items: [
-      { key: "25", id: 25, name: "Proteína", description: "Suplemento proteico", category: "bar", stock: 15, unitPrice: 25, unitDiscount: 0, quantity: 1, subtotal: 25, source: "PRODUCT" },
+      { key: "25", id: 25, name: "Proteína", description: "Suplemento proteico", category: "bar", stock: 15, unitPrice: 25, unitDiscount: 0, quantity: 1, subtotal: 25, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 25, taxableSubtotal: 25, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 25 },
     client: { documentNumber: "99887766", firstName: "Carlos", lastName: "Rodríguez" },
@@ -291,7 +291,7 @@ const sampleSales: SaleRecord[] = [
     id: 21,
     createdAt: getDateString(2026, 1, 5),
     items: [
-      { key: "26", id: 26, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP" },
+      { key: "26", id: 26, name: "Membresía Mensual", description: "Acceso mensual", category: "servicio", stock: null, unitPrice: 30, unitDiscount: 0, quantity: 1, subtotal: 30, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 30, taxableSubtotal: 30, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 30 },
     client: { documentNumber: "12345678", firstName: "Juan", lastName: "Pérez" },
@@ -302,7 +302,7 @@ const sampleSales: SaleRecord[] = [
     id: 22,
     createdAt: getDateString(2026, 1, 12),
     items: [
-      { key: "27", id: 27, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 1, subtotal: 18, source: "MEMBERSHIP" },
+      { key: "27", id: 27, name: "Membresía Quincenal", description: "Acceso quincenal", category: "servicio", stock: null, unitPrice: 18, unitDiscount: 0, quantity: 1, subtotal: 18, source: "MEMBERSHIP", taxRate: 15 },
     ],
     totals: { subtotal: 18, taxableSubtotal: 18, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 18 },
     client: { documentNumber: "87654321", firstName: "María", lastName: "García" },
@@ -314,7 +314,7 @@ const sampleSales: SaleRecord[] = [
     id: 23,
     createdAt: getDateString(2026, 1, 18),
     items: [
-      { key: "28", id: 28, name: "Bebida", description: "Bebida", category: "bar", stock: 30, unitPrice: 2.5, unitDiscount: 0, quantity: 6, subtotal: 15, source: "PRODUCT" },
+      { key: "28", id: 28, name: "Bebida", description: "Bebida", category: "bar", stock: 30, unitPrice: 2.5, unitDiscount: 0, quantity: 6, subtotal: 15, source: "PRODUCT", taxRate: 15 },
     ],
     totals: { subtotal: 15, taxableSubtotal: 15, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 15 },
     client: { documentNumber: "11223344", firstName: "Pedro", lastName: "López" },
@@ -325,8 +325,8 @@ const sampleSales: SaleRecord[] = [
     id: 24,
     createdAt: getDateString(2026, 1, 25),
     items: [
-      { key: "29", id: 29, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 4, subtotal: 40, source: "MEMBERSHIP" },
-      { key: "30", id: 30, name: "Agua", description: "Botella de agua", category: "bar", stock: 50, unitPrice: 1.5, unitDiscount: 0, quantity: 5, subtotal: 7.5, source: "PRODUCT" },
+      { key: "29", id: 29, name: "Membresía Semanal", description: "Acceso semanal", category: "servicio", stock: null, unitPrice: 10, unitDiscount: 0, quantity: 4, subtotal: 40, source: "MEMBERSHIP", taxRate: 15 },
+      { key: "30", id: 30, name: "Agua", description: "Botella de agua", category: "bar", stock: 50, unitPrice: 1.5, unitDiscount: 0, quantity: 5, subtotal: 7.5, source: "PRODUCT", taxRate: 0 },
     ],
     totals: { subtotal: 47.5, taxableSubtotal: 47.5, vatSubtotal: 0, discountRate: 0, discountAmount: 0, taxRate: 0, taxAmount: 0, iceAmount: 0, total: 47.5 },
     client: { documentNumber: "66554433", firstName: "Miguel", lastName: "Torres" },
@@ -393,6 +393,7 @@ export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
           quantity: item.quantity || 1,
           subtotal: item.subtotal || 0,
           source: item.source || "",
+          taxRate: item.taxRate ?? 0,
         })),
         totals: {
           subtotal: sale.subtotal || 0,
@@ -457,6 +458,7 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
         unitDiscount: item.unitDiscount || 0,
         subtotal: item.subtotal,
         source: item.source || null,
+        taxRate: item.taxRate ?? 0,
       })),
       subtotal: input.totals?.subtotal || 0,
       tax: input.totals?.taxAmount || 0,
@@ -502,6 +504,7 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
         quantity: item.quantity || 1,
         subtotal: item.subtotal || 0,
         source: item.source || "SALE",
+        taxRate: item.taxRate ?? 0,
       })),
       totals: {
         subtotal: apiResponse.subtotal || 0,
@@ -524,8 +527,8 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
       },
       payment: {
         method: apiResponse.paymentMethod || "CASH",
-        cashAmount: apiResponse.paymentMethod === "CASH" ? (apiResponse.total || 0) : 0,
-        transferAmount: ["TRANSFER", "MIXED"].includes(apiResponse.paymentMethod) ? (apiResponse.total || 0) : 0,
+        cashAmount: apiResponse.cashAmount || 0,
+        transferAmount: apiResponse.transferAmount || 0,
       },
       paymentStatus: apiResponse.paymentStatus,
       voucherCode: apiResponse.voucherCode,
@@ -539,12 +542,19 @@ export const createSaleAPI = async (input: SaleInput): Promise<SaleRecord | null
 };
 
 // Actualiza venta en MongoDB
-export const updateSaleAPI = async (id: number, update: Partial<SaleRecord>): Promise<SaleRecord | null> => {
+export const updateSaleAPI = async (id: string | number, update: Partial<SaleRecord>): Promise<SaleRecord | null> => {
   try {
+    // Transformar al formato que espera el backend (SaleUpdate)
+    const body: Record<string, unknown> = {};
+    if (update.payment) {
+      body.paymentMethod = update.payment.method;
+      body.cashAmount = update.payment.cashAmount ?? 0;
+      body.transferAmount = update.payment.transferAmount ?? 0;
+    }
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "PUT",
       headers: getHeaders(),
-      body: JSON.stringify(update),
+      body: JSON.stringify(body),
     });
     if (!response.ok) {
       throw new Error("Error al actualizar venta");
@@ -574,6 +584,19 @@ export const verifyPaymentAPI = async (saleId: string): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE}/${saleId}/verify`, {
       method: "PUT",
+      headers: getHeaders(),
+    });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Elimina venta en MongoDB (solo GERENTE)
+export const deleteSaleAPI = async (saleId: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE}/${saleId}`, {
+      method: "DELETE",
       headers: getHeaders(),
     });
     return response.ok;

@@ -3,6 +3,7 @@ import type { SaleRecord, SaleInput, PaymentMethod } from "../types/sales.types"
 import type { CartItem } from "../types/pos.types";
 import { getSales, updateSaleAPI, createSaleAPI } from "../services/sales.service";
 import { getInvoicesFromAPI, type InvoiceRecord } from "../services/invoices.service";
+import { round2 } from "../utils/format/number";
 
 /**
  * Transacción unificada para reportes (sale o invoice)
@@ -32,6 +33,10 @@ export interface TransactionSummary {
   cash: number;
   /** Total recibido por transferencia */
   transfer: number;
+  /** Base imponible (suma de subtotal / (1 + tasa) para items gravados) */
+  taxableBase?: number;
+  /** IVA generado (diferencia entre PVP y base imponible) */
+  iva?: number;
   /** Suma total de servicios + bar */
   total: number;
 }
@@ -49,6 +54,10 @@ export interface MonthlyData {
   services: number;
   /** Total de productos del bar en el mes */
   bar: number;
+  /** Base imponible del mes */
+  taxableBase: number;
+  /** IVA generado en el mes */
+  iva: number;
   /** Total general del mes */
   total: number;
 }
@@ -71,6 +80,10 @@ export interface WeeklyData {
   services: number;
   /** Total de productos del bar en la semana */
   bar: number;
+  /** Base imponible de la semana */
+  taxableBase: number;
+  /** IVA generado en la semana */
+  iva: number;
   /** Total general de la semana */
   total: number;
 }
@@ -84,21 +97,44 @@ export interface YearlyData {
   month: string;
   /** Clave del mes (ej: 2024-01) */
   monthKey: string;
+  /** Base imponible del mes */
+  taxableBase: number;
+  /** IVA generado en el mes */
+  iva: number;
   /** Total del mes */
   total: number;
 }
 
-// Palabras clave que identifican items de servicio/membresia
+// Palabras clave que identifican items de servicio/membresia (fallback legacy)
 const SERVICE_KEYWORDS = ["mensual", "quincenal", "semanal", "diario", "promo"];
 
 /**
+ * Calcula base imponible e IVA de un item segun IVA incluido.
+ * PVP = subtotal (ya incluye IVA)
+ * base = PVP / (1 + taxRate/100)
+ * IVA = PVP - base
+ */
+const calcItemIVA = (item: CartItem): { base: number; iva: number } => {
+  if (item.taxRate > 0) {
+    const rate = item.taxRate / 100;
+    const base = round2(item.subtotal / (1 + rate));
+    return { base, iva: round2(item.subtotal - base) };
+  }
+  return { base: item.subtotal, iva: 0 };
+};
+
+/**
  * Determina si un item del carrito es un servicio o membresia.
- * Se diferencia de los productos del bar para reporting.
+ * Usa source (PRODUCT | MEMBERSHIP | DAILY) cuando esta disponible,
+ * con fallback a keywords para datos legacy.
  *
  * @param item - Item del carrito a evaluar
  * @returns true si es un servicio/membresia, false si es producto del bar
  */
 const isServiceItem = (item: CartItem): boolean => {
+  if (item.source === "MEMBERSHIP" || item.source === "DAILY") return true;
+  if (item.source === "PRODUCT") return false;
+  // Fallback para datos legacy sin source
   const name = item.name.toLowerCase();
   const category = item.category?.toLowerCase() || "";
   return SERVICE_KEYWORDS.some(k => name.includes(k) || category.includes("servicio"));
@@ -189,7 +225,9 @@ export const useTransactions = () => {
    */
   const formatItemsList = useCallback((items: CartItem[]): string => {
     if (!items || items.length === 0) return "-";
-    return items.map(item => item.name).join(" + ");
+    return items
+      .map(item => item.quantity > 1 ? `${item.name} x${item.quantity}` : item.name)
+      .join(" + ");
   }, []);
 
   /**
@@ -203,14 +241,19 @@ export const useTransactions = () => {
     let bar = 0;
     let cash = 0;
     let transfer = 0;
+    let taxableBase = 0;
+    let iva = 0;
 
     for (const txn of txns) {
       for (const item of txn.items) {
+        const { base, iva: itemIVA } = calcItemIVA(item);
         if (isServiceItem(item)) {
           services += item.subtotal;
         } else {
           bar += item.subtotal;
         }
+        taxableBase += base;
+        iva += itemIVA;
       }
 
       if (txn.payment.method === "CASH" || txn.payment.method === "MIXED") {
@@ -226,6 +269,8 @@ export const useTransactions = () => {
       bar,
       cash,
       transfer,
+      taxableBase: round2(taxableBase),
+      iva: round2(iva),
       total: services + bar,
     };
   }, []);
@@ -246,16 +291,19 @@ export const useTransactions = () => {
       const month = date.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
 
       if (!grouped[monthKey]) {
-        grouped[monthKey] = { month, monthKey, services: 0, bar: 0, total: 0 };
+        grouped[monthKey] = { month, monthKey, services: 0, bar: 0, total: 0, iva: 0, taxableBase: 0 };
       }
 
       for (const item of txn.items) {
+        const { base, iva: itemIVA } = calcItemIVA(item);
         if (isServiceItem(item)) {
           grouped[monthKey].services += item.subtotal;
         } else {
           grouped[monthKey].bar += item.subtotal;
         }
         grouped[monthKey].total += item.subtotal;
+        grouped[monthKey].taxableBase += base;
+        grouped[monthKey].iva += itemIVA;
       }
     }
 
@@ -309,16 +357,21 @@ export const useTransactions = () => {
           services: 0,
           bar: 0,
           total: 0,
+          taxableBase: 0,
+          iva: 0,
         };
       }
 
       for (const item of txn.items) {
+        const { base, iva: itemIVA } = calcItemIVA(item);
         if (isServiceItem(item)) {
           weeks[weekNum].services += item.subtotal;
         } else {
           weeks[weekNum].bar += item.subtotal;
         }
         weeks[weekNum].total += item.subtotal;
+        weeks[weekNum].taxableBase += base;
+        weeks[weekNum].iva += itemIVA;
       }
     }
 
@@ -346,6 +399,8 @@ export const useTransactions = () => {
         month: date.toLocaleDateString("es-ES", { month: "long" }),
         monthKey,
         total: 0,
+        taxableBase: 0,
+        iva: 0,
       };
     }
 
@@ -354,7 +409,10 @@ export const useTransactions = () => {
       const monthKey = txn.createdAt.slice(0, 7);
       if (months[monthKey]) {
         for (const item of txn.items) {
+          const { base, iva: itemIVA } = calcItemIVA(item);
           months[monthKey].total += item.subtotal;
+          months[monthKey].taxableBase += base;
+          months[monthKey].iva += itemIVA;
         }
       }
     }
@@ -371,7 +429,7 @@ export const useTransactions = () => {
    * @param update - Datos parciales a actualizar
    * @returns true si la actualizacion fue exitosa
    */
-  const updateTransaction = useCallback(async (id: number, update: Partial<SaleRecord>) => {
+  const updateTransaction = useCallback(async (id: string | number, update: Partial<SaleRecord>) => {
     const result = await updateSaleAPI(id, update as SaleRecord);
     if (result) {
       await loadTransactions();
@@ -510,5 +568,7 @@ export const useTransactions = () => {
     formatMethodLabel,
     getUnifiedTransactions,
     reload,
+    isServiceItem,
+    calcItemIVA,
   };
 };

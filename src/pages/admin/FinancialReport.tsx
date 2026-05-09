@@ -109,7 +109,7 @@ const FinancialReport = () => {
     setIsEditModalOpen(true);
   };
 
-  const handleSaveEdit = (id: number, updates: Partial<SaleRecord>) => {
+  const handleSaveEdit = (id: string | number, updates: Partial<SaleRecord>) => {
     updateTransaction(id, updates);
     reload();
   };
