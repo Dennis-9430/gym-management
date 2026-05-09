@@ -161,6 +161,36 @@ const FinancialMonthlyReport = () => {
     return groupByYear(transactions, currentYear);
   }, [groupByYear, transactions, currentYear]);
 
+  // Resumen anual por empleado
+  const yearlySummaryByEmployee = useMemo(() => {
+    const summaries: Record<string, { services: number; bar: number; cash: number; transfer: number; total: number }> = {};
+    const yearTransactions = transactions.filter(t => {
+      const d = new Date(t.createdAt);
+      return d.getFullYear() === currentYear;
+    });
+    for (const txn of yearTransactions) {
+      const employee = getDisplayName(txn.createdBy);
+      if (!summaries[employee]) {
+        summaries[employee] = { services: 0, bar: 0, cash: 0, transfer: 0, total: 0 };
+      }
+      for (const item of txn.items) {
+        if (isServiceItem(item)) {
+          summaries[employee].services += item.subtotal;
+        } else {
+          summaries[employee].bar += item.subtotal;
+        }
+      }
+      if (txn.payment.method === "CASH" || txn.payment.method === "MIXED") {
+        summaries[employee].cash += txn.payment.cashAmount;
+      }
+      if (txn.payment.method === "TRANSFER" || txn.payment.method === "MIXED") {
+        summaries[employee].transfer += txn.payment.transferAmount;
+      }
+      summaries[employee].total += txn.totals.total;
+    }
+    return summaries;
+  }, [transactions, currentYear, getDisplayName]);
+
   const formatMonthLabel = (monthKey: string) => {
     const [year, month] = monthKey.split("-");
     const date = new Date(parseInt(year), parseInt(month) - 1);
@@ -319,7 +349,7 @@ const FinancialMonthlyReport = () => {
                 transfer: yearlyData.reduce((acc, m) => acc + (m as any).transfer || 0, 0),
                 total: yearlyData.reduce((acc, m) => acc + m.total, 0),
               }} 
-              employeeData={{}} 
+              employeeData={yearlySummaryByEmployee} 
             />
           </section>
 
