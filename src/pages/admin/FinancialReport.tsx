@@ -1,6 +1,7 @@
 /* Pagina de reporte financiero con transacciones */
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useTransactions } from "../../hooks/useTransactions";
+import { useEmployees } from "../../hooks/useEmployees";
 import type { SaleRecord } from "../../types/sales.types";
 import FinancialTransactionsList from "../../components/financial/FinancialTransactionsList";
 import TransactionEditModal from "../../components/financial/TransactionEditModal";
@@ -21,6 +22,31 @@ const FinancialReport = () => {
     calculateSummary,
     reload,
   } = useTransactions();
+  const { employees, refresh: refreshEmployees } = useEmployees();
+
+  // Cargar empleados al montar
+  useEffect(() => {
+    refreshEmployees();
+  }, [refreshEmployees]);
+
+  // Mapa username → nombre completo del empleado
+  const employeeNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const emp of employees) {
+      const fullName = [emp.firstName, emp.lastName].filter(Boolean).join(" ");
+      if (fullName) {
+        map[emp.username] = fullName;
+        if (emp.email) map[emp.email] = fullName;
+      }
+    }
+    return map;
+  }, [employees]);
+
+  // getEmployeeName con resolución de nombre real
+  const getEmployeeDisplayName = useCallback((createdBy?: string): string => {
+    if (!createdBy) return "Sistema";
+    return employeeNameMap[createdBy] || createdBy;
+  }, [employeeNameMap]);
 
   const [editingTransaction, setEditingTransaction] = useState<SaleRecord | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -215,7 +241,7 @@ const FinancialReport = () => {
           onEdit={handleEdit}
           formatItems={formatItemsList}
           formatTime={formatTime}
-          getEmployeeName={getEmployeeName}
+          getEmployeeName={getEmployeeDisplayName}
           formatMethodLabel={formatMethodLabel}
         />
       </section>
