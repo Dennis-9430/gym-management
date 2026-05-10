@@ -461,7 +461,7 @@ const sortByStatus = (a: ClientForm, b: ClientForm): number => {
 export const createClient = (input: Omit<ClientForm, "id" | "createdAt">): ClientForm => {
   const clients = loadClients();
   const nextId = clients.length
-    ? Math.max(...clients.map((client) => client.id)) + 1
+    ? Math.max(...clients.map((client) => Number(client.id))) + 1
     : 1;
 
   const now = new Date();

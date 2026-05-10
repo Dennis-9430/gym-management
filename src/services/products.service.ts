@@ -158,7 +158,7 @@ export const getProductByIdLocal = (id: number): Product | null => loadProducts(
 export const createProduct = (input: ProductInput): Product => {
   const products = loadProducts();
   const nextId = products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-  const product: Product = { id: nextId, createdAt: new Date().toISOString(), taxRate: 0, ...input };
+  const product: Product = { id: nextId, createdAt: new Date().toISOString(), ...input };
   const updated = [...products, product];
   saveProducts(updated);
   return product;

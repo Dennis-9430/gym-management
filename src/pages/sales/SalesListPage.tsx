@@ -331,7 +331,7 @@ const SalesListPage = () => {
             <div className="sale-detail__header">
               <div className="sale-detail__field">
                 <Hash size={14} />
-                <span>Venta #{typeof detailSale.id === "string" ? detailSale.id.slice(0, 8) : detailSale.id}</span>
+                <span>Venta #{String(detailSale.id).slice(0, 8)}</span>
               </div>
               <div className="sale-detail__field">
                 <User size={14} />

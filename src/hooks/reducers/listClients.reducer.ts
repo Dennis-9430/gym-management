@@ -46,8 +46,8 @@ const isActive = (client: ClientForm) => client.memberShipStatus === "ACTIVE";
  */
 const sortInactiveDefault = (clients: ClientForm[]) => {
   return [...clients].sort((a, b) => {
-    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : a.id;
-    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : b.id;
+    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : Number(a.id);
+    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : Number(b.id);
     return dateB - dateA;
   });
 };

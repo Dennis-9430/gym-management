@@ -240,6 +240,7 @@ export const usePOSSubscription = (
           unitDiscount: 0,
           quantity: 1,
           subtotal: subscriptionTotal,
+          taxRate: 0,
           source: "MEMBERSHIP",
         }],
         totals: {
@@ -273,7 +274,7 @@ export const usePOSSubscription = (
       };
       const saleResult = await createSaleAPI(saleData as any);
       if (!saleResult) {
-        toast?.showToast("Membresía asignada correctamente, pero hubo un error al generar la factura.", "warning");
+        toast?.showToast("Membresía asignada correctamente, pero hubo un error al generar la factura.", "info");
         reloadClients();
         handleCloseSubscriptionModal();
       } else {
@@ -329,7 +330,7 @@ export const usePOSSubscription = (
     toast,
   ]);
 
-  const handleDeletePending = useCallback((client: ClientForm) => {
+  const handleDeletePending = useCallback((_client: ClientForm) => {
     if (!confirm("¿Deseas eliminar esta suscripción pendiente?")) {
       return;
     }

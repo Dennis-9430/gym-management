@@ -1,5 +1,4 @@
 import type { Person } from "../../types/person.types";
-import type { DocumentType } from "../../types/client.types";
 
 type UpdateField<T> = <K extends keyof T>(field: K, value: T[K]) => void;
 
@@ -15,7 +14,12 @@ function PersonalDataFields<T extends Person>({ form, updateField }: Props<T>) {
         <label>Tipo de documento</label>
         <select
           value={(form as any).documentType || "CEDULA"}
-          onChange={(e) => updateField("documentType" as keyof T, e.target.value as DocumentType)}
+          onChange={(e) =>
+            updateField(
+              "documentType" as keyof T,
+              e.target.value as unknown as T[keyof T],
+            )
+          }
         >
           <option value="CEDULA">Cédula</option>
           <option value="PASAPORTE">Pasaporte</option>

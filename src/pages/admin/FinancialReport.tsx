@@ -17,7 +17,6 @@ const FinancialReport = () => {
     updateTransaction,
     formatItemsList,
     formatTime,
-    getEmployeeName,
     formatMethodLabel,
     calculateSummary,
     reload,

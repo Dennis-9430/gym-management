@@ -34,7 +34,6 @@ const EmployeesPage = () => {
     removeEmployee,
   } = useEmployees();
   
-  const realCount = realEmployees.length;
   const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -81,7 +80,6 @@ const EmployeesPage = () => {
 
   const openEditForm = async (employee: Employee) => {
     const isGerente = (employee as any).isOwner === true;
-    const isAdmin = employee.role === "ADMIN" && !isGerente;
     const isRecepcionista = employee.role === "RECEPCIONISTA";
 
     // Owner (Gerente): puede editar a todos
@@ -282,8 +280,6 @@ const EmployeesPage = () => {
     }
     
     const isTargetOwner = (employeeToDelete as any).isOwner === true;
-    const isTargetAdmin = employeeToDelete.role === "ADMIN" && !isTargetOwner;
-    const isTargetGerente = employeeToDelete.role === "GERENTE";
     const isTargetRecepcionista = employeeToDelete.role === "RECEPCIONISTA";
     const isTargetSelf = employeeIdFromToken && String(employeeIdFromToken) === String(id);
     

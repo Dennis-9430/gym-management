@@ -96,13 +96,8 @@ const EmployeeProfilePage = () => {
     ? true // Owner/Gerente: puede editar a todos
     : (isAdmin && isRecepcionistaProfile); // Admin: solo puede editar recepcionistas
 
-  // Determinar permisos para gestionar permisos de empleados
-  // - Owner/Gerente: puede gestionar permisos de todos
-  // - Admin: solo puede gestionar permisos de recepcionistas
-  // - Recepcionista: NO puede gestionar permisos de nadie
-  const canManagePermissions = (currentUserIsOwner || isGerente)
-    ? true // Owner/Gerente: puede gestionar permisos de todos
-    : (isAdmin && isRecepcionistaProfile && !isRecepcionistaUser); // Admin: solo puede gestionar permisos de recepcionistas (no su propio perfil)
+  // Nota: canManagePermissions se puede restaurar cuando se implemente
+  // la edición de permisos desde este perfil
   
   if (!canViewProfile && !currentUserIsOwner) {
     return (

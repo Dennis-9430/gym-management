@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sections, type DashboardSection, useFilteredSections } from "../types/dashboard.section";
+import { type DashboardSection, useFilteredSections } from "../types/dashboard.section";
 import PaymentModal from "../pages/payments/PaymentModal";
 import DashboardCard from "../components/dashboard/DashboardCard";
 import "../styles/dashboard.css";

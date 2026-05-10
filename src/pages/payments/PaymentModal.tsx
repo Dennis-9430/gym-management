@@ -58,6 +58,7 @@ const PaymentModal = ({ onClose }: Props) => {
           unitDiscount: 0,
           quantity: 1,
           subtotal: selectedService.price,
+          taxRate: 0,
           source: "DAILY",
         }],
         totals: {

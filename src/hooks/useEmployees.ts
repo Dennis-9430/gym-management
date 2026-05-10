@@ -6,7 +6,6 @@ import {
   createEmployee,
   createEmployeeAPI,
   updateEmployeeAPI,
-  deleteEmployee,
   deleteEmployeeAPI,
 } from "../services/employees.service";
 
@@ -104,10 +103,10 @@ const sortEmployees = (a: Employee, b: Employee): number => {
     setError(null);
     try {
       // Para ObjectId strings, pasar directo; para números hacer parse
-      const apiId = typeof id === 'string' && /^[a-fA-F0-9]{24}$/.test(id) ? id : 
+      const apiId: number | string = typeof id === 'string' && /^[a-fA-F0-9]{24}$/.test(id) ? id : 
                     typeof id === 'string' ? parseInt(id, 10) : id;
       
-      const deleted = await deleteEmployeeAPI(apiId);
+      const deleted = await deleteEmployeeAPI(apiId as number);
       if (deleted) {
         setEmployees((prev) => prev.filter((emp) => emp.id !== id));
         return;

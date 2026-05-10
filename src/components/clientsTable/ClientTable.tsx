@@ -12,7 +12,7 @@ interface Props {
   sortField: keyof ClientForm | null;
   sortDirection: "asc" | "desc";
   showActions: boolean;
-  onDelete?: (clientId: number) => void;
+  onDelete?: (clientId: number | string) => void;
 }
 
 const ClientTable = ({

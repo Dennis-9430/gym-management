@@ -86,7 +86,7 @@ export const getEmployees = async (): Promise<Employee[]> => {
     if (!response.ok) {
       throw new Error("Error al obtener empleados");
     }
-    const data = await response.json();
+    const data: { employees?: Employee[] } = await response.json();
     let employees = data.employees || [];
     
     // Verificar si el API ya devuelve un owner

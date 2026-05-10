@@ -9,7 +9,7 @@ import SubscriptionModal from "../../components/sales/SubscriptionModal";
 import MembershipModal from "../../components/sales/MembershipModal";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
-import { getServices, getMembershipServices, getDailyServices } from "../../services/services.service";
+import { getServices } from "../../services/services.service";
 import "../../styles/pos.css";
 
 const SalesPages = () => {

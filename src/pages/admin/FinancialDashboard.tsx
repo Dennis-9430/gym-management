@@ -13,7 +13,7 @@ import "../../styles/financial.css";
 const FinancialDashboard = () => {
   const navigate = useNavigate();
   const { isPremium } = usePlanAccess();
-  const { transactions, groupByMonth, getTransactionsByDate, isServiceItem, calcItemIVA } =
+  const { transactions, groupByMonth, getTransactionsByDate, isServiceItem } =
     useTransactions();
   const { employees, refresh: refreshEmployees } = useEmployees();
 

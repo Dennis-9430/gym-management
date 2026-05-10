@@ -1,5 +1,5 @@
 /* Servicio para login de empleados */
-import { getAuthHeaders, getApiBaseUrl } from "./api";
+import { getApiBaseUrl } from "./api";
 
 const BASE_URL = getApiBaseUrl();
 

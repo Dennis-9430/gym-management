@@ -10,12 +10,11 @@ import {
 interface Props {
   role: EmployeeRole | "GERENTE";
   isAdmin: boolean;
-  employeeId: number;
   isOwnerManaging?: boolean; // true si el owner está gestionando permisos de otro
   isReadOnly?: boolean; // true si es el propio Gerente viendo sus permisos
 }
 
-const EmployeePermissions = ({ role, isAdmin, employeeId, isOwnerManaging = false, isReadOnly = false }: Props) => {
+const EmployeePermissions = ({ role, isAdmin, isOwnerManaging = false, isReadOnly = false }: Props) => {
   const [permissions, setPermissions] = useState<RolePermissions>(
     getRolePermissions(role as EmployeeRole),
   );

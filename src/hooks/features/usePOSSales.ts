@@ -6,11 +6,11 @@
  * @version 1.0.0
  */
 
-import { useState, useCallback, useEffect, useContext, useRef } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import type { MutableRefObject } from "react";
 import type { CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod, SaleClientInfo } from "../../types/sales.types";
-import type { ClientForm } from "../../types/client.types";
+import type { ClientForm, DocumentType } from "../../types/client.types";
 import { createSaleAPI } from "../../services/sales.service";
 import { useAuth } from "../../context/index.ts";
 import { ToastContext } from "../../context/ToastContext";
@@ -107,7 +107,7 @@ const handleCheckout = useCallback(() => {
     const saleClient: SaleClientInfo = matchedSaleClientRef.current
       ? {
           documentNumber: matchedSaleClientRef.current.documentNumber,
-          documentType: matchedSaleClientRef.current.documentType,
+          documentType: matchedSaleClientRef.current.documentType as DocumentType,
           firstName: matchedSaleClientRef.current.firstName,
           lastName: matchedSaleClientRef.current.lastName,
           email: matchedSaleClientRef.current.email,

@@ -99,7 +99,7 @@ const ClientModal = ({
           onSaved?.(updated);
         }
       } else {
-        await createClientAPI({
+        const created = await createClientAPI({
           documentType: (form as any).documentType || "CEDULA",
           documentNumber: form.documentNumber,
           firstName: form.firstName,
@@ -110,14 +110,18 @@ const ClientModal = ({
           emergencyContact: form.emergencyContact,
           emergencyPhone: form.emergencyPhone,
           notes: form.notes,
+          memberShip: "Por registrar",
+          memberShipStartDate: new Date(),
+          memberShipEndDate: new Date(),
+          memberShipStatus: "NONE",
+          fingerPrint: false,
         });
-        onSaved?.();
+        if (created) onSaved?.(created);
       }
       onClose();
     } catch (err) {
       console.error("Error al guardar cliente:", err);
       alert("No se pudo guardar el cliente.");
-      onSaved?.();
     }
   };
 
