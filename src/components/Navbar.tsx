@@ -31,9 +31,9 @@ const Navbar = () => {
    *
    * @returns {void}
    */
-  const handleLogout = () => {
-    // Llama a la función de logout del contexto auth
-    logout();
+  const handleLogout = async () => {
+    // Llama a la función de logout del contexto auth (limpia datos demo si aplica)
+    await logout();
     // Redirige al usuario a la página principal ("/")
     navigate("/");
   };

@@ -11,11 +11,11 @@ interface Props {
 }
 
 const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
-  const { isOwner, isDemo, isAdmin, isGerente } = useAccountType();
+  const { isOwner, isAdmin, isGerente } = useAccountType();
 
-  // Solo Gerente, Admin y Owner ven la columna de acciones
+  // Admin, Owner y Gerente ven la columna de acciones
   // Recepcionista NO ve acciones
-  const showActions = (isOwner || isGerente || (isAdmin && !isDemo));
+  const showActions = (isOwner || isGerente || isAdmin);
 
   return (
     <table className="employee-table">

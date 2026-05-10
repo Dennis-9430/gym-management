@@ -6,12 +6,14 @@
  * @version 1.0.0
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useContext, useRef } from "react";
+import type { MutableRefObject } from "react";
 import type { CartItem, CartTotals } from "../../types/pos.types";
 import type { PaymentMethod, SaleClientInfo } from "../../types/sales.types";
 import type { ClientForm } from "../../types/client.types";
 import { createSaleAPI } from "../../services/sales.service";
 import { useAuth } from "../../context/index.ts";
+import { ToastContext } from "../../context/ToastContext";
 import { round2 } from "../../utils/format/number";
 
 const defaultClientLabel = "Consumidor final";
@@ -48,9 +50,10 @@ export const usePOSSales = (
   totals: CartTotals,
   items: CartItem[],
   clearCart: () => void,
-  matchedSaleClient: ClientForm | null,
+  matchedSaleClientRef: MutableRefObject<ClientForm | null>,
 ): UsePOSSalesReturn => {
   const { user } = useAuth();
+  const toast = useContext(ToastContext);
   
   const [saleClientInput, setSaleClientInput] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
@@ -101,15 +104,15 @@ const handleCheckout = useCallback(() => {
       }
     }
 
-    const saleClient: SaleClientInfo = matchedSaleClient
+    const saleClient: SaleClientInfo = matchedSaleClientRef.current
       ? {
-          documentNumber: matchedSaleClient.documentNumber,
-          documentType: matchedSaleClient.documentType,
-          firstName: matchedSaleClient.firstName,
-          lastName: matchedSaleClient.lastName,
-          email: matchedSaleClient.email,
-          phone: matchedSaleClient.phone,
-          address: matchedSaleClient.address,
+          documentNumber: matchedSaleClientRef.current.documentNumber,
+          documentType: matchedSaleClientRef.current.documentType,
+          firstName: matchedSaleClientRef.current.firstName,
+          lastName: matchedSaleClientRef.current.lastName,
+          email: matchedSaleClientRef.current.email,
+          phone: matchedSaleClientRef.current.phone,
+          address: matchedSaleClientRef.current.address,
         }
       : {
           documentNumber: saleClientInput.trim() || defaultClientDocument,
@@ -132,15 +135,21 @@ const handleCheckout = useCallback(() => {
         generateInvoice,
         invoiceEmail: invoiceEmail.trim() || null,
       })
-        .then(() => {
+        .then((result) => {
           clearCart();
           setSaleClientInput("");
           setVoucherCode("");
           setPaymentMethod("CASH");
           setGenerateInvoice(false);
           setInvoiceEmail("");
+          setSaleModalOpen(false);
+          if (result) {
+            toast?.showToast("¡Venta registrada con éxito!", "success");
+          }
         })
-        .catch(() => {});
+        .catch(() => {
+          toast?.showToast("Error al registrar la venta.", "error");
+        });
     }
   }, [
     items,
@@ -148,12 +157,13 @@ const handleCheckout = useCallback(() => {
     cashAmount,
     transferAmount,
     totals,
-    matchedSaleClient,
+    matchedSaleClientRef,
     saleClientInput,
     voucherCode,
     user,
     clearCart,
     invoiceEmail,
+    toast,
   ]);
 
   const handleCashChange = useCallback((value: number) => {

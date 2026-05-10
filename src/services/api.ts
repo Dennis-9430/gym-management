@@ -21,6 +21,21 @@ export const getAuthToken = (): string | null => {
   return localStorage.getItem("accessToken");
 };
 
+/** Limpia datos demo en backend antes de cerrar sesión */
+export const cleanupDemoData = async (): Promise<void> => {
+  const isDemo = localStorage.getItem("isDemo") === "true";
+  if (!isDemo) return;
+  
+  try {
+    await fetch("/api/tenants/demo/cleanup", {
+      method: "POST",
+      headers: getAuthHeaders(),
+    });
+  } catch {
+    // Si falla la limpieza, igual cerramos sesión
+  }
+};
+
 /** Limpia TODOS los datos de autenticación y sesión */
 export const clearAuthStorage = () => {
   const keysToRemove = [

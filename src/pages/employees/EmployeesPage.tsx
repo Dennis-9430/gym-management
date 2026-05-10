@@ -20,7 +20,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const EmployeesPage = () => {
   const navigate = useNavigate();
   const { isPremium } = usePlanAccess();
-  const { isDemo, isOwner, employeeIdFromToken } = useAccountType();
+  const { isOwner, employeeIdFromToken } = useAccountType();
   const { user } = useAuth();
   const {
     employees,
@@ -45,12 +45,7 @@ const EmployeesPage = () => {
     refresh();
   }, [refresh]);
 
-const canAddEmployee = () => {
-    if (isDemo) {
-      alert("Las cuentas demo tienen acceso restringido.");
-      return false;
-    }
-
+  const canAddEmployee = () => {
     // Owner (Gerente), Admin pueden crear empleados
     if (!isOwner && user?.role !== "ADMIN" && user?.role !== "GERENTE") {
       alert("No tienes permisos para crear empleados.");
@@ -85,11 +80,6 @@ const canAddEmployee = () => {
   };
 
   const openEditForm = async (employee: Employee) => {
-    if (isDemo) {
-      alert("Las cuentas demo tienen acceso restringido.");
-      return;
-    }
-
     const isGerente = (employee as any).isOwner === true;
     const isAdmin = employee.role === "ADMIN" && !isGerente;
     const isRecepcionista = employee.role === "RECEPCIONISTA";
@@ -152,10 +142,6 @@ const canAddEmployee = () => {
   };
 
   const handleSubmit = async (values: EmployeeInput) => {
-    if (isDemo) {
-      alert("Las cuentas demo tienen acceso restringido.");
-      return;
-    }
     if (!editingEmployee) {
       if (!isPremium()) {
         alert("En el plan BASIC solo tienes el Owner. ¡Upgrade a PREMIUM para agregar empleados!");
@@ -284,11 +270,6 @@ const canAddEmployee = () => {
 };
 
   const handleDelete = (id: number | string) => {
-    if (isDemo) {
-      alert("Las cuentas demo tienen acceso restringido.");
-      return;
-    }
-    
     // Encontrar el empleado a eliminar
     const employeeToDelete = employees.find(e => {
       const empId = e.id as number | string;
@@ -344,13 +325,7 @@ const canAddEmployee = () => {
         </div>
         <div className="employees-actions">
           <EmployeeSearch value={search} onChange={setSearch} />
-          {isDemo ? (
-            <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
-              <Lock size={16} />
-              <p>Agregar empleado</p>
-              <span className="pro-badge">DEMO</span>
-            </div>
-          ) : !isPremium() ? (
+          {!isPremium() ? (
             <div className="pro-feature-locked" style={{ cursor: "not-allowed" }}>
               <Lock size={16} />
               <p>Agregar empleado</p>

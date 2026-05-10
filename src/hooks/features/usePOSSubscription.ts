@@ -273,12 +273,15 @@ export const usePOSSubscription = (
       };
       const saleResult = await createSaleAPI(saleData as any);
       if (!saleResult) {
-        toast?.showToast("La membresía se asignó pero hubo un error al generar la factura.", "warning");
+        toast?.showToast("Membresía asignada correctamente, pero hubo un error al generar la factura.", "warning");
+        reloadClients();
+        handleCloseSubscriptionModal();
       } else {
-        toast?.showToast("Suscripción registrada. Recibido enviado al correo.", "success");
+        toast?.showToast("¡Suscripción registrada con éxito! Factura enviada al correo del cliente.", "success");
+        reloadClients();
+        // Pequeña pausa para que el usuario vea el mensaje de éxito antes de cerrar
+        setTimeout(() => handleCloseSubscriptionModal(), 1200);
       }
-      reloadClients();
-      handleCloseSubscriptionModal();
     } catch (error) {
       toast?.showToast("Error al registrar la membresía.", "error");
     }
@@ -311,11 +314,11 @@ export const usePOSSubscription = (
 
     try {
       await assignMembership(subscriptionClient.id, subscriptionService.id, subscriptionStartDate);
-      toast?.showToast("Suscripción pendiente registrada.", "success");
+      toast?.showToast("¡Suscripción pendiente registrada con éxito!", "success");
       reloadClients();
       handleCloseSubscriptionModal();
     } catch (error) {
-      toast?.showToast("Error al registrar la membresía pendiente.", "error");
+      toast?.showToast("Error al registrar la suscripción pendiente.", "error");
     }
   }, [
     subscriptionClient,

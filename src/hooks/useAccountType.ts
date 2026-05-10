@@ -40,37 +40,21 @@ export const useAccountType = () => {
     }
   }, []);
 
-  const canEditEmployee = useMemo(() => {
-    if (isDemo) return false;
-    return true;
-  }, [isDemo]);
+  const canEditEmployee = true;
 
   const canEditConfig = useMemo(() => {
     if (isDemo) return false;
     return true;
   }, [isDemo]);
 
-  const canEditOwnerFields = useMemo(() => {
-    if (isDemo) return false;
-    return true;
-  }, [isDemo]);
+  const canEditOwnerFields = true;
 
-  const ownerEditableFields = useMemo(() => {
-    if (isDemo) {
-      return {
-        email: false,
-        businessName: false,
-        password: false,
-        username: false,
-      };
-    }
-    return {
-      email: false,
-      businessName: false,
-      password: true,
-      username: true,
-    };
-  }, [isDemo]);
+  const ownerEditableFields = useMemo(() => ({
+    email: false,
+    businessName: false,
+    password: true,
+    username: true,
+  }), []);
 
   const employeeIdFromToken = useMemo(() => tokenPayload?.employeeId || null, [tokenPayload]);
 

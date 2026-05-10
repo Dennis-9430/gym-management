@@ -5,9 +5,6 @@ import { useEmployees } from "../../hooks/useEmployees";
 import FinancialBarChart from "../../components/financial/FinancialBarChart";
 import FinancialSummaryTable from "../../components/financial/FinancialSummaryTable";
 import { ArrowLeft, TrendingUp } from "lucide-react";
-import {
-  getFinancialSummary,
-} from "../../services/financialReports.service";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
 import Modal from "../../components/common/Modal";
 import "../../styles/financial.css";
@@ -72,20 +69,6 @@ const FinancialDashboard = () => {
     [getTransactionsByDate, selectedDate],
   );
 
-  // Mock data para transferencias cuando no hay datos reales
-  const mockTransfers = todayTransactions.length === 0 ? [
-    {
-      employee: "Juan Pérez",
-      voucherCode: "TRF-001",
-      voucherImage: undefined
-    },
-    {
-      employee: "María González",
-      voucherCode: "DEP-2024-001",
-      voucherImage: undefined
-    }
-  ] : [];
-
   const summaryByEmployee = useMemo(() => {
     const summaries: Record<
       string,
@@ -143,7 +126,7 @@ const FinancialDashboard = () => {
       }));
   }, [todayTransactions]);
 
-  const displayTransfers = transfersWithVouchers.length > 0 ? transfersWithVouchers : mockTransfers;
+  const displayTransfers = transfersWithVouchers;
 
   const totalSummary = useMemo(() => {
     return Object.values(summaryByEmployee).reduce(
@@ -160,10 +143,6 @@ const FinancialDashboard = () => {
   }, [summaryByEmployee]);
 
 
-
-  useEffect(() => {
-    getFinancialSummary(selectedDate, selectedDate).then(() => {}).catch(() => {});
-  }, [selectedDate]);
 
   return (
     <div className="financial-dashboard">

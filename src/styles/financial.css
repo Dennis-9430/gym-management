@@ -713,8 +713,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--color-primary);
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 8px;
   font-size: var(--font-size-sm);
@@ -998,7 +998,11 @@
 }
 
 .financial-summary__card--total {
-  background: linear-gradient(135deg, var(--color-action) 0%, var(--color-action-hover) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-action) 0%,
+    var(--color-action-hover) 100%
+  );
   border: none;
 }
 

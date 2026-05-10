@@ -34,9 +34,13 @@ const WhatsAppMessageModal = ({
   const [loading, setLoading] = useState(false);
   const [schedulerRunning, setSchedulerRunning] = useState(false);
   const [errors, setErrors] = useState<{ date?: string; time?: string; message?: string }>({});
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
+      setSaveError(null);
+      setSaveSuccess(false);
       loadConfig();
     }
   }, [isOpen, messageType]);
@@ -88,10 +92,19 @@ const WhatsAppMessageModal = ({
     return Object.keys(newErrors).length === 0;
   };
 
+  const isDemo = localStorage.getItem("isDemo") === "true";
+
   const handleSave = async () => {
     if (!validate()) return;
 
+    if (isDemo) {
+      setSaveError("Las cuentas demo no pueden modificar esta configuración.");
+      return;
+    }
+
     setLoading(true);
+    setSaveError(null);
+    setSaveSuccess(false);
     try {
       const config = {
         type: messageType,
@@ -109,10 +122,13 @@ const WhatsAppMessageModal = ({
         setSchedulerRunning(true);
       }
 
-      onSaved?.();
-      onClose();
+      setSaveSuccess(true);
+      setTimeout(() => {
+        onSaved?.();
+        onClose();
+      }, 800);
     } catch (error) {
-      // Error handled silently
+      setSaveError(error instanceof Error ? error.message : "Error al guardar. Intenta de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -216,6 +232,18 @@ const WhatsAppMessageModal = ({
               ⚠️ El scheduler está detenido. Se iniciarán los jobs al guardar.
             </div>
           )}
+
+          {saveError && (
+            <div className="error-box">
+              {saveError}
+            </div>
+          )}
+
+          {saveSuccess && (
+            <div className="success-box">
+              Configuración guardada correctamente
+            </div>
+          )}
         </div>
 
         <div className="modal-footer">
@@ -225,9 +253,9 @@ const WhatsAppMessageModal = ({
           <button
             className="btn-save"
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || isDemo}
           >
-            {loading ? "Guardando..." : "Guardar"}
+            {loading ? "Guardando..." : isDemo ? "No disponible en demo" : "Guardar"}
           </button>
         </div>
       </div>

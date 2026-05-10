@@ -46,10 +46,10 @@ const EmployeeForm = ({
   isOwner = false,
   isNew = true,
 }: Props) => {
-  const { isDemo, ownerEditableFields } = useAccountType();
+  const { ownerEditableFields } = useAccountType();
 
-  const usernameDisabled = isOwner && (isDemo || !ownerEditableFields.username);
-  const emailDisabled = isOwner && (isDemo || !ownerEditableFields.email);
+  const usernameDisabled = isOwner && !ownerEditableFields.username;
+  const emailDisabled = isOwner && !ownerEditableFields.email;
   const statusDisabled = isOwner;
   const roleDisabled = isOwner;
   
@@ -124,18 +124,12 @@ const EmployeeForm = ({
 
   return (
     <form className="employee-modal-form" onSubmit={handleSubmit}>
-      {isDemo && (
-        <div className="demo-notice">
-          Las cuentas demo tienen acceso restringido
-        </div>
-      )}
       <div className="form-group ">
         <label>Cedula</label>
         <input
           value={form.documentNumber}
           onChange={(e) => updateField("documentNumber", e.target.value)}
           placeholder="Numero de cedula"
-          disabled={isDemo}
         />
       </div>
       <div className="form-group">
@@ -145,7 +139,7 @@ const EmployeeForm = ({
           onChange={(e) =>
             updateField("status", e.target.value as EmployeeStatus)
           }
-          disabled={statusDisabled || isDemo}
+          disabled={statusDisabled}
         >
           {statusOptions.map((status) => (
             <option key={status} value={status}>
@@ -153,7 +147,7 @@ const EmployeeForm = ({
             </option>
           ))}
         </select>
-        {isOwner && !isDemo && <span className="field-hint">No editable para el owner</span>}
+        {isOwner && <span className="field-hint">No editable para el owner</span>}
       </div>
       <div className="form-group">
         <label>Nombre</label>
@@ -161,7 +155,6 @@ const EmployeeForm = ({
           value={form.firstName}
           onChange={(e) => updateField("firstName", e.target.value)}
           placeholder="Nombre"
-          disabled={isDemo}
         />
       </div>
 
@@ -171,7 +164,6 @@ const EmployeeForm = ({
           value={form.lastName}
           onChange={(e) => updateField("lastName", e.target.value)}
           placeholder="Apellido"
-          disabled={isDemo}
         />
       </div>
 
@@ -181,7 +173,6 @@ const EmployeeForm = ({
           value={form.phone}
           onChange={(e) => updateField("phone", e.target.value)}
           placeholder="Telefono"
-          disabled={isDemo}
         />
       </div>
 
@@ -191,7 +182,6 @@ const EmployeeForm = ({
           value={form.address}
           onChange={(e) => updateField("address", e.target.value)}
           placeholder="Direccion"
-          disabled={isDemo}
         />
       </div>
       <div className="form-group">
@@ -203,7 +193,7 @@ const EmployeeForm = ({
           placeholder="correo@email.com"
           disabled={emailDisabled}
         />
-        {emailDisabled && !isDemo && <span className="field-hint">No editable (dato del registro)</span>}
+        {emailDisabled && <span className="field-hint">No editable (dato del registro)</span>}
       </div>
 
       <div className="form-group ">
@@ -214,7 +204,7 @@ const EmployeeForm = ({
           placeholder="Usuario"
           disabled={usernameDisabled}
         />
-        {isOwner && !isDemo && !ownerEditableFields.username && (
+        {isOwner && !ownerEditableFields.username && (
           <span className="field-hint">No editable (dato del registro)</span>
         )}
       </div>
@@ -226,7 +216,6 @@ const EmployeeForm = ({
             value={form.password}
             onChange={(e) => updateField("password", e.target.value)}
             placeholder="Contrasena"
-            disabled={isDemo}
           />
           <button
             type="button"
@@ -246,7 +235,7 @@ const EmployeeForm = ({
           onChange={(e) =>
             updateField("role", e.target.value as EmployeeRole)
           }
-          disabled={roleDisabled || isDemo}
+          disabled={roleDisabled}
         >
           {roleOptions.map((role) => (
             <option key={role} value={role}>
@@ -254,13 +243,13 @@ const EmployeeForm = ({
             </option>
           ))}
         </select>
-        {isOwner && !isDemo && <span className="field-hint">No editable para el owner</span>}
+        {isOwner && <span className="field-hint">No editable para el owner</span>}
       </div>
 
       {error && <p className="form-error">{error}</p>}
 
       <div className="form-buttons">
-        <button type="submit" className="btn-register" disabled={isDemo}>
+        <button type="submit" className="btn-register">
           {submitLabel}
         </button>
         {onCancel && (

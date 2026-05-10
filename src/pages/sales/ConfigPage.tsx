@@ -186,91 +186,9 @@ const ConfigPage = () => {
       </header>
 
       <div className="config-layout">
-        {/* Row 1: Suscripción + WhatsApp */}
         <div className="config-layout-row">
+          {/* Columna izquierda: Datos del Negocio */}
           <div className="config-layout-col">
-            <section className="config-section__body">
-              <div className="config-section__header">
-                <CreditCard size={20} />
-                <h3>Suscripción</h3>
-              </div>
-
-              {subscription ? (
-                <div className="subscription-info">
-                  <div className="subscription-grid">
-                    <div className="subscription-item">
-                      <span className="subscription-label">Plan</span>
-                      <span className="subscription-value">{subscription.plan}</span>
-                    </div>
-                    <div className="subscription-item">
-                      <span className="subscription-label">Estado</span>
-                      <span className={`subscription-status ${getStatusClass(subscription.subscriptionStatus)}`}>
-                        {getStatusLabel(subscription.subscriptionStatus)}
-                      </span>
-                    </div>
-                    <div className="subscription-item">
-                      <span className="subscription-label">Vence</span>
-                      <span className="subscription-value">
-                        <Calendar size={14} />
-                        {formatDate(subscription.subscriptionEndDate)}
-                      </span>
-                    </div>
-                    <div className="subscription-item">
-                      <span className="subscription-label">Usuarios</span>
-                      <span className="subscription-value">
-                        <Users size={14} />
-                        {subscription.users.current}/{subscription.users.max}
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    className="config-renew-btn"
-                    onClick={handleRenew}
-                    disabled={renewing}
-                  >
-                    <RefreshCw size={16} className={renewing ? "spin" : ""} />
-                    {renewing ? "Renovando..." : "Renovar 30 días"}
-                  </button>
-                </div>
-              ) : (
-                <p className="config-loading">Cargando...</p>
-              )}
-            </section>
-          </div>
-
-          <div className="config-layout-col">
-            {isPro ? (
-              <section className="config-section__body">
-                <div className="config-section__header">
-                  <MessageSquare size={20} />
-                  <h3>WhatsApp</h3>
-                </div>
-                <p className="config-description">
-                  Envía recordatorios automáticos de vencimiento de membresías a tus clientes.
-                </p>
-                <button className="config-whatsapp-btn" onClick={() => setWhatsAppModalOpen(true)}>
-                  <MessageSquare size={18} />
-                  Configurar WhatsApp
-                </button>
-              </section>
-            ) : (
-              <section className="config-section__body">
-                <div className="config-section__header">
-                  <Lock size={20} />
-                  <h3>WhatsApp</h3>
-                </div>
-                <p className="config-description">
-                  Disponible en plan PREMIUM. Actualiza tu plan para acceder a esta función.
-                </p>
-              </section>
-            )}
-          </div>
-        </div>
-
-        {/* Row 2: Datos del Negocio */}
-        <div className="config-layout-row">
-          <div className="config-layout-col config-layout-col--full">
             <section className="config-section__body">
               <div className="config-section__header">
                 <Building2 size={20} />
@@ -346,6 +264,86 @@ const ConfigPage = () => {
                 {saved && <span className="config-saved">¡Guardado exitosamente!</span>}
                 {isDemo && <span className="field-hint">Las cuentas demo tienen acceso restringido</span>}
               </div>
+            </section>
+          </div>
+
+          {/* Columna derecha: Suscripción + WhatsApp */}
+          <div className="config-layout-col">
+            <section className="config-section__body config-section--subscription">
+              <div className="config-section__header">
+                <CreditCard size={20} />
+                <h3>Suscripción</h3>
+              </div>
+
+              {subscription ? (
+                <div className="subscription-info">
+                  <div className="subscription-grid">
+                    <div className="subscription-item">
+                      <span className="subscription-label">Plan</span>
+                      <span className="subscription-value">{subscription.plan}</span>
+                    </div>
+                    <div className="subscription-item">
+                      <span className="subscription-label">Estado</span>
+                      <span className={`subscription-status ${getStatusClass(subscription.subscriptionStatus)}`}>
+                        {getStatusLabel(subscription.subscriptionStatus)}
+                      </span>
+                    </div>
+                    <div className="subscription-item">
+                      <span className="subscription-label">Vence</span>
+                      <span className="subscription-value">
+                        <Calendar size={14} />
+                        {formatDate(subscription.subscriptionEndDate)}
+                      </span>
+                    </div>
+                    <div className="subscription-item">
+                      <span className="subscription-label">Usuarios</span>
+                      <span className="subscription-value">
+                        <Users size={14} />
+                        {subscription.users.current}/{subscription.users.max}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    className="config-renew-btn"
+                    onClick={handleRenew}
+                    disabled={renewing}
+                  >
+                    <RefreshCw size={16} className={renewing ? "spin" : ""} />
+                    {renewing ? "Renovando..." : "Renovar 30 días"}
+                  </button>
+                </div>
+              ) : (
+                <p className="config-loading">Cargando...</p>
+              )}
+            </section>
+
+            <section className="config-section__body config-section--whatsapp">
+              {isPro ? (
+                <>
+                  <div className="config-section__header">
+                    <MessageSquare size={20} />
+                    <h3>WhatsApp</h3>
+                  </div>
+                  <p className="config-description">
+                    Envía recordatorios automáticos de vencimiento de membresías a tus clientes.
+                  </p>
+                  <button className="config-whatsapp-btn" onClick={() => setWhatsAppModalOpen(true)}>
+                    <MessageSquare size={18} />
+                    Configurar WhatsApp
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="config-section__header">
+                    <Lock size={20} />
+                    <h3>WhatsApp</h3>
+                  </div>
+                  <p className="config-description">
+                    Disponible en plan PREMIUM. Actualiza tu plan para acceder a esta función.
+                  </p>
+                </>
+              )}
             </section>
           </div>
         </div>

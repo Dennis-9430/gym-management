@@ -36,7 +36,7 @@ interface AuthContextProps {
   login: (user: AuthUser) => void;
   
   /** Función para cerrar la sesión actual */
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 /**

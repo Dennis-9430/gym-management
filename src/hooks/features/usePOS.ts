@@ -161,8 +161,10 @@ export interface UsePOSReturn {
 // Hook principal del POS
 export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => {
   const cart = useCart();
-  const sales = usePOSSales(cart.totals, cart.items, cart.clearCart, null);
+  const matchedSaleClientRef = useRef<ClientForm | null>(null);
+  const sales = usePOSSales(cart.totals, cart.items, cart.clearCart, matchedSaleClientRef);
   const clients = usePOSClients(initialSubscriptionClient, sales.saleClientInput);
+  matchedSaleClientRef.current = clients.matchedSaleClient;
   const subscription = usePOSSubscription(clients.clients, clients.reloadClients, initialSubscriptionClient);
   const hasOpenedModal = useRef(false);
   const [products, setProducts] = useState<Product[]>([]);

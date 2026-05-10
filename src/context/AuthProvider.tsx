@@ -16,7 +16,7 @@ import type { ReactNode } from "react";
 import type { AuthUser } from "../types/user.types";
 import { authReducer } from "../hooks/authHook";
 import { AuthContext } from "./AuthContext";
-import { clearAuthStorage } from "../services/api";
+import { clearAuthStorage, cleanupDemoData } from "../services/api";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -113,7 +113,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    * @function logout
    * @returns {void}
    */
-  const logout = () => {
+  const logout = async () => {
+    // Limpiar datos demo antes de cerrar sesión
+    await cleanupDemoData();
     // Limpiar TODOS los datos de autenticación
     clearAuthStorage();
     // Reiniciar el estado global
