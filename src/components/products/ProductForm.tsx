@@ -8,7 +8,7 @@ import { DecimalInput } from "../common/DecimalInput";
 
 /* Formulario para crear o editar productos */
 interface Props {
-  idValue?: number | null;
+  idValue?: string | null;
   initialValues?: ProductInput;
   onSubmit: (values: ProductInput) => void;
   onCancel?: () => void;

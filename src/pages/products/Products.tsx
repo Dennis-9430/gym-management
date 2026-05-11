@@ -97,7 +97,7 @@ const Products = () => {
     }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (!canManageProducts) {
       alert("No tienes permisos para eliminar productos.");
       return;

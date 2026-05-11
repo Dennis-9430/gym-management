@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import PersonalDataFields from "../../components/formClients/PersonalDataFields";
 import ContactFields from "../../components/formClients/ContactFields";
 import EmergencyFields from "../../components/formClients/EmergencyFields";
-import { createClient, updateClient } from "../../services/clients.service";
+import { createClientRemote, updateClientRemote } from "../../services/clients.service";
 
 import "../../styles/clientsRegister.css";
 
@@ -17,7 +17,7 @@ const FormClient = () => {
   const { id } = useParams();
   const { clients } = useClients();
 
-  const clientToEdit = clients.find((c) => c.id === Number(id));
+  const clientToEdit = clients.find((client) => String(client.id) === String(id));
 
   useEffect(() => {
     if (clientToEdit) {
@@ -50,7 +50,7 @@ const FormClient = () => {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateRequiredFields()) return;
@@ -62,7 +62,7 @@ const FormClient = () => {
 
     try {
       if (id && clientToEdit) {
-        updateClient(clientToEdit.id, {
+        const updated = await updateClientRemote(clientToEdit.id, {
           ...clientToEdit,
           documentNumber: form.documentNumber,
           firstName: form.firstName,
@@ -74,10 +74,10 @@ const FormClient = () => {
           emergencyPhone: form.emergencyPhone,
           notes: form.notes,
         });
-        navigate(`/clients/${id}`);
+        navigate(`/clients/${updated?.id ?? id}`);
       } else {
-        const created = createClient(form);
-        navigate(`/clients/${created.id}`);
+        const created = await createClientRemote(form);
+        navigate(`/clients/${created?.id}`);
       }
     } catch {
       alert("No se pudo guardar el cliente.");

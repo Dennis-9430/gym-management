@@ -1,16 +1,5 @@
 /* Servicio de asistencia - carga bajo demanda */
-import { getAuthToken } from "./api";
-
-// Configuración de API - usa variable de entorno o proxy de Vite
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
-const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/attendance` : "/api/attendance";
-
-const getHeaders = (): Record<string, string> => {
-  const token = getAuthToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return headers;
-};
+import { apiGet } from "./api";
 
 export interface AttendanceRecord {
   _id: string;
@@ -35,13 +24,9 @@ export interface TodayAttendance {
 /* Obtiene asistencia por fecha */
 export const getAttendanceByDate = async (date: string): Promise<AttendanceRecord[]> => {
   try {
-    const response = await fetch(`${API_BASE}?date=${date}`, { headers: getHeaders() });
-    if (!response.ok) {
-      throw new Error("Error al obtener asistencia");
-    }
-    const data: AttendanceListResponse = await response.json();
+    const data: AttendanceListResponse = await apiGet(`/api/attendance?date=${date}`);
     return data.records || [];
-  } catch (error) {
+  } catch {
     return [];
   }
 };
@@ -49,12 +34,8 @@ export const getAttendanceByDate = async (date: string): Promise<AttendanceRecor
 /* Obtiene asistencia de hoy */
 export const getTodayAttendance = async (): Promise<TodayAttendance | null> => {
   try {
-    const response = await fetch(`${API_BASE}/today`, { headers: getHeaders() });
-    if (!response.ok) {
-      throw new Error("Error al obtener asistencia de hoy");
-    }
-    return await response.json();
-  } catch (error) {
+    return await apiGet("/api/attendance/today");
+  } catch {
     return null;
   }
 };
@@ -65,11 +46,7 @@ export const getAttendanceByRange = async (
   _endDate: string
 ): Promise<AttendanceRecord[]> => {
   try {
-    const response = await fetch(`${API_BASE}?date=${startDate}`, { headers: getHeaders() });
-    if (!response.ok) {
-      return [];
-    }
-    const data: AttendanceListResponse = await response.json();
+    const data: AttendanceListResponse = await apiGet(`/api/attendance?date=${startDate}`);
     return data.records || [];
   } catch {
     return [];

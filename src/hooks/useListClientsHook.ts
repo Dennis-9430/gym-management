@@ -62,7 +62,7 @@ export const useClients = () => {
    * @param {number} id - ID del cliente a eliminar
    * @returns {Promise<boolean>} - true si se eliminó exitosamente
    */
-  const deleteClient = useCallback(async (id: number): Promise<boolean> => {
+  const deleteClient = useCallback(async (id: number | string): Promise<boolean> => {
     try {
       await deleteClientAPI(id);
       // Recargar la lista después de eliminar

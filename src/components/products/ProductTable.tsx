@@ -6,7 +6,7 @@ import { PRODUCT_CATEGORY_LABELS } from "../../types/product.types";
 interface Props {
   products: Product[];
   onEdit: (product: Product) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
   canManage?: boolean; // true si puede editar/eliminar productos
 }
 

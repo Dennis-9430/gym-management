@@ -69,7 +69,7 @@ const ListClients = () => {
   const [showModal, setShowModal] = useState(false);
 
   /** Maneja la eliminación de un cliente */
-  const handleDeleteClient = async (clientId: number) => {
+  const handleDeleteClient = async (clientId: number | string) => {
     if (!canDeleteClients) {
       alert("No tienes permisos para eliminar clientes.");
       return;

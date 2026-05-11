@@ -1,192 +1,58 @@
-/* Servicio para gestionar productos y inventario */
+/* Servicio de productos alineado al backend como fuente de verdad */
 // Direccion del archivo: src/services/products.service.ts
 // Relacionado con: useProducts.ts, Products.tsx, backend/app/routers/products.py
 
 import type { Product, ProductInput, ProductUpdate } from "../types/product.types";
-import { services } from "../types/payment.types";
-import { getAuthToken } from "./api";
+import { apiGet, apiPost, apiPut, apiDelete } from "./api";
 
-// Configuración de API - usa variable de entorno o proxy de Vite
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
-const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/products` : "/api/products";
+const PRODUCTS_ENDPOINT = "/api/products";
 
-// Función helper para obtener headers con token
-const getHeaders = (): Record<string, string> => {
-  const token = getAuthToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return headers;
-};
-const STORAGE_KEY = "gym-management.products";
-
-// Productos de ejemplo -保留 para referencia
-export const seedProducts: Product[] = [
-  { id: 1, code: "SUP-001", name: "Whey Protein", description: "Proteina de suero 1kg", category: "SUPLEMENTOS", unitPrice: 35, taxRate: 15, quantity: 10, minStock: 5, createdAt: new Date().toISOString() },
-  { id: 2, code: "BEB-001", name: "Agua", description: "Botella 600ml", category: "BEBIDAS", unitPrice: 1, taxRate: 0, quantity: 60, minStock: 20, createdAt: new Date().toISOString() },
-  { id: 3, code: "ACC-001", name: "Guantes", description: "Guantes de entrenamiento", category: "ACCESORIOS", unitPrice: 12, taxRate: 15, quantity: 15, minStock: 5, createdAt: new Date().toISOString() },
-  { id: 4, code: "ROP-001", name: "Camiseta", description: "Camiseta deportiva", category: "ROPA", unitPrice: 18, taxRate: 15, quantity: 20, minStock: 5, createdAt: new Date().toISOString() },
-  // Incluye servicios como productos
-  ...services.map((service, index) => ({ id: 5 + index, code: `SER-00${index + 1}`, name: service.name, description: "Servicio del gimnasio", category: "SERVICIOS_GYM" as const, unitPrice: service.price, taxRate: service.taxRate ?? 15, quantity: 1, minStock: 0, createdAt: new Date().toISOString() })),
-];
-
-// TODO: remove localStorage fallback after API is stable
-// Funciones de manejo de datos locales (Fallback)
-
-/**
- * Carga productos desde localStorage
- * @returns Array de productos (solo datos locales, no crea seed)
- */
-const loadProducts = (): Product[] => {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) { return []; }  // No usar datos seed - usar solo DB
-  try {
-    const parsed = JSON.parse(raw) as Product[];
-    if (!Array.isArray(parsed)) return [];
-    return parsed;
-  } catch { return []; }
-};
-
-/**
- * Guarda productos en localStorage
- * @param products - Array de productos
- */
-const saveProducts = (products: Product[]) => localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-
-// Funciones de API (MongoDB)
-
-// Obtiene productos desde MongoDB
-// Relacionado con: backend/app/routers/products.py (list_products)
-/** Mapea el campo `stock` del backend a `quantity` del frontend */
-const mapApiProduct = (p: any): Product => ({
-  id: p.id ?? p._id,
-  code: p.code ?? "",
-  name: p.name ?? "",
-  description: p.description ?? "",
-  category: p.category ?? "SUPLEMENTOS",
-  unitPrice: p.unitPrice ?? 0,
-  taxRate: p.taxRate ?? 0,
-  quantity: p.stock ?? p.quantity ?? 0,
-  minStock: p.minStock ?? 0,
-  createdAt: p.createdAt ?? new Date().toISOString(),
+/* El backend persiste stock; el frontend mantiene quantity para el formulario. */
+const mapApiProduct = (product: Record<string, unknown>): Product => ({
+  id: String(product.id ?? product._id ?? ""),
+  code: String(product.code ?? ""),
+  name: String(product.name ?? ""),
+  description: String(product.description ?? ""),
+  category: (product.category as Product["category"]) ?? "SUPLEMENTOS",
+  unitPrice: Number(product.unitPrice ?? 0),
+  taxRate: Number(product.taxRate ?? 0),
+  quantity: Number(product.stock ?? product.quantity ?? 0),
+  minStock: Number(product.minStock ?? 0),
+  createdAt: String(product.createdAt ?? new Date().toISOString()),
 });
 
-/** Mapea del frontend al backend: `quantity` → `stock` */
-const toApiPayload = (input: ProductInput) => ({
-  code: input.code,
-  name: input.name,
-  description: input.description,
-  category: input.category,
-  unitPrice: input.unitPrice,
-  taxRate: input.taxRate,
-  stock: input.quantity,
-  minStock: input.minStock,
-});
-
-export const getProductsFromAPI = async (): Promise<Product[]> => {
-  try {
-    const response = await fetch(`${API_BASE}?low_stock=false`, { headers: getHeaders() });
-    if (!response.ok) throw new Error("Error al obtener productos");
-    const data = await response.json();
-    return (data.products || []).map(mapApiProduct);
-  } catch (error) { throw error; }
-};
-
-// TODO: remove localStorage fallback after API is stable
-// Obtiene productos (intenta API, fallback localStorage)
-// Relacionado con: useProducts.ts
-export const getProducts = async (): Promise<Product[]> => {
-  try { return await getProductsFromAPI(); } catch { return [...loadProducts()].sort((a, b) => a.id - b.id); }
-};
-
-// TODO: remove localStorage fallback after API is stable
-// Obtiene producto por ID
-// Relacionado con: backend/app/routers/products.py (get_product)
-export const getProductById = async (id: number): Promise<Product | null> => {
-  try {
-    const response = await fetch(`${API_BASE}/${id}`, { headers: getHeaders() });
-    if (!response.ok) throw new Error("Producto no encontrado");
-    const data = await response.json();
-    return mapApiProduct(data);
-  } catch { return loadProducts().find((p) => p.id === id) ?? null; }
-};
-
-// Crea producto en MongoDB
-// Relacionado con: backend/app/routers/products.py (create_product)
-export const createProductAPI = async (input: ProductInput): Promise<Product | null> => {
-  const response = await fetch(API_BASE, { method: "POST", headers: getHeaders(), body: JSON.stringify(toApiPayload(input)) });
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    throw new Error(errData.detail || "Error al crear producto");
+const toApiPayload = (input: ProductInput | ProductUpdate) => {
+  const payload: Record<string, unknown> = { ...input };
+  if ("quantity" in payload) {
+    payload.stock = payload.quantity;
+    delete payload.quantity;
   }
-  const data = await response.json();
-  return mapApiProduct(data);
+  return payload;
 };
 
-// Actualiza producto en MongoDB
-// Relacionado con: backend/app/routers/products.py (update_product)
-export const updateProductAPI = async (id: number, update: ProductUpdate): Promise<Product | null> => {
-  try {
-    const payload = { ...update } as any;
-    if ("quantity" in payload) { payload.stock = payload.quantity; delete payload.quantity; }
-    const response = await fetch(`${API_BASE}/${id}`, { method: "PUT", headers: getHeaders(), body: JSON.stringify(payload) });
-    if (!response.ok) throw new Error("Error al actualizar producto");
-    const data = await response.json();
-    return mapApiProduct(data);
-  } catch (error) { return null; }
+export const getProducts = async (): Promise<Product[]> => {
+  const data = await apiGet(`${PRODUCTS_ENDPOINT}?low_stock=false`) as { products?: Record<string, unknown>[] };
+  return (data.products ?? []).map(mapApiProduct);
 };
 
-// Elimina producto en MongoDB
-// Relacionado con: backend/app/routers/products.py (delete_product)
-export const deleteProductAPI = async (id: number): Promise<boolean> => {
-  try {
-    const response = await fetch(`${API_BASE}/${id}`, { method: "DELETE", headers: getHeaders() });
-    return response.ok;
-  } catch (error) { return false; }
+export const getProductById = async (id: string): Promise<Product | null> => {
+  const data = await apiGet(`${PRODUCTS_ENDPOINT}/${id}`);
+  return mapApiProduct(data as Record<string, unknown>);
 };
 
-// TODO: remove localStorage fallback after API is stable
-// Funciones locales (Fallback)
-
-/**
- * Busca producto por ID en localStorage
- * @param id - ID del producto
- * @returns Producto o null
- */
-export const getProductByIdLocal = (id: number): Product | null => loadProducts().find((p) => p.id === id) ?? null;
-
-/**
- * Crea producto en localStorage (fallback)
- * @param input - Datos del producto
- * @returns Producto creado
- */
-export const createProduct = (input: ProductInput): Product => {
-  const products = loadProducts();
-  const nextId = products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-  const product: Product = { id: nextId, createdAt: new Date().toISOString(), ...input };
-  const updated = [...products, product];
-  saveProducts(updated);
-  return product;
+export const createProductAPI = async (input: ProductInput): Promise<Product> => {
+  const data = await apiPost(PRODUCTS_ENDPOINT, toApiPayload(input));
+  return mapApiProduct(data as Record<string, unknown>);
 };
 
-/**
- * Actualiza producto en localStorage (fallback)
- * @param id - ID del producto
- * @param update - Campos a actualizar
- * @returns Producto actualizado
- */
-export const updateProduct = (id: number, update: ProductUpdate): Product => {
-  const products = loadProducts();
-  const index = products.findIndex((p) => p.id === id);
-  if (index === -1) throw new Error("Producto no encontrado");
-  const updatedProduct: Product = { ...products[index], ...update };
-  const updatedProducts = [...products];
-  updatedProducts[index] = updatedProduct;
-  saveProducts(updatedProducts);
-  return updatedProduct;
+export const updateProductAPI = async (
+  id: string,
+  update: ProductUpdate,
+): Promise<Product> => {
+  const data = await apiPut(`${PRODUCTS_ENDPOINT}/${id}`, toApiPayload(update));
+  return mapApiProduct(data as Record<string, unknown>);
 };
 
-/**
- * Elimina producto de localStorage (fallback)
- * @param id - ID del producto
- */
-export const deleteProduct = (id: number) => saveProducts(loadProducts().filter((p) => p.id !== id));
+export const deleteProductAPI = async (id: string): Promise<void> => {
+  await apiDelete(`${PRODUCTS_ENDPOINT}/${id}`);
+};
