@@ -37,7 +37,8 @@ const SalesListPage = () => {
       const data = await getSales();
       setSales(data);
     } catch (error) {
-      // Error handled silently
+      console.warn("Error al cargar ventas:", error);
+      // No mostramos alerta porque getSales ya maneja errores via api.ts
     } finally {
       setLoading(false);
     }
@@ -86,7 +87,7 @@ const SalesListPage = () => {
       await verifyPaymentAPI(saleId);
       await loadSales();
     } catch (error) {
-      // Error handled silently
+      alert(error instanceof Error ? error.message : "Error al verificar pago. Intenta de nuevo.");
     } finally {
       setUpdating(null);
     }

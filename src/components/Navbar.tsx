@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import { useAccountType } from "../hooks/useAccountType";
 import "../styles/navbar.css";
@@ -23,6 +23,11 @@ const Navbar = () => {
   const { isOwner } = useAccountType();
   // Hook para navegación programática
   const navigate = useNavigate();
+  const location = useLocation();
+  const isDashboard = location.pathname === "/dashboard";
+
+  // VISUAL ONLY: isOwner, role, plan son para display del label de rol.
+  // Backend valida permisos reales en cada request autenticado.
 
   /**
    * Maneja el cierre de sesión del usuario.
@@ -63,7 +68,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${!isDashboard ? "navbar--mobile-hidden" : ""}`}>
       <div className="navbar__containner">
         <div className="navbar__brand">
           <Dumbbell size={22} />

@@ -55,8 +55,10 @@ const WhatsAppMessageModal = ({
     try {
       const status = await getSchedulerStatus();
       setSchedulerRunning(status.running);
-    } catch {
+    } catch (err) {
+      console.warn("Error al verificar scheduler:", err);
       setSchedulerRunning(false);
+      // Falla silenciosa: el scheduler no es crítico para el modal.
     }
   };
 
@@ -92,6 +94,7 @@ const WhatsAppMessageModal = ({
     return Object.keys(newErrors).length === 0;
   };
 
+  // VISUAL ONLY: flag demo local. Backend no usa este flag para permisos.
   const isDemo = localStorage.getItem("isDemo") === "true";
 
   const handleSave = async () => {

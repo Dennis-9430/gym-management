@@ -30,6 +30,11 @@ const InvoiceListPage = () => {
     loadInvoices();
   }, [isPremium, navigate]);
 
+  /*
+   * hasValidToken: check redundante porque apiGet ya maneja 401 con
+   * redirect. Se mantiene como early return para evitar request innecesario
+   * cuando no hay sesión. No es chequeo de seguridad.
+   */
   const hasValidToken = (): boolean => {
     const token = localStorage.getItem("accessToken");
     return !!token;
@@ -46,7 +51,10 @@ const InvoiceListPage = () => {
       const response = await invoiceService.getInvoices(0, 100);
       setInvoices(response.invoices);
     } catch (error) {
+      console.warn("Error al cargar facturas:", error);
       setInvoices([]);
+      // No se muestra alerta al usuario porque las facturas no son
+      // críticas para la navegación. Se renderiza tabla vacía.
     } finally {
       setLoading(false);
     }

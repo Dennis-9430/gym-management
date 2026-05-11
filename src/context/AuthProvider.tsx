@@ -67,6 +67,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    * Efecto que se ejecuta al montar el componente.
    * Restaura el usuario desde localStorage si existe una sesión previa.
    * 
+   * ⚠️ VISUAL CACHE ONLY: localStorage("user") es solo cache para UI.
+   * El backend es la fuente de verdad. No usar estos datos para decisiones
+   * de seguridad, permisos o autenticación real. El JWT (accessToken) es
+   * la única fuente de verdad de sesión.
+   * 
    * @useEffect
    * @description Restaura la sesión del usuario desde localStorage al iniciar la aplicación
    */
@@ -94,6 +99,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   /**
    * Función para iniciar sesión.
    * Guarda el usuario en localStorage y actualiza el estado global.
+   * 
+   * ⚠️ VISUAL CACHE ONLY: persistimos user en localStorage para que al
+   * recargar la página se muestre la UI correcta. El token JWT es la
+   * fuente de verdad. El backend valida permisos en cada request.
    * 
    * @function login
    * @param {AuthUser} user - Usuario a autenticarse

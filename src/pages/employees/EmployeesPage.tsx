@@ -148,6 +148,8 @@ const EmployeesPage = () => {
       }
 
       const updatedOwner = await updateOwnerProfile(values);
+      // VISUAL CACHE: actualiza localStorage("tenant") para reflejar cambios en UI.
+      // Backend sigue siendo fuente de verdad del owner data.
       const tenant = JSON.parse(localStorage.getItem("tenant") || "{}");
 
       if (updatedOwner.username) tenant.ownerUsername = updatedOwner.username;

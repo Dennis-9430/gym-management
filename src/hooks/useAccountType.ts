@@ -1,4 +1,8 @@
 /* Hook para verificar tipo de cuenta y permisos */
+/* ⚠️ VISUAL ONLY: este hook NUNCA debe usarse para seguridad real.
+ * Los claims vienen del JWT firmado por el backend, que es la única
+ * fuente de verdad para roles/permisos. El frontend usa esto solo para
+ * ocultar/mostrar UI. El backend valida cada request con el token. */
 import { useMemo } from "react";
 import { jwtDecode } from "jwt-decode";
 
@@ -24,12 +28,15 @@ export const useAccountType = () => {
     }
   }, [token]);
 
+  // VISUAL ONLY: isDemo es flag local, backend no depende de esto
   const isDemo = useMemo(() => localStorage.getItem("isDemo") === "true", []);
+  // VISUAL ONLY: isOwner del JWT, backend valida con el token
   const isOwner = useMemo(() => tokenPayload?.isOwner === true, [tokenPayload]);
   const isGerente = useMemo(() => isOwner || tokenPayload?.role === "GERENTE", [tokenPayload, isOwner]);
   const isRecepcionista = useMemo(() => tokenPayload?.role === "RECEPCIONISTA", [tokenPayload]);
   const isAdmin = useMemo(() => tokenPayload?.role === "ADMIN", [tokenPayload]);
   
+  // VISUAL ONLY: ownerUsername desde localStorage("tenant") — solo para display
   const ownerUsername = useMemo(() => {
     const tenant = localStorage.getItem("tenant");
     if (!tenant) return null;
@@ -42,6 +49,7 @@ export const useAccountType = () => {
 
   const canEditEmployee = true;
 
+  // VISUAL ONLY: backend valida permisos de edición real
   const canEditConfig = useMemo(() => {
     if (isDemo) return false;
     return true;

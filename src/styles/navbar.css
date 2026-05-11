@@ -212,3 +212,13 @@
   .navbar__brand-title {
     font-size: var(--font-size-base);
   }
+}
+
+/* ==========================================================================
+   RESPONSIVE HIDE - Oculta navbar en mobile fuera del dashboard
+   ========================================================================== */
+@media (max-width: 768px) {
+  .navbar--mobile-hidden {
+    display: none;
+  }
+}

@@ -32,6 +32,12 @@ const defaultConfig: ConfigData = {
 
 const STORAGE_KEY = "gym-management.config";
 
+/**
+ * ⚠️ TEMPORARY LOCAL CACHE — NO ES FUENTE DE VERDAD.
+ * La config debería venir del backend via API. Por ahora se cachea en
+ * localStorage y se complementa con datos del tenant (también cache).
+ * Próximo paso: migrar a endpoint /api/tenants/config para CRUD real.
+ */
 const loadConfig = (): ConfigData => {
   const stored = localStorage.getItem(STORAGE_KEY);
   let baseConfig = defaultConfig;
@@ -44,6 +50,7 @@ const loadConfig = (): ConfigData => {
     }
   }
   
+  // VISUAL CACHE: tenant data from localStorage, complementa config local
   const storedTenant = localStorage.getItem("tenant");
   if (storedTenant) {
     try {
@@ -99,8 +106,10 @@ const ConfigPage = () => {
         subscriptionEndDate: data.subscriptionEndDate || null,
         users: { current: 1, max: data.plan === "PREMIUM" ? 6 : 1 },
       });
-    } catch {
-      // Error silencioso
+    } catch (err) {
+      console.warn("Error al cargar suscripción:", err);
+      // No mostramos error al usuario porque la subscripción se carga al montar
+      // y no debe bloquear la página. Se muestra "Cargando..." permanentemente.
     }
   };
 
@@ -113,8 +122,8 @@ const ConfigPage = () => {
       setRenewing(true);
       await apiPost("/api/tenants/renew", {});
       await loadSubscription();
-    } catch {
-      // Error silencioso
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error al renovar suscripción. Intenta de nuevo más tarde.");
     } finally {
       setRenewing(false);
     }
@@ -125,6 +134,7 @@ const ConfigPage = () => {
       alert("Las cuentas demo tienen acceso restringido.");
       return;
     }
+    // TEMPORARY: guarda solo en localStorage. Próximo paso: endpoint real.
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);

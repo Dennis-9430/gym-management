@@ -92,6 +92,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      // PUBLIC ENDPOINT: login no requiere token. Fetch directo intencional.
       const response = await fetch(buildUrl("/api/tenants/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },

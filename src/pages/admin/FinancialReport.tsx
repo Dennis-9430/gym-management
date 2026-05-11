@@ -49,6 +49,8 @@ const FinancialReport = () => {
 
   const [editingTransaction, setEditingTransaction] = useState<SaleRecord | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // UI PREFERENCE CACHE: filtros de fecha persisten entre sesiones como conveniencia.
+  // No son datos de negocio ni fuente de verdad.
   const [dateFilter, setDateFilter] = useState<DateFilter>(() => {
     const saved = localStorage.getItem("financial_dateFilter");
     return (saved as DateFilter) || "today";

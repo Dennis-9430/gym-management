@@ -12,6 +12,7 @@ export const buildUrl = (endpoint: string) =>
 export const getAuthToken = (): string | null => localStorage.getItem("accessToken");
 
 /** Limpia datos demo en backend antes de cerrar sesión */
+/* PUBLIC + POST-LOGOUT: no necesita token. Fetch directo intencional por ser cleanup que no debe interferir con logout. */
 export const cleanupDemoData = async (): Promise<void> => {
   const isDemo = localStorage.getItem("isDemo") === "true";
   if (!isDemo) return;
@@ -126,6 +127,7 @@ export const apiDelete = async (endpoint: string) =>
   );
 
 /* Verificar plan del tenant desde la sesión actual */
+/* ⚠️ VISUAL ONLY: localStorage("tenant") es cache de UI. El backend tiene el plan real. */
 export const getTenantPlan = (): string | null => {
   const tenant = localStorage.getItem("tenant");
   if (!tenant) return null;
@@ -137,6 +139,7 @@ export const getTenantPlan = (): string | null => {
   }
 };
 
+/* ⚠️ VISUAL ONLY: backend enforces actual permissions. Esta función solo controla UI. */
 export const hasPlanFeature = (feature: string): boolean => {
   const plan = getTenantPlan();
   if (!plan) return false;
@@ -179,4 +182,5 @@ export const hasPlanFeature = (feature: string): boolean => {
   return features[plan]?.includes(feature) ?? false;
 };
 
+/* ⚠️ VISUAL ONLY: backend enforces actual permissions */
 export const isPremium = (): boolean => getTenantPlan() === "PREMIUM";

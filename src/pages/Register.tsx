@@ -165,6 +165,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
+      // PUBLIC ENDPOINT: registro no requiere token. Fetch directo intencional.
       const response = await fetch(buildUrl("/api/tenants/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
