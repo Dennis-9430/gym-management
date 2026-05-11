@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import type { AuthUser } from "../types/user.types";
-import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail } from "lucide-react";
+import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail, Building2 } from "lucide-react";
 import { buildUrl } from "../services/api";
 import "../styles/login.css";
 
@@ -24,11 +24,12 @@ interface TenantLoginResponse {
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [tenantId, setTenantId] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
+  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "", tenantId: "" });
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -39,6 +40,16 @@ const Login = () => {
     const message = searchParams.get("message");
     if (message) {
       setSuccessMessage(decodeURIComponent(message));
+    }
+    
+    // tenantId desde URL (después de registro) o desde localStorage (sesión previa)
+    const urlTenantId = searchParams.get("tenantId");
+    const storedTenantId = localStorage.getItem("tenantId");
+    
+    if (urlTenantId) {
+      setTenantId(urlTenantId);
+    } else if (storedTenantId) {
+      setTenantId(storedTenantId);
     }
   }, [searchParams]);
 
@@ -93,10 +104,14 @@ const Login = () => {
 
     try {
       // PUBLIC ENDPOINT: login no requiere token. Fetch directo intencional.
+      const body: Record<string, string> = { email, password };
+      if (tenantId.trim()) {
+        body.tenantId = tenantId.trim();
+      }
       const response = await fetch(buildUrl("/api/tenants/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify(body)
       });
 
       const data: TenantLoginResponse = await response.json();
@@ -108,6 +123,7 @@ const Login = () => {
 
       // Guardar token y datos del tenant
       localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("tenantId", data.tenant.tenantId);
       // Incluir ownerUsername en tenant si viene del backend
       const tenantData: Record<string, unknown> = { ...data.tenant };
       if ((data.tenant as any).ownerUsername) {
@@ -224,6 +240,31 @@ const Login = () => {
               </div>
               {fieldErrors.email && (
                 <span className="login__field-error">{fieldErrors.email}</span>
+              )}
+            </div>
+
+            <div className="login__field">
+              <label htmlFor="tenantId" className="login__label">
+                Código del Gimnasio <span className="login__optional">(opcional)</span>
+              </label>
+              <div className={`login__input-wrapper ${fieldErrors.tenantId ? "login__input-wrapper--error" : ""}`}>
+                <Building2 size={18} className="login__input-icon" />
+                <input
+                  id="tenantId"
+                  className="login__input"
+                  type="text"
+                  placeholder="ID de tu gimnasio"
+                  value={tenantId}
+                  onChange={(e) => {
+                    setTenantId(e.target.value);
+                    if (error) setError("");
+                  }}
+                  autoComplete="off"
+                  disabled={isLoading || isDemoSession}
+                />
+              </div>
+              {fieldErrors.tenantId && (
+                <span className="login__field-error">{fieldErrors.tenantId}</span>
               )}
             </div>
 

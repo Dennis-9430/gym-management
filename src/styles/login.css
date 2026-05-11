@@ -175,6 +175,12 @@
   color: var(--color-primary-light);
 }
 
+.login__optional {
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-light);
+  font-size: 0.75em;
+}
+
 .login__input-wrapper {
   position: relative;
   display: flex;

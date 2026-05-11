@@ -188,12 +188,16 @@ const Register = () => {
         );
       }
 
-      navigate("/", {
-        state: {
-          message:
-            "Gimnasio registrado exitosamente. Por favor, inicia sesión.",
-        },
-      });
+      const registeredTenant = await response.json();
+
+      // Pasar tenantId al login para multi-tenant real
+      const params = new URLSearchParams();
+      params.set("message", "Gimnasio registrado exitosamente. Por favor, inicia sesión.");
+      if (registeredTenant.tenantId) {
+        params.set("tenantId", registeredTenant.tenantId);
+      }
+
+      navigate(`/?${params.toString()}`);
     } catch (err) {
       const errorMessage =
         err instanceof Error
