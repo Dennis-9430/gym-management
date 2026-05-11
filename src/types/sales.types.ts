@@ -23,7 +23,7 @@ export interface SaleClientInfo {
 }
 
 export interface SaleRecord {
-  id: number;
+  id: string;
   createdAt: string;
   items: CartItem[];
   totals: CartTotals;

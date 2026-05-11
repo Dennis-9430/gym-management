@@ -4,6 +4,7 @@ import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import type { AuthUser } from "../types/user.types";
 import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail } from "lucide-react";
+import { buildUrl } from "../services/api";
 import "../styles/login.css";
 
 interface TenantLoginResponse {
@@ -90,10 +91,8 @@ const Login = () => {
 
     setIsLoading(true);
 
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
     try {
-      const response = await fetch(`${apiUrl}/api/tenants/login`, {
+      const response = await fetch(buildUrl("/api/tenants/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })

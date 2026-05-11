@@ -13,6 +13,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { buildUrl } from "../services/api";
 import "../styles/login.css";
 import "../styles/register.css";
 import "../styles/register-form.css";
@@ -163,10 +164,8 @@ const Register = () => {
 
     setIsLoading(true);
 
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
     try {
-      const response = await fetch(`${apiUrl}/api/tenants/register`, {
+      const response = await fetch(buildUrl("/api/tenants/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

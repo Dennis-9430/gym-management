@@ -1,33 +1,23 @@
-/* Servicio de API con manejo de errores y protección por plan */
+/* Servicio base de API con manejo centralizado de auth y errores */
 
-// URL del backend (usa .env para producción, ruta relativa para proxy de desarrollo)
-export const getApiBaseUrl = () =>
-  import.meta.env.VITE_API_URL || "";
+export const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
 
-const API_BASE_URL = getApiBaseUrl() || "";
+const API_BASE_URL = getApiBaseUrl();
 
-/* Construir URL correctamente */
-const buildUrl = (endpoint: string) => {
-  return `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
-};
-
-/* Headers por defecto - para uso interno */
-const getHeaders = () => {
-  return getAuthHeaders();
-};
+/* Construir URL correctamente para entorno local con proxy o URL configurada */
+export const buildUrl = (endpoint: string) =>
+  `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
 /* Obtener token de autenticación */
-export const getAuthToken = (): string | null => {
-  return localStorage.getItem("accessToken");
-};
+export const getAuthToken = (): string | null => localStorage.getItem("accessToken");
 
 /** Limpia datos demo en backend antes de cerrar sesión */
 export const cleanupDemoData = async (): Promise<void> => {
   const isDemo = localStorage.getItem("isDemo") === "true";
   if (!isDemo) return;
-  
+
   try {
-    await fetch("/api/tenants/demo/cleanup", {
+    await fetch(buildUrl("/api/tenants/demo/cleanup"), {
       method: "POST",
       headers: getAuthHeaders(),
     });
@@ -38,14 +28,9 @@ export const cleanupDemoData = async (): Promise<void> => {
 
 /** Limpia TODOS los datos de autenticación y sesión */
 export const clearAuthStorage = () => {
-  const keysToRemove = [
-    "accessToken",
-    "tenantToken",
-    "tenant",
-    "user",
-    "isDemo",
-  ];
-  keysToRemove.forEach((key) => localStorage.removeItem(key));
+  ["accessToken", "tenantToken", "tenant", "user", "isDemo"].forEach((key) =>
+    localStorage.removeItem(key),
+  );
 };
 
 /* Headers con token de autenticación */
@@ -55,14 +40,14 @@ export const getAuthHeaders = (): Record<string, string> => {
     "Content-Type": "application/json",
   };
   if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+    headers.Authorization = `Bearer ${token}`;
   }
   return headers;
 };
 
 /* Manejo de errores de respuesta */
 const handleResponse = async (response: Response) => {
-  let data;
+  let data: any = {};
 
   try {
     data = await response.json();
@@ -71,92 +56,76 @@ const handleResponse = async (response: Response) => {
   }
 
   if (!response.ok) {
+    const message = data?.detail || data?.message || "Error en la solicitud";
     const isAuthError = response.status === 401 || response.status === 403;
-    
+
     if (isAuthError) {
-      // Emitir evento personalizado para que los componentes puedan manejarlo
-      window.dispatchEvent(new CustomEvent("auth:error", { 
-        detail: { status: response.status, message: data.detail || "Sesión expirada" }
-      }));
-      // No redirigir automáticamente - deixar que el componente maneje
+      window.dispatchEvent(
+        new CustomEvent("auth:error", {
+          detail: { status: response.status, message },
+        }),
+      );
     }
 
-    if (response.status === 403) {
-      throw new Error(data.detail || "No tienes acceso a esta funcionalidad");
-    }
-
-    if (response.status === 401 && !window.location.pathname.includes("/sales/invoices")) {
-      // Solo redirigir si NO estamos en la página de facturas (donde tenemos datos demo)
+    if (response.status === 401) {
       clearAuthStorage();
       window.location.href = "/";
       throw new Error("Sesión expirada");
     }
 
-    throw new Error(data.detail || "Error en la solicitud");
+    throw new Error(message);
   }
 
   return data;
 };
 
-/* GET request */
-export const apiGet = async (endpoint: string) => {
+const withErrorHandling = async (request: Promise<Response>) => {
   try {
-    const response = await fetch(buildUrl(endpoint), {
+    const response = await request;
+    return await handleResponse(response);
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("No se pudo conectar con el servidor");
+  }
+};
+
+export const apiGet = async (endpoint: string) =>
+  withErrorHandling(
+    fetch(buildUrl(endpoint), {
       method: "GET",
-      headers: getHeaders(),
-    });
+      headers: getAuthHeaders(),
+    }),
+  );
 
-    return handleResponse(response);
-  } catch (error) {
-    throw new Error("No se pudo conectar con el servidor");
-  }
-};
-
-/* POST request */
-export const apiPost = async (endpoint: string, body: unknown) => {
-  try {
-    const response = await fetch(buildUrl(endpoint), {
+export const apiPost = async (endpoint: string, body: unknown) =>
+  withErrorHandling(
+    fetch(buildUrl(endpoint), {
       method: "POST",
-      headers: getHeaders(),
+      headers: getAuthHeaders(),
       body: JSON.stringify(body),
-    });
+    }),
+  );
 
-    return handleResponse(response);
-  } catch (error) {
-    throw new Error("No se pudo conectar con el servidor");
-  }
-};
-
-/* PUT request */
-export const apiPut = async (endpoint: string, body: unknown) => {
-  try {
-    const response = await fetch(buildUrl(endpoint), {
+export const apiPut = async (endpoint: string, body: unknown) =>
+  withErrorHandling(
+    fetch(buildUrl(endpoint), {
       method: "PUT",
-      headers: getHeaders(),
+      headers: getAuthHeaders(),
       body: JSON.stringify(body),
-    });
+    }),
+  );
 
-    return handleResponse(response);
-  } catch (error) {
-    throw new Error("No se pudo conectar con el servidor");
-  }
-};
-
-/* DELETE request */
-export const apiDelete = async (endpoint: string) => {
-  try {
-    const response = await fetch(buildUrl(endpoint), {
+export const apiDelete = async (endpoint: string) =>
+  withErrorHandling(
+    fetch(buildUrl(endpoint), {
       method: "DELETE",
-      headers: getHeaders(),
-    });
+      headers: getAuthHeaders(),
+    }),
+  );
 
-    return handleResponse(response);
-  } catch (error) {
-    throw new Error("No se pudo conectar con el servidor");
-  }
-};
-
-/* Verificar plan del tenant */
+/* Verificar plan del tenant desde la sesión actual */
 export const getTenantPlan = (): string | null => {
   const tenant = localStorage.getItem("tenant");
   if (!tenant) return null;
@@ -168,7 +137,6 @@ export const getTenantPlan = (): string | null => {
   }
 };
 
-/* Verificar si tiene acceso a una funcionalidad */
 export const hasPlanFeature = (feature: string): boolean => {
   const plan = getTenantPlan();
   if (!plan) return false;
@@ -211,5 +179,4 @@ export const hasPlanFeature = (feature: string): boolean => {
   return features[plan]?.includes(feature) ?? false;
 };
 
-/* Verificar si tiene plan PREMIUM */
 export const isPremium = (): boolean => getTenantPlan() === "PREMIUM";

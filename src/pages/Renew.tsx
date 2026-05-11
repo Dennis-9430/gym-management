@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { Dumbbell, RefreshCw, Check, Loader2, AlertCircle } from "lucide-react";
+import { apiGet, apiPost } from "../services/api";
 import "../styles/register.css";
 
 interface TenantInfo {
@@ -54,17 +55,9 @@ const Renew = () => {
       return;
     }
 
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
     const fetchTenant = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/tenants/me?tenantId=${tenantId}`);
-        
-        if (!response.ok) {
-          throw new Error("Gimnasio no encontrado");
-        }
-        
-        const data = await response.json();
+        const data = await apiGet("/api/tenants/me");
         setTenant(data);
         setSelectedPlan(data.plan);
       } catch (err) {
@@ -83,19 +76,8 @@ const Renew = () => {
     setIsRenewing(true);
     setError("");
 
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
     try {
-      const response = await fetch(`${apiUrl}/api/tenants/renew`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tenantId, plan: selectedPlan })
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Error al renovar");
-      }
+      await apiPost("/api/tenants/renew", { plan: selectedPlan });
 
       setSuccess(true);
     } catch (err) {

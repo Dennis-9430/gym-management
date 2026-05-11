@@ -23,7 +23,7 @@ export const PRODUCT_CATEGORY_LABELS: Record<ProductCategory, string> = {
 };
 
 export interface Product {
-  id: number;
+  id: string;
   code: string;
   name: string;
   description: string;

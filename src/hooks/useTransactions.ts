@@ -503,7 +503,7 @@ export const useTransactions = () => {
   const getUnifiedTransactions = useMemo(() => {
     // Convertir facturas a formato de SaleRecord
     const invoiceRecords: SaleRecord[] = invoices.map(inv => ({
-      id: inv.id as unknown as number,
+      id: inv.id,
       createdAt: inv.createdAt,
       items: inv.items.map((item, idx) => ({
         key: `${inv.id}-${idx}`,

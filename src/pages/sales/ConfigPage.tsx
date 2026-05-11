@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, Building2, MessageSquare, Lock, CreditCard, Users, Calendar, RefreshCw } from "lucide-react";
 import "../../styles/config.css";
-import { hasPlanFeature, getAuthToken } from "../../services/api";
+import { apiGet, apiPost, hasPlanFeature } from "../../services/api";
 import { useAccountType } from "../../hooks/useAccountType";
 import WhatsAppMessageModal from "../../components/whatsapp/WhatsAppMessageModal";
 
@@ -92,21 +92,13 @@ const ConfigPage = () => {
 
   const loadSubscription = async () => {
     try {
-      const token = getAuthToken();
-      if (!token) return;
-
-      const res = await fetch(`/api/tenants/me`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const data = await apiGet("/api/tenants/me");
+      setSubscription({
+        plan: data.plan || "BASIC",
+        subscriptionStatus: data.subscriptionStatus || "ACTIVE",
+        subscriptionEndDate: data.subscriptionEndDate || null,
+        users: { current: 1, max: data.plan === "PREMIUM" ? 6 : 1 },
       });
-      if (res.ok) {
-        const data = await res.json();
-        setSubscription({
-          plan: data.plan || "BASIC",
-          subscriptionStatus: data.subscriptionStatus || "ACTIVE",
-          subscriptionEndDate: data.subscriptionEndDate || null,
-          users: { current: 1, max: data.plan === "PREMIUM" ? 6 : 1 },
-        });
-      }
     } catch {
       // Error silencioso
     }
@@ -119,19 +111,8 @@ const ConfigPage = () => {
     }
     try {
       setRenewing(true);
-      const token = getAuthToken();
-      if (!token) return;
-
-      const res = await fetch(`/api/tenants/renew`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.ok) {
-        await loadSubscription();
-      }
+      await apiPost("/api/tenants/renew", {});
+      await loadSubscription();
     } catch {
       // Error silencioso
     } finally {
