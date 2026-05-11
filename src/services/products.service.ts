@@ -29,6 +29,7 @@ export const seedProducts: Product[] = [
   ...services.map((service, index) => ({ id: 5 + index, code: `SER-00${index + 1}`, name: service.name, description: "Servicio del gimnasio", category: "SERVICIOS_GYM" as const, unitPrice: service.price, taxRate: service.taxRate ?? 15, quantity: 1, minStock: 0, createdAt: new Date().toISOString() })),
 ];
 
+// TODO: remove localStorage fallback after API is stable
 // Funciones de manejo de datos locales (Fallback)
 
 /**
@@ -90,12 +91,14 @@ export const getProductsFromAPI = async (): Promise<Product[]> => {
   } catch (error) { throw error; }
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Obtiene productos (intenta API, fallback localStorage)
 // Relacionado con: useProducts.ts
 export const getProducts = async (): Promise<Product[]> => {
   try { return await getProductsFromAPI(); } catch { return [...loadProducts()].sort((a, b) => a.id - b.id); }
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Obtiene producto por ID
 // Relacionado con: backend/app/routers/products.py (get_product)
 export const getProductById = async (id: number): Promise<Product | null> => {
@@ -141,6 +144,7 @@ export const deleteProductAPI = async (id: number): Promise<boolean> => {
   } catch (error) { return false; }
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Funciones locales (Fallback)
 
 /**

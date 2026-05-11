@@ -335,6 +335,7 @@ const sampleSales: SaleRecord[] = [
   },
 ];
 
+// TODO: remove localStorage fallback after API is stable
 const loadSales = (): SaleRecord[] => {
   // Carga ventas desde localStorage SOLO si existen datos (no crea semillas)
   // NOTA: Ahora solo usa la API - si no hay datos en DB retorna array vacío
@@ -352,6 +353,7 @@ const loadSales = (): SaleRecord[] => {
   }
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Funciones de manejo de datos locales (Fallback)
 
 /**
@@ -432,6 +434,7 @@ export const getSalesFromAPI = async (): Promise<SaleRecord[]> => {
   }
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Obtiene ventas (intenta API, fallback localStorage)
 // Relacionado con: useTransactions.ts
 export const getSales = async (): Promise<SaleRecord[]> => {

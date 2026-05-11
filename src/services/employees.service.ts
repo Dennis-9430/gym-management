@@ -25,6 +25,7 @@ export const getEmployeesFromAPI = async (): Promise<Employee[]> => {
   }
 };
 
+// TODO: remove localStorage fallback after API is stable
 /* Obtiene empleados (intenta API, fallback localStorage) */
 // Relacionado con: useEmployees.ts, EmployeesPage.tsx
 export const getEmployees = async (): Promise<Employee[]> => {
@@ -122,6 +123,7 @@ export const getEmployees = async (): Promise<Employee[]> => {
   }
 };
 
+// TODO: remove localStorage fallback after API is stable
 /* Obtiene empleado por ID */
 export const getEmployeeById = async (id: number | string): Promise<Employee | null> => {
   try {
@@ -245,6 +247,7 @@ const withDefaults = (employee: Employee): Employee => {
   };
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Funciones de manejo de datos locales (Fallback)
 
 /**
@@ -272,6 +275,7 @@ const saveEmployees = (employees: Employee[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Funciones locales (Fallback)
 
 /**

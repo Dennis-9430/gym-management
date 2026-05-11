@@ -2,19 +2,7 @@
 // Dirección del archivo: src/services/invoices.service.ts
 // Relacionado con: useTransactions.ts, backend/app/routers/invoices.py
 
-import { getAuthToken } from "./api";
-
-// Configuración de API
-const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
-const API_BASE = getApiBaseUrl() ? `${getApiBaseUrl()}/api/invoices` : "/api/invoices";
-
-// Función helper para obtener headers con token
-const getHeaders = (): Record<string, string> => {
-  const token = getAuthToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return headers;
-};
+import { apiGet } from "./api";
 
 /**
  * Datos de una factura
@@ -58,11 +46,7 @@ export interface InvoiceRecord {
  */
 export const getInvoicesFromAPI = async (): Promise<InvoiceRecord[]> => {
   try {
-    const response = await fetch(`${API_BASE}?limit=100`, { headers: getHeaders() });
-    if (!response.ok) {
-      throw new Error("Error al obtener facturas");
-    }
-    const data = await response.json();
+    const data = await apiGet("/api/invoices?limit=100");
     const invoices = data.invoices || [];
     // Backend guarda createdAt en UTC sin "Z". Agregarlo para parse correcto.
     return invoices.map((inv: InvoiceRecord) => ({

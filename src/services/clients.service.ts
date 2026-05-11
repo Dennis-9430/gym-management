@@ -51,16 +51,14 @@ export const getClientsFromAPI = async (): Promise<ClientForm[]> => {
   }
 };
 
-// Obtiene clientes (intenta API, fallback localStorage)
+// Obtiene clientes desde API
 // Relacionado con: useListClientsHook.ts
 export const getClients = async (): Promise<ClientForm[]> => {
-  try {
-    return await getClientsFromAPI();
-  } catch {
-    return loadClients().sort(sortByStatus);
-  }
+  // TODO: remove localStorage fallback after API is stable
+  return await getClientsFromAPI();
 };
 
+// TODO: remove localStorage fallback after API is stable
 // Funciones locales (fallback)
 
 /**

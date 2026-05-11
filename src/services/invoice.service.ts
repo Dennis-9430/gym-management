@@ -2,22 +2,10 @@
 import type { Invoice, InvoiceCreateRequest, InvoiceListResponse, InvoiceEmailRequest } from "../types/invoice.types";
 import { apiGet, apiPost, apiDelete } from "./api";
 
-export const getTenantId = () => {
-  const tenant = localStorage.getItem("tenant");
-  if (!tenant) return null;
-  try {
-    return JSON.parse(tenant).tenantId;
-  } catch {
-    return null;
-  }
-};
-
 const invoiceService = {
   /* Lista de facturas */
   async getInvoices(page = 0, limit = 50): Promise<InvoiceListResponse> {
-    const tenantId = getTenantId();
-    if (!tenantId) throw new Error("No hay tenant");
-    return apiGet(`/api/invoices?tenantId=${tenantId}&skip=${page * limit}&limit=${limit}`);
+    return apiGet(`/api/invoices?skip=${page * limit}&limit=${limit}`);
   },
 
   /* Obtener una factura por ID */
@@ -42,9 +30,7 @@ const invoiceService = {
 
   /* Generar número de factura siguiente */
   async getNextInvoiceNumber(): Promise<string> {
-    const tenantId = getTenantId();
-    if (!tenantId) throw new Error("No hay tenant");
-    const result = await apiGet(`/api/invoices/next-number?tenantId=${tenantId}`);
+    const result = await apiGet("/api/invoices/next-number");
     return result as string;
   },
 };
