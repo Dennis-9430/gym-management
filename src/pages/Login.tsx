@@ -24,12 +24,12 @@ interface TenantLoginResponse {
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [tenantId, setTenantId] = useState("");
+  const [businessCode, setBusinessCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "", tenantId: "" });
+  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "", businessCode: "" });
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -42,14 +42,13 @@ const Login = () => {
       setSuccessMessage(decodeURIComponent(message));
     }
     
-    // tenantId desde URL (después de registro) o desde localStorage (sesión previa)
-    const urlTenantId = searchParams.get("tenantId");
-    const storedTenantId = localStorage.getItem("tenantId");
-    
-    if (urlTenantId) {
-      setTenantId(urlTenantId);
-    } else if (storedTenantId) {
-      setTenantId(storedTenantId);
+    // businessCode desde URL (después de registro) o desde localStorage
+    const urlCode = searchParams.get("code");
+    const storedCode = localStorage.getItem("businessCode");
+    if (urlCode) {
+      setBusinessCode(urlCode);
+    } else if (storedCode) {
+      setBusinessCode(storedCode);
     }
   }, [searchParams]);
 
@@ -58,6 +57,7 @@ const Login = () => {
   
   useEffect(() => {
     const isDemo = searchParams.get("demo") === "true";
+    const planParam = searchParams.get("plan");
     
     if (isDemo) {
       const creds = localStorage.getItem("demoCredentials");
@@ -71,6 +71,10 @@ const Login = () => {
         // Error parsing demo credentials
       }
       }
+      
+      // Pre-fill businessCode según el plan demo (fijo, coincide con seed data)
+      const demoPlan = planParam || searchParams.get("plan") || "BASIC";
+      setBusinessCode(demoPlan === "PREMIUM" ? "demo-premium" : "demo-basic");
     }
   }, [searchParams]);
 
@@ -105,8 +109,14 @@ const Login = () => {
     try {
       // PUBLIC ENDPOINT: login no requiere token. Fetch directo intencional.
       const body: Record<string, string> = { email, password };
-      if (tenantId.trim()) {
-        body.tenantId = tenantId.trim();
+      // Enviar businessCode (slug) si el usuario lo ingresó
+      if (businessCode.trim()) {
+        body.businessCode = businessCode.trim();
+      }
+      // Enviar tenantId UUID si lo tenemos de sesión anterior
+      const savedTenantId = localStorage.getItem("tenantId");
+      if (savedTenantId) {
+        body.tenantId = savedTenantId;
       }
       const response = await fetch(buildUrl("/api/tenants/login"), {
         method: "POST",
@@ -124,6 +134,9 @@ const Login = () => {
       // Guardar token y datos del tenant
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("tenantId", data.tenant.tenantId);
+      if (data.tenant.businessCode) {
+        localStorage.setItem("businessCode", data.tenant.businessCode);
+      }
       // Incluir ownerUsername en tenant si viene del backend
       const tenantData: Record<string, unknown> = { ...data.tenant };
       if ((data.tenant as any).ownerUsername) {
@@ -244,27 +257,27 @@ const Login = () => {
             </div>
 
             <div className="login__field">
-              <label htmlFor="tenantId" className="login__label">
-                Código del Gimnasio <span className="login__optional">(opcional)</span>
+              <label htmlFor="businessCode" className="login__label">
+                Código del Negocio <span className="login__optional">(opcional)</span>
               </label>
-              <div className={`login__input-wrapper ${fieldErrors.tenantId ? "login__input-wrapper--error" : ""}`}>
+              <div className={`login__input-wrapper ${fieldErrors.businessCode ? "login__input-wrapper--error" : ""}`}>
                 <Building2 size={18} className="login__input-icon" />
                 <input
-                  id="tenantId"
+                  id="businessCode"
                   className="login__input"
                   type="text"
-                  placeholder="ID de tu gimnasio"
-                  value={tenantId}
+                  placeholder="ej: mi-gimnasio"
+                  value={businessCode}
                   onChange={(e) => {
-                    setTenantId(e.target.value);
+                    setBusinessCode(e.target.value);
                     if (error) setError("");
                   }}
                   autoComplete="off"
                   disabled={isLoading || isDemoSession}
                 />
               </div>
-              {fieldErrors.tenantId && (
-                <span className="login__field-error">{fieldErrors.tenantId}</span>
+              {fieldErrors.businessCode && (
+                <span className="login__field-error">{fieldErrors.businessCode}</span>
               )}
             </div>
 

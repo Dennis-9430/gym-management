@@ -1,5 +1,5 @@
 /* Página de registro de nuevo gimnasio (Landing) */
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Dumbbell,
@@ -7,6 +7,7 @@ import {
   Mail,
   Phone,
   Building2,
+  Tag,
   Check,
   Loader2,
   Play,
@@ -58,6 +59,15 @@ const PLANS: Plan[] = [
   },
 ];
 
+/** Convierte texto a slug URL-friendly */
+const slugify = (text: string): string =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[-\s]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 const Register = () => {
   const [step, setStep] = useState<"plans" | "form">("plans");
   const [selectedPlan, setSelectedPlan] = useState<string>("BASIC");
@@ -67,6 +77,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     businessName: "",
+    businessCode: "",
     email: "",
     phone: "",
     password: "",
@@ -76,6 +87,7 @@ const Register = () => {
   });
   const [fieldErrors, setFieldErrors] = useState({
     businessName: "",
+    businessCode: "",
     email: "",
     phone: "",
     password: "",
@@ -173,6 +185,7 @@ const Register = () => {
           email: formData.email,
           password: formData.password,
           businessName: formData.businessName,
+          businessCode: formData.businessCode || undefined,
           businessPhone: formData.phone,
           plan: selectedPlan,
           ownerFirstName: formData.ownerFirstName,
@@ -190,11 +203,14 @@ const Register = () => {
 
       const registeredTenant = await response.json();
 
-      // Pasar tenantId al login para multi-tenant real
+      // Pasar tenantId y businessCode al login para multi-tenant real
       const params = new URLSearchParams();
       params.set("message", "Gimnasio registrado exitosamente. Por favor, inicia sesión.");
       if (registeredTenant.tenantId) {
         params.set("tenantId", registeredTenant.tenantId);
+      }
+      if (registeredTenant.businessCode) {
+        params.set("code", registeredTenant.businessCode);
       }
 
       navigate(`/?${params.toString()}`);
@@ -210,7 +226,14 @@ const Register = () => {
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value };
+      // Auto-generar businessCode desde businessName
+      if (field === "businessName") {
+        updated.businessCode = slugify(value) || "";
+      }
+      return updated;
+    });
     if (fieldErrors[field as keyof typeof fieldErrors]) {
       setFieldErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -342,6 +365,31 @@ const Register = () => {
             {fieldErrors.businessName && (
               <span className="register-form__field-error">
                 {fieldErrors.businessName}
+              </span>
+            )}
+          </div>
+
+          <div className="register-form__field register-form__field--full">
+            <label>
+              Código del Negocio
+              <span style={{ fontWeight: "normal", color: "var(--color-text-light)", fontSize: "0.75em", marginLeft: 6 }}>
+                (auto-generado)
+              </span>
+            </label>
+            <div className={`register-form__input-wrap ${fieldErrors.businessCode ? "register-form__input-wrap--error" : ""}`}>
+              <Tag size={18} />
+              <input
+                type="text"
+                placeholder="código-auto-generado"
+                value={formData.businessCode}
+                readOnly
+                className="register-form__input register-form__input--readonly"
+                tabIndex={-1}
+              />
+            </div>
+            {fieldErrors.businessCode && (
+              <span className="register-form__field-error">
+                {fieldErrors.businessCode}
               </span>
             )}
           </div>

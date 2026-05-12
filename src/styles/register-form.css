@@ -56,6 +56,13 @@
   min-width: 0;
 }
 
+/* Read-only (businessCode auto-generado) */
+.register-form__input-wrap input[readonly] {
+  color: var(--color-text-light, rgba(255,255,255,0.6));
+  cursor: default;
+  user-select: none;
+}
+
 .register-form__input-wrap input::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
