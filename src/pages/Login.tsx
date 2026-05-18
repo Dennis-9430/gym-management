@@ -42,13 +42,11 @@ const Login = () => {
       setSuccessMessage(decodeURIComponent(message));
     }
     
-    // businessCode desde URL (después de registro) o desde localStorage
+    // businessCode solo desde URL (después de registro, ?code=mi-gimnasio).
+    // NO leer de localStorage para que el campo arranque limpio al navegar al login.
     const urlCode = searchParams.get("code");
-    const storedCode = localStorage.getItem("businessCode");
     if (urlCode) {
       setBusinessCode(urlCode);
-    } else if (storedCode) {
-      setBusinessCode(storedCode);
     }
   }, [searchParams]);
 
@@ -80,7 +78,7 @@ const Login = () => {
 
   /* Valida que los campos no estén vacíos */
   const validateForm = (): boolean => {
-    const errors = { email: "", password: "" };
+    const errors = { email: "", password: "", businessCode: "" };
     let isValid = true;
 
     if (!email.trim()) {
@@ -90,6 +88,11 @@ const Login = () => {
 
     if (!password.trim()) {
       errors.password = "La contraseña es requerida";
+      isValid = false;
+    }
+
+    if (!businessCode.trim()) {
+      errors.businessCode = "El Código del Negocio es requerido";
       isValid = false;
     }
 
@@ -112,11 +115,12 @@ const Login = () => {
       // Enviar businessCode (slug) si el usuario lo ingresó
       if (businessCode.trim()) {
         body.businessCode = businessCode.trim();
-      }
-      // Enviar tenantId UUID si lo tenemos de sesión anterior
-      const savedTenantId = localStorage.getItem("tenantId");
-      if (savedTenantId) {
-        body.tenantId = savedTenantId;
+      } else {
+        // Solo enviar tenantId como fallback si NO hay businessCode
+        const savedTenantId = localStorage.getItem("tenantId");
+        if (savedTenantId) {
+          body.tenantId = savedTenantId;
+        }
       }
       const response = await fetch(buildUrl("/api/tenants/login"), {
         method: "POST",
@@ -258,7 +262,7 @@ const Login = () => {
 
             <div className="login__field">
               <label htmlFor="businessCode" className="login__label">
-                Código del Negocio <span className="login__optional">(opcional)</span>
+                Código del Negocio
               </label>
               <div className={`login__input-wrapper ${fieldErrors.businessCode ? "login__input-wrapper--error" : ""}`}>
                 <Building2 size={18} className="login__input-icon" />

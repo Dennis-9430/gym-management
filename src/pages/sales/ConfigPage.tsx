@@ -1,14 +1,15 @@
-/* Pagina de configuracion del negocio */
+/* Página de configuración del negocio — fuente de verdad: backend */
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, Building2, MessageSquare, Lock, CreditCard, Users, Calendar, RefreshCw } from "lucide-react";
 import "../../styles/config.css";
-import { apiGet, apiPost, hasPlanFeature } from "../../services/api";
+import { apiGet, apiPost, apiPut, hasPlanFeature } from "../../services/api";
 import { useAccountType } from "../../hooks/useAccountType";
 import WhatsAppMessageModal from "../../components/whatsapp/WhatsAppMessageModal";
 
 interface ConfigData {
   businessName: string;
+  businessCode: string;
   businessRuc: string;
   businessAddress: string;
   businessPhone: string;
@@ -21,53 +22,6 @@ interface SubscriptionInfo {
   subscriptionEndDate: string | null;
   users: { current: number; max: number };
 }
-
-const defaultConfig: ConfigData = {
-  businessName: "Gimnasio Fitness Pro",
-  businessRuc: "1234567890001",
-  businessAddress: "Av. Principal 123, Ciudad",
-  businessPhone: "",
-  businessEmail: "",
-};
-
-const STORAGE_KEY = "gym-management.config";
-
-/**
- * ⚠️ TEMPORARY LOCAL CACHE — NO ES FUENTE DE VERDAD.
- * La config debería venir del backend via API. Por ahora se cachea en
- * localStorage y se complementa con datos del tenant (también cache).
- * Próximo paso: migrar a endpoint /api/tenants/config para CRUD real.
- */
-const loadConfig = (): ConfigData => {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  let baseConfig = defaultConfig;
-  
-  if (stored) {
-    try {
-      baseConfig = { ...defaultConfig, ...JSON.parse(stored) };
-    } catch {
-      baseConfig = defaultConfig;
-    }
-  }
-  
-  // VISUAL CACHE: tenant data from localStorage, complementa config local
-  const storedTenant = localStorage.getItem("tenant");
-  if (storedTenant) {
-    try {
-      const tenant = JSON.parse(storedTenant);
-      if (tenant.email) {
-        baseConfig.businessEmail = tenant.email;
-      }
-      if (tenant.businessName) {
-        baseConfig.businessName = tenant.businessName;
-      }
-    } catch {
-      // Ignorar
-    }
-  }
-  
-  return baseConfig;
-};
 
 const formatDate = (dateStr: string | null): string => {
   if (!dateStr) return "Sin límite";
@@ -85,7 +39,9 @@ const formatDate = (dateStr: string | null): string => {
 
 const ConfigPage = () => {
   const navigate = useNavigate();
-  const [config, setConfig] = useState<ConfigData>(() => loadConfig());
+  const [config, setConfig] = useState<ConfigData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false);
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
@@ -94,12 +50,21 @@ const ConfigPage = () => {
   const isPro = hasPlanFeature("whatsapp:write");
 
   useEffect(() => {
-    loadSubscription();
+    loadTenantData();
   }, []);
 
-  const loadSubscription = async () => {
+  const loadTenantData = async () => {
+    setLoading(true);
     try {
       const data = await apiGet("/api/tenants/me");
+      setConfig({
+        businessName: data.businessName || "",
+        businessCode: data.businessCode || "",
+        businessRuc: data.businessRuc || "",
+        businessAddress: data.businessAddress || "",
+        businessPhone: data.businessPhone || "",
+        businessEmail: data.email || "",
+      });
       setSubscription({
         plan: data.plan || "BASIC",
         subscriptionStatus: data.subscriptionStatus || "ACTIVE",
@@ -107,9 +72,9 @@ const ConfigPage = () => {
         users: { current: 1, max: data.plan === "PREMIUM" ? 6 : 1 },
       });
     } catch (err) {
-      console.warn("Error al cargar suscripción:", err);
-      // No mostramos error al usuario porque la subscripción se carga al montar
-      // y no debe bloquear la página. Se muestra "Cargando..." permanentemente.
+      console.warn("Error al cargar datos del negocio:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,7 +86,7 @@ const ConfigPage = () => {
     try {
       setRenewing(true);
       await apiPost("/api/tenants/renew", {});
-      await loadSubscription();
+      await loadTenantData();
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error al renovar suscripción. Intenta de nuevo más tarde.");
     } finally {
@@ -129,25 +94,34 @@ const ConfigPage = () => {
     }
   };
 
-  const handleSave = () => {
-    if (isDemo) {
+  const handleSave = async () => {
+    if (isDemo || !config) {
       alert("Las cuentas demo tienen acceso restringido.");
       return;
     }
-    // TEMPORARY: guarda solo en localStorage. Próximo paso: endpoint real.
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      setSaving(true);
+      // Enviar solo campos editables al backend
+      await apiPut("/api/tenants/me", {
+        businessName: config.businessName,
+        businessPhone: config.businessPhone,
+        businessAddress: config.businessAddress,
+        businessRuc: config.businessRuc,
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error al guardar. Intenta de nuevo.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleChange = (field: keyof ConfigData, value: string | number) => {
-    if (isDemo) {
-      alert("Las cuentas demo tienen acceso restringido.");
-      return;
-    }
+    if (isDemo || !config) return;
     if (field === "businessEmail" && !ownerEditableFields.email) return;
     if (field === "businessName" && !ownerEditableFields.businessName) return;
-    setConfig((prev) => ({ ...prev, [field]: value }));
+    setConfig((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
   const getStatusLabel = (status: string): string => {
@@ -164,6 +138,22 @@ const ConfigPage = () => {
     if (status === "EXPIRED") return "status--expired";
     return "status--pending";
   };
+
+  if (loading) {
+    return (
+      <main className="config-page">
+        <p className="config-loading">Cargando configuración...</p>
+      </main>
+    );
+  }
+
+  if (!config) {
+    return (
+      <main className="config-page">
+        <p className="config-loading">No se pudieron cargar los datos del negocio.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="config-page">
@@ -198,6 +188,22 @@ const ConfigPage = () => {
                   {!ownerEditableFields.businessName && !isDemo && (
                     <span className="field-hint">No editable (dato del registro)</span>
                   )}
+                </div>
+
+                <div className="config-field">
+                  <label>Código del Negocio</label>
+                  <div className="config-businesscode">
+                    <input
+                      type="text"
+                      value={config.businessCode}
+                      readOnly
+                      className="businesscode-input"
+                      title="Este código lo usás para iniciar sesión. No se puede editar."
+                    />
+                    <span className="field-hint">
+                      Usá este código en el login como <strong>Código del Negocio</strong>
+                    </span>
+                  </div>
                 </div>
 
                 <div className="config-field">
@@ -248,9 +254,9 @@ const ConfigPage = () => {
               </div>
 
               <div className="config-actions">
-                <button className="config-save-btn" onClick={handleSave} disabled={isDemo}>
+                <button className="config-save-btn" onClick={handleSave} disabled={isDemo || saving}>
                   <Save size={18} />
-                  Guardar Cambios
+                  {saving ? "Guardando..." : "Guardar Cambios"}
                 </button>
                 {saved && <span className="config-saved">¡Guardado exitosamente!</span>}
                 {isDemo && <span className="field-hint">Las cuentas demo tienen acceso restringido</span>}

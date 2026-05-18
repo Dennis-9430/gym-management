@@ -117,6 +117,36 @@
   color: #9ca3af;
 }
 
+/* Business Code - campo de solo lectura destacado */
+.config-businesscode {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.businesscode-input {
+  font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  background: var(--color-bg-secondary) !important;
+  color: var(--color-primary) !important;
+  cursor: default;
+  letter-spacing: 0.5px;
+  border: 2px dashed var(--color-border-dark) !important;
+}
+
+.businesscode-input:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+.config-field .field-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  font-style: normal;
+}
+
 .field-hint {
   display: block;
   font-size: var(--font-size-xs);
