@@ -29,7 +29,8 @@ export const cleanupDemoData = async (): Promise<void> => {
 
 /** Limpia TODOS los datos de autenticación y sesión */
 export const clearAuthStorage = () => {
-  ["accessToken", "tenantToken", "tenant", "user", "isDemo"].forEach((key) =>
+  ["accessToken", "tenantToken", "tenant", "user", "isDemo",
+   "tenantId", "businessCode", "demoCredentials"].forEach((key) =>
     localStorage.removeItem(key),
   );
 };
