@@ -347,23 +347,7 @@ const Building2Icon = ({ size, style }: { size: number; style?: React.CSSPropert
 );
 
 /* Layout mínimo para páginas de SUPER_ADMIN */
-const SuperAdminLayout = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
-    <div style={{ backgroundColor: "#0f172a", color: "#fff", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Gym Management</h1>
-        <span style={{ fontSize: 12, backgroundColor: "#3b82f6", padding: "2px 8px", borderRadius: 4, fontWeight: 600 }}>SUPER ADMIN</span>
-      </div>
-      <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
-        <a href="/super-admin/dashboard" style={{ color: "#94a3b8", textDecoration: "none" }}>Dashboard</a>
-        <a href="/super-admin/tenants" style={{ color: "#fff", textDecoration: "none", fontWeight: 600 }}>Tenants</a>
-      </nav>
-    </div>
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px" }}>
-      {children}
-    </div>
-  </div>
-);
+import SuperAdminLayout from "../../components/superAdmin/SuperAdminLayout";
 
 const thStyle: React.CSSProperties = {
   padding: "12px 16px",

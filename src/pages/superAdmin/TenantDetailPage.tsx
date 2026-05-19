@@ -21,6 +21,7 @@ import { getAdminTenantById, suspendTenant, cancelTenant, reactivateTenant, getT
 import { registerManualPayment } from "../../services/adminTenants.service";
 import { TenantStatusBadge } from "../../components/superAdmin/TenantStatusBadge";
 import { ManualPaymentModal } from "../../components/superAdmin/ManualPaymentModal";
+import SuperAdminLayout from "../../components/superAdmin/SuperAdminLayout";
 import type { AdminTenant, ManualPaymentResponse, ManualPaymentRequest } from "../../types/adminTenant.types";
 
 const PAGE_SIZE = 10;
@@ -425,25 +426,6 @@ const DemoIcon = ({ size }: { size: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polygon points="5 3 19 12 5 21 5 3" />
   </svg>
-);
-
-/* Layout mínimo para páginas de SUPER_ADMIN */
-const SuperAdminLayout = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
-    <div style={{ backgroundColor: "#0f172a", color: "#fff", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Gym Management</h1>
-        <span style={{ fontSize: 12, backgroundColor: "#3b82f6", padding: "2px 8px", borderRadius: 4, fontWeight: 600 }}>SUPER ADMIN</span>
-      </div>
-      <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
-        <a href="/super-admin/dashboard" style={{ color: "#94a3b8", textDecoration: "none" }}>Dashboard</a>
-        <a href="/super-admin/tenants" style={{ color: "#94a3b8", textDecoration: "none" }}>Tenants</a>
-      </nav>
-    </div>
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px" }}>
-      {children}
-    </div>
-  </div>
 );
 
 const thStyle: React.CSSProperties = {
