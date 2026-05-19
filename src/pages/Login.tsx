@@ -357,11 +357,7 @@ const Login = () => {
           <div className="login__register">
             <p>
               <a 
-                href="#" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert("Funcionalidad en desarrollo. Contacta al administrador.");
-                }}
+                href="/forgot-password"
                 className="login__forgot"
               >
                 ¿Olvidaste tu contraseña?

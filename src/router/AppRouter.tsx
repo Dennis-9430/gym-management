@@ -9,6 +9,8 @@ import { ProtectedRoute } from "../components/common/ProtectedRoute";
 // Relacionado con: vite.config.ts (manualChunks)
 const Login = lazy(() => import("../pages/Login"));
 const Register = lazy(() => import("../pages/Register"));
+const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("../pages/ResetPassword"));
 const Renew = lazy(() => import("../pages/Renew"));
 const Terms = lazy(() => import("../pages/Terms"));
 const Privacy = lazy(() => import("../pages/Privacy"));
@@ -50,6 +52,8 @@ function AppRouter() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/renew" element={<Renew />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
