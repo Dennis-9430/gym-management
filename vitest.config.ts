@@ -3,6 +3,9 @@
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',
