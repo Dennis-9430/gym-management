@@ -46,68 +46,69 @@ const SuperAdminLayout = ({ children }: Props) => {
           </span>
         </div>
 
-        {/* Center: nav links */}
-        <nav style={{ display: "flex", gap: 24, fontSize: 14 }}>
-          <a
-            href="/super-admin/dashboard"
-            style={{
-              color: "#cbd5e1",
-              textDecoration: "none",
-              fontWeight: 500,
-              padding: "4px 0",
-              borderBottom: "2px solid transparent",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
-            onMouseOut={(e) => (e.currentTarget.style.color = "#cbd5e1")}
-          >
-            Dashboard
-          </a>
-          <a
-            href="/super-admin/tenants"
-            style={{
-              color: "#cbd5e1",
-              textDecoration: "none",
-              fontWeight: 500,
-              padding: "4px 0",
-              borderBottom: "2px solid transparent",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
-            onMouseOut={(e) => (e.currentTarget.style.color = "#cbd5e1")}
-          >
-            Tenants
-          </a>
-        </nav>
+        {/* Right: nav links + logout */}
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
+            <a
+              href="/super-admin/dashboard"
+              style={{
+                color: "#cbd5e1",
+                textDecoration: "none",
+                fontWeight: 500,
+                padding: "4px 0",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
+              onMouseOut={(e) => (e.currentTarget.style.color = "#cbd5e1")}
+            >
+              Dashboard
+            </a>
+            <a
+              href="/super-admin/tenants"
+              style={{
+                color: "#cbd5e1",
+                textDecoration: "none",
+                fontWeight: 500,
+                padding: "4px 0",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
+              onMouseOut={(e) => (e.currentTarget.style.color = "#cbd5e1")}
+            >
+              Tenants
+            </a>
+          </nav>
 
-        {/* Right: logout */}
-        <button
-          onClick={handleLogout}
-          title="Cerrar sesión"
-          style={{
-            background: "none",
-            border: "1px solid #334155",
-            borderRadius: 8,
-            color: "#94a3b8",
-            cursor: "pointer",
-            padding: "8px 14px",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            fontSize: 13,
-            fontWeight: 500,
-            transition: "all 0.15s",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.color = "#ef4444";
-            e.currentTarget.style.borderColor = "#ef4444";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.color = "#94a3b8";
-            e.currentTarget.style.borderColor = "#334155";
-          }}
-        >
-          <LogOut size={15} />
-          Salir
-        </button>
+          <div style={{ width: 1, height: 24, backgroundColor: "#334155" }} />
+
+          <button
+            onClick={handleLogout}
+            title="Cerrar sesión"
+            style={{
+              background: "none",
+              border: "1px solid #334155",
+              borderRadius: 8,
+              color: "#94a3b8",
+              cursor: "pointer",
+              padding: "8px 14px",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 500,
+              transition: "all 0.15s",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.color = "#ef4444";
+              e.currentTarget.style.borderColor = "#ef4444";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.color = "#94a3b8";
+              e.currentTarget.style.borderColor = "#334155";
+            }}
+          >
+            <LogOut size={15} />
+            Salir
+          </button>
+        </div>
       </div>
 
       {/* Content */}
