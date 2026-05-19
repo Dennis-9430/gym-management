@@ -8,14 +8,62 @@ import {
   DollarSign,
   Clock,
   Loader2,
+  Settings,
+  Save,
+  X,
+  Eye,
+  EyeOff,
+  CheckCircle,
 } from "lucide-react";
-import { getAdminDashboard } from "../../services/adminTenants.service";
+import { getAdminDashboard, updateSuperAdminCredentials } from "../../services/adminTenants.service";
 import type { AdminDashboard } from "../../types/adminTenant.types";
 
 const SuperAdminDashboard = () => {
   const [data, setData] = useState<AdminDashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Credential update state
+  const [credEmail, setCredEmail] = useState("");
+  const [credCurrentPass, setCredCurrentPass] = useState("");
+  const [credNewPass, setCredNewPass] = useState("");
+  const [credMessage, setCredMessage] = useState("");
+  const [credError, setCredError] = useState(false);
+  const [credSaving, setCredSaving] = useState(false);
+  const [showCurrentPass, setShowCurrentPass] = useState(false);
+  const [showNewPass, setShowNewPass] = useState(false);
+
+  const handleCredSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!credCurrentPass) return;
+    setCredSaving(true);
+    setCredMessage("");
+    setCredError(false);
+    try {
+      const res = await updateSuperAdminCredentials({
+        email: credEmail || undefined,
+        current_password: credCurrentPass,
+        new_password: credNewPass || undefined,
+      });
+      setCredMessage(res.message);
+      setCredError(false);
+      setCredCurrentPass("");
+      setCredNewPass("");
+    } catch (err) {
+      setCredMessage(err instanceof Error ? err.message : "Error al actualizar");
+      setCredError(true);
+    } finally {
+      setCredSaving(false);
+    }
+  };
+
+  const clearCredForm = () => {
+    setCredMessage("");
+    setCredError(false);
+    setCredEmail("");
+    setCredCurrentPass("");
+    setCredNewPass("");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -153,6 +201,82 @@ const SuperAdminDashboard = () => {
           </div>
         )}
       </div>
+
+      {/* Credential Update */}
+      <div style={{
+        backgroundColor: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+        border: "1px solid #e2e8f0", padding: 20, marginTop: 24,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+          <Settings size={18} color="#64748b" />
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>
+            Credenciales de administrador
+          </h3>
+        </div>
+
+        {credMessage && (
+          <div style={{
+            padding: "10px 16px", borderRadius: 8, marginBottom: 16, fontSize: 14,
+            backgroundColor: credError ? "#fef2f2" : "#f0fdf4",
+            color: credError ? "#dc2626" : "#16a34a",
+            display: "flex", alignItems: "center", gap: 8,
+          }}>
+            {credError ? <AlertTriangle size={16} /> : <CheckCircle size={16} />}
+            {credMessage}
+          </div>
+        )}
+
+        <form onSubmit={handleCredSubmit} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 400 }}>
+          <input
+            type="email"
+            placeholder="Nuevo email (dejar vacío para mantener)"
+            value={credEmail}
+            onChange={(e) => setCredEmail(e.target.value)}
+            style={inputStyle}
+          />
+          <div style={{ position: "relative" }}>
+            <input
+              type={showCurrentPass ? "text" : "password"}
+              placeholder="Contraseña actual *"
+              value={credCurrentPass}
+              onChange={(e) => setCredCurrentPass(e.target.value)}
+              required
+              style={inputStyle}
+            />
+            <button type="button" onClick={() => setShowCurrentPass(!showCurrentPass)}
+              style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
+              {showCurrentPass ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+          <div style={{ position: "relative" }}>
+            <input
+              type={showNewPass ? "text" : "password"}
+              placeholder="Nueva contraseña (dejar vacío para mantener)"
+              value={credNewPass}
+              onChange={(e) => setCredNewPass(e.target.value)}
+              style={inputStyle}
+            />
+            <button type="button" onClick={() => setShowNewPass(!showNewPass)}
+              style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
+              {showNewPass ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button type="submit" disabled={credSaving} style={{
+              ...btnStyle, backgroundColor: "#3b82f6", color: "#fff",
+              opacity: credSaving ? 0.6 : 1, cursor: credSaving ? "not-allowed" : "pointer",
+            }}>
+              {credSaving ? <Loader2 size={16} className="login__spinner" /> : <Save size={16} />}
+              Guardar cambios
+            </button>
+            {credMessage && !credError && (
+              <button type="button" onClick={clearCredForm} style={{ ...btnStyle, backgroundColor: "#f1f5f9", color: "#64748b" }}>
+                <X size={16} /> Cerrar
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
     </SuperAdminLayout>
   );
 };
@@ -199,6 +323,28 @@ const retryBtnStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 600,
   cursor: "pointer",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "10px 12px",
+  border: "1px solid #e2e8f0",
+  borderRadius: 8,
+  fontSize: 14,
+  outline: "none",
+  boxSizing: "border-box",
+};
+
+const btnStyle: React.CSSProperties = {
+  padding: "10px 16px",
+  border: "none",
+  borderRadius: 8,
+  fontSize: 14,
+  fontWeight: 600,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
 };
 
 export default SuperAdminDashboard;

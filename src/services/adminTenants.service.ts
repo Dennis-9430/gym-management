@@ -82,3 +82,9 @@ export const getTenantPayments = (tenantId: string, page?: number, limit?: numbe
     limit: number;
   }>(`/api/admin/tenants/${tenantId}/payments${qs ? `?${qs}` : ""}`);
 };
+
+export const updateSuperAdminCredentials = (data: { email?: string; current_password: string; new_password?: string }) =>
+  apiCall<{ message: string }>("/api/admin/super-admin/update-credentials", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
