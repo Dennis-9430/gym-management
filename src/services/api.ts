@@ -8,7 +8,10 @@ const API_BASE_URL = getApiBaseUrl();
 export const buildUrl = (endpoint: string) =>
   `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
-/* Obtener token de autenticación */
+/* Obtener token de autenticación.
+   El JWT se envía como cookie HttpOnly (segura contra XSS).
+   Este getter es fallback para sesiones legacy que aún tengan
+   el token en localStorage. Las sesiones nuevas usan cookie. */
 export const getAuthToken = (): string | null => localStorage.getItem("accessToken");
 
 /** Limpia datos demo en backend antes de cerrar sesión */
@@ -20,7 +23,8 @@ export const cleanupDemoData = async (): Promise<void> => {
   try {
     await fetch(buildUrl("/api/tenants/demo/cleanup"), {
       method: "POST",
-      headers: getAuthHeaders(),
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
     });
   } catch {
     // Si falla la limpieza, igual cerramos sesión
@@ -35,17 +39,26 @@ export const clearAuthStorage = () => {
   );
 };
 
-/* Headers con token de autenticación */
+/* Headers con token de autenticación.
+   Prefiere cookie HttpOnly (automática del browser).
+   Si hay token legacy en localStorage, lo envía como fallback. */
 export const getAuthHeaders = (): Record<string, string> => {
-  const token = getAuthToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
+  const token = getAuthToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
   return headers;
 };
+
+/** Opciones base para fetch: incluye cookie HttpOnly + headers. */
+const fetchOptions = (extra: RequestInit = {}): RequestInit => ({
+  credentials: "include",
+  headers: getAuthHeaders(),
+  ...extra,
+});
 
 /* Manejo de errores de respuesta */
 const handleResponse = async (response: Response) => {
@@ -95,36 +108,28 @@ const withErrorHandling = async (request: Promise<Response>) => {
 
 export const apiGet = async (endpoint: string) =>
   withErrorHandling(
-    fetch(buildUrl(endpoint), {
-      method: "GET",
-      headers: getAuthHeaders(),
-    }),
+    fetch(buildUrl(endpoint), fetchOptions({ method: "GET" })),
   );
 
 export const apiPost = async (endpoint: string, body: unknown) =>
   withErrorHandling(
-    fetch(buildUrl(endpoint), {
+    fetch(buildUrl(endpoint), fetchOptions({
       method: "POST",
-      headers: getAuthHeaders(),
       body: JSON.stringify(body),
-    }),
+    })),
   );
 
 export const apiPut = async (endpoint: string, body: unknown) =>
   withErrorHandling(
-    fetch(buildUrl(endpoint), {
+    fetch(buildUrl(endpoint), fetchOptions({
       method: "PUT",
-      headers: getAuthHeaders(),
       body: JSON.stringify(body),
-    }),
+    })),
   );
 
 export const apiDelete = async (endpoint: string) =>
   withErrorHandling(
-    fetch(buildUrl(endpoint), {
-      method: "DELETE",
-      headers: getAuthHeaders(),
-    }),
+    fetch(buildUrl(endpoint), fetchOptions({ method: "DELETE" })),
   );
 
 /* Verificar plan del tenant desde la sesión actual */
@@ -156,7 +161,6 @@ export const hasPlanFeature = (feature: string): boolean => {
       "sales:read",
       "sales:write",
       "attendance:read",
-      "attendance:write",
     ],
     PREMIUM: [
       "clients:read",
@@ -168,20 +172,11 @@ export const hasPlanFeature = (feature: string): boolean => {
       "sales:read",
       "sales:write",
       "attendance:read",
-      "attendance:write",
+      "reports:read",
       "employees:read",
       "employees:write",
-      "reports:read",
-      "reports:write",
-      "config:read",
-      "config:write",
-      "whatsapp:read",
-      "whatsapp:write",
     ],
   };
 
-  return features[plan]?.includes(feature) ?? false;
+  return (features[plan] || []).includes(feature);
 };
-
-/* ⚠️ VISUAL ONLY: backend enforces actual permissions */
-export const isPremium = (): boolean => getTenantPlan() === "PREMIUM";
