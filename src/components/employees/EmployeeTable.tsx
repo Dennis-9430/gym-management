@@ -5,9 +5,9 @@ import { useAccountType } from "../../hooks/useAccountType";
 /* Tabla de empleados con acciones de seleccionar, editar y eliminar */
 interface Props {
   employees: Employee[];
-  onSelect: (id: number | string) => void;
+  onSelect: (id: string) => void;
   onEdit: (employee: Employee) => void;
-  onDelete: (id: number | string) => void;
+  onDelete: (id: string) => void;
 }
 
 const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {

@@ -1,5 +1,5 @@
 /* Página de registro de nuevo gimnasio (Landing) */
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Dumbbell,

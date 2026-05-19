@@ -1,5 +1,5 @@
 /* API de WhatsApp Notifications */
-import { apiGet, apiPost, apiPut, apiDelete } from "./api";
+import { apiGet, apiPost, apiDelete } from "./api";
 
 export interface WhatsAppConfig {
   type: "expiry" | "scheduled";

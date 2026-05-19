@@ -1,7 +1,7 @@
 /* Página de Historial de Ventas */
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { getSales, verifyPaymentAPI, deleteSaleAPI } from "../../services/sales.service";
 import type { SaleRecord, PaymentStatus } from "../../types/sales.types";
 import { Search, Filter, CheckCircle, Clock, Eye, Edit, Loader2, ArrowLeft, Trash2, PackageOpen, ShoppingBag, CreditCard, Hash, User, DollarSign } from "lucide-react";

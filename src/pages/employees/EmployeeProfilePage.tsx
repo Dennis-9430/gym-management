@@ -198,7 +198,6 @@ const EmployeeProfilePage = () => {
             <EmployeePermissions
               role={employee.role}
               isAdmin={isAdmin}
-              employeeId={employee.id}
               isOwnerManaging={currentUserIsOwner || isGerente}
             />
           </div>
@@ -217,7 +216,6 @@ const EmployeeProfilePage = () => {
             <EmployeePermissions
               role="GERENTE"
               isAdmin={false}
-              employeeId={employee.id}
               isOwnerManaging={false}
               isReadOnly={true}
             />

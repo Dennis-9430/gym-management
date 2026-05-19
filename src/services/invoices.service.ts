@@ -39,6 +39,7 @@ export interface InvoiceRecord {
   };
   status: string;
   createdAt: string;
+  createdBy?: string;
 }
 
 const normalizeCreatedAt = <T extends { createdAt: string }>(value: T): T => ({

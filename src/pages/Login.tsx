@@ -13,6 +13,7 @@ interface TenantLoginResponse {
     tenantId: string;
     email: string;
     businessName: string;
+    businessCode?: string;
     plan: string;
     subscriptionStatus: string;
     ownerFirstName?: string;
