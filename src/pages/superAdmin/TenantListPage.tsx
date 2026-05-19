@@ -210,7 +210,7 @@ const TenantListPage = () => {
               </thead>
               <tbody>
                 {tenants.map((t) => (
-                  <tr key={t._id} style={{ borderBottom: "1px solid #f1f5f9", transition: "background 0.15s" }}
+                  <tr key={t.id} style={{ borderBottom: "1px solid #f1f5f9", transition: "background 0.15s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#f8fafc"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ""; }}
                   >

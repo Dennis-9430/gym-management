@@ -5,7 +5,7 @@ export type SubscriptionPlan = "BASIC" | "PREMIUM";
 export type PaymentMethod = "CASH" | "TRANSFER" | "OTHER";
 
 export interface AdminTenant {
-  _id: string;
+  id: string;
   tenantId: string;
   businessCode: string;
   businessName: string;

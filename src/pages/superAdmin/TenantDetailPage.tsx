@@ -150,7 +150,7 @@ const TenantDetailPage = () => {
   if (!tenant) return null;
 
   const canSuspendOrCancel = tenant.subscriptionStatus !== "SUSPENDED" && tenant.subscriptionStatus !== "CANCELLED";
-  const canReactivate = tenant.subscriptionStatus === "SUSPENDED" || tenant.subscriptionStatus === "CANCELLED";
+  const canReactivate = tenant.subscriptionStatus === "SUSPENDED";
 
   return (
     <SuperAdminLayout>
