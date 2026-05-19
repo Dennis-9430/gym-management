@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import MainLayout from "../layouts/MainLayout";
 import { ProtectedRoute } from "../components/common/ProtectedRoute";
+import { SuperAdminRoute } from "../components/common/SuperAdminRoute";
 
 // Páginas con lazy loading para code splitting
 // Relacionado con: vite.config.ts (manualChunks)
@@ -31,6 +32,9 @@ const FinancialReport = lazy(() => import("../pages/admin/FinancialReport"));
 const FinancialDashboard = lazy(() => import("../pages/admin/FinancialDashboard"));
 const FinancialMonthlyReport = lazy(() => import("../pages/admin/FinancialMonthlyReport"));
 const AttendancePage = lazy(() => import("../pages/attendance/AttendancePage"));
+const SuperAdminDashboard = lazy(() => import("../pages/superAdmin/SuperAdminDashboard"));
+const TenantListPage = lazy(() => import("../pages/superAdmin/TenantListPage"));
+const TenantDetailPage = lazy(() => import("../pages/superAdmin/TenantDetailPage"));
 
 // Loading fallback
 const PageLoader = () => (
@@ -78,6 +82,11 @@ function AppRouter() {
               <Route path="/clients/edit/:id" element={<FormClients />} />
               <Route path="/attendance" element={<AttendancePage />} />
             </Route>
+          </Route>
+          <Route element={<SuperAdminRoute />}>
+            <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
+            <Route path="/super-admin/tenants" element={<TenantListPage />} />
+            <Route path="/super-admin/tenants/:tenantId" element={<TenantDetailPage />} />
           </Route>
         </Routes>
       </Suspense>

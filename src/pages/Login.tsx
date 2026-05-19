@@ -92,11 +92,6 @@ const Login = () => {
       isValid = false;
     }
 
-    if (!businessCode.trim()) {
-      errors.businessCode = "El Código del Negocio es requerido";
-      isValid = false;
-    }
-
     setFieldErrors(errors);
     return isValid;
   };
@@ -116,13 +111,9 @@ const Login = () => {
       // Enviar businessCode (slug) si el usuario lo ingresó
       if (businessCode.trim()) {
         body.businessCode = businessCode.trim();
-      } else {
-        // Solo enviar tenantId como fallback si NO hay businessCode
-        const savedTenantId = localStorage.getItem("tenantId");
-        if (savedTenantId) {
-          body.tenantId = savedTenantId;
-        }
       }
+      // Si no hay businessCode, se envía solo email+password para
+      // permitir login de SUPER_ADMIN (que no pertenece a un tenant)
       const response = await fetch(buildUrl("/api/tenants/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -150,12 +141,13 @@ const Login = () => {
       localStorage.setItem("tenant", JSON.stringify(tenantData));
 
       // Decodificar token para obtener rol real
-      let userRole: "ADMIN" | "RECEPCIONISTA" | "GERENTE" = "ADMIN";
+      let userRole: "ADMIN" | "RECEPCIONISTA" | "GERENTE" | "SUPER_ADMIN" = "ADMIN";
+      let payload: Record<string, unknown> = {};
       try {
         const base64Url = data.accessToken.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const payload = JSON.parse(atob(base64));
-        userRole = payload.role || "ADMIN";
+        payload = JSON.parse(atob(base64));
+        userRole = (payload.role as "ADMIN" | "RECEPCIONISTA" | "GERENTE" | "SUPER_ADMIN") || "ADMIN";
       } catch {
         // Usar ADMIN por defecto si no se puede decodificar
       }
@@ -166,6 +158,18 @@ const Login = () => {
         localStorage.setItem("isDemo", "true");
       } else {
         localStorage.removeItem("isDemo");
+      }
+
+      // Si es SUPER_ADMIN, redirigir al panel de administración de tenants
+      if (userRole === "SUPER_ADMIN") {
+        const user: AuthUser = {
+          username: data.tenant?.businessName || (payload.sub as string) || "Admin",
+          role: "SUPER_ADMIN",
+          tenantId: undefined,
+        };
+        login(user);
+        navigate("/super-admin/tenants");
+        return;
       }
 
       // Login con datos del tenant y rol real

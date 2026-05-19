@@ -1,13 +1,13 @@
 import type { Person } from "./person.types";
 
 /* Roles disponibles en el sistema */
-export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR" | "GERENTE";
+export type Role = "ADMIN" | "RECEPCIONISTA" | "ENTRENADOR" | "GERENTE" | "SUPER_ADMIN";
 
 /* Planes de suscripción */
 export type SubscriptionPlan = "BASIC" | "PREMIUM";
 
 /* Estado de suscripción */
-export type SubscriptionStatus = "ACTIVE" | "EXPIRED" | "PENDING" | "CANCELLED";
+export type SubscriptionStatus = "ACTIVE" | "EXPIRED" | "PENDING" | "CANCELLED" | "PENDING_PAYMENT" | "SUSPENDED";
 
 /* Tipo que representa un usuario del sistema */
 export interface User extends Person {
