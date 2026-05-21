@@ -196,49 +196,6 @@ const TenantListPage = () => {
           </div>
         ) : (
           <>
-          <style>{`
-            @media (max-width: 640px) {
-              .sa-tenant-table,
-              .sa-tenant-table tbody,
-              .sa-tenant-table tr.sa-tenant-row {
-                display: block;
-                width: 100%;
-              }
-              .sa-tenant-table thead {
-                display: none;
-              }
-              .sa-tenant-table tr.sa-tenant-row {
-                background: #fff;
-                border: 1px solid #e2e8f0;
-                border-radius: 10px;
-                padding: 16px;
-                margin-bottom: 12px;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-              }
-              .sa-tenant-table tr.sa-tenant-row td {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 6px 0;
-                border: none !important;
-                font-size: 13px;
-              }
-              .sa-tenant-table tr.sa-tenant-row td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                font-size: 11px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                color: #94a3b8;
-                margin-right: 12px;
-                flex-shrink: 0;
-              }
-              .sa-tenant-table tr.sa-tenant-row td[data-label="Acciones"]::before {
-                align-self: flex-start;
-              }
-            }
-          `}</style>
-          <div style={{ overflowX: "auto" }}>
             <table className="sa-tenant-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr style={{ backgroundColor: "#f8fafc", color: "#64748b", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -313,7 +270,6 @@ const TenantListPage = () => {
                 ))}
               </tbody>
             </table>
-          </div>
           </>
         )}
       </div>

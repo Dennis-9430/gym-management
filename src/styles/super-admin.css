@@ -1,0 +1,332 @@
+/* ==========================================================================
+   SUPER ADMIN — Layout, Drawer, Top Bar, Tables
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Layout wrapper
+   -------------------------------------------------------------------------- */
+.sa-layout {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+/* --------------------------------------------------------------------------
+   Top bar
+   -------------------------------------------------------------------------- */
+.sa-topbar {
+  background-color: #0f172a;
+  color: #fff;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.sa-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.sa-topbar__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.sa-badge {
+  font-size: 11px;
+  background-color: #3b82f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.sa-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Desktop navigation
+   -------------------------------------------------------------------------- */
+.sa-nav-desktop {
+  display: flex;
+  align-items: center;
+}
+
+.sa-nav-desktop--nav {
+  gap: 16px;
+  font-size: 14px;
+}
+
+.sa-nav-desktop__link {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s;
+}
+
+.sa-nav-desktop__link:hover {
+  color: #fff;
+}
+
+.sa-nav-desktop__link--active {
+  color: #fff;
+  font-weight: 600;
+  border-bottom-color: #3b82f6;
+}
+
+.sa-nav-desktop__separator {
+  width: 1px;
+  height: 24px;
+  background-color: #334155;
+}
+
+.sa-nav-desktop__logout {
+  background: none;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.sa-nav-desktop__logout:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Hamburger button
+   -------------------------------------------------------------------------- */
+.sa-hamburger {
+  display: none;  /* shown only on mobile */
+  background: none;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sa-hamburger:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Overlay
+   -------------------------------------------------------------------------- */
+.sa-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.sa-overlay--visible {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Drawer
+   -------------------------------------------------------------------------- */
+.sa-drawer {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 260px;
+  height: 100vh;
+  background: #0f172a;
+  z-index: 999;
+  transition: right 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sa-drawer--open {
+  right: 0;
+}
+
+.sa-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.sa-drawer__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sa-drawer__brand-text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sa-drawer__close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.sa-drawer__close:hover {
+  color: #fff;
+}
+
+.sa-drawer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.sa-drawer__link {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 400;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background-color: transparent;
+  transition: all 0.15s;
+}
+
+.sa-drawer__link:hover {
+  background-color: #1e293b;
+  color: #fff;
+}
+
+.sa-drawer__link--active {
+  color: #fff;
+  font-weight: 600;
+  background-color: #1e293b;
+}
+
+/* Drawer footer — logout button container */
+.sa-drawer__footer {
+  border-top: 1px solid #334155;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+/* Drawer logout button — matches sidebar__logout style */
+.sa-drawer__logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #334155;
+  background: transparent;
+  border-radius: 8px;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.sa-drawer__logout:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Content area
+   -------------------------------------------------------------------------- */
+.sa-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Tenant responsive table (card layout at 640px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .sa-tenant-table,
+  .sa-tenant-table tbody,
+  .sa-tenant-table tr.sa-tenant-row {
+    display: block;
+    width: 100%;
+  }
+
+  .sa-tenant-table thead {
+    display: none;
+  }
+
+  .sa-tenant-table tr.sa-tenant-row {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .sa-tenant-table tr.sa-tenant-row td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border: none !important;
+    font-size: 13px;
+  }
+
+  .sa-tenant-table tr.sa-tenant-row td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .sa-tenant-table tr.sa-tenant-row td[data-label="Acciones"]::before {
+    align-self: flex-start;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile: hide desktop nav, show hamburger
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .sa-nav-desktop {
+    display: none !important;
+  }
+
+  .sa-hamburger {
+    display: flex;
+  }
+}

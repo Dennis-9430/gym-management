@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import { useAccountType } from "../hooks/useAccountType";
@@ -64,6 +64,21 @@ const Navbar = () => {
 
   /** Cierra el sidebar */
   const closeSidebar = () => setSidebarOpen(false);
+
+  // Prevenir scroll del body + html cuando el sidebar está abierto
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [sidebarOpen]);
 
   /**
    * Genera el label del rol para mostrar
