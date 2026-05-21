@@ -39,8 +39,6 @@ const SuperAdminLayout = ({ children }: Props) => {
       <style>{`
         .sa-nav-desktop { display: flex; }
         .sa-hamburger { display: none; }
-        .sa-brand-text { display: inline; }
-        .sa-brand-badge { display: inline-block; }
         .sa-overlay {
           display: none;
           position: fixed;
@@ -67,8 +65,6 @@ const SuperAdminLayout = ({ children }: Props) => {
         @media (max-width: 640px) {
           .sa-nav-desktop { display: none; }
           .sa-hamburger { display: flex; }
-          .sa-brand-text { display: none; }
-          .sa-brand-badge { display: none; }
         }
       `}</style>
 
@@ -154,10 +150,10 @@ const SuperAdminLayout = ({ children }: Props) => {
         {/* Left: logo + title */}
         <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
           <Dumbbell size={22} color="#3b82f6" />
-          <h1 className="sa-brand-text" style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff", whiteSpace: "nowrap" }}>
+          <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff", whiteSpace: "nowrap" }}>
             Gym Management
           </h1>
-          <span className="sa-brand-badge" style={{
+          <span style={{
             fontSize: 11,
             backgroundColor: "#3b82f6",
             padding: "2px 8px",
