@@ -169,6 +169,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     dispatch({ type: "LOGOUT" });
   };
 
+  /* ──────────────────────────────────────────────
+   * Idle Session Timeout
+   * Cierra sesión automáticamente tras inactividad.
+   * Se reinicia con cualquier interacción del usuario.
+   * ────────────────────────────────────────────── */
+  useEffect(() => {
+    if (!state.user) return;
+
+    const IDLE_TIMEOUT_MS = 12 * 60 * 60 * 1000; // 12 horas
+    let idleTimer: ReturnType<typeof setTimeout>;
+
+    const resetTimer = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(async () => {
+        await logout();
+        window.location.href = "/";
+      }, IDLE_TIMEOUT_MS);
+    };
+
+    const events = ["mousedown", "keydown", "touchstart", "scroll", "mousemove"];
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+    resetTimer();
+
+    return () => {
+      clearTimeout(idleTimer);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, [state.user]);
+
   // Renderizar el proveedor con el contexto
   return (
     <AuthContext
