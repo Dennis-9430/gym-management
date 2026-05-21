@@ -3,6 +3,7 @@ import { Plus, X } from "lucide-react";
 import ProductForm from "../../components/products/ProductForm";
 import ProductSearch from "../../components/products/ProductSearch";
 import ProductTable from "../../components/products/ProductTable";
+import BackButton from "../../components/common/BackButton";
 import { useAuth } from "../../context/index.ts";
 import { useAccountType } from "../../hooks/useAccountType";
 import { useProducts } from "../../hooks/useProducts";
@@ -111,7 +112,10 @@ const Products = () => {
     <main className="products-container">
       <section className="products-header">
         <div>
-          <h2>Productos</h2>
+          <div className="page-header-row">
+            <BackButton />
+            <h2>Productos</h2>
+          </div>
           <p className="products-subtitle">
             Gestiona el inventario y los servicios del gimnasio.
           </p>

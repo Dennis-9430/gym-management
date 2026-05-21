@@ -49,34 +49,34 @@ const FinancialSummaryTable = ({ summary, employeeData = {} }: Props) => {
                 const data = employeeData[emp];
                 return (
                   <tr key={emp}>
-                    <td className="employee-cell">{emp}</td>
-                    <td className="services-cell">{formatCurrency(data.services)}</td>
-                    <td className="bar-cell">{formatCurrency(data.bar)}</td>
-                    <td className="cash-cell">{formatCurrency(data.cash)}</td>
-                    <td className="transfer-cell">{formatCurrency(data.transfer)}</td>
-                    <td className="total-cell">{formatCurrency(data.total)}</td>
+                    <td className="employee-cell" data-label="Empleado">{emp}</td>
+                    <td className="services-cell" data-label="Servicios">{formatCurrency(data.services)}</td>
+                    <td className="bar-cell" data-label="Bar">{formatCurrency(data.bar)}</td>
+                    <td className="cash-cell" data-label="Efectivo">{formatCurrency(data.cash)}</td>
+                    <td className="transfer-cell" data-label="Transferencia">{formatCurrency(data.transfer)}</td>
+                    <td className="total-cell" data-label="Total">{formatCurrency(data.total)}</td>
                   </tr>
                 );
               })}
               {totalRow && (
                 <tr className="total-row">
-                  <td className="employee-cell total-label">TOTAL</td>
-                  <td className="services-cell">{formatCurrency(totalRow.services)}</td>
-                  <td className="bar-cell">{formatCurrency(totalRow.bar)}</td>
-                  <td className="cash-cell">{formatCurrency(totalRow.cash)}</td>
-                  <td className="transfer-cell">{formatCurrency(totalRow.transfer)}</td>
-                  <td className="total-cell">{formatCurrency(totalRow.total)}</td>
+                  <td className="employee-cell total-label" data-label="Empleado">TOTAL</td>
+                  <td className="services-cell" data-label="Servicios">{formatCurrency(totalRow.services)}</td>
+                  <td className="bar-cell" data-label="Bar">{formatCurrency(totalRow.bar)}</td>
+                  <td className="cash-cell" data-label="Efectivo">{formatCurrency(totalRow.cash)}</td>
+                  <td className="transfer-cell" data-label="Transferencia">{formatCurrency(totalRow.transfer)}</td>
+                  <td className="total-cell" data-label="Total">{formatCurrency(totalRow.total)}</td>
                 </tr>
               )}
             </>
           ) : (
             <tr>
-              <td className="employee-cell">-</td>
-              <td className="services-cell">{formatCurrency(summary.services)}</td>
-              <td className="bar-cell">{formatCurrency(summary.bar)}</td>
-              <td className="cash-cell">{formatCurrency(summary.cash)}</td>
-              <td className="transfer-cell">{formatCurrency(summary.transfer)}</td>
-              <td className="total-cell">{formatCurrency(summary.total)}</td>
+              <td className="employee-cell" data-label="Empleado">-</td>
+              <td className="services-cell" data-label="Servicios">{formatCurrency(summary.services)}</td>
+              <td className="bar-cell" data-label="Bar">{formatCurrency(summary.bar)}</td>
+              <td className="cash-cell" data-label="Efectivo">{formatCurrency(summary.cash)}</td>
+              <td className="transfer-cell" data-label="Transferencia">{formatCurrency(summary.transfer)}</td>
+              <td className="total-cell" data-label="Total">{formatCurrency(summary.total)}</td>
             </tr>
           )}
         </tbody>

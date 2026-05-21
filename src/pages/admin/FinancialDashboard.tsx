@@ -212,8 +212,8 @@ const FinancialDashboard = () => {
               ) : (
                 displayTransfers.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.employee}</td>
-                    <td>
+                    <td data-label="Empleado">{item.employee}</td>
+                    <td data-label="Comprobante">
                       <button
                         className="voucher-link"
                         onClick={() => handleVoucherClick(item.voucherCode, item.voucherImage)}

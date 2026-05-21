@@ -33,12 +33,12 @@ const PendingSubscriptions = ({
           ) : (
             clients.map((client) => (
               <tr key={client.id}>
-                <td>{client.documentNumber}</td>
-                <td>
+                <td data-label="Cédula">{client.documentNumber}</td>
+                <td data-label="Cliente">
                   {client.firstName} {client.lastName}
                 </td>
-                <td>Pendiente</td>
-                <td>
+                <td data-label="Estado">Pendiente</td>
+                <td data-label="Acciones">
                   <div className="pos-table-actions">
                     <button
                       type="button"

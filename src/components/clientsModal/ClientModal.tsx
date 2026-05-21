@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import useClientForm from "../../hooks/useClientForm";
 import PersonalDataFields from "../formClients/PersonalDataFields";
@@ -14,6 +14,14 @@ interface Props {
   initialClient?: ClientForm | null;
 }
 
+type TabId = "personal" | "contact" | "emergency";
+
+const TABS: { id: TabId; label: string }[] = [
+  { id: "personal", label: "Datos Personales" },
+  { id: "contact", label: "Contacto" },
+  { id: "emergency", label: "Emergencia" },
+];
+
 const ClientModal = ({
   onClose,
   onSaved,
@@ -21,7 +29,13 @@ const ClientModal = ({
   initialClient = null,
 }: Props) => {
   const { form, updateField, resetForm } = useClientForm();
+  const [activeTab, setActiveTab] = useState<TabId>("personal");
   const isEdit = mode === "edit" && Boolean(initialClient);
+
+  // Reset active tab when opening/closing
+  useEffect(() => {
+    setActiveTab("personal");
+  }, []);
 
   useEffect(() => {
     if (!initialClient) {
@@ -140,10 +154,30 @@ const ClientModal = ({
           </button>
         </div>
 
+        {/* Tab navigation */}
+        <div className="client-modal-tabs">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              className={`client-modal-tab ${activeTab === tab.id ? "client-modal-tab--active" : ""}`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
         <form className="client-modal-form" onSubmit={handleSubmit}>
-          <PersonalDataFields form={form} updateField={updateField} />
-          <ContactFields form={form} updateField={updateField} />
-          <EmergencyFields form={form} updateField={updateField} />
+          {activeTab === "personal" && (
+            <PersonalDataFields form={form} updateField={updateField} />
+          )}
+          {activeTab === "contact" && (
+            <ContactFields form={form} updateField={updateField} />
+          )}
+          {activeTab === "emergency" && (
+            <EmergencyFields form={form} updateField={updateField} />
+          )}
 
           <div className="form-buttons">
             <button className="btn-register" type="submit">

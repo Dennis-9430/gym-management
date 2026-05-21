@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import { useAccountType } from "../hooks/useAccountType";
@@ -7,7 +8,23 @@ import {
   LayoutDashboard,
   LogOut,
   Dumbbell,
+  Menu,
+  X,
+  Users,
+  Package,
+  ShoppingCart,
+  DollarSign,
 } from "lucide-react";
+
+/** @const Enlaces del menú de navegación */
+const NAV_LINKS = [
+  { to: "/dashboard", label: "Panel Principal", icon: LayoutDashboard },
+  { to: "/clients/list", label: "Clientes", icon: Users },
+  { to: "/products", label: "Productos", icon: Package },
+  { to: "/sales", label: "Ventas", icon: ShoppingCart },
+  { to: "/employees", label: "Empleados", icon: User },
+  { to: "/financial", label: "Finanzas", icon: DollarSign },
+];
 
 /**
  * Componente de barra de navegación principal.
@@ -18,6 +35,8 @@ import {
  * @returns {JSX.Element} Barra de navegación renderizada
  */
 const Navbar = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   // Obtenemos el usuario actual y la función de logout del contexto de autenticación
   const { user, logout } = useAuth();
   const { isOwner } = useAccountType();
@@ -42,6 +61,9 @@ const Navbar = () => {
     // Redirige al usuario a la página principal ("/")
     navigate("/");
   };
+
+  /** Cierra el sidebar */
+  const closeSidebar = () => setSidebarOpen(false);
 
   /**
    * Genera el label del rol para mostrar
@@ -68,36 +90,105 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`navbar ${!isDashboard ? "navbar--mobile-hidden" : ""}`}>
-      <div className="navbar__containner">
-        <div className="navbar__brand">
-          <Dumbbell size={22} />
-          <h1 className="navbar__brand-title">
-            Gym Management
-            {user && (
-              <span className="navbar__username">
-                <User size={16} />
-                <span className="navbar__username-text">{getDisplayName()}</span>
-              </span>
-            )}
-          </h1>
-        </div>
+    <>
+      <nav className="navbar">
+        <div className="navbar__containner">
+          <div className="navbar__brand">
+            <Dumbbell size={22} />
+            <h1 className="navbar__brand-title">
+              Gym Management
+              {user && (
+                <span className="navbar__username">
+                  <User size={16} />
+                  <span className="navbar__username-text">{getDisplayName()}</span>
+                </span>
+              )}
+            </h1>
+          </div>
 
           {user && (
             <div className="nav-actions">
-              <NavLink className={({ isActive }) => `navbar__link ${isActive ? 'active' : ''}`} to="/dashboard">
-                <LayoutDashboard size={16} />
-                Panel Principal
-              </NavLink>
+              {/* Botón hamburguesa para el menú lateral */}
+              <button
+                className="navbar__hamburger"
+                onClick={() => setSidebarOpen(true)}
+                aria-label="Abrir menú de navegación"
+                type="button"
+              >
+                <Menu size={20} />
+              </button>
 
-              <button className="navbar__logout" onClick={handleLogout}>
+              {!isDashboard && (
+                <NavLink className={({ isActive }) => `navbar__link ${isActive ? 'active' : ''}`} to="/dashboard">
+                  <LayoutDashboard size={16} />
+                  Panel Principal
+                </NavLink>
+              )}
+
+              <button className="navbar__logout" onClick={handleLogout} title="Cerrar Sesión">
                 <LogOut size={16} />
-                Cerrar Sesíon
+                <span>Cerrar Sesión</span>
               </button>
             </div>
           )}
-      </div>
-    </nav>
+        </div>
+      </nav>
+
+      {/* Sidebar overlay */}
+      {sidebarOpen && (
+        <div className="sidebar-overlay" onClick={closeSidebar} />
+      )}
+
+      {/* Sidebar / Drawer */}
+      <aside className={`sidebar ${sidebarOpen ? "sidebar--open" : ""}`}>
+        <div className="sidebar__header">
+          <Dumbbell size={22} />
+          <h2 className="sidebar__title">Gym Management</h2>
+          <button
+            className="sidebar__close"
+            onClick={closeSidebar}
+            aria-label="Cerrar menú"
+            type="button"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {user && (
+          <div className="sidebar__user-info">
+            <User size={16} />
+            <span>{getDisplayName()}</span>
+          </div>
+        )}
+
+        <nav className="sidebar__nav">
+          {NAV_LINKS.map((link) => {
+            const Icon = link.icon;
+            return (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === "/dashboard"}
+                className={({ isActive }) =>
+                  `sidebar__link ${isActive ? "sidebar__link--active" : ""}`
+                }
+                onClick={closeSidebar}
+              >
+                <Icon size={18} />
+                <span>{link.label}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+
+        <div className="sidebar__footer">
+          <button className="sidebar__logout" onClick={handleLogout}>
+            <LogOut size={18} />
+            Cerrar Sesión
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };
 

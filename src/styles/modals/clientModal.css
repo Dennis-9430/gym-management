@@ -161,6 +161,45 @@
   background: var(--color-background-alt);
 }
 
+/* ==========================================================================
+   CLIENT MODAL TABS - Navegación por secciones
+   ========================================================================== */
+
+.client-modal-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 20px;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.client-modal-tab {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 150ms ease;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.client-modal-tab:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+}
+
+.client-modal-tab--active {
+  color: var(--color-action);
+  border-bottom-color: var(--color-action);
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .client-modal {
@@ -169,8 +208,17 @@
     border-radius: 12px;
   }
 
-  .client-modal-form .register-form {
+  .client-modal-form {
     grid-template-columns: 1fr;
+  }
+
+  .client-modal-tabs {
+    padding: 0 12px;
+  }
+
+  .client-modal-tab {
+    padding: 10px 8px;
+    font-size: var(--font-size-xs);
   }
 
   .form-buttons {

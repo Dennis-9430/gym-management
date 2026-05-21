@@ -7,6 +7,7 @@ import FinancialTransactionsList from "../../components/financial/FinancialTrans
 import TransactionEditModal from "../../components/financial/TransactionEditModal";
 import FinancialDashboardButton from "../../components/financial/FinancialDashboardButton";
 import FinancialSummary from "../../components/financial/FinancialSummary";
+import BackButton from "../../components/common/BackButton";
 import "../../styles/financial.css";
 
 type DateFilter = "today" | "week" | "month" | "custom";
@@ -170,7 +171,10 @@ const FinancialReport = () => {
   return (
     <div className="financial-report">
       <div className="financial-report__header">
-        <h2 className="financial-report__title">Reporte Financiero</h2>
+        <div className="page-header-row">
+          <BackButton />
+          <h2 className="financial-report__title">Reporte Financiero</h2>
+        </div>
         <p className="financial-report__subtitle">{formatDateLabel()}</p>
       </div>
 

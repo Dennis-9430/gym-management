@@ -1,9 +1,9 @@
 /* Página de configuración del negocio — fuente de verdad: backend */
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Building2, MessageSquare, Lock, CreditCard, Users, Calendar, RefreshCw } from "lucide-react";
+import { ArrowLeft, Save, Building2, MessageSquare, CreditCard, Users, Calendar, RefreshCw } from "lucide-react";
 import "../../styles/config.css";
-import { apiGet, apiPost, apiPut, hasPlanFeature } from "../../services/api";
+import { apiGet, apiPost, apiPut } from "../../services/api";
 import { useAccountType } from "../../hooks/useAccountType";
 import WhatsAppMessageModal from "../../components/whatsapp/WhatsAppMessageModal";
 
@@ -47,7 +47,6 @@ const ConfigPage = () => {
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
   const [renewing, setRenewing] = useState(false);
   const { isDemo, ownerEditableFields } = useAccountType();
-  const isPro = hasPlanFeature("whatsapp:write");
 
   useEffect(() => {
     loadTenantData();
@@ -254,12 +253,12 @@ const ConfigPage = () => {
               </div>
 
               <div className="config-actions">
-                <button className="config-save-btn" onClick={handleSave} disabled={isDemo || saving}>
+                <button className="config-save-btn" onClick={handleSave} disabled={saving}>
                   <Save size={18} />
                   {saving ? "Guardando..." : "Guardar Cambios"}
                 </button>
                 {saved && <span className="config-saved">¡Guardado exitosamente!</span>}
-                {isDemo && <span className="field-hint">Las cuentas demo tienen acceso restringido</span>}
+                {isDemo && <span className="config-actions__demo-hint">Demo — solo vista previa</span>}
               </div>
             </section>
           </div>
@@ -316,31 +315,18 @@ const ConfigPage = () => {
             </section>
 
             <section className="config-section__body config-section--whatsapp">
-              {isPro ? (
-                <>
-                  <div className="config-section__header">
-                    <MessageSquare size={20} />
-                    <h3>WhatsApp</h3>
-                  </div>
-                  <p className="config-description">
-                    Envía recordatorios automáticos de vencimiento de membresías a tus clientes.
-                  </p>
-                  <button className="config-whatsapp-btn" onClick={() => setWhatsAppModalOpen(true)}>
-                    <MessageSquare size={18} />
-                    Configurar WhatsApp
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="config-section__header">
-                    <Lock size={20} />
-                    <h3>WhatsApp</h3>
-                  </div>
-                  <p className="config-description">
-                    Disponible en plan PREMIUM. Actualiza tu plan para acceder a esta función.
-                  </p>
-                </>
-              )}
+              <div className="config-section__header">
+                <MessageSquare size={20} />
+                <h3>WhatsApp</h3>
+                {isDemo && <span className="demo-badge">Demo</span>}
+              </div>
+              <p className="config-description">
+                Envía recordatorios automáticos de vencimiento de membresías a tus clientes.
+              </p>
+              <button className="config-whatsapp-btn" onClick={() => setWhatsAppModalOpen(true)}>
+                <MessageSquare size={18} />
+                Configurar WhatsApp
+              </button>
             </section>
           </div>
         </div>

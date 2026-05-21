@@ -169,8 +169,14 @@
     border-radius: 12px;
   }
 
-  .product-modal-form .product-form {
+  .product-modal-form {
     grid-template-columns: 1fr;
+  }
+
+  .product-modal-form input,
+  .product-modal-form select,
+  .product-modal-form textarea {
+    min-height: 44px;
   }
 
   .form-buttons {
@@ -179,5 +185,9 @@
 
   .form-buttons .btn-register {
     width: 100%;
+  }
+
+  .product-modal-header .modal-subtitle {
+    display: none;
   }
 }

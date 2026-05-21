@@ -365,3 +365,66 @@
     align-items: center;
   }
 
+/* Responsive card layout for client table on mobile */
+@media (max-width: 768px) {
+  .client-table-wrapper {
+    overflow-x: unset;
+  }
+
+  .client-table {
+    min-width: unset;
+  }
+
+  .client-table thead {
+    display: none;
+  }
+
+  .client-table,
+  .client-table tbody,
+  .client-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .client-table tr {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .client-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: var(--font-size-sm);
+  }
+
+  .client-table td::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .client-table td.actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid var(--color-border);
+    justify-content: flex-end;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .client-table td.actions::before {
+    display: none;
+  }
+}
+

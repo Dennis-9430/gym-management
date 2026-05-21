@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { ClientForm } from "../../types/client.types";
 import { getClients, updateClientAPI } from "../../services/clients.service";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
+import BackButton from "../../components/common/BackButton";
 import PendingSubscriptionsList from "../../components/sales/PendingSubscriptions";
 import "../../styles/pos.css";
 
@@ -45,26 +46,14 @@ const PendingSubscriptionsPage = () => {
     reloadClients();
   };
 
-  const handleBack = () => {
-    navigate("/sales");
-  };
-
   return (
     <main className="pos-container">
       <section className="pos-pending">
-        <div className="pos-pending-header">
-          <div>
-            <button
-              type="button"
-              className="pos-card-btn primary"
-              onClick={handleBack}
-            >
-              ← Volver
-            </button>
-            <h3>Suscripciones pendientes</h3>
-            <p>Clientes con pagos por completar.</p>
-          </div>
+        <div className="page-header-row">
+          <BackButton to="/sales" />
+          <h3>Suscripciones pendientes</h3>
         </div>
+        <p className="pos-pending-subtitle">Clientes con pagos por completar.</p>
         <PendingSubscriptionsList
           clients={pendingClients}
           onRegisterPayment={handleRegisterPayment}

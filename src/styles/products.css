@@ -148,7 +148,6 @@
 
 .product-table {
   width: 100%;
-  min-width: 900px;
   border-collapse: collapse;
 }
 
@@ -328,6 +327,7 @@
   .products-header h2 {
     font-size: var(--font-size-xl);
     text-align: center;
+    margin-top: 8px;
   }
 
   .products-subtitle {
@@ -369,12 +369,54 @@
   }
 
   .products-table-wrapper {
-    min-width: 600px;
     overflow-x: auto;
   }
 
-  .product-table {
-    min-width: 600px;
+  /* Card layout for table on mobile */
+  .product-table thead {
+    display: none;
+  }
+
+  .product-table,
+  .product-table tbody,
+  .product-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .product-table tr {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .product-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: var(--font-size-sm);
+  }
+
+  .product-table td::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .product-table .actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid var(--color-border);
+    justify-content: flex-end;
   }
 }
 

@@ -235,8 +235,8 @@ const SalesListPage = () => {
             ) : (
               filteredSales.map((sale) => (
                 <tr key={sale.id}>
-                  <td>{formatDate(sale.createdAt)}</td>
-                  <td>
+                  <td data-label="Fecha">{formatDate(sale.createdAt)}</td>
+                  <td data-label="Cliente">
                     <div className="sale-client">
                       <strong>
                         {sale.client.firstName || sale.client.lastName
@@ -248,13 +248,13 @@ const SalesListPage = () => {
                       )}
                     </div>
                   </td>
-                  <td>{getPaymentMethod(sale.payment.method)}</td>
-                  <td className="sale-total">
+                  <td data-label="Método">{getPaymentMethod(sale.payment.method)}</td>
+                  <td data-label="Total" className="sale-total">
                     ${sale.totals.total.toFixed(2)}
                   </td>
-                  <td>{sale.voucherCode || "-"}</td>
-                  <td>{getStatusBadge(sale.paymentStatus)}</td>
-                  <td>
+                  <td data-label="Voucher">{sale.voucherCode || "-"}</td>
+                  <td data-label="Estado">{getStatusBadge(sale.paymentStatus)}</td>
+                  <td data-label="Acciones">
                     <div className="sale-actions">
                       <button
                         className="pos-btn-icon"

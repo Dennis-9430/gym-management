@@ -49,8 +49,7 @@ const SalesDashboard = ({
     <section className="pos-dashboard">
       <div className="pos-dashboard-header">
         <div>
-          <h2>Ventas</h2>
-          <p>Panel rapido para operaciones del gimnasio.</p>
+          <p>Gestioná suscripciones, ventas de productos, membresías y consultá el historial.</p>
         </div>
       </div>
       <div className="pos-dashboard-grid">

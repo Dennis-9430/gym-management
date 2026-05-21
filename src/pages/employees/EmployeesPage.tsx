@@ -6,6 +6,7 @@ import EmployeeForm from "../../components/employees/EmployeeForm";
 import EmployeeSearch from "../../components/employees/EmployeeSearch";
 import EmployeeTable from "../../components/employees/EmployeeTable";
 import PasswordConfirmModal from "../../components/employees/PasswordConfirmModal";
+import BackButton from "../../components/common/BackButton";
 import { useEmployees } from "../../hooks/useEmployees";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
 import { useAccountType } from "../../hooks/useAccountType";
@@ -220,7 +221,10 @@ const EmployeesPage = () => {
     <main className="employees-container">
       <section className="employees-header">
         <div>
-          <h2>Empleados</h2>
+          <div className="page-header-row">
+            <BackButton />
+            <h2>Empleados</h2>
+          </div>
           <p className="employees-subtitle">
             Gestiona el personal del gimnasio.
           </p>

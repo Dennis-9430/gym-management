@@ -959,6 +959,12 @@
   font-size: var(--font-size-sm);
 }
 
+.pos-pending-subtitle {
+  margin: -4px 0 16px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
 .pos-pending-table-wrapper {
   background: var(--color-bg-primary);
   border-radius: 16px;
@@ -1129,6 +1135,11 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+.membership-modal__header > div {
+  text-align: center;
+  flex: 1;
+}
+
 .membership-modal__header h3 {
   margin: 0;
   font-size: var(--font-size-xl);
@@ -1191,7 +1202,7 @@
 }
 
 .membership-modal__table th {
-  text-align: left;
+  text-align: center;
   padding: 12px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
@@ -1477,6 +1488,65 @@
   }
 }
 
+/* Responsive card layout for pending subscriptions table */
+@media (max-width: 768px) {
+  .pos-pending-table {
+    min-width: unset;
+  }
+
+  .pos-pending-table thead {
+    display: none;
+  }
+
+  .pos-pending-table,
+  .pos-pending-table tbody,
+  .pos-pending-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .pos-pending-table tr {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .pos-pending-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: var(--font-size-sm);
+  }
+
+  .pos-pending-table td::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .pos-pending-table .pos-table-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid var(--color-border);
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .pos-pending-table .pos-table-actions .pos-action-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 640px) {
   .membership-modal-backdrop {
     padding: 8px;
@@ -1500,11 +1570,64 @@
 
   .membership-modal__table-wrapper {
     padding: 8px;
-    overflow-x: auto;
+    overflow-x: unset;
   }
 
   .membership-modal__table {
     font-size: var(--font-size-xs);
+    min-width: unset;
+  }
+
+  .membership-modal__table thead {
+    display: none;
+  }
+
+  .membership-modal__table,
+  .membership-modal__table tbody,
+  .membership-modal__table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .membership-modal__table tr {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .membership-modal__table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: var(--font-size-sm);
+  }
+
+  .membership-modal__table td::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .membership-modal__table td.membership-modal__actions-cell {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid var(--color-border);
+    justify-content: flex-end;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .membership-modal__table td.membership-modal__actions-cell::before {
+    display: none;
   }
 
   .membership-modal__table th,
@@ -1912,6 +2035,60 @@
 
 .pos-btn-back:hover {
   background: var(--color-primary-hover);
+}
+
+/* Responsive card layout for sales table on mobile */
+@media (max-width: 768px) {
+  .pos-table-scroll .pos-table {
+    min-width: unset;
+  }
+
+  .pos-table-scroll .pos-table thead {
+    display: none;
+  }
+
+  .pos-table-scroll .pos-table,
+  .pos-table-scroll .pos-table tbody,
+  .pos-table-scroll .pos-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .pos-table-scroll .pos-table tr {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .pos-table-scroll .pos-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: var(--font-size-sm);
+  }
+
+  .pos-table-scroll .pos-table td::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .pos-table-scroll .pos-table .sale-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid var(--color-border);
+    justify-content: flex-end;
+    width: 100%;
+  }
 }
 
 /* Pagination */

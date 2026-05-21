@@ -309,3 +309,42 @@
   opacity: 1;
   background: rgba(0, 0, 0, 0.05);
 }
+
+/* --- Page Header Row --- */
+/* Used when a back button sits above the page title */
+.page-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.page-header-row h2 {
+  margin: 0;
+}
+
+/* --- Back Button --- */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back-button:hover {
+  background: var(--color-action);
+}
+
+.back-button:active {
+  transform: scale(0.97);
+}

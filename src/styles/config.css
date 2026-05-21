@@ -169,8 +169,34 @@
 
 .config-actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 12px;
   padding-top: 8px;
+}
+
+.config-actions__demo-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-style: italic;
+  background: var(--color-bg-secondary);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px dashed var(--color-border-dark);
+  white-space: nowrap;
+}
+
+.demo-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #fef08a;
+  color: #854d0e;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: auto;
 }
 
 .config-save-btn {

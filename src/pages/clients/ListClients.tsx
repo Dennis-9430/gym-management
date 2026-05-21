@@ -2,6 +2,7 @@ import { useState } from "react";
 import ClientSearch from "../../components/clientsTable/ClientSearch";
 import ClientTable from "../../components/clientsTable/ClientTable";
 import ClientModal from "../../components/clientsModal/ClientModal";
+import BackButton from "../../components/common/BackButton";
 import { useClients } from "../../hooks/useListClientsHook";
 import { usePOS } from "../../hooks/features/usePOS";
 import { useAccountType } from "../../hooks/useAccountType";
@@ -99,6 +100,10 @@ const ListClients = () => {
   return (
     <>
       <div className="clients-container">
+        <div className="page-header-row">
+          <BackButton />
+          <h2>Clientes</h2>
+        </div>
         <ClientSearch
           search={search}
           onSearch={searchClient}

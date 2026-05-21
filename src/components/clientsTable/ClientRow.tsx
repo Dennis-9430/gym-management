@@ -36,20 +36,21 @@ const ClientRow = ({ client, index, showActions, canDelete, onDelete }: Props) =
 
   return (
     <tr>
-      <td>{index + 1}</td>
+      <td data-label="N°">{index + 1}</td>
       <td
+        data-label="Cédula"
         className="client-link"
         onClick={gotoProfile}
         style={{ cursor: "pointer", color: "blue" }}
       >
         {client.documentNumber}
       </td>
-      <td>{client.lastName}</td>
-      <td> {client.firstName}</td>
+      <td data-label="Apellidos">{client.lastName}</td>
+      <td data-label="Nombres"> {client.firstName}</td>
 
-      <td>{formatDate(client.memberShipEndDate)}</td>
+      <td data-label="Expiracion">{formatDate(client.memberShipEndDate)}</td>
       {showActions && (
-        <td className="actions">
+        <td data-label="Acciones" className="actions">
           {client.memberShipStatus === "NONE" ? (
             <button
               type="button"

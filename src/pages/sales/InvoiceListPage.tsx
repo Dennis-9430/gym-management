@@ -196,12 +196,12 @@ const InvoiceListPage = () => {
             <tbody>
               {paginatedInvoices.map((invoice) => (
                 <tr key={invoice.id}>
-                  <td className="invoice-number">{invoice.invoiceNumber}</td>
-                  <td>{formatDate(invoice.createdAt)}</td>
-                  <td>
+                  <td className="invoice-number" data-label="Número">{invoice.invoiceNumber}</td>
+                  <td data-label="Fecha">{formatDate(invoice.createdAt)}</td>
+                  <td data-label="Tipo">
                     {invoice.type === "MEMBERSHIP" ? "Membresía" : "Productos"}
                   </td>
-                  <td>
+                  <td data-label="Cliente">
                     <div className="client-info">
                       <span className="client-name">
                         {invoice.client.firstName} {invoice.client.lastName}
@@ -211,11 +211,11 @@ const InvoiceListPage = () => {
                       </span>
                     </div>
                   </td>
-                  <td className="invoice-total">
+                  <td className="invoice-total" data-label="Total">
                     {formatCurrency(invoice.totals.total)}
                   </td>
-                  <td>{getStatusBadge(invoice.status)}</td>
-                  <td className="invoice-actions">
+                  <td data-label="Estado">{getStatusBadge(invoice.status)}</td>
+                  <td className="invoice-actions" data-label="Acciones">
                     <button
                       className="action-btn"
                       title="Descargar PDF"

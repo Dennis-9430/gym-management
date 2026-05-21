@@ -232,11 +232,11 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
                 <tbody>
                   {services.map((service) => (
                     <tr key={service.id}>
-                      <td>{service.name}</td>
-                      <td>
+                      <td data-label="Nombre">{service.name}</td>
+                      <td data-label="Duración">
                         {service.duration || getDaysFromService(service)} días
                       </td>
-                      <td>
+                      <td data-label="Subtotal">
                         ${(() => {
                           const pvp = Number(service.price);
                           const tr = service.taxRate || 0;
@@ -245,8 +245,8 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
                           return subtotal.toFixed(2);
                         })()}
                       </td>
-                      <td>{service.taxRate || 0}%</td>
-                      <td>
+                      <td data-label="IVA (%)">{service.taxRate || 0}%</td>
+                      <td data-label="IVA ($)">
                         ${(() => {
                           const pvp = Number(service.price);
                           const tr = service.taxRate || 0;
@@ -255,8 +255,8 @@ const MembershipModal = ({ isOpen, onClose, services, onRefresh }: Props) => {
                           return (subtotal * tr / 100).toFixed(2);
                         })()}
                       </td>
-                      <td><strong>${Number(service.price).toFixed(2)}</strong></td>
-                      <td className="membership-modal__actions-cell">
+                      <td data-label="Total (PVP)"><strong>${Number(service.price).toFixed(2)}</strong></td>
+                      <td data-label="Acciones" className="membership-modal__actions-cell">
                         <button
                           className="membership-modal__btn-edit"
                           onClick={() => handleEdit(service)}

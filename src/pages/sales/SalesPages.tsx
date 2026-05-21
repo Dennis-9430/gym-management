@@ -7,6 +7,7 @@ import SalesDashboard from "../../components/sales/SalesDashboard";
 import SaleModal from "../../components/sales/SaleModal";
 import SubscriptionModal from "../../components/sales/SubscriptionModal";
 import MembershipModal from "../../components/sales/MembershipModal";
+import BackButton from "../../components/common/BackButton";
 import type { ClientForm } from "../../types/client.types";
 import type { Service } from "../../types/payment.types";
 import { getServices } from "../../services/services.service";
@@ -122,6 +123,10 @@ const {
 
   return (
     <main className="pos-container">
+      <div className="page-header-row">
+        <BackButton />
+        <h2>Ventas</h2>
+      </div>
       <SalesDashboard
         onOpenSubscriptionModal={() => handleOpenSubscriptionModal()}
         onOpenSaleModal={() => setSaleModalOpen(true)}

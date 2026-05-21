@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, Filter } from "lucide-react";
 import { getClients } from "../../services/clients.service";
 import { getAttendanceByDate, type AttendanceRecord as ApiAttendanceRecord } from "../../services/attendance.service";
+import BackButton from "../../components/common/BackButton";
 import "../../styles/attendance.css";
 
 type PersonType = "clients";
@@ -115,7 +116,10 @@ const AttendancePage = () => {
     <main className="attendance-page">
       <div className="attendance-header">
         <div className="attendance-header__left">
-          <h2 className="attendance-title">Historial de Asistencia</h2>
+          <div className="page-header-row">
+            <BackButton />
+            <h2 className="attendance-title">Historial de Asistencia</h2>
+          </div>
           <p className="attendance-subtitle">{formatDateLabel()}</p>
         </div>
 
