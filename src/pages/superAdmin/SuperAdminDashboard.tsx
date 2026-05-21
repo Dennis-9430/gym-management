@@ -230,7 +230,7 @@ const SuperAdminDashboard = () => {
         <form onSubmit={handleCredSubmit} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 400 }}>
           <input
             type="email"
-            placeholder="Nuevo email (dejar vacío para mantener)"
+            placeholder="Nuevo email"
             value={credEmail}
             onChange={(e) => setCredEmail(e.target.value)}
             style={inputStyle}
@@ -252,7 +252,7 @@ const SuperAdminDashboard = () => {
           <div style={{ position: "relative" }}>
             <input
               type={showNewPass ? "text" : "password"}
-              placeholder="Nueva contraseña (dejar vacío para mantener)"
+              placeholder="Nueva contraseña"
               value={credNewPass}
               onChange={(e) => setCredNewPass(e.target.value)}
               style={inputStyle}

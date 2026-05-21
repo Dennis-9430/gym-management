@@ -195,8 +195,51 @@ const TenantListPage = () => {
             <p>No se encontraron tenants</p>
           </div>
         ) : (
+          <>
+          <style>{`
+            @media (max-width: 640px) {
+              .sa-tenant-table,
+              .sa-tenant-table tbody,
+              .sa-tenant-table tr.sa-tenant-row {
+                display: block;
+                width: 100%;
+              }
+              .sa-tenant-table thead {
+                display: none;
+              }
+              .sa-tenant-table tr.sa-tenant-row {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 16px;
+                margin-bottom: 12px;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+              }
+              .sa-tenant-table tr.sa-tenant-row td {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 6px 0;
+                border: none !important;
+                font-size: 13px;
+              }
+              .sa-tenant-table tr.sa-tenant-row td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: #94a3b8;
+                margin-right: 12px;
+                flex-shrink: 0;
+              }
+              .sa-tenant-table tr.sa-tenant-row td[data-label="Acciones"]::before {
+                align-self: flex-start;
+              }
+            }
+          `}</style>
           <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+            <table className="sa-tenant-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr style={{ backgroundColor: "#f8fafc", color: "#64748b", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   <th style={thStyle}>Negocio</th>
@@ -210,16 +253,16 @@ const TenantListPage = () => {
               </thead>
               <tbody>
                 {tenants.map((t) => (
-                  <tr key={t.id} style={{ borderBottom: "1px solid #f1f5f9", transition: "background 0.15s" }}
+                  <tr key={t.id} className="sa-tenant-row" style={{ borderBottom: "1px solid #f1f5f9", transition: "background 0.15s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#f8fafc"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ""; }}
                   >
-                    <td style={tdStyle}>
+                    <td style={tdStyle} data-label="Negocio">
                       <div style={{ fontWeight: 600, color: "#0f172a" }}>{t.businessName}</div>
                     </td>
-                    <td style={{ ...tdStyle, color: "#64748b", fontFamily: "monospace", fontSize: 13 }}>{t.businessCode}</td>
-                    <td style={tdStyle}>{t.email}</td>
-                    <td style={tdStyle}>
+                    <td style={{ ...tdStyle, color: "#64748b", fontFamily: "monospace", fontSize: 13 }} data-label="Código">{t.businessCode}</td>
+                    <td style={tdStyle} data-label="Email">{t.email}</td>
+                    <td style={tdStyle} data-label="Plan">
                       <span style={{
                         display: "inline-block",
                         padding: "2px 8px",
@@ -232,15 +275,15 @@ const TenantListPage = () => {
                         {t.plan}
                       </span>
                     </td>
-                    <td style={tdStyle}>
+                    <td style={tdStyle} data-label="Estado">
                       <TenantStatusBadge status={t.subscriptionStatus} />
                     </td>
-                    <td style={{ ...tdStyle, color: "#64748b", fontSize: 13 }}>
+                    <td style={{ ...tdStyle, color: "#64748b", fontSize: 13 }} data-label="Vencimiento">
                       {t.subscriptionEndDate
                         ? new Date(t.subscriptionEndDate).toLocaleDateString("es-ES")
                         : "—"}
                     </td>
-                    <td style={tdStyle}>
+                    <td style={tdStyle} data-label="Acciones">
                       <div style={{ display: "flex", gap: 6 }}>
                         <ActionBtn
                           icon={<Eye size={15} />}
@@ -271,6 +314,7 @@ const TenantListPage = () => {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </div>
 
