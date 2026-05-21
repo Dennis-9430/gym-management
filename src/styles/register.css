@@ -242,17 +242,26 @@
 }
 
 .register-form__back {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
+  padding: 8px 16px;
   margin-bottom: 1rem;
   align-self: flex-start;
+  transition: all 0.2s ease;
 }
 
 .register-form__back:hover {
+  background: rgba(255, 255, 255, 0.15);
   color: white;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .register-form__header {
@@ -497,6 +506,28 @@
 
 .legal-content li {
   margin-bottom: 0.5rem;
+}
+
+/* Mobile: mejor espaciado */
+@media (max-width: 480px) {
+  .register-form {
+    padding: 1rem;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+  .register-form__form {
+    max-width: 100%;
+  }
+  .register-form__header h2 {
+    font-size: 1.35rem;
+  }
+  .register-form__fields-grid {
+    grid-template-columns: 1fr;
+  }
+  .register-form__back {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
 }
 
 @keyframes spin {
