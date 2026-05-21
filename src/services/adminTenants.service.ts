@@ -1,6 +1,6 @@
 /* Servicio API para el panel SUPER_ADMIN de gestión de tenants */
 
-import { buildUrl } from "./api";
+import { buildUrl, getAuthHeaders } from "./api";
 import type {
   AdminTenant,
   AdminDashboard,
@@ -12,7 +12,10 @@ import type {
 async function apiCall<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const res = await fetch(buildUrl(endpoint), {
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
     ...options,
   });
   if (!res.ok) {
