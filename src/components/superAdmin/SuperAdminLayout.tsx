@@ -76,7 +76,7 @@ const SuperAdminLayout = ({ children }: Props) => {
 
       {/* Drawer */}
       <div className={`sa-drawer ${menuOpen ? "sa-drawer--open" : ""}`}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Dumbbell size={22} color="#3b82f6" />
             <span style={{ color: "#fff", fontSize: 16, fontWeight: 700 }}>Gym Manager</span>
@@ -114,27 +114,29 @@ const SuperAdminLayout = ({ children }: Props) => {
           })}
         </nav>
 
-        <button
-          onClick={() => { setMenuOpen(false); handleLogout(); }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            background: "none",
-            border: "1px solid #334155",
-            borderRadius: 8,
-            color: "#ef4444",
-            cursor: "pointer",
-            padding: "10px 14px",
-            fontSize: 14,
-            fontWeight: 500,
-            width: "100%",
-            justifyContent: "center",
-          }}
-        >
-          <LogOut size={16} />
-          Salir
-        </button>
+        <div style={{ borderTop: "1px solid #334155", paddingTop: 12, marginTop: 12 }}>
+          <button
+            onClick={() => { setMenuOpen(false); handleLogout(); }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              background: "none",
+              border: "1px solid #334155",
+              borderRadius: 8,
+              color: "#ef4444",
+              cursor: "pointer",
+              padding: "10px 14px",
+              fontSize: 14,
+              fontWeight: 500,
+              width: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <LogOut size={16} />
+            Salir
+          </button>
+        </div>
       </div>
 
       {/* Top bar */}
