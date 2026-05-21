@@ -202,7 +202,6 @@ const SuperAdminLayout = ({ children }: Props) => {
               color: "#94a3b8",
               cursor: "pointer",
               padding: "8px 14px",
-              display: "flex",
               alignItems: "center",
               gap: 6,
               fontSize: 13,
