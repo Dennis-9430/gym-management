@@ -64,7 +64,6 @@ const Navbar = () => {
   const handleEntryClick = () => {
     setEntryMsg("✅ Puerta abierta — Bienvenido!");
     setTimeout(() => setEntryMsg(null), 2500);
-    navigate("/attendance");
   };
 
   // VISUAL ONLY: isOwner, role, plan son para display del label de rol.
