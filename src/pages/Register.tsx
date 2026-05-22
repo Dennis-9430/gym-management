@@ -15,8 +15,6 @@ import {
   Eye,
   EyeOff,
   Star,
-  TrendingUp,
-  Shield,
   HelpCircle,
 } from "lucide-react";
 import { buildUrl } from "../services/api";
@@ -58,11 +56,7 @@ const PLANS: Plan[] = [
       "Configuración personalizada",
       "Soporte Prioritario",
     ],
-    exclusiveFeatures: [
-      "Empleados",
-      "Reportes",
-      "Soporte Prioritario",
-    ],
+    exclusiveFeatures: ["Empleados", "Reportes", "Soporte Prioritario"],
     demoEmail: "demo-pro@gmail.com",
     demoPassword: "demoPro123",
   },
@@ -214,7 +208,10 @@ const Register = () => {
 
       // Pasar tenantId y businessCode al login para multi-tenant real
       const params = new URLSearchParams();
-      params.set("message", "Gimnasio registrado exitosamente. Por favor, inicia sesión.");
+      params.set(
+        "message",
+        "Gimnasio registrado exitosamente. Por favor, inicia sesión.",
+      );
       if (registeredTenant.tenantId) {
         params.set("tenantId", registeredTenant.tenantId);
       }
@@ -263,8 +260,11 @@ const Register = () => {
               <Dumbbell size={32} strokeWidth={1.5} />
             </div>
             <h1 className="register-landing__headline">
-              Gestioná tu gimnasio<br />
-              <span className="register-landing__headline-accent">como un negocio moderno</span>
+              Gestioná tu gimnasio
+              <br />
+              <span className="register-landing__headline-accent">
+                como un negocio moderno
+              </span>
             </h1>
             <p className="register-landing__subheadline">
               Controlá clientes, membresías, pagos y más desde un solo lugar.
@@ -298,7 +298,8 @@ const Register = () => {
                 <ul className="register-landing__features">
                   {plan.features.map((feature, i) => {
                     const isExclusive = plan.exclusiveFeatures?.some(
-                      (ex) => feature.startsWith("Todo") || feature.includes(ex)
+                      (ex) =>
+                        feature.startsWith("Todo") || feature.includes(ex),
                     );
                     return (
                       <li
@@ -306,9 +307,15 @@ const Register = () => {
                         className={`register-landing__feature ${isExclusive ? "register-landing__feature--exclusive" : ""} ${feature === "Todo lo de Basic" ? "register-landing__feature--muted" : ""}`}
                       >
                         {isExclusive ? (
-                          <Star size={15} className="register-landing__feature-star" />
+                          <Star
+                            size={15}
+                            className="register-landing__feature-star"
+                          />
                         ) : (
-                          <Check size={15} className="register-landing__feature-check" />
+                          <Check
+                            size={15}
+                            className="register-landing__feature-check"
+                          />
                         )}
                         <span>{feature}</span>
                       </li>
@@ -346,14 +353,20 @@ const Register = () => {
               <HelpCircle size={16} className="register-landing__faq-icon" />
               <div>
                 <strong>¿Puedo cancelar cuando quiera?</strong>
-                <p>Sí, sin multas ni compromisos. Cancelás y seguís hasta fin de mes.</p>
+                <p>
+                  Sí, sin multas ni compromisos. Cancelás y seguís hasta fin de
+                  mes.
+                </p>
               </div>
             </div>
             <div className="register-landing__faq-item">
               <HelpCircle size={16} className="register-landing__faq-icon" />
               <div>
                 <strong>¿Puedo cambiar de plan después?</strong>
-                <p>Obvio. Actualizás o downgradeás cuando quieras desde configuración.</p>
+                <p>
+                  Obvio. Actualizás o downgradeás cuando quieras desde
+                  configuración.
+                </p>
               </div>
             </div>
           </div>
@@ -428,11 +441,20 @@ const Register = () => {
           <div className="register-form__field register-form__field--full">
             <label>
               Código del Negocio
-              <span style={{ fontWeight: "normal", color: "var(--color-text-light)", fontSize: "0.75em", marginLeft: 6 }}>
+              <span
+                style={{
+                  fontWeight: "normal",
+                  color: "var(--color-text-light)",
+                  fontSize: "0.75em",
+                  marginLeft: 6,
+                }}
+              >
                 (auto-generado)
               </span>
             </label>
-            <div className={`register-form__input-wrap ${fieldErrors.businessCode ? "register-form__input-wrap--error" : ""}`}>
+            <div
+              className={`register-form__input-wrap ${fieldErrors.businessCode ? "register-form__input-wrap--error" : ""}`}
+            >
               <Tag size={18} />
               <input
                 type="text"
