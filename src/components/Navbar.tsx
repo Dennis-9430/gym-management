@@ -48,6 +48,7 @@ const Navbar = () => {
   const isDashboard = location.pathname === "/dashboard";
 
   const [biometricEnabled, setBiometricEnabled] = useState(false);
+  const [entryMsg, setEntryMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -59,6 +60,12 @@ const Navbar = () => {
       .then((d) => setBiometricEnabled(d.biometricEnabled))
       .catch(() => {});
   }, [user]);
+
+  const handleEntryClick = () => {
+    setEntryMsg("✅ Puerta abierta — Bienvenido!");
+    setTimeout(() => setEntryMsg(null), 2500);
+    navigate("/attendance");
+  };
 
   // VISUAL ONLY: isOwner, role, plan son para display del label de rol.
   // Backend valida permisos reales en cada request autenticado.
@@ -156,10 +163,10 @@ const Navbar = () => {
               )}
 
               {biometricEnabled && (
-                <NavLink className="navbar__link" to="/attendance" title="Abrir puerta">
+                <button className="navbar__entry-btn" onClick={handleEntryClick} title="Abrir puerta">
                   <DoorOpen size={16} />
                   <span>Entrada</span>
-                </NavLink>
+                </button>
               )}
 
               <button className="navbar__logout" onClick={handleLogout} title="Cerrar Sesión">
@@ -170,6 +177,13 @@ const Navbar = () => {
           )}
         </div>
       </nav>
+
+      {/* Entry notification toast */}
+      {entryMsg && (
+        <div className="navbar__entry-toast">
+          {entryMsg}
+        </div>
+      )}
 
       {/* Sidebar overlay */}
       {sidebarOpen && (
@@ -220,16 +234,13 @@ const Navbar = () => {
 
         {biometricEnabled && (
           <div className="sidebar__footer" style={{ borderTop: "none", paddingTop: 0 }}>
-            <NavLink
-              to="/attendance"
-              className={({ isActive }) =>
-                `sidebar__link ${isActive ? "sidebar__link--active" : ""}`
-              }
-              onClick={closeSidebar}
+            <button
+              className="sidebar__entry-btn"
+              onClick={() => { closeSidebar(); handleEntryClick(); }}
             >
               <DoorOpen size={18} />
               <span>Abrir puerta</span>
-            </NavLink>
+            </button>
           </div>
         )}
 

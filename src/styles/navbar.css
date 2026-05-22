@@ -373,9 +373,84 @@
   color: var(--color-text-inverse);
 }
 
+/* Entry button (door/bell) */
+.navbar__entry-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--color-primary-light);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: var(--color-border);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 250ms ease;
+  outline: none;
+}
+
+.navbar__entry-btn:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: var(--color-text-inverse);
+}
+
+/* Sidebar entry button (matches sidebar__link style) */
+.sidebar__entry-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  text-align: left;
+  transition: all 150ms ease;
+}
+
+.sidebar__entry-btn:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-action);
+}
+
+/* Entry toast notification */
+.navbar__entry-toast {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: #16a34a;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
+  animation: fadeInUp 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Hide entry btn text on mobile, keep icon */
+@media (max-width: 1023px) {
+  .navbar__entry-btn {
+    display: none;
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 
