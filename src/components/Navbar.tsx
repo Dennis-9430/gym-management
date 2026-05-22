@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import { useAccountType } from "../hooks/useAccountType";
+import { buildUrl, getAuthHeaders } from "../services/api";
 import "../styles/navbar.css";
 import {
   User,
@@ -14,6 +15,7 @@ import {
   Package,
   ShoppingCart,
   DollarSign,
+  DoorOpen,
 } from "lucide-react";
 
 /** @const Enlaces del menú de navegación */
@@ -44,6 +46,19 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isDashboard = location.pathname === "/dashboard";
+
+  const [biometricEnabled, setBiometricEnabled] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    fetch(buildUrl("/api/fingerprints/biometric-config"), {
+      headers: { ...getAuthHeaders() },
+      credentials: "include",
+    })
+      .then((r) => r.json())
+      .then((d) => setBiometricEnabled(d.biometricEnabled))
+      .catch(() => {});
+  }, [user]);
 
   // VISUAL ONLY: isOwner, role, plan son para display del label de rol.
   // Backend valida permisos reales en cada request autenticado.
@@ -140,6 +155,13 @@ const Navbar = () => {
                 </NavLink>
               )}
 
+              {biometricEnabled && (
+                <NavLink className="navbar__link" to="/attendance" title="Abrir puerta">
+                  <DoorOpen size={16} />
+                  <span>Entrada</span>
+                </NavLink>
+              )}
+
               <button className="navbar__logout" onClick={handleLogout} title="Cerrar Sesión">
                 <LogOut size={16} />
                 <span>Cerrar Sesión</span>
@@ -195,6 +217,21 @@ const Navbar = () => {
             );
           })}
         </nav>
+
+        {biometricEnabled && (
+          <div className="sidebar__footer" style={{ borderTop: "none", paddingTop: 0 }}>
+            <NavLink
+              to="/attendance"
+              className={({ isActive }) =>
+                `sidebar__link ${isActive ? "sidebar__link--active" : ""}`
+              }
+              onClick={closeSidebar}
+            >
+              <DoorOpen size={18} />
+              <span>Abrir puerta</span>
+            </NavLink>
+          </div>
+        )}
 
         <div className="sidebar__footer">
           <button className="sidebar__logout" onClick={handleLogout}>

@@ -1,6 +1,8 @@
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context";
 import type { ClientProps } from "../../types/client.types";
 import { useAccountType } from "../../hooks/useAccountType";
+import { buildUrl, getAuthHeaders } from "../../services/api";
 
 /* Muestra informacion personal y de membresia del cliente */
 interface Props extends ClientProps {
@@ -10,6 +12,17 @@ interface Props extends ClientProps {
 const ClientInfo = ({ client, onEdit }: Props) => {
   const { user } = useAuth();
   const { isOwner } = useAccountType();
+  const [biometricEnabled, setBiometricEnabled] = useState(false);
+
+  useEffect(() => {
+    fetch(buildUrl("/api/fingerprints/biometric-config"), {
+      headers: { ...getAuthHeaders() },
+      credentials: "include",
+    })
+      .then((r) => r.json())
+      .then((d) => setBiometricEnabled(d.biometricEnabled))
+      .catch(() => {});
+  }, []);
 
   // Gerente y Admin pueden editar clientes
   // Recepcionista NO puede editar clientes
@@ -43,10 +56,12 @@ const ClientInfo = ({ client, onEdit }: Props) => {
       <p>
         <strong>Telefono de Emergencia</strong> {client.emergencyPhone}
       </p>
-      <p>
-        <strong>Huella:</strong>{" "}
-        {client.fingerPrint ? "✅ Registrada" : "❌ Sin registrar"}
-      </p>
+      {biometricEnabled && (
+        <p>
+          <strong>Huella:</strong>{" "}
+          {client.fingerPrint ? "✅ Registrada" : "❌ Sin registrar"}
+        </p>
+      )}
       {canEdit && (
         <button className="btn-edit" onClick={onEdit}>
           Editar informacion
