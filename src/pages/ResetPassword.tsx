@@ -1,7 +1,7 @@
 /* Página de restablecimiento de contraseña */
 import { useState } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { Lock, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { Lock, Loader2, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
 import { buildUrl } from "../services/api";
 import "../styles/login.css";
 
@@ -66,7 +66,10 @@ const ResetPassword = () => {
           <div className="login__header">
             <h1>Enlace inválido</h1>
             <p>El enlace de recuperación no es válido o está incompleto.</p>
-            <Link to="/">Volver al inicio</Link>
+            <Link to="/" className="login__back-link">
+              <ArrowLeft size={16} />
+              Volver al inicio
+            </Link>
           </div>
         </div>
       </div>

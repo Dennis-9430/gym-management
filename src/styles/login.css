@@ -366,6 +366,32 @@
   text-decoration: underline;
 }
 
+/* Back link — Volver al inicio (parecido a un botón outline) */
+.login__back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 10px 20px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.login__back-link:hover {
+  border-color: var(--color-action);
+  background: var(--color-action);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+}
+
 /* ==========================================================================
    FORGOT / RESET PASSWORD — contenedor centrado (login__container)
    ========================================================================== */

@@ -63,8 +63,11 @@ const ForgotPassword = () => {
               de recuperación en los próximos minutos.
             </p>
           </div>
-          <div style={{ textAlign: "center", marginTop: "16px" }}>
-            <Link to="/">Volver al inicio</Link>
+          <div style={{ textAlign: "center" }}>
+            <Link to="/" className="login__back-link">
+              <ArrowLeft size={16} />
+              Volver al inicio
+            </Link>
           </div>
         </div>
       </div>
@@ -129,9 +132,9 @@ const ForgotPassword = () => {
             )}
           </button>
 
-          <div className="login__register" style={{ marginTop: "16px" }}>
-            <Link to="/">
-              <ArrowLeft size={16} style={{ verticalAlign: "middle", marginRight: "4px" }} />
+          <div style={{ textAlign: "center" }}>
+            <Link to="/" className="login__back-link">
+              <ArrowLeft size={16} />
               Volver al inicio de sesión
             </Link>
           </div>
