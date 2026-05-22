@@ -19,7 +19,7 @@
 }
 
 .login__split--left {
-  flex: 0 0 35%;
+  flex: 0 0 40%;
   background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
   position: relative;
   overflow: hidden;
