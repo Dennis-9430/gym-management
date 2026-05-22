@@ -27,7 +27,7 @@ coverage
 *.sw?
 
 desarrolloBackend.txt
-*.md
+
 backend/
 .env
 nul

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/index.ts";
 import type { AuthUser } from "../types/user.types";
-import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail, Building2 } from "lucide-react";
+import { Lock, Eye, EyeOff, Dumbbell, Loader2, Mail, Building2, Users, BarChart3, ShoppingCart } from "lucide-react";
 import { buildUrl } from "../services/api";
 import "../styles/login.css";
 
@@ -31,6 +31,21 @@ const Login = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({ email: "", password: "", businessCode: "" });
+  
+  // Rotación de descripciones del sistema
+  const features = [
+    { icon: <Users size={28} />, title: "Gestión de miembros", desc: "Administrá clientes, empleados, membresías, renovaciones y control de vencimientos desde un solo lugar" },
+    { icon: <ShoppingCart size={28} />, title: "Ventas y productos", desc: "Registrá ventas, gestioná productos, cobrá membresías y llevá el control de pagos diarios" },
+    { icon: <BarChart3 size={28} />, title: "Reportes financieros", desc: "Visualizá ingresos, egresos, rentabilidad y accedé a un dashboard completo con métricas en tiempo real" },
+  ];
+  const [currentFeature, setCurrentFeature] = useState(0);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeature((prev) => (prev + 1) % features.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [features.length]);
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -209,11 +224,41 @@ const Login = () => {
   return (
     <div className="login">
       <div className="login__split login__split--left">
-        <div className="login__brand">
-          <Dumbbell size={48} strokeWidth={1.5} />
-          <h1>Gym Management</h1>
-          <p>Sistema de gestión integral para tu gimnasio</p>
+        <div className="login__panel-inner">
+          {/* TOP - Logo/Badge */}
+          <div className="login__panel-top">
+            <div className="login__panel-badge">
+              <Dumbbell size={18} strokeWidth={2} />
+              <span>Gym Management</span>
+            </div>
+          </div>
+
+          {/* CENTER - Headline principal */}
+          <div className="login__panel-center">
+            <h2 className="login__panel-headline">
+              Gestioná tu gimnasio<br />
+              <span>desde un solo lugar</span>
+            </h2>
+            <p className="login__panel-subtext">
+              Controlá membresías, pagos, clientes y asistencia en tiempo real.
+            </p>
+          </div>
+
+          {/* BOTTOM - Features rotativo */}
+          <div className="login__panel-bottom">
+            <div className="login__features-rotator">
+              <div className="login__feature-item" key={currentFeature}>
+                <div className="login__feature-icon">{features[currentFeature].icon}</div>
+                <div className="login__feature-text">
+                  <strong>{features[currentFeature].title}</strong>
+                  <span>{features[currentFeature].desc}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Background decoration */}
         <div className="login__decoration">
           <div className="login__circle login__circle--1"></div>
           <div className="login__circle login__circle--2"></div>
