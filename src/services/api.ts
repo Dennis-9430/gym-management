@@ -53,9 +53,8 @@ export const getAuthHeaders = (): Record<string, string> => {
   return headers;
 };
 
-/** Opciones base para fetch: incluye cookie HttpOnly + headers. */
+/** Opciones base para fetch: incluye headers de auth sin cookies cross-origin. */
 const fetchOptions = (extra: RequestInit = {}): RequestInit => ({
-  credentials: "include",
   headers: getAuthHeaders(),
   ...extra,
 });
