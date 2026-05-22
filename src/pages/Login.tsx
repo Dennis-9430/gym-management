@@ -183,7 +183,7 @@ const Login = () => {
           tenantId: undefined,
         };
         login(user);
-        navigate("/super-admin/tenants");
+        setTimeout(() => navigate("/super-admin/tenants"), 0);
         return;
       }
 
@@ -197,7 +197,7 @@ const Login = () => {
       };
 
       login(user);
-      navigate("/dashboard");
+      setTimeout(() => navigate("/dashboard"), 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error de conexión");
     } finally {
@@ -244,7 +244,7 @@ const Login = () => {
             </p>
           </div>
 
-          {/* BOTTOM - Features rotativo */}
+          {/* BOTTOM - Features rotativo + Demo callout */}
           <div className="login__panel-bottom">
             <div className="login__features-rotator">
               <div className="login__feature-item" key={currentFeature}>
@@ -254,6 +254,15 @@ const Login = () => {
                   <span>{features[currentFeature].desc}</span>
                 </div>
               </div>
+            </div>
+            <div className="login__demo-callout">
+              <span className="login__demo-callout-text">
+                ¿Querés probar antes?{' '}
+                <Link to="/register" className="login__demo-callout-link">
+                  Probalo gratis
+                </Link>
+                {' '}— sin tarjeta
+              </span>
             </div>
           </div>
         </div>

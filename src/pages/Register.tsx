@@ -1,4 +1,5 @@
-/* Página de registro de nuevo gimnasio (Landing) */
+/* Página de registro de nuevo gimnasio (Landing) —
+   Diseño SaaS premium con estructura: hero → métricas → pricing → FAQ → footer */
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
@@ -13,6 +14,10 @@ import {
   Play,
   Eye,
   EyeOff,
+  Star,
+  TrendingUp,
+  Shield,
+  HelpCircle,
 } from "lucide-react";
 import { buildUrl } from "../services/api";
 import "../styles/login.css";
@@ -24,6 +29,7 @@ interface Plan {
   name: string;
   price: number;
   features: string[];
+  exclusiveFeatures?: string[];
   demoEmail: string;
   demoPassword: string;
 }
@@ -34,11 +40,9 @@ const PLANS: Plan[] = [
     name: "Basic",
     price: 20,
     features: [
-      "Gestión de Clientes",
-      "Membresías",
+      "Clientes y Membresías",
       "Inventario de Productos",
       "Punto de Venta (POS)",
-      "Registro de Asistencia",
     ],
     demoEmail: "demo-basic@gmail.com",
     demoPassword: "demoBasic123",
@@ -48,10 +52,15 @@ const PLANS: Plan[] = [
     name: "Premium",
     price: 30,
     features: [
-      "Todo en Basic",
-      "Gestión de Empleados (CRUD)",
+      "Todo lo de Basic",
+      "Gestión de Empleados",
       "Reportes Financieros",
-      "Configuración Completa",
+      "Configuración personalizada",
+      "Soporte Prioritario",
+    ],
+    exclusiveFeatures: [
+      "Empleados",
+      "Reportes",
       "Soporte Prioritario",
     ],
     demoEmail: "demo-pro@gmail.com",
@@ -243,43 +252,68 @@ const Register = () => {
   if (step === "plans") {
     return (
       <div className="register-landing">
-        <div className="register-landing__header">
+        {/* Fondo decorativo */}
+        <div className="register-landing__bg-glow" />
+        <div className="register-landing__bg-noise" />
+
+        {/* Hero */}
+        <div className="register-landing__hero">
           <div className="register-landing__brand">
-            <Dumbbell size={48} strokeWidth={1.5} />
-            <h1>Gym Management</h1>
-            <p>El sistema de gestión ideal para tu gimnasio</p>
+            <div className="register-landing__brand-icon">
+              <Dumbbell size={32} strokeWidth={1.5} />
+            </div>
+            <h1 className="register-landing__headline">
+              Gestioná tu gimnasio<br />
+              <span className="register-landing__headline-accent">como un negocio moderno</span>
+            </h1>
+            <p className="register-landing__subheadline">
+              Controlá clientes, membresías, pagos y más desde un solo lugar.
+            </p>
           </div>
         </div>
 
+        {/* Pricing */}
         <div className="register-landing__content">
-          <h2 className="register-landing__title">Elige tu plan</h2>
+          <h2 className="register-landing__title">Elegí tu plan</h2>
           <p className="register-landing__subtitle">
-            Comienza hoy. Sin compromiso. Cancela cuando quieras.
+            Empezá hoy. Sin compromiso. Cancelá cuando quieras.
           </p>
 
           <div className="register-landing__plans">
             {PLANS.map((plan) => (
               <div
                 key={plan.id}
-                className={`register-landing__plan ${selectedPlan === plan.id ? "register-landing__plan--selected" : ""}`}
+                className={`register-landing__plan ${plan.id === "PREMIUM" ? "register-landing__plan--premium" : "register-landing__plan--basic"} ${selectedPlan === plan.id ? "register-landing__plan--selected" : ""}`}
                 onClick={() => setSelectedPlan(plan.id)}
               >
                 {plan.id === "PREMIUM" && (
                   <span className="register-landing__badge">Más Popular</span>
                 )}
-                <h3>{plan.name}</h3>
+                <h3 className="register-landing__plan-name">{plan.name}</h3>
                 <div className="register-landing__price">
                   <span className="register-landing__currency">$</span>
                   <span className="register-landing__amount">{plan.price}</span>
                   <span className="register-landing__period">/mes</span>
                 </div>
                 <ul className="register-landing__features">
-                  {plan.features.map((feature, i) => (
-                    <li key={i}>
-                      <Check size={16} />
-                      {feature}
-                    </li>
-                  ))}
+                  {plan.features.map((feature, i) => {
+                    const isExclusive = plan.exclusiveFeatures?.some(
+                      (ex) => feature.startsWith("Todo") || feature.includes(ex)
+                    );
+                    return (
+                      <li
+                        key={i}
+                        className={`register-landing__feature ${isExclusive ? "register-landing__feature--exclusive" : ""} ${feature === "Todo lo de Basic" ? "register-landing__feature--muted" : ""}`}
+                      >
+                        {isExclusive ? (
+                          <Star size={15} className="register-landing__feature-star" />
+                        ) : (
+                          <Check size={15} className="register-landing__feature-check" />
+                        )}
+                        <span>{feature}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
                 <div className="register-landing__actions">
                   <button
@@ -293,7 +327,7 @@ const Register = () => {
                   </button>
                   <button
                     type="button"
-                    className="register-landing__select"
+                    className={`register-landing__select ${plan.id === "PREMIUM" ? "register-landing__select--premium" : ""}`}
                     onClick={() => handleSelectPlan(plan.id)}
                   >
                     Seleccionar {plan.name}
@@ -302,22 +336,44 @@ const Register = () => {
               </div>
             ))}
           </div>
+        </div>
 
-          <div className="register-landing__footer">
-            <p>
-              ¿Ya tienes cuenta? <Link to="/">Iniciar sesión</Link>
-            </p>
-            <p className="register-form__terms">
-              Al registrarte, aceptas nuestros{" "}
-              <a href="/terms" target="_blank">
-                Términos y Condiciones
-              </a>{" "}
-              y{" "}
-              <a href="/privacy" target="_blank">
-                Política de Privacidad
-              </a>
-            </p>
+        {/* FAQ */}
+        <div className="register-landing__faq">
+          <h3 className="register-landing__faq-title">Preguntas frecuentes</h3>
+          <div className="register-landing__faq-items">
+            <div className="register-landing__faq-item">
+              <HelpCircle size={16} className="register-landing__faq-icon" />
+              <div>
+                <strong>¿Puedo cancelar cuando quiera?</strong>
+                <p>Sí, sin multas ni compromisos. Cancelás y seguís hasta fin de mes.</p>
+              </div>
+            </div>
+            <div className="register-landing__faq-item">
+              <HelpCircle size={16} className="register-landing__faq-icon" />
+              <div>
+                <strong>¿Puedo cambiar de plan después?</strong>
+                <p>Obvio. Actualizás o downgradeás cuando quieras desde configuración.</p>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="register-landing__footer">
+          <div className="register-landing__footer-links">
+            <Link to="/terms">Términos</Link>
+            <span className="register-landing__footer-dot">·</span>
+            <Link to="/privacy">Privacidad</Link>
+            <span className="register-landing__footer-dot">·</span>
+            <a href="mailto:soporte@gymmanagement.com">Soporte</a>
+          </div>
+          <p className="register-landing__footer-copy">
+            © 2024 Gym Management. Todos los derechos reservados.
+          </p>
+          <p className="register-landing__footer-login">
+            ¿Ya tenés cuenta? <Link to="/">Iniciar sesión</Link>
+          </p>
         </div>
       </div>
     );
