@@ -21,6 +21,7 @@ export interface AdminTenant {
   taxRate: number;
   currency: string;
   isDemo: boolean;
+  biometricEnabled?: boolean;
   createdAt: string;
   updatedAt: string;
 }

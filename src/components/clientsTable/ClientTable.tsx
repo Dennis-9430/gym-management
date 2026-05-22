@@ -13,6 +13,9 @@ interface Props {
   sortDirection: "asc" | "desc";
   showActions: boolean;
   onDelete?: (clientId: number | string) => void;
+  biometricEnabled?: boolean;
+  onRegisterFingerprint?: (clientId: number | string) => void;
+  onDeleteFingerprint?: (clientId: number | string) => void;
 }
 
 const ClientTable = ({
@@ -24,6 +27,9 @@ const ClientTable = ({
   sortDirection,
   showActions,
   onDelete,
+  biometricEnabled = false,
+  onRegisterFingerprint,
+  onDeleteFingerprint,
 }: Props) => {
   const { isOwner } = useAccountType();
   const { user } = useAuth();
@@ -64,6 +70,7 @@ const ClientTable = ({
             {renderHeader("Apellidos", "lastName")}
             {renderHeader("Nombres", "firstName")}
             <th>Expiracion</th>
+            {biometricEnabled && <th>Huella</th>}
             {showActions && <th>Acciones</th>}
           </tr>
         </thead>
@@ -76,6 +83,9 @@ const ClientTable = ({
               showActions={showActions}
               canDelete={canDelete}
               onDelete={onDelete}
+              biometricEnabled={biometricEnabled}
+              onRegisterFingerprint={onRegisterFingerprint}
+              onDeleteFingerprint={onDeleteFingerprint}
             />
           ))}
         </tbody>

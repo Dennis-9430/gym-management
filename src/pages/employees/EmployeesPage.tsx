@@ -1,5 +1,5 @@
 /* Pagina de gestion de empleados */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, X, Lock } from "lucide-react";
 import EmployeeForm from "../../components/employees/EmployeeForm";
@@ -17,6 +17,7 @@ import {
   updateOwnerProfile,
   verifyCurrentPassword,
 } from "../../services/employees.service";
+import { buildUrl, getAuthHeaders } from "../../services/api";
 import type { Employee, EmployeeInput, EmployeeUpdate } from "../../types/employee.types";
 import "../../styles/employees.css";
 
@@ -40,6 +41,46 @@ const EmployeesPage = () => {
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [pendingEmployeeData, setPendingEmployeeData] = useState<EmployeeInput | null>(null);
+
+  // Biometric fingerprint state
+  const [biometricEnabled, setBiometricEnabled] = useState(false);
+
+  useEffect(() => {
+    fetch(buildUrl("/api/fingerprints/biometric-config"), {
+      headers: { ...getAuthHeaders() },
+      credentials: "include",
+    })
+      .then((r) => r.json())
+      .then((d) => setBiometricEnabled(d.biometricEnabled))
+      .catch(() => {});
+  }, []);
+
+  const handleRegisterFingerprint = useCallback(async (employeeId: string) => {
+    try {
+      await fetch(buildUrl("/api/fingerprints/register"), {
+        method: "POST",
+        headers: { ...getAuthHeaders() },
+        credentials: "include",
+        body: JSON.stringify({ entityType: "employee", entityId: employeeId }),
+      });
+      refresh();
+    } catch {
+      alert("Error al registrar huella");
+    }
+  }, [refresh]);
+
+  const handleDeleteFingerprint = useCallback(async (employeeId: string) => {
+    try {
+      await fetch(buildUrl(`/api/fingerprints/employee/${employeeId}`), {
+        method: "DELETE",
+        headers: { ...getAuthHeaders() },
+        credentials: "include",
+      });
+      refresh();
+    } catch {
+      alert("Error al borrar huella");
+    }
+  }, [refresh]);
 
   useEffect(() => {
     refresh();
@@ -266,6 +307,9 @@ const EmployeesPage = () => {
         <div className="employees-table-wrapper">
           <EmployeeTable
             employees={employees}
+            biometricEnabled={biometricEnabled}
+            onRegisterFingerprint={handleRegisterFingerprint}
+            onDeleteFingerprint={handleDeleteFingerprint}
             onSelect={(id) => {
               if (id === "owner") {
                 navigate("/employees/owner");

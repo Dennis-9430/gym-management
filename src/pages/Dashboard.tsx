@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { type DashboardSection, useFilteredSections } from "../types/dashboard.section";
 import PaymentModal from "../pages/payments/PaymentModal";
 import DashboardCard from "../components/dashboard/DashboardCard";
+import { buildUrl, getAuthHeaders } from "../services/api";
 import "../styles/dashboard.css";
 
 /* Página principal del dashboard con accesos rápidos */
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [biometricEnabled, setBiometricEnabled] = useState(false);
   const filteredSections = useFilteredSections();
+
+  useEffect(() => {
+    fetch(buildUrl("/api/fingerprints/biometric-config"), {
+      headers: { ...getAuthHeaders() },
+      credentials: "include",
+    })
+      .then((r) => r.json())
+      .then((d) => setBiometricEnabled(d.biometricEnabled))
+      .catch(() => {});
+  }, []);
+
+  const sections = filteredSections.filter(
+    (s) => s.title !== "Historial de Asistencia" || biometricEnabled
+  );
 
   /* Maneja la acción de cada tarjeta según su tipo */
   const handleAction = (section: DashboardSection) => {
@@ -36,7 +52,7 @@ const Dashboard = () => {
         </div>
 
         <div className="dashboard__grid">
-          {filteredSections.map((section) => {
+          {sections.map((section) => {
             const Icon = section.icon;
             return (
               <DashboardCard

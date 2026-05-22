@@ -86,6 +86,12 @@ export const getTenantPayments = (tenantId: string, page?: number, limit?: numbe
   }>(`/api/admin/tenants/${tenantId}/payments${qs ? `?${qs}` : ""}`);
 };
 
+export const toggleBiometric = (tenantId: string, enabled: boolean) =>
+  apiCall<AdminTenant>(`/api/admin/tenants/${tenantId}/biometric`, {
+    method: "PUT",
+    body: JSON.stringify({ biometricEnabled: enabled }),
+  });
+
 export const updateSuperAdminCredentials = (data: { email?: string; current_password: string; new_password?: string }) =>
   apiCall<{ message: string }>("/api/admin/super-admin/update-credentials", {
     method: "POST",

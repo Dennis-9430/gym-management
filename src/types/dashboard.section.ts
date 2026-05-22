@@ -7,6 +7,7 @@ import {
   ShoppingCart,
   UserCog,
   Settings,
+  Fingerprint,
 } from "lucide-react";
 import { useAccountType } from "../hooks/useAccountType";
 
@@ -122,5 +123,13 @@ export const sections: DashboardSection[] = [
     plan: "PREMIUM",
   },
 
-  // Historial de Asistencia - OCULTO completamente
+  {
+    title: "Historial de Asistencia",
+    path: "/attendance",
+    icon: Fingerprint,
+    action: "NAVIGATE",
+    roles: ["ADMIN", "RECEPCIONISTA"],
+    buttonLabel: "Ver historial",
+    description: "Registro de entrada y salida con huella",
+  },
 ];

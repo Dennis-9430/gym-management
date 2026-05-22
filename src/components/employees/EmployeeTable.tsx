@@ -1,4 +1,4 @@
-import { Pencil, Trash2, Crown } from "lucide-react";
+import { Pencil, Trash2, Crown, Fingerprint } from "lucide-react";
 import type { Employee } from "../../types/employee.types";
 import { useAccountType } from "../../hooks/useAccountType";
 
@@ -8,9 +8,12 @@ interface Props {
   onSelect: (id: string) => void;
   onEdit: (employee: Employee) => void;
   onDelete: (id: string) => void;
+  biometricEnabled?: boolean;
+  onRegisterFingerprint?: (employeeId: string) => void;
+  onDeleteFingerprint?: (employeeId: string) => void;
 }
 
-const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
+const EmployeeTable = ({ employees, onSelect, onEdit, onDelete, biometricEnabled = false, onRegisterFingerprint, onDeleteFingerprint }: Props) => {
   const { isOwner, isAdmin, isGerente } = useAccountType();
 
   // Admin, Owner y Gerente ven la columna de acciones
@@ -26,6 +29,7 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
           <th>Usuario</th>
           <th>Rol</th>
           <th>Estado</th>
+          {biometricEnabled && <th>Huella</th>}
           {showActions && <th>Acciones</th>}
         </tr>
       </thead>
@@ -77,6 +81,34 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete }: Props) => {
                 )}
               </td>
               <td>{emp.status}</td>
+              {biometricEnabled && (
+                <td>
+                  {emp.fingerPrint ? (
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ color: "#16a34a", fontSize: 16 }}>✅</span>
+                      <button
+                        type="button"
+                        className="btn-delete"
+                        style={{ padding: "2px 8px", fontSize: 12 }}
+                        onClick={() => onDeleteFingerprint?.(emp.id)}
+                      >
+                        <Fingerprint size={14} style={{ marginRight: 2 }} />
+                        Borrar
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn-renew"
+                      style={{ padding: "2px 8px", fontSize: 12 }}
+                      onClick={() => onRegisterFingerprint?.(emp.id)}
+                    >
+                      <Fingerprint size={14} style={{ marginRight: 2 }} />
+                      Registrar
+                    </button>
+                  )}
+                </td>
+              )}
               {showActions && (
                 <td className="actions">
                   {canEdit && (

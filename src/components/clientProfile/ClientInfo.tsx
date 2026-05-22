@@ -43,6 +43,10 @@ const ClientInfo = ({ client, onEdit }: Props) => {
       <p>
         <strong>Telefono de Emergencia</strong> {client.emergencyPhone}
       </p>
+      <p>
+        <strong>Huella:</strong>{" "}
+        {client.fingerPrint ? "✅ Registrada" : "❌ Sin registrar"}
+      </p>
       {canEdit && (
         <button className="btn-edit" onClick={onEdit}>
           Editar informacion

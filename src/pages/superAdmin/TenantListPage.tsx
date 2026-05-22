@@ -9,8 +9,9 @@ import {
   X,
   Loader2,
   AlertTriangle,
+  Fingerprint,
 } from "lucide-react";
-import { getAdminTenants, suspendTenant, cancelTenant } from "../../services/adminTenants.service";
+import { getAdminTenants, suspendTenant, cancelTenant, toggleBiometric } from "../../services/adminTenants.service";
 import { TenantStatusBadge } from "../../components/superAdmin/TenantStatusBadge";
 import type { AdminTenant } from "../../types/adminTenant.types";
 
@@ -113,6 +114,15 @@ const TenantListPage = () => {
     }
   };
 
+  const handleToggleBiometric = async (tenant: AdminTenant) => {
+    try {
+      await toggleBiometric(tenant.tenantId, !tenant.biometricEnabled);
+      fetchTenants();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error al cambiar biométrico");
+    }
+  };
+
   return (
     <SuperAdminLayout>
       {/* Header */}
@@ -205,6 +215,7 @@ const TenantListPage = () => {
                   <th style={thStyle}>Plan</th>
                   <th style={thStyle}>Estado</th>
                   <th style={thStyle}>Vencimiento</th>
+                  <th style={thStyle}>Biométrico</th>
                   <th style={thStyle}>Acciones</th>
                 </tr>
               </thead>
@@ -239,6 +250,33 @@ const TenantListPage = () => {
                       {t.subscriptionEndDate
                         ? new Date(t.subscriptionEndDate).toLocaleDateString("es-ES")
                         : "—"}
+                    </td>
+                    <td style={tdStyle} data-label="Biométrico">
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: t.biometricEnabled ? "#16a34a" : "#94a3b8" }}>
+                          {t.biometricEnabled ? "✅ ON" : "❌ OFF"}
+                        </span>
+                        <button
+                          onClick={() => handleToggleBiometric(t)}
+                          title={t.biometricEnabled ? "Desactivar biométrico" : "Activar biométrico"}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: 28,
+                            height: 28,
+                            border: "1px solid #e2e8f0",
+                            borderRadius: 6,
+                            backgroundColor: t.biometricEnabled ? "#dcfce7" : "#f1f5f9",
+                            color: t.biometricEnabled ? "#16a34a" : "#94a3b8",
+                            cursor: "pointer",
+                            transition: "all 0.15s",
+                            fontSize: 14,
+                          }}
+                        >
+                          <Fingerprint size={14} />
+                        </button>
+                      </div>
                     </td>
                     <td style={tdStyle} data-label="Acciones">
                       <div style={{ display: "flex", gap: 6 }}>

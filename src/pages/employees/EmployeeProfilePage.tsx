@@ -173,6 +173,10 @@ const EmployeeProfilePage = () => {
               <span className="info-label">Estado:</span>
               <span className="info-value badge">{employee.status}</span>
             </div>
+            <div className="info-row">
+              <span className="info-label">Huella:</span>
+              <span className="info-value">{employee.fingerPrint ? "✅ Registrada" : "❌ Sin registrar"}</span>
+            </div>
             {employee.notes && (
               <div className="info-row">
                 <span className="info-label">Notas:</span>

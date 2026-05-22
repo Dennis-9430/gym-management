@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { ClientForm } from "../../types/client.types";
-import { UserPlus, BadgePlus, Trash2 } from "lucide-react";
+import { UserPlus, BadgePlus, Trash2, Fingerprint } from "lucide-react";
 
 /* Fila de cliente con acciones de perfil y suscripcion */
 interface Props {
@@ -9,9 +9,12 @@ interface Props {
   showActions: boolean;
   canDelete?: boolean;
   onDelete?: (clientId: number | string) => void;
+  biometricEnabled?: boolean;
+  onRegisterFingerprint?: (clientId: number | string) => void;
+  onDeleteFingerprint?: (clientId: number | string) => void;
 }
 
-const ClientRow = ({ client, index, showActions, canDelete, onDelete }: Props) => {
+const ClientRow = ({ client, index, showActions, canDelete, onDelete, biometricEnabled = false, onRegisterFingerprint, onDeleteFingerprint }: Props) => {
   const navigate = useNavigate();
   const gotoProfile = () => {
     navigate(`/clients/${client.id}`);
@@ -49,6 +52,34 @@ const ClientRow = ({ client, index, showActions, canDelete, onDelete }: Props) =
       <td data-label="Nombres"> {client.firstName}</td>
 
       <td data-label="Expiracion">{formatDate(client.memberShipEndDate)}</td>
+      {biometricEnabled && (
+        <td data-label="Huella">
+          {client.fingerPrint ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ color: "#16a34a", fontSize: 16 }}>✅</span>
+              <button
+                type="button"
+                className="btn-delete"
+                style={{ padding: "2px 8px", fontSize: 12 }}
+                onClick={() => onDeleteFingerprint?.(client.id)}
+              >
+                <Fingerprint size={14} style={{ marginRight: 2 }} />
+                Borrar
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="btn-renew"
+              style={{ padding: "2px 8px", fontSize: 12 }}
+              onClick={() => onRegisterFingerprint?.(client.id)}
+            >
+              <Fingerprint size={14} style={{ marginRight: 2 }} />
+              Registrar
+            </button>
+          )}
+        </td>
+      )}
       {showActions && (
         <td data-label="Acciones" className="actions">
           {client.memberShipStatus === "NONE" ? (
