@@ -1,5 +1,6 @@
 /* Dashboard del panel SUPER_ADMIN con resumen de tenants y pagos */
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Building2,
   Users,
@@ -20,6 +21,7 @@ import type { AdminDashboard } from "../../types/adminTenant.types";
 import SuperAdminLayout from "../../components/superAdmin/SuperAdminLayout";
 
 const SuperAdminDashboard = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<AdminDashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -110,7 +112,7 @@ const SuperAdminDashboard = () => {
   const cards = [
     { label: "Total Tenants", value: data.total_tenants, icon: <Building2 size={20} />, color: "#3b82f6" },
     { label: "Activos", value: data.active, icon: <Users size={20} />, color: "#22c55e" },
-    { label: "Pendientes de pago", value: data.pending_payment, icon: <Clock size={20} />, color: "#eab308" },
+    { label: "Pendientes de pago", value: data.pending_payment, icon: <Clock size={20} />, color: "#eab308", link: "/super-admin/payments/pending" },
     { label: "Suspendidos", value: data.suspended, icon: <Ban size={20} />, color: "#ef4444" },
     { label: "Cancelados", value: data.cancelled, icon: <AlertTriangle size={20} />, color: "#6b7280" },
     { label: "Ingresos del mes", value: `$${data.monthly_revenue.toFixed(2)}`, icon: <DollarSign size={20} />, color: "#10b981" },
@@ -129,12 +131,25 @@ const SuperAdminDashboard = () => {
         {cards.map((card) => (
           <div
             key={card.label}
+            {...(card as { link?: string }).link ? { onClick: () => navigate((card as { link: string }).link) } : {}}
             style={{
               backgroundColor: "#fff",
               borderRadius: 12,
               padding: "20px",
               boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
               border: "1px solid #e2e8f0",
+              cursor: (card as { link?: string }).link ? "pointer" : "default",
+              transition: "box-shadow 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              if ((card as { link?: string }).link) {
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.12)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if ((card as { link?: string }).link) {
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.08)";
+              }
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>

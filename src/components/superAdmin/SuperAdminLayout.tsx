@@ -38,6 +38,7 @@ const SuperAdminLayout = ({ children }: Props) => {
   const navItems = [
     { label: "Dashboard", href: "/super-admin/dashboard" },
     { label: "Tenants", href: "/super-admin/tenants" },
+    { label: "Pagos pendientes", href: "/super-admin/payments/pending" },
   ];
 
   return (

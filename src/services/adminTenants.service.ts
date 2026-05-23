@@ -86,6 +86,47 @@ export const getTenantPayments = (tenantId: string, page?: number, limit?: numbe
   }>(`/api/admin/tenants/${tenantId}/payments${qs ? `?${qs}` : ""}`);
 };
 
+export const getPendingPayments = (page?: number, limit?: number) => {
+  const search = new URLSearchParams();
+  if (page) search.set("page", String(page));
+  if (limit) search.set("limit", String(limit));
+  const qs = search.toString();
+  return apiCall<{
+    items: PendingPaymentItem[];
+    total: number;
+    page: number;
+    limit: number;
+  }>(`/api/admin/payments/pending${qs ? `?${qs}` : ""}`);
+};
+
+export const approvePayment = (tenantId: string, notes?: string) =>
+  apiCall<{ message: string; tenantId: string }>(`/api/admin/tenants/${tenantId}/approve-payment`, {
+    method: "POST",
+    body: JSON.stringify({ notes: notes || "" }),
+  });
+
+export const rejectPayment = (tenantId: string, reason: string) =>
+  apiCall<{ message: string; tenantId: string }>(`/api/admin/tenants/${tenantId}/reject-payment`, {
+    method: "POST",
+    body: JSON.stringify({ reason }),
+  });
+
+export interface PendingPaymentItem {
+  id: string;
+  tenantId: string;
+  tenantName: string;
+  tenantEmail: string;
+  plan: string;
+  amount: number;
+  currency: string;
+  method: string;
+  reference?: string;
+  receiptUrl?: string;
+  status: string;
+  notes?: string;
+  createdAt: string;
+}
+
 export const toggleBiometric = (tenantId: string, enabled: boolean) =>
   apiCall<AdminTenant>(`/api/admin/tenants/${tenantId}/biometric`, {
     method: "PUT",

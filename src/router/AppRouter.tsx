@@ -35,6 +35,7 @@ const AttendancePage = lazy(() => import("../pages/attendance/AttendancePage"));
 const SuperAdminDashboard = lazy(() => import("../pages/superAdmin/SuperAdminDashboard"));
 const TenantListPage = lazy(() => import("../pages/superAdmin/TenantListPage"));
 const TenantDetailPage = lazy(() => import("../pages/superAdmin/TenantDetailPage"));
+const PendingPaymentsPage = lazy(() => import("../pages/superAdmin/PendingPaymentsPage"));
 
 // Loading fallback
 const PageLoader = () => (
@@ -87,6 +88,7 @@ function AppRouter() {
             <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
             <Route path="/super-admin/tenants" element={<TenantListPage />} />
             <Route path="/super-admin/tenants/:tenantId" element={<TenantDetailPage />} />
+            <Route path="/super-admin/payments/pending" element={<PendingPaymentsPage />} />
           </Route>
         </Routes>
       </Suspense>
