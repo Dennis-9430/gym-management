@@ -2,6 +2,8 @@
 
 Sistema SaaS de gestión integral para gimnasios. Multi-tenant con planes BASIC / PREMIUM, módulo POS, control de membresías, asistencia, inventario, empleados y reportes financieros.
 
+Landing page corporativa en [`landing-gym/`](#landing-page) con carrusel de capturas reales, pricing y FAQ.
+
 ---
 
 ## Stack
@@ -16,7 +18,7 @@ Sistema SaaS de gestión integral para gimnasios. Multi-tenant con planes BASIC 
 | Backend | Python + FastAPI | 3.12 / 0.115 |
 | Database | MongoDB (Motor async) | 7+ |
 | Auth | JWT + bcrypt | — |
-| Deployment | Vercel (FE) / Render (BE) | — |
+| Deployment | Vercel (FE + Landing) / Render (BE) | — |
 
 ---
 
@@ -329,6 +331,46 @@ uvicorn app.main:app --reload  # http://localhost:8000
 2. Network Access: add `0.0.0.0/0` (required for Render free tier dynamic IPs)
 3. Database Access: create user with read/write permissions
 4. Connection string: `mongodb+srv://user:pass@cluster.xxxxx.mongodb.net/gym_db?retryWrites=true&w=majority`
+
+---
+
+## Landing Page
+
+Sitio corporativo / marketing en `landing-gym/`. SPA con carrusel de capturas reales del sistema, pricing, FAQ y CTA directo al login.
+
+### Stack
+
+| Capa | Tecnología |
+|------|-----------|
+| Framework | React 19 + TypeScript |
+| Build | Vite 6 |
+| Routing | Scroll-based (anclas `#features`, `#pricing`, `#faq`) |
+| CSS | ITCSS (variables, base, layout, components) |
+| Deployment | Vercel (SPA fallback a `index.html`) |
+
+### Development
+
+```bash
+cd landing-gym
+pnpm install
+pnpm run dev          # http://localhost:5174
+pnpm run build        # tsc + vite build → landing-gym/dist/
+pnpm run preview      # Preview build local
+pnpm run deploy       # Push + deploy a Vercel (si configurado)
+```
+
+### Architecture
+
+- **ITCSS**: estilos organizados en `src/styles/` (variables → base → layout → components)
+- **Componentes**: separados en `layout/` (Navbar, Footer) y `sections/` (Hero, Features, Showcase, Pricing, FAQ, Testimonials)
+- **Carrusel**: 12 capturas reales del sistema, autoplay, lightbox full-screen al tocar la imagen
+- **Responsive**: mobile-first, menú colapsa a hamburguesa en <768px
+
+### Deployment
+
+1. `cd landing-gym && pnpm run build`
+2. `vercel --prod` o push a la branch conectada a Vercel
+3. SPA fallback: `vercel.json` redirige 404 → `index.html`
 
 ---
 
