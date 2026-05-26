@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { getAdminTenantById, suspendTenant, cancelTenant, reactivateTenant, getTenantPayments, deleteTenant } from "../../services/adminTenants.service";
 import { registerManualPayment } from "../../services/adminTenants.service";
+import { TenantStatusBadge } from "../../components/superAdmin/TenantStatusBadge";
 import { ManualPaymentModal } from "../../components/superAdmin/ManualPaymentModal";
 import SuperAdminLayout from "../../components/superAdmin/SuperAdminLayout";
 import type { AdminTenant, ManualPaymentResponse, ManualPaymentRequest } from "../../types/adminTenant.types";
