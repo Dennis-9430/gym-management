@@ -43,7 +43,7 @@ const PLANS: Plan[] = [
       "Punto de Venta (POS)",
     ],
     demoEmail: "demo-basic@gmail.com",
-    demoPassword: "demoBasic123",
+    demoPassword: "demo123456",
   },
   {
     id: "PREMIUM",
@@ -58,7 +58,7 @@ const PLANS: Plan[] = [
     ],
     exclusiveFeatures: ["Empleados", "Reportes", "Soporte Prioritario"],
     demoEmail: "demo-pro@gmail.com",
-    demoPassword: "demoPro123",
+    demoPassword: "demo123456",
   },
 ];
 

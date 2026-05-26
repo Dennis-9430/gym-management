@@ -66,7 +66,7 @@ const Login = () => {
     }
   }, [searchParams]);
 
-  // Detectar si viene de demo y prellenar credenciales
+  // Detectar si viene de demo y prellenar/bloquear credenciales
   const [isDemoSession, setIsDemoSession] = useState(false);
   
   useEffect(() => {
@@ -74,21 +74,15 @@ const Login = () => {
     const planParam = searchParams.get("plan");
     
     if (isDemo) {
-      const creds = localStorage.getItem("demoCredentials");
-      if (creds) {
-        try {
-          const data = JSON.parse(creds);
-          setEmail(data.email || "");
-          setPassword(data.password || "");
-          setIsDemoSession(true);
-      } catch (e) {
-        // Error parsing demo credentials
-      }
-      }
+      const demoPlan = planParam || "BASIC";
+      const isPremium = demoPlan === "PREMIUM";
       
-      // Pre-fill businessCode según el plan demo (fijo, coincide con seed data)
-      const demoPlan = planParam || searchParams.get("plan") || "BASIC";
-      setBusinessCode(demoPlan === "PREMIUM" ? "demo-premium" : "demo-basic");
+      // Hardcode: credenciales fijas de los tenants demo
+      // El usuario solo hace clic en "Iniciar Sesión"
+      setEmail(isPremium ? "demo-pro@gmail.com" : "demo-basic@gmail.com");
+      setPassword("demo123456");
+      setBusinessCode(isPremium ? "demo-premium" : "demo-basic");
+      setIsDemoSession(true);
     }
   }, [searchParams]);
 
