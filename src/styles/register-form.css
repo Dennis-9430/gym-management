@@ -124,15 +124,4 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Responsive */
-@media (min-width: 640px) {
-  .register-form__fields-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
 
-  .register-form__field--full {
-    grid-column: 1 / -1;
-  }
-}

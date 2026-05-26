@@ -110,7 +110,7 @@ const Register = () => {
   const [transferReference, setTransferReference] = useState("");
 
   // Whitelist de emails autorizados para registro anticipado
-  const REGISTRATION_WHITELIST = ["dennichapu940@gmail.com"];
+  const REGISTRATION_WHITELIST = ["dennischapu94@gmail.com"];
   const isWhitelisted = REGISTRATION_WHITELIST.includes(formData.email.toLowerCase().trim());
 
   const navigate = useNavigate();
