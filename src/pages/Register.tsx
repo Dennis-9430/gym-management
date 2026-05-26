@@ -109,6 +109,10 @@ const Register = () => {
   const [cardName, setCardName] = useState("");
   const [transferReference, setTransferReference] = useState("");
 
+  // Whitelist de emails autorizados para registro anticipado
+  const REGISTRATION_WHITELIST = ["dennichapu940@gmail.com"];
+  const isWhitelisted = REGISTRATION_WHITELIST.includes(formData.email.toLowerCase().trim());
+
   const navigate = useNavigate();
 
   const validateForm = (): boolean => {
@@ -240,6 +244,10 @@ const Register = () => {
     e.preventDefault();
     setError("");
     if (!validateForm()) return;
+    if (!isWhitelisted) {
+      setError("Registro en desarrollo — solo disponible para correos autorizados");
+      return;
+    }
     if (!paymentMethod) { setError("Seleccioná un método de pago"); return; }
     if (paymentMethod === "CARD") { setShowGateway(true); return; }
     await submitRegistration();
@@ -834,15 +842,26 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="register-gateway__unavailable">
-                  <span>🚧 Pago con tarjeta no disponible — próximamente</span>
-                  <span className="register-gateway__unavailable-hint">Seleccioná "Transferencia bancaria" como método de pago</span>
-                </div>
-
-                <button type="button" className="register-gateway__pay" disabled>
-                  <Loader2 size={20} className="register-form__spinner" />
-                  Próximamente
-                </button>
+                {isWhitelisted ? (
+                  <button type="button" className="register-gateway__pay" onClick={handleGatewayPay} disabled={gatewayLoading}>
+                    {gatewayLoading ? (
+                      <><Loader2 size={20} className="register-form__spinner" /> Procesando...</>
+                    ) : (
+                      `Pagar $${selectedPlanData.price.toFixed(2)}`
+                    )}
+                  </button>
+                ) : (
+                  <>
+                    <div className="register-gateway__unavailable">
+                      <span>🚧 Pago con tarjeta no disponible — próximamente</span>
+                      <span className="register-gateway__unavailable-hint">Seleccioná "Transferencia bancaria" como método de pago</span>
+                    </div>
+                    <button type="button" className="register-gateway__pay" disabled>
+                      <Loader2 size={20} className="register-form__spinner" />
+                      Próximamente
+                    </button>
+                  </>
+                )}
 
                 <div className="register-gateway__secure">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
