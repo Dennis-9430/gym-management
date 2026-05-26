@@ -74,8 +74,8 @@ const Login = () => {
     const planParam = searchParams.get("plan");
     
     if (isDemo) {
-      const demoPlan = planParam || "BASIC";
-      const isPremium = demoPlan === "PREMIUM";
+      const demoPlan = (planParam || "BASIC").trim().toUpperCase();
+      const isPremium = demoPlan === "PREMIUM" || demoPlan === "PRO";
       
       // Hardcode: credenciales fijas de los tenants demo
       // El usuario solo hace clic en "Iniciar Sesión"
@@ -125,6 +125,7 @@ const Login = () => {
       // permitir login de SUPER_ADMIN (que no pertenece a un tenant)
       const response = await fetch(buildUrl("/api/tenants/login"), {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
@@ -176,6 +177,12 @@ const Login = () => {
         plan: data.tenant.plan as AuthUser["plan"],
         subscriptionStatus: data.tenant.subscriptionStatus as AuthUser["subscriptionStatus"]
       };
+
+      localStorage.setItem("tenant", JSON.stringify(data.tenant));
+      localStorage.setItem("tenantId", data.tenant.tenantId);
+      if (data.tenant.businessCode) {
+        localStorage.setItem("businessCode", data.tenant.businessCode);
+      }
 
       login(user);
       setTimeout(() => navigate("/dashboard"), 0);
