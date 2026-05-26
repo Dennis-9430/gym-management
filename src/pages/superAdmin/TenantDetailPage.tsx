@@ -16,10 +16,12 @@ import {
   User,
   Shield,
   Lock,
+  Trash2,
+  Eye,
+  EyeOff,
 } from "lucide-react";
-import { getAdminTenantById, suspendTenant, cancelTenant, reactivateTenant, getTenantPayments } from "../../services/adminTenants.service";
+import { getAdminTenantById, suspendTenant, cancelTenant, reactivateTenant, getTenantPayments, deleteTenant } from "../../services/adminTenants.service";
 import { registerManualPayment } from "../../services/adminTenants.service";
-import { TenantStatusBadge } from "../../components/superAdmin/TenantStatusBadge";
 import { ManualPaymentModal } from "../../components/superAdmin/ManualPaymentModal";
 import SuperAdminLayout from "../../components/superAdmin/SuperAdminLayout";
 import type { AdminTenant, ManualPaymentResponse, ManualPaymentRequest } from "../../types/adminTenant.types";
@@ -45,6 +47,13 @@ const TenantDetailPage = () => {
 
   // Action loading
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  // Delete modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   const fetchTenant = useCallback(async () => {
     if (!tenantId) return;
@@ -89,6 +98,21 @@ const TenantDetailPage = () => {
     await registerManualPayment(tenantId, data);
     // Refresh tenant and payments
     await Promise.all([fetchTenant(), fetchPayments()]);
+  };
+
+  const handleDelete = async () => {
+    if (!tenantId || !deletePassword) return;
+    setDeleteLoading(true);
+    setDeleteError("");
+    try {
+      const result = await deleteTenant(tenantId, deletePassword);
+      alert(result.message);
+      navigate("/super-admin/tenants");
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Error al eliminar tenant");
+    } finally {
+      setDeleteLoading(false);
+    }
   };
 
   const handleAction = async (
@@ -225,6 +249,14 @@ const TenantDetailPage = () => {
               Reactivar
             </button>
           )}
+          <button
+            onClick={() => { setDeletePassword(""); setDeleteError(""); setShowDeleteModal(true); }}
+            style={actionBtnStyle("#dc2626")}
+            disabled={actionLoading !== null}
+          >
+            <Trash2 size={16} />
+            Eliminar
+          </button>
         </div>
       </div>
 
@@ -344,6 +376,131 @@ const TenantDetailPage = () => {
         onConfirm={handleManualPayment}
         currentPlan={tenant.plan}
       />
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div
+          style={{
+            position: "fixed", inset: 0, zIndex: 1000,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowDeleteModal(false); }}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff", borderRadius: 12, padding: 32,
+              maxWidth: 440, width: "90%", boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: "50%",
+                backgroundColor: "#fef2f2", display: "flex",
+                alignItems: "center", justifyContent: "center",
+                color: "#dc2626", flexShrink: 0,
+              }}>
+                <AlertTriangle size={22} />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>
+                  Eliminar "{tenant.businessName}"
+                </h3>
+                <p style={{ margin: "4px 0 0", fontSize: 13, color: "#64748b" }}>
+                  Esta operación es IRREVERSIBLE. Se borrarán TODOS los datos del gimnasio.
+                </p>
+              </div>
+            </div>
+
+            <div style={{
+              backgroundColor: "#fef2f2", border: "1px solid #fecaca",
+              borderRadius: 8, padding: "12px 16px", marginBottom: 20,
+              fontSize: 13, color: "#991b1b",
+            }}>
+              <strong>⛔ Atención:</strong> empleados, clientes, ventas, facturas, productos,
+              servicios, asistencias, huellas y pagos — todo se eliminará permanentemente.
+            </div>
+
+            {deleteError && (
+              <div style={{
+                backgroundColor: "#fef2f2", border: "1px solid #fecaca",
+                borderRadius: 8, padding: "8px 12px", marginBottom: 16,
+                fontSize: 13, color: "#dc2626",
+              }}>
+                {deleteError}
+              </div>
+            )}
+
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
+                Ingresá tu contraseña de SUPER_ADMIN para confirmar
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showDeletePassword ? "text" : "password"}
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Contraseña"
+                  autoFocus
+                  style={{
+                    width: "100%", padding: "10px 40px 10px 12px",
+                    border: "1px solid #d1d5db", borderRadius: 8,
+                    fontSize: 14, outline: "none", boxSizing: "border-box",
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && deletePassword && !deleteLoading) {
+                      handleDelete();
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowDeletePassword(!showDeletePassword)}
+                  style={{
+                    position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)",
+                    background: "none", border: "none", cursor: "pointer",
+                    color: "#9ca3af", padding: 4, display: "flex",
+                  }}
+                >
+                  {showDeletePassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={deleteLoading}
+                style={{
+                  padding: "10px 20px", border: "1px solid #d1d5db",
+                  borderRadius: 8, backgroundColor: "#fff",
+                  color: "#374151", fontSize: 14, fontWeight: 600,
+                  cursor: "pointer", opacity: deleteLoading ? 0.6 : 1,
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={!deletePassword || deleteLoading}
+                style={{
+                  padding: "10px 20px", border: "none", borderRadius: 8,
+                  backgroundColor: deletePassword ? "#dc2626" : "#fca5a5",
+                  color: "#fff", fontSize: 14, fontWeight: 600,
+                  cursor: deletePassword ? "pointer" : "not-allowed",
+                  display: "flex", alignItems: "center", gap: 6,
+                }}
+              >
+                {deleteLoading ? (
+                  <><Loader2 size={16} className="login__spinner" /> Eliminando...</>
+                ) : (
+                  <><Trash2 size={16} /> Eliminar permanentemente</>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </SuperAdminLayout>
   );
 };

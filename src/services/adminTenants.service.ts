@@ -138,3 +138,9 @@ export const updateSuperAdminCredentials = (data: { email?: string; current_pass
     method: "POST",
     body: JSON.stringify(data),
   });
+
+export const deleteTenant = (tenantId: string, password: string) =>
+  apiCall<{ message: string; deleted: Record<string, number> }>(`/api/admin/tenants/${tenantId}`, {
+    method: "DELETE",
+    body: JSON.stringify({ password }),
+  });
