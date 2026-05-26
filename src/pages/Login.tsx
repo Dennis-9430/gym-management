@@ -142,19 +142,6 @@ const Login = () => {
         throw new Error(errorData.detail || "Credenciales incorrectas");
       }
 
-      // Guardar token y datos del tenant
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("tenantId", data.tenant.tenantId);
-      if (data.tenant.businessCode) {
-        localStorage.setItem("businessCode", data.tenant.businessCode);
-      }
-      // Incluir ownerUsername en tenant si viene del backend
-      const tenantData: Record<string, unknown> = { ...data.tenant };
-      if ((data.tenant as any).ownerUsername) {
-        tenantData.ownerUsername = (data.tenant as any).ownerUsername;
-      }
-      localStorage.setItem("tenant", JSON.stringify(tenantData));
-
       // Decodificar token para obtener rol real
       let userRole: "ADMIN" | "RECEPCIONISTA" | "GERENTE" | "SUPER_ADMIN" = "ADMIN";
       let payload: Record<string, unknown> = {};

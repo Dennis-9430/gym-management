@@ -8,12 +8,6 @@ const API_BASE_URL = getApiBaseUrl();
 export const buildUrl = (endpoint: string) =>
   `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
-/* Obtener token de autenticación.
-   El JWT se envía como cookie HttpOnly (segura contra XSS).
-   Este getter es fallback para sesiones legacy que aún tengan
-   el token en localStorage. Las sesiones nuevas usan cookie. */
-export const getAuthToken = (): string | null => localStorage.getItem("accessToken");
-
 /** Limpia datos demo en backend antes de cerrar sesión */
 /* PUBLIC + POST-LOGOUT: no necesita token. Fetch directo intencional por ser cleanup que no debe interferir con logout. */
 export const cleanupDemoData = async (): Promise<void> => {
@@ -33,29 +27,25 @@ export const cleanupDemoData = async (): Promise<void> => {
 
 /** Limpia TODOS los datos de autenticación y sesión */
 export const clearAuthStorage = () => {
-  ["accessToken", "tenantToken", "tenant", "user", "isDemo",
+  ["tenant", "user", "isDemo",
    "tenantId", "businessCode", "demoCredentials"].forEach((key) =>
     localStorage.removeItem(key),
   );
 };
 
-/* Headers con token de autenticación.
-   Prefiere cookie HttpOnly (automática del browser).
-   Si hay token legacy en localStorage, lo envía como fallback. */
+/* Headers base para peticiones autenticadas.
+   La autenticación se maneja via cookie HttpOnly (automática del browser).
+   No se envía Bearer token — el backend lee el JWT de la cookie. */
 export const getAuthHeaders = (): Record<string, string> => {
-  const headers: Record<string, string> = {
+  return {
     "Content-Type": "application/json",
   };
-  const token = getAuthToken();
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-  return headers;
 };
 
-/** Opciones base para fetch: incluye headers de auth sin cookies cross-origin. */
+/** Opciones base para fetch: incluye headers y envía cookies con cada request. */
 const fetchOptions = (extra: RequestInit = {}): RequestInit => ({
   headers: getAuthHeaders(),
+  credentials: "include",
   ...extra,
 });
 
@@ -82,7 +72,6 @@ const handleResponse = async (response: Response) => {
     }
 
     if (response.status === 401) {
-      clearAuthStorage();
       window.location.href = "/";
       throw new Error("Sesión expirada");
     }

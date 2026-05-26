@@ -834,8 +834,14 @@ const Register = () => {
                   </div>
                 </div>
 
-                <button type="button" className="register-gateway__pay" onClick={handleGatewayPay} disabled={gatewayLoading}>
-                  {gatewayLoading ? (<><Loader2 size={20} className="register-form__spinner" /> Procesando...</>) : `Pagar $${selectedPlanData.price.toFixed(2)}`}
+                <div className="register-gateway__unavailable">
+                  <span>🚧 Pago con tarjeta no disponible — próximamente</span>
+                  <span className="register-gateway__unavailable-hint">Seleccioná "Transferencia bancaria" como método de pago</span>
+                </div>
+
+                <button type="button" className="register-gateway__pay" disabled>
+                  <Loader2 size={20} className="register-form__spinner" />
+                  Próximamente
                 </button>
 
                 <div className="register-gateway__secure">

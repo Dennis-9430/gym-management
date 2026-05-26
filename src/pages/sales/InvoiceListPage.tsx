@@ -30,22 +30,7 @@ const InvoiceListPage = () => {
     loadInvoices();
   }, [isPremium, navigate]);
 
-  /*
-   * hasValidToken: check redundante porque apiGet ya maneja 401 con
-   * redirect. Se mantiene como early return para evitar request innecesario
-   * cuando no hay sesión. No es chequeo de seguridad.
-   */
-  const hasValidToken = (): boolean => {
-    const token = localStorage.getItem("accessToken");
-    return !!token;
-  };
-
   const loadInvoices = async () => {
-    if (!hasValidToken()) {
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       const response = await invoiceService.getInvoices(0, 100);

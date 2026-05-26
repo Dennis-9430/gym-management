@@ -10,24 +10,19 @@ import {
   updateService,
   deleteService,
 } from "../../services/services.service";
-import { getAuthToken } from "../../services/api";
-import { jwtDecode } from "jwt-decode";
-
-interface JwtPayload {
-  tenantId: string;
-  sub: string;
-  exp: number;
-}
 
 const getTenantId = (): string => {
-  const token = getAuthToken();
-  if (!token) return "";
+  // Leer tenantId desde localStorage("tenant") que se persiste al hacer login
+  // ⚠️ VISUAL CACHE ONLY: no es fuente de verdad de seguridad
   try {
-    const payload = jwtDecode<JwtPayload>(token);
-    return payload.tenantId || "";
+    const tenant = localStorage.getItem("tenant");
+    if (tenant) {
+      return JSON.parse(tenant).tenantId || "";
+    }
   } catch {
-    return "";
+    // fallback
   }
+  return "";
 };
 
 /* Datos del formulario de membresía */

@@ -25,29 +25,6 @@ interface AuthProviderProps {
 const initialState = { user: null };
 
 /**
- * Decodifica un JWT y retorna el payload. Retorna null si es inválido.
- */
-const decodeToken = (token: string): Record<string, unknown> | null => {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(atob(base64));
-  } catch {
-    return null;
-  }
-};
-
-/**
- * Verifica si el token JWT está expirado según su claim `exp`.
- */
-const isTokenExpired = (token: string): boolean => {
-  const payload = decodeToken(token);
-  if (!payload || !payload.exp) return true;
-  // exp está en segundos, Date.now() en milisegundos
-  return (payload.exp as number) * 1000 < Date.now();
-};
-
-/**
  * Proveedor de autenticación que envuelve la aplicación.
  * 
  * Este componente:
@@ -91,9 +68,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    * Restaura el usuario desde localStorage si existe una sesión previa.
    * 
    * ⚠️ VISUAL CACHE ONLY: localStorage("user") es solo cache para UI.
-   * El backend es la fuente de verdad. No usar estos datos para decisiones
-   * de seguridad, permisos o autenticación real. El JWT (accessToken) es
-   * la única fuente de verdad de sesión.
+   * El backend es la fuente de verdad de la sesión via cookie HttpOnly.
+   * No usar estos datos para decisiones de seguridad, permisos o autenticación real.
    * 
    * @useEffect
    * @description Restaura la sesión del usuario desde localStorage al iniciar la aplicación
@@ -103,16 +79,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     cleanupOldData();
 
     try {
-      // Validar expiración del token JWT antes de restaurar sesión
-      const token = localStorage.getItem("accessToken");
-      if (token && isTokenExpired(token)) {
-        // Token vencido: limpiar sesión completa
-        clearAuthStorage();
-        setIsInitialized(true);
-        return;
-      }
-
       // Intentar recuperar el usuario guardado en localStorage
+      // ⚠️ VISUAL CACHE ONLY: user en localStorage es solo para
+      // mostrar la UI correcta al recargar. El backend es la fuente
+      // de verdad de la sesión via cookie HttpOnly.
       const storeUser = localStorage.getItem("user");
       if (storeUser) {
         // Parsear y restaurar el usuario
