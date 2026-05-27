@@ -61,6 +61,9 @@ interface SaleModalProps {
   onGenerateInvoiceChange: (value: boolean) => void;
   invoiceEmail: string;
   onInvoiceEmailChange: (value: string) => void;
+  cashReceived: number;
+  onCashReceivedChange: (value: number) => void;
+  saleChange: number;
 }
 
 const SaleModal = ({
@@ -100,6 +103,9 @@ const SaleModal = ({
   onGenerateInvoiceChange,
   invoiceEmail,
   onInvoiceEmailChange,
+  cashReceived,
+  onCashReceivedChange,
+  saleChange,
 }: SaleModalProps) => {
   // Cerrar con tecla Escape
   useEffect(() => {
@@ -402,6 +408,24 @@ const SaleModal = ({
               <span>Total</span>
               <strong>${totals.total.toFixed(2)}</strong>
             </div>
+            {(paymentMethod === "CASH" || paymentMethod === "MIXED") && (
+              <>
+                <div className="pos-summary-row">
+                  <span>Con cuánto paga</span>
+                  <DecimalInput
+                    value={cashReceived}
+                    onChange={onCashReceivedChange}
+                    placeholder="0.00"
+                  />
+                </div>
+                {cashReceived >= totals.total && (
+                  <div className="pos-summary-row pos-summary-change">
+                    <span>Cambio</span>
+                    <strong>${saleChange.toFixed(2)}</strong>
+                  </div>
+                )}
+              </>
+            )}
             <div className="pos-summary-actions">
               <button type="button" className="pos-checkout-btn" onClick={onCheckout}>
                 Registrar venta

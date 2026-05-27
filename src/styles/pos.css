@@ -638,6 +638,14 @@
   margin-top: 4px;
 }
 
+.pos-summary-change {
+  color: var(--color-success, #16a34a);
+  font-size: var(--font-size-base);
+  border-top: 1px dashed var(--color-border);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
 .pos-summary-actions {
   display: flex;
   gap: 12px;

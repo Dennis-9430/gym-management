@@ -75,6 +75,9 @@ export interface UsePOSReturn {
   matchedSaleClient: ReturnType<typeof usePOSClients>["matchedSaleClient"];
   generateInvoice: boolean;
   invoiceEmail: string;
+  cashReceived: number;
+  handleCashReceivedChange: (value: number) => void;
+  saleChange: number;
   
   subscriptionModalOpen: boolean;
   subscriptionSearch: string;
@@ -246,6 +249,9 @@ export const usePOS = (initialSubscriptionClient?: ClientForm): UsePOSReturn => 
     matchedSaleClient: clients.matchedSaleClient,
     generateInvoice: sales.generateInvoice,
     invoiceEmail: sales.invoiceEmail,
+    cashReceived: sales.cashReceived,
+    handleCashReceivedChange: sales.handleCashReceivedChange,
+    saleChange: sales.saleChange,
     
     subscriptionModalOpen: subscription.subscriptionModalOpen,
     subscriptionSearch: subscription.subscriptionSearch,

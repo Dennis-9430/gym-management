@@ -38,7 +38,7 @@ const SalesPages = () => {
     loadMembershipServices();
   }, []);
 
-const {
+  const {
     // State
     saleModalOpen,
     subscriptionModalOpen,
@@ -51,6 +51,9 @@ const {
     voucherCode,
     generateInvoice,
     invoiceEmail,
+    cashReceived,
+    handleCashReceivedChange,
+    saleChange,
     saleClientResults,
     matchedSaleClient,
     search,
@@ -170,6 +173,9 @@ const {
         onGenerateInvoiceChange={setGenerateInvoice}
         invoiceEmail={invoiceEmail}
         onInvoiceEmailChange={setInvoiceEmail}
+        cashReceived={cashReceived}
+        onCashReceivedChange={handleCashReceivedChange}
+        saleChange={saleChange}
       />
 
       <SubscriptionModal

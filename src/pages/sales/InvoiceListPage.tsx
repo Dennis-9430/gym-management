@@ -73,7 +73,11 @@ const InvoiceListPage = () => {
   );
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("es-ES", {
+    // El servidor almacena UTC; forzamos interpretación UTC para evitar
+    // desfases de día cuando la hora cruza la medianoche en Ecuador (UTC-5)
+    const isUtc = dateStr.endsWith("Z") || /\+\d{2}:\d{2}/.test(dateStr);
+    const date = new Date(isUtc ? dateStr : dateStr + "Z");
+    return date.toLocaleDateString("es-ES", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -82,6 +86,15 @@ const InvoiceListPage = () => {
 
   const formatCurrency = (amount: number) => {
     return `$${amount.toFixed(2)}`;
+  };
+
+  const formatMethodLabel = (method: string) => {
+    const labels: Record<string, string> = {
+      CASH: "Efectivo",
+      TRANSFER: "Transferencia",
+      MIXED: "Mixto",
+    };
+    return labels[method] || method;
   };
 
   const getStatusBadge = (status: string) => {
@@ -345,7 +358,7 @@ const InvoiceListPage = () => {
               {/* Pago */}
               <div className="invoice-payment">
                 <p>
-                  <strong>Método:</strong> {selectedInvoice.payment.method}
+                  <strong>Método:</strong> {formatMethodLabel(selectedInvoice.payment.method)}
                 </p>
                 <p>
                   <strong>Pagado:</strong>{" "}

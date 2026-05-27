@@ -43,6 +43,10 @@ export interface UsePOSSalesReturn {
   setGenerateInvoice: (value: boolean) => void;
   invoiceEmail: string;
   setInvoiceEmail: (value: string) => void;
+  // Vuelto
+  cashReceived: number;
+  handleCashReceivedChange: (value: number) => void;
+  saleChange: number;
 }
 
 // Hook de ventas del POS
@@ -63,6 +67,9 @@ export const usePOSSales = (
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [generateInvoice, setGenerateInvoice] = useState(false);
   const [invoiceEmail, setInvoiceEmail] = useState("");
+  const [cashReceived, setCashReceived] = useState(0);
+
+  const saleChange = Math.max(0, round2(cashReceived - totals.total));
 
   const handlePaymentMethodChange = useCallback((value: PaymentMethod) => {
     const total = totals.total;
@@ -70,12 +77,15 @@ export const usePOSSales = (
     if (value === "CASH") {
       setCashAmount(total);
       setTransferAmount(0);
+      setCashReceived(total);
     } else if (value === "TRANSFER") {
       setCashAmount(0);
       setTransferAmount(total);
+      setCashReceived(0);
     } else {
       setCashAmount(total);
       setTransferAmount(0);
+      setCashReceived(total);
     }
   }, [totals.total]);
 
@@ -180,6 +190,10 @@ const handleCheckout = useCallback(() => {
     setCashAmount(round2(Math.max(total - normalized, 0)));
   }, [totals.total]);
 
+  const handleCashReceivedChange = useCallback((value: number) => {
+    setCashReceived(Math.max(0, round2(value)));
+  }, []);
+
   const handleSelectSaleClient = useCallback((client: ClientForm | null) => {
     if (client === null) {
       setSaleClientInput("");
@@ -227,5 +241,8 @@ const handleCheckout = useCallback(() => {
     setGenerateInvoice,
     invoiceEmail,
     setInvoiceEmail,
+    cashReceived,
+    handleCashReceivedChange,
+    saleChange,
   };
 };
