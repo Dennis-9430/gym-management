@@ -183,7 +183,7 @@ const EmployeesPage = () => {
     }
 
     if (editingEmployee.isOwner) {
-      if (!isOwner || !employeeIdFromToken) {
+      if (!isOwner) {
         alert("Error: No se pudo identificar al owner.");
         closeForm();
         return;
