@@ -16,7 +16,7 @@ import type { ReactNode } from "react";
 import type { AuthUser } from "../types/user.types";
 import { authReducer } from "../hooks/authHook";
 import { AuthContext } from "./AuthContext";
-import { clearAuthStorage, cleanupDemoData, buildUrl } from "../services/api";
+import { clearAuthStorage, cleanupDemoData, postLogout } from "../services/api";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -127,12 +127,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     // Limpiar datos demo antes de cerrar sesión
     await cleanupDemoData();
-    // Llamar al backend para eliminar cookie HttpOnly
-    try {
-      await fetch(buildUrl("/api/tenants/logout"), { method: "POST", credentials: "include" });
-    } catch {
-      // Si falla, igual limpiamos local
-    }
+    // Llamar al backend para eliminar cookie HttpOnly (con timeout 8s para Render dormido)
+    await postLogout();
     // Limpiar TODOS los datos de autenticación
     clearAuthStorage();
     // Reiniciar el estado global

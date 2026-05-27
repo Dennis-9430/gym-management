@@ -11,6 +11,18 @@ export const buildUrl = (endpoint: string) => {
   return `${API_BASE_URL}${normalized}`;
 };
 
+/** Fetch con timeout. Si el servidor no responde en msTimeout, rechaza.
+ *  Útil para logout cuando Render está dormido (free tier). */
+const fetchWithTimeout = async (url: string, options: RequestInit, msTimeout = 8000): Promise<Response> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), msTimeout);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
 /** Limpia datos demo en backend antes de cerrar sesión */
 /* PUBLIC + POST-LOGOUT: no necesita token. Fetch directo intencional por ser cleanup que no debe interferir con logout. */
 export const cleanupDemoData = async (): Promise<void> => {
@@ -18,13 +30,25 @@ export const cleanupDemoData = async (): Promise<void> => {
   if (!isDemo) return;
 
   try {
-    await fetch(buildUrl("/api/tenants/demo/cleanup"), {
+    await fetchWithTimeout(buildUrl("/api/tenants/demo/cleanup"), {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
   } catch {
     // Si falla la limpieza, igual cerramos sesión
+  }
+};
+
+/** POST /api/tenants/logout con timeout. Se usa desde AuthProvider. */
+export const postLogout = async (): Promise<void> => {
+  try {
+    await fetchWithTimeout(buildUrl("/api/tenants/logout"), {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch {
+    // Si falla, igual limpiamos local
   }
 };
 
