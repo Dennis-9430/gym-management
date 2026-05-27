@@ -374,17 +374,49 @@ const FinancialMonthlyReport = () => {
                       border: "1px solid #e5e7eb",
                       borderRadius: "8px",
                     }}
-                    formatter={(value) => [formatCurrency(Number(value)), "Ingresos Totales"]}
+                    formatter={(value, name) => {
+                      const labels: Record<string, string> = {
+                        total: "Total de Ingresos",
+                        cash: "Efectivo",
+                        transfer: "Transferencia",
+                      };
+                      return [formatCurrency(Number(value)), labels[String(name)] || name];
+                    }}
                   />
-                  <Legend />
+                  <Legend
+                    formatter={(value) => {
+                      const labels: Record<string, string> = {
+                        total: "Total de Ingresos",
+                        cash: "Efectivo",
+                        transfer: "Transferencia",
+                      };
+                      return labels[value] || value;
+                    }}
+                  />
                   <Line
                     type="monotone"
                     dataKey="total"
-                    name="Total"
+                    name="total"
                     stroke="#8b5cf6"
                     strokeWidth={3}
                     dot={{ fill: "#8b5cf6", strokeWidth: 2 }}
                     activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="cash"
+                    name="cash"
+                    stroke="#f59e0b"
+                    strokeWidth={2}
+                    dot={{ fill: "#f59e0b" }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="transfer"
+                    name="transfer"
+                    stroke="#06b6d4"
+                    strokeWidth={2}
+                    dot={{ fill: "#06b6d4" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
