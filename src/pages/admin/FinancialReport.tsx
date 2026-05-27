@@ -50,41 +50,29 @@ const FinancialReport = () => {
 
   const [editingTransaction, setEditingTransaction] = useState<SaleRecord | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  // UI PREFERENCE CACHE: filtros de fecha persisten entre sesiones como conveniencia.
-  // No son datos de negocio ni fuente de verdad.
   const [dateFilter, setDateFilter] = useState<DateFilter>(() => {
-    const saved = localStorage.getItem("financial_dateFilter");
-    if (saved) return saved as DateFilter;
-    // For demo without saved preference, default to custom range
     if (localStorage.getItem("isDemo") === "true") return "custom";
     return "today";
   });
   const [customStartDate, setCustomStartDate] = useState(() => {
-    const saved = localStorage.getItem("financial_customStartDate");
-    if (saved) return saved;
     if (localStorage.getItem("isDemo") === "true") return "2026-05-20";
     return "";
   });
   const [customEndDate, setCustomEndDate] = useState(() => {
-    const saved = localStorage.getItem("financial_customEndDate");
-    if (saved) return saved;
     if (localStorage.getItem("isDemo") === "true") return "2026-05-20";
     return "";
   });
 
   const handleSetDateFilter = (filter: DateFilter) => {
     setDateFilter(filter);
-    localStorage.setItem("financial_dateFilter", filter);
   };
 
   const handleSetCustomStartDate = (date: string) => {
     setCustomStartDate(date);
-    localStorage.setItem("financial_customStartDate", date);
   };
 
   const handleSetCustomEndDate = (date: string) => {
     setCustomEndDate(date);
-    localStorage.setItem("financial_customEndDate", date);
   };
 
   const getDateRange = () => {
