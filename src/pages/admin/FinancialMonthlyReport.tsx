@@ -61,12 +61,15 @@ const FinancialMonthlyReport = () => {
 
   const months = useMemo(() => {
     const monthSet = new Set<string>();
+    // Always include the currently selected month
+    monthSet.add(selectedMonth);
+    // Add months from existing transactions
     for (const txn of transactions) {
       const monthKey = txn.createdAt.slice(0, 7);
       monthSet.add(monthKey);
     }
     return Array.from(monthSet).sort().reverse();
-  }, [transactions]);
+  }, [transactions, selectedMonth]);
 
   const monthTransactions = useMemo(() => {
     // selectedMonth es "YYYY-MM" en local

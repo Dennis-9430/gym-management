@@ -54,13 +54,22 @@ const FinancialReport = () => {
   // No son datos de negocio ni fuente de verdad.
   const [dateFilter, setDateFilter] = useState<DateFilter>(() => {
     const saved = localStorage.getItem("financial_dateFilter");
-    return (saved as DateFilter) || "today";
+    if (saved) return saved as DateFilter;
+    // For demo without saved preference, default to custom range
+    if (localStorage.getItem("isDemo") === "true") return "custom";
+    return "today";
   });
   const [customStartDate, setCustomStartDate] = useState(() => {
-    return localStorage.getItem("financial_customStartDate") || "";
+    const saved = localStorage.getItem("financial_customStartDate");
+    if (saved) return saved;
+    if (localStorage.getItem("isDemo") === "true") return "2026-05-20";
+    return "";
   });
   const [customEndDate, setCustomEndDate] = useState(() => {
-    return localStorage.getItem("financial_customEndDate") || "";
+    const saved = localStorage.getItem("financial_customEndDate");
+    if (saved) return saved;
+    if (localStorage.getItem("isDemo") === "true") return "2026-05-20";
+    return "";
   });
 
   const handleSetDateFilter = (filter: DateFilter) => {
