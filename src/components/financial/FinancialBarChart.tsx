@@ -16,6 +16,8 @@ interface ChartDataItem {
   name: string;
   services: number;
   bar: number;
+  cash: number;
+  transfer: number;
 }
 
 /* Grafico de barras de ingresos semanales por servicios y bar */
@@ -48,6 +50,8 @@ const FinancialBarChart = ({ data }: Props) => {
             name: week.week,
             services: week.services,
             bar: week.bar,
+            cash: week.cash,
+            transfer: week.transfer,
           });
         }
       }
@@ -59,6 +63,8 @@ const FinancialBarChart = ({ data }: Props) => {
       name: w.week,
       services: w.services,
       bar: w.bar,
+      cash: w.cash,
+      transfer: w.transfer,
     }));
   }, [selectedMonth, data, availableMonths, groupByWeek, transactions]);
 
@@ -144,6 +150,8 @@ const FinancialBarChart = ({ data }: Props) => {
               const labels: Record<string, string> = {
                 services: "Servicios",
                 bar: "Bar",
+                cash: "Efectivo",
+                transfer: "Transferencia",
               };
               return [formatCurrency(Number(value)), labels[String(name)] || name];
             }}
@@ -151,6 +159,8 @@ const FinancialBarChart = ({ data }: Props) => {
           <Legend />
           <Bar dataKey="services" name="Servicios" fill="#3b82f6" radius={[4, 4, 0, 0]} />
           <Bar dataKey="bar" name="Bar" fill="#10b981" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="cash" name="Efectivo" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="transfer" name="Transferencia" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

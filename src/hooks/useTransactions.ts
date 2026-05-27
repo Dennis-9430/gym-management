@@ -80,6 +80,10 @@ export interface WeeklyData {
   services: number;
   /** Total de productos del bar en la semana */
   bar: number;
+  /** Total en efectivo de la semana */
+  cash: number;
+  /** Total por transferencia de la semana */
+  transfer: number;
   /** Base imponible de la semana */
   taxableBase: number;
   /** IVA generado en la semana */
@@ -376,6 +380,8 @@ export const useTransactions = () => {
           endDate: range.end.toISOString().split("T")[0],
           services: 0,
           bar: 0,
+          cash: 0,
+          transfer: 0,
           total: 0,
           taxableBase: 0,
           iva: 0,
@@ -392,6 +398,13 @@ export const useTransactions = () => {
         weeks[weekNum].total += item.subtotal;
         weeks[weekNum].taxableBase += base;
         weeks[weekNum].iva += itemIVA;
+      }
+
+      if (txn.payment.method === "CASH" || txn.payment.method === "MIXED") {
+        weeks[weekNum].cash += txn.payment.cashAmount;
+      }
+      if (txn.payment.method === "TRANSFER" || txn.payment.method === "MIXED") {
+        weeks[weekNum].transfer += txn.payment.transferAmount;
       }
     }
 
