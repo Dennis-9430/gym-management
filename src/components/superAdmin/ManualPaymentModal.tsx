@@ -11,8 +11,8 @@ interface Props {
 }
 
 const PLAN_PRICES: Record<SubscriptionPlan, number> = {
-  BASIC: 29.99,
-  PREMIUM: 59.99,
+  BASIC: 20,
+  PREMIUM: 30,
 };
 
 const MONTHS_OPTIONS = [1, 3, 6, 12];
@@ -145,7 +145,7 @@ export const ManualPaymentModal = ({ isOpen, onClose, onConfirm, currentPlan }: 
                         color: plan === p ? "#fff" : "#475569",
                       }}
                     >
-                      {p === "BASIC" ? "BASIC - $29.99/mes" : "PREMIUM - $59.99/mes"}
+                      {p === "BASIC" ? "BASIC - $20/mes" : "PREMIUM - $30/mes"}
                     </button>
                   ))}
                 </div>
