@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://gym-management-api-k4u3.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

@@ -1,12 +1,15 @@
 /* Servicio base de API con manejo centralizado de auth y errores */
 
-export const getApiBaseUrl = () => import.meta.env.VITE_API_URL || "";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
-const API_BASE_URL = getApiBaseUrl();
-
-/* Construir URL correctamente para entorno local con proxy o URL configurada */
-export const buildUrl = (endpoint: string) =>
-  `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+/* Construir URL correctamente:
+   - En producción (Vite.PROD=true): ruta relativa → el proxy de Vercel la maneja
+   - En desarrollo: usa VITE_API_URL (backend local) o relativa si no está configurado */
+export const buildUrl = (endpoint: string) => {
+  const normalized = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  if (import.meta.env.PROD) return normalized;
+  return `${API_BASE_URL}${normalized}`;
+};
 
 /** Limpia datos demo en backend antes de cerrar sesión */
 /* PUBLIC + POST-LOGOUT: no necesita token. Fetch directo intencional por ser cleanup que no debe interferir con logout. */
