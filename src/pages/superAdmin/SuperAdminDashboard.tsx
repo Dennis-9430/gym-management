@@ -171,8 +171,8 @@ const SuperAdminDashboard = () => {
             No hay pagos recientes
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+          <div className="sa-table-responsive-wrapper">
+            <table className="sa-table-responsive" style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr style={{ backgroundColor: "#f8fafc", color: "#64748b", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   <th style={thStyle}>Tenant</th>
@@ -186,8 +186,8 @@ const SuperAdminDashboard = () => {
               <tbody>
                 {data.recent_payments.map((p) => (
                   <tr key={p.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                    <td style={{ ...tdStyle, fontFamily: "monospace", fontSize: 13 }}>{p.businessName || p.tenantId}</td>
-                    <td style={tdStyle}>
+                    <td data-label="Tenant" style={{ ...tdStyle, fontFamily: "monospace", fontSize: 13 }}>{p.businessName || p.tenantId}</td>
+                    <td data-label="Plan" style={tdStyle}>
                       <span style={{
                         display: "inline-block",
                         padding: "2px 8px",
@@ -200,14 +200,14 @@ const SuperAdminDashboard = () => {
                         {p.plan}
                       </span>
                     </td>
-                    <td style={tdStyle}>${p.amount.toFixed(2)}</td>
-                    <td style={tdStyle}>
+                    <td data-label="Monto" style={tdStyle}>${p.amount.toFixed(2)}</td>
+                    <td data-label="Método" style={tdStyle}>
                       {p.method === "CASH" ? "Efectivo" : p.method === "TRANSFER" ? "Transferencia" : "Otro"}
                     </td>
-                    <td style={tdStyle}>
+                    <td data-label="Vencimiento" style={tdStyle}>
                       {new Date(p.subscriptionEndDate).toLocaleDateString("es-ES")}
                     </td>
-                    <td style={tdStyle}>
+                    <td data-label="Fecha" style={tdStyle}>
                       {new Date(p.createdAt).toLocaleDateString("es-ES")}
                     </td>
                   </tr>

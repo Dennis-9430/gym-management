@@ -298,8 +298,8 @@ const TenantDetailPage = () => {
             <p>No hay pagos registrados</p>
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+          <div className="sa-table-responsive-wrapper">
+            <table className="sa-table-responsive" style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr style={{ backgroundColor: "#f8fafc", color: "#64748b", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   <th style={thStyle}>Fecha</th>
@@ -316,8 +316,8 @@ const TenantDetailPage = () => {
               <tbody>
                 {payments.map((p) => (
                   <tr key={p.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                    <td style={tdStyle}>{new Date(p.createdAt).toLocaleDateString("es-ES")}</td>
-                    <td style={tdStyle}>
+                    <td data-label="Fecha" style={tdStyle}>{new Date(p.createdAt).toLocaleDateString("es-ES")}</td>
+                    <td data-label="Plan" style={tdStyle}>
                       <span style={{
                         display: "inline-block",
                         padding: "2px 8px",
@@ -330,15 +330,15 @@ const TenantDetailPage = () => {
                         {p.plan}
                       </span>
                     </td>
-                    <td style={{ ...tdStyle, fontWeight: 600 }}>${p.amount.toFixed(2)}</td>
-                    <td style={tdStyle}>{p.months}</td>
-                    <td style={tdStyle}>
+                    <td data-label="Monto" style={{ ...tdStyle, fontWeight: 600 }}>${p.amount.toFixed(2)}</td>
+                    <td data-label="Meses" style={tdStyle}>{p.months}</td>
+                    <td data-label="Método" style={tdStyle}>
                       {p.method === "CASH" ? "Efectivo" : p.method === "TRANSFER" ? "Transferencia" : "Otro"}
                     </td>
-                    <td style={{ ...tdStyle, color: "#64748b" }}>{p.reference || "—"}</td>
-                    <td style={tdStyle}>{new Date(p.subscriptionStartDate).toLocaleDateString("es-ES")}</td>
-                    <td style={tdStyle}>{new Date(p.subscriptionEndDate).toLocaleDateString("es-ES")}</td>
-                    <td style={{ ...tdStyle, color: "#64748b" }}>{p.registeredBy}</td>
+                    <td data-label="Referencia" style={{ ...tdStyle, color: "#64748b" }}>{p.reference || "—"}</td>
+                    <td data-label="Inicio" style={tdStyle}>{new Date(p.subscriptionStartDate).toLocaleDateString("es-ES")}</td>
+                    <td data-label="Fin" style={tdStyle}>{new Date(p.subscriptionEndDate).toLocaleDateString("es-ES")}</td>
+                    <td data-label="Registrado por" style={{ ...tdStyle, color: "#64748b" }}>{p.registeredBy}</td>
                   </tr>
                 ))}
               </tbody>

@@ -152,8 +152,8 @@ const PendingPaymentsPage = () => {
             overflow: "hidden",
           }}
         >
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+          <div className="sa-table-responsive-wrapper">
+            <table className="sa-table-responsive" style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr
                   style={{
@@ -176,7 +176,7 @@ const PendingPaymentsPage = () => {
               <tbody>
                 {payments.map((p) => (
                   <tr key={p.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                    <td style={tdStyle}>
+                    <td data-label="Negocio" style={tdStyle}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <span style={{ fontWeight: 600, color: "#0f172a" }}>{p.tenantName}</span>
                         <button
@@ -195,8 +195,8 @@ const PendingPaymentsPage = () => {
                         </button>
                       </div>
                     </td>
-                    <td style={{ ...tdStyle, color: "#64748b" }}>{p.tenantEmail}</td>
-                    <td style={tdStyle}>
+                    <td data-label="Email" style={{ ...tdStyle, color: "#64748b" }}>{p.tenantEmail}</td>
+                    <td data-label="Plan" style={tdStyle}>
                       <span
                         style={{
                           display: "inline-block",
@@ -211,12 +211,12 @@ const PendingPaymentsPage = () => {
                         {p.plan}
                       </span>
                     </td>
-                    <td style={{ ...tdStyle, fontWeight: 600 }}>${p.amount.toFixed(2)}</td>
-                    <td style={{ ...tdStyle, color: "#64748b", maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <td data-label="Monto" style={{ ...tdStyle, fontWeight: 600 }}>${p.amount.toFixed(2)}</td>
+                    <td data-label="Referencia" style={{ ...tdStyle, color: "#64748b", maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis" }}>
                       {p.reference || "—"}
                     </td>
-                    <td style={tdStyle}>{new Date(p.createdAt).toLocaleDateString("es-ES")}</td>
-                    <td style={tdStyle}>
+                    <td data-label="Fecha" style={tdStyle}>{new Date(p.createdAt).toLocaleDateString("es-ES")}</td>
+                    <td data-label="Acciones" style={tdStyle}>
                       <div style={{ display: "flex", gap: 6 }}>
                         <button
                           onClick={() => handleApprove(p)}
