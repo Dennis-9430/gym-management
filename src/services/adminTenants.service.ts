@@ -116,6 +116,7 @@ export interface PendingPaymentItem {
   tenantId: string;
   tenantName: string;
   tenantEmail: string;
+  businessCode: string;
   plan: string;
   amount: number;
   currency: string;

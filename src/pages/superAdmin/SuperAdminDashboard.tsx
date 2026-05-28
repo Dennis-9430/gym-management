@@ -186,7 +186,7 @@ const SuperAdminDashboard = () => {
               <tbody>
                 {data.recent_payments.map((p) => (
                   <tr key={p.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                    <td style={tdStyle}>{p.tenantId}</td>
+                    <td style={{ ...tdStyle, fontFamily: "monospace", fontSize: 13 }}>{p.businessName || p.tenantId}</td>
                     <td style={tdStyle}>
                       <span style={{
                         display: "inline-block",

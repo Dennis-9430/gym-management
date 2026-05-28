@@ -87,7 +87,7 @@ function AppRouter() {
           <Route element={<SuperAdminRoute />}>
             <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
             <Route path="/super-admin/tenants" element={<TenantListPage />} />
-            <Route path="/super-admin/tenants/:tenantId" element={<TenantDetailPage />} />
+            <Route path="/super-admin/tenants/:identifier" element={<TenantDetailPage />} />
             <Route path="/super-admin/payments/pending" element={<PendingPaymentsPage />} />
           </Route>
         </Routes>

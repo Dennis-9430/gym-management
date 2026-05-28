@@ -180,7 +180,7 @@ const PendingPaymentsPage = () => {
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <span style={{ fontWeight: 600, color: "#0f172a" }}>{p.tenantName}</span>
                         <button
-                          onClick={() => navigate(`/super-admin/tenants/${p.tenantId}`)}
+                          onClick={() => navigate(`/super-admin/tenants/${p.businessCode}`)}
                           style={{
                             background: "none",
                             border: "none",

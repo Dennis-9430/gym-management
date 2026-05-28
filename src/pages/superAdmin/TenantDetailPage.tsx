@@ -30,7 +30,7 @@ import type { AdminTenant, ManualPaymentResponse, ManualPaymentRequest } from ".
 const PAGE_SIZE = 10;
 
 const TenantDetailPage = () => {
-  const { tenantId } = useParams<{ tenantId: string }>();
+  const { identifier } = useParams<{ identifier: string }>();
   const navigate = useNavigate();
 
   const [tenant, setTenant] = useState<AdminTenant | null>(null);
@@ -57,24 +57,24 @@ const TenantDetailPage = () => {
   const [deleteError, setDeleteError] = useState("");
 
   const fetchTenant = useCallback(async () => {
-    if (!tenantId) return;
+    if (!identifier) return;
     try {
       setLoading(true);
       setError("");
-      const result = await getAdminTenantById(tenantId);
+      const result = await getAdminTenantById(identifier);
       setTenant(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cargar tenant");
     } finally {
       setLoading(false);
     }
-  }, [tenantId]);
+  }, [identifier]);
 
   const fetchPayments = useCallback(async () => {
-    if (!tenantId) return;
+    if (!tenant) return;
     try {
       setPaymentsLoading(true);
-      const result = await getTenantPayments(tenantId, paymentsPage, PAGE_SIZE);
+      const result = await getTenantPayments(tenant.tenantId, paymentsPage, PAGE_SIZE);
       setPayments(result.items);
       setPaymentsTotal(result.total);
     } catch {
@@ -82,7 +82,7 @@ const TenantDetailPage = () => {
     } finally {
       setPaymentsLoading(false);
     }
-  }, [tenantId, paymentsPage]);
+  }, [tenant?.tenantId, paymentsPage]);
 
   useEffect(() => {
     fetchTenant();
@@ -95,18 +95,18 @@ const TenantDetailPage = () => {
   const totalPages = Math.ceil(paymentsTotal / PAGE_SIZE);
 
   const handleManualPayment = async (data: ManualPaymentRequest) => {
-    if (!tenantId) return;
-    await registerManualPayment(tenantId, data);
+    if (!tenant) return;
+    await registerManualPayment(tenant.tenantId, data);
     // Refresh tenant and payments
     await Promise.all([fetchTenant(), fetchPayments()]);
   };
 
   const handleDelete = async () => {
-    if (!tenantId || !deletePassword) return;
+    if (!tenant || !deletePassword) return;
     setDeleteLoading(true);
     setDeleteError("");
     try {
-      const result = await deleteTenant(tenantId, deletePassword);
+      const result = await deleteTenant(tenant.tenantId, deletePassword);
       alert(result.message);
       navigate("/super-admin/tenants");
     } catch (err) {
@@ -120,7 +120,7 @@ const TenantDetailPage = () => {
     action: "suspend" | "cancel" | "reactivate",
     verb: string,
   ) => {
-    if (!tenant || !tenantId) return;
+    if (!tenant) return;
 
     const reason = window.prompt(`Motivo para ${verb} "${tenant.businessName}":`);
     if (reason === null) return;
@@ -137,9 +137,9 @@ const TenantDetailPage = () => {
 
     setActionLoading(action);
     try {
-      if (action === "suspend") await suspendTenant(tenantId, reason.trim());
-      else if (action === "cancel") await cancelTenant(tenantId, reason.trim());
-      else await reactivateTenant(tenantId, reason.trim());
+      if (action === "suspend") await suspendTenant(tenant.tenantId, reason.trim());
+      else if (action === "cancel") await cancelTenant(tenant.tenantId, reason.trim());
+      else await reactivateTenant(tenant.tenantId, reason.trim());
       await fetchTenant();
     } catch (err) {
       alert(err instanceof Error ? err.message : `Error al ${verb} tenant`);

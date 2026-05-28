@@ -50,6 +50,9 @@ export interface ManualPaymentResponse {
   subscriptionStartDate: string;
   subscriptionEndDate: string;
   createdAt: string;
+  /** Presente cuando se incluye desde el dashboard (batch lookup de tenant) */
+  businessName?: string;
+  businessCode?: string;
 }
 
 export interface AdminDashboard {

@@ -283,7 +283,7 @@ const TenantListPage = () => {
                         <ActionBtn
                           icon={<Eye size={15} />}
                           label="Ver detalle"
-                          onClick={() => navigate(`/super-admin/tenants/${t.tenantId}`)}
+                          onClick={() => navigate(`/super-admin/tenants/${t.businessCode}`)}
                           color="#3b82f6"
                         />
                         {t.subscriptionStatus !== "SUSPENDED" && t.subscriptionStatus !== "CANCELLED" && (
