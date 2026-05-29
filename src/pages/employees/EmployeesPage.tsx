@@ -304,6 +304,20 @@ const EmployeesPage = () => {
       </section>
 
       <section className="employees-list">
+        {error && (
+          <div style={{
+            padding: "12px 16px",
+            backgroundColor: "#fef2f2",
+            border: "1px solid #fecaca",
+            borderRadius: 10,
+            color: "#dc2626",
+            fontSize: 14,
+            fontWeight: 500,
+            marginBottom: 16,
+          }}>
+            {error}
+          </div>
+        )}
         <div className="employees-table-wrapper">
           <EmployeeTable
             employees={employees}
