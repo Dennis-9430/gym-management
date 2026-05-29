@@ -304,6 +304,59 @@
   transform: none;
 }
 
+/* Responsive card layout for employee table */
+@media (max-width: 640px) {
+  .employee-table,
+  .employee-table thead,
+  .employee-table tbody,
+  .employee-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .employee-table thead {
+    display: none;
+  }
+
+  .employee-table tr {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .employee-table tr td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border: none !important;
+    font-size: 13px;
+  }
+
+  .employee-table tr td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .employee-table .actions {
+    padding-top: 8px;
+  }
+
+  .employee-actions-group {
+    display: flex;
+    gap: 8px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 1280px) {
   .employees-container {

@@ -61,14 +61,15 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete, biometricEnabled
               className={`employee-row ${isEmployeeOwner ? "employee-row--owner" : ""}`}
             >
               <td
+                data-label="Nombre"
                 className={`employee-cell-link ${isEmployeeOwner ? "employee-cell-link--owner" : ""}`}
                 onClick={() => onSelect(emp.id)}
               >
                 {emp.firstName} {emp.lastName}
               </td>
-              <td>{emp.email}</td>
-              <td>{emp.username || "-"}</td>
-              <td>
+              <td data-label="Email">{emp.email}</td>
+              <td data-label="Usuario">{emp.username || "-"}</td>
+              <td data-label="Rol">
                 {isEmployeeOwner || isEmployeeGerente ? (
                   <span className="employee-badge employee-badge--owner">
                     <Crown size={12} />
@@ -80,9 +81,9 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete, biometricEnabled
                   </span>
                 )}
               </td>
-              <td>{emp.status}</td>
+              <td data-label="Estado">{emp.status}</td>
               {biometricEnabled && (
-                <td>
+                <td data-label="Huella">
                   {emp.fingerPrint ? (
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <span style={{ color: "#16a34a", fontSize: 16 }}>✅</span>
@@ -110,27 +111,29 @@ const EmployeeTable = ({ employees, onSelect, onEdit, onDelete, biometricEnabled
                 </td>
               )}
               {showActions && (
-                <td className="actions">
-                  {canEdit && (
-                    <button
-                      type="button"
-                      className="btn-edit"
-                      onClick={() => onEdit(emp)}
-                    >
-                      <Pencil size={16} />
-                      Editar
-                    </button>
-                  )}
-                  {canDelete && (
-                    <button
-                      type="button"
-                      className="btn-delete"
-                      onClick={() => onDelete(emp.id)}
-                    >
-                      <Trash2 size={16} />
-                      Eliminar
-                    </button>
-                  )}
+                <td data-label="Acciones" className="actions">
+                  <div className="employee-actions-group">
+                    {canEdit && (
+                      <button
+                        type="button"
+                        className="btn-edit"
+                        onClick={() => onEdit(emp)}
+                      >
+                        <Pencil size={16} />
+                        Editar
+                      </button>
+                    )}
+                    {canDelete && (
+                      <button
+                        type="button"
+                        className="btn-delete"
+                        onClick={() => onDelete(emp.id)}
+                      >
+                        <Trash2 size={16} />
+                        Eliminar
+                      </button>
+                    )}
+                  </div>
                 </td>
               )}
             </tr>
